@@ -1,0 +1,30 @@
+[gd_scene format=3 uid="uid://ckbyw6p0dd4tr"]
+
+[ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/top_menu.tscn" id="1_m12ob"]
+[ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/bottom_menu.tscn" id="2_q3cwv"]
+
+[node name="HUD" type="Control" unique_id=4857712]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1067688684]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 64
+
+[node name="Control" type="Control" parent="MarginContainer" unique_id=1491080167]
+layout_mode = 2
+
+[node name="TopMenu" parent="MarginContainer/Control" unique_id=985816981 instance=ExtResource("1_m12ob")]
+layout_mode = 1
+
+[node name="BottomMenu" parent="MarginContainer/Control" unique_id=1410235141 instance=ExtResource("2_q3cwv")]
+layout_mode = 1

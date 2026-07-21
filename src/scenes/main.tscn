@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://cslsestkvwjl2"]
+
+[ext_resource type="Script" uid="uid://dtsyevv75wql0" path="res://src/scenes/main.gd" id="1_32aa5"]
+[ext_resource type="PackedScene" uid="uid://ckbyw6p0dd4tr" path="res://src/scenes/ui/hud.tscn" id="1_kkvs4"]
+
+[node name="Main" type="Node2D" unique_id=1753224795]
+script = ExtResource("1_32aa5")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=2018987880]
+
+[node name="HUD" parent="CanvasLayer" unique_id=4857712 instance=ExtResource("1_kkvs4")]
+
+[node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]
+
+[node name="Entities" type="Node" parent="." unique_id=907262960]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
+zoom = Vector2(4, 4)
+
+[node name="DirectionalLight2D" type="DirectionalLight2D" parent="." unique_id=1016554598]
+energy = 0.33

@@ -1,0 +1,9 @@
+Idea for abilities:
+	- Player has several equipable abilities they can choose to bring a subset of to any given stage.
+	- Player can activate abilities from a sub-menu in the in-game HUD
+
+Abilities:
+	- Arrow rain: drop damaging arrows in a small radius
+	- Freeze: freeze mobs in a small radius
+	- Cannonball: large explosive with high cooldown
+	- etc.
