@@ -12,8 +12,6 @@ script = ExtResource("1_32aa5")
 
 [node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]
 
-[node name="Entities" type="Node" parent="." unique_id=907262960]
-
 [node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
 zoom = Vector2(4, 4)
 

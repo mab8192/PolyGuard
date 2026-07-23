@@ -1,15 +1,20 @@
 class_name Stage extends Node2D
 
 @export var data: StageData
+@export var spawners: Array[Spawner]
+
 @onready var tiles: TileMapLayer = $NavigationRegion2D/Tiles
+
+# Debug
 @onready var color_rect: ColorRect = $ColorRect
 
 func _ready() -> void:
 	if data == null:
-		push_error("Need to provide data file for stage")
+		push_error("Need to provide data for stage")
 		return
-
-	data.load()
+	
+	var wave_data: WaveData = data.get_wave(0)
+	spawners[0].run(wave_data.spawns[0])
 
 func get_map_pixel_rect() -> Rect2:
 	var used_rect: Rect2i = tiles.get_used_rect()

@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://ckbyw6p0dd4tr"]
 
 [ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/top_menu.tscn" id="1_m12ob"]
+[ext_resource type="Script" uid="uid://61ygublj6ljm" path="res://src/scenes/ui/hud.gd" id="1_q3cwv"]
 [ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/bottom_menu.tscn" id="2_q3cwv"]
 
 [node name="HUD" type="Control" unique_id=4857712]
@@ -10,6 +11,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_q3cwv")
 
 [node name="MarginContainer" type="MarginContainer" parent="." unique_id=1067688684]
 layout_mode = 1

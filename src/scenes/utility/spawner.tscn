@@ -1,9 +1,13 @@
 [gd_scene format=3 uid="uid://cq3ofdmp8sxea"]
 
-[ext_resource type="PackedScene" uid="uid://78gyx3vwcf8f" path="res://src/scenes/stages/props.tscn" id="1_naouo"]
+[ext_resource type="Script" uid="uid://cy04gqumfumjy" path="res://src/scenes/utility/spawner.gd" id="1_y5mdg"]
 
 [node name="Spawner" type="Node2D" unique_id=391670320]
+script = ExtResource("1_y5mdg")
 
-[node name="Props" parent="." unique_id=1917346300 instance=ExtResource("1_naouo")]
-position = Vector2(-32, -32)
-tile_map_data = PackedByteArray(0, 0, 0, 0, 0, 0, 0, 0, 10, 0, 8, 0, 0, 0)
+[node name="ColorRect" type="ColorRect" parent="." unique_id=1912200016]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0.9724042, 0, 0.08693842, 1)

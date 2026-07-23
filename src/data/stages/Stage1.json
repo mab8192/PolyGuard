@@ -1,5 +1,26 @@
 {
-	"waves": [
-		
-	]
+  "stage_id": "stage_01",
+  "waves": [
+	{
+	  "wave_number": 1,
+	  "reward_gold": 50,
+	  "spawns": [
+		{ "enemy_type": "basic", "count": 10, "spawn_interval": 1.0, "delay_before": 0.0 }
+	  ]
+	},
+	{
+	  "wave_number": 2,
+	  "reward_gold": 75,
+	  "spawns": [
+		{ "enemy_type": "basic", "count": 12, "spawn_interval": 0.8, "delay_before": 0.0 },
+	  ]
+	},
+	{
+	  "wave_number": 3,
+	  "reward_gold": 150,
+	  "spawns": [
+		{ "enemy_type": "basic", "count": 15, "spawn_interval": 0.5, "delay_before": 0.0 },
+	  ]
+	}
+  ]
 }

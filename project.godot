@@ -21,6 +21,9 @@ config/icon="res://icon.svg"
 GameManager="*uid://bh6gjdf6wjx87"
 Registry="*uid://btdmff6ur7gu2"
 SignalBus="*uid://f4x1spochkwu"
+AudioManager="*uid://dns2dtsx4xm5b"
+SaveManager="*uid://c36ci1uxro7aq"
+SettingsManager="*uid://ce1684yjgnm6d"
 
 [display]
 

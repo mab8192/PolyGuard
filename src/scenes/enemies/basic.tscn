@@ -1,9 +1,38 @@
 [gd_scene format=3 uid="uid://d3okyyaxqd41w"]
 
-[node name="Basic" type="Node2D" unique_id=361852318]
+[ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_k1kd5"]
+[ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jux7r"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_747qd"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_jux7r"]
+size = Vector2(16, 16)
+
+[node name="Basic" type="CharacterBody2D" unique_id=1825300398 node_paths=PackedStringArray("agent", "health", "movement")]
+script = ExtResource("1_k1kd5")
+agent = NodePath("NavigationAgent2D")
+health = NodePath("HealthComponent")
+movement = NodePath("MovementComponent")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1816937693]
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=632593169]
+shape = SubResource("RectangleShape2D_jux7r")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1899630549]
+path_desired_distance = 8.0
+target_desired_distance = 8.0
+path_postprocessing = 1
+avoidance_enabled = true
+
+[node name="MovementComponent" type="Node" parent="." unique_id=588237634 node_paths=PackedStringArray("body")]
+script = ExtResource("2_jux7r")
+body = NodePath("..")
+metadata/_custom_type_script = "uid://btkgrma8jeupr"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2023714483]
+script = ExtResource("3_747qd")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
