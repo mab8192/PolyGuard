@@ -15,14 +15,10 @@ extends Resource
 # Internal cache of converted WaveData objects
 var _waves: Array[WaveData] = []
 
-## Returns an array of typed WaveData objects parsed from the JSON file.
-func get_waves() -> Array[WaveData]:
-	if not _waves.is_empty():
-		return _waves
-
+func _load() -> void:
 	if wave_data_file.is_empty() or not FileAccess.file_exists(wave_data_file):
-		push_error("StageData (%s): Invalid or missing JSON path: %s" % [stage_name, wave_data_file])
-		return []
+		printerr("StageData (%s): Invalid or missing JSON path: %s" % [stage_name, wave_data_file])
+		return
 
 	var file := FileAccess.open(wave_data_file, FileAccess.READ)
 	var json_string := file.get_as_text()
@@ -30,20 +26,25 @@ func get_waves() -> Array[WaveData]:
 
 	var json := JSON.new()
 	if json.parse(json_string) != OK:
-		push_error("StageData (%s): JSON Parse Error: %s" % [stage_name, json.get_error_message()])
-		return []
-
-	var raw_wave_list: Array = []
-	if json.data is Dictionary and json.data.has("waves"):
-		raw_wave_list = json.data["waves"]
-	elif json.data is Array:
-		raw_wave_list = json.data
+		printerr("StageData (%s): JSON Parse Error: %s" % [stage_name, json.get_error_message()])
+		return
+	
+	var data = json.data as Array
+	if not data:
+		printerr("Malformed JSON: ", wave_data_file)
+		return
 
 	# Convert each dictionary to a strongly-typed WaveData object
-	for wave_dict in raw_wave_list:
+	for wave_dict in data:
 		if wave_dict is Dictionary:
 			_waves.append(WaveData.from_dict(wave_dict))
 
+## Returns an array of typed WaveData objects parsed from the JSON file.
+func get_waves() -> Array[WaveData]:
+	if not _waves.is_empty():
+		return _waves
+
+	_load()
 	return _waves
 
 ## Gets a specific WaveData instance by index.
@@ -51,5 +52,5 @@ func get_wave(index: int) -> WaveData:
 	var waves := get_waves()
 	if index >= 0 and index < waves.size():
 		return waves[index]
-	push_error("StageData (%s): Wave index %d out of bounds." % [stage_name, index])
+	printerr("StageData (%s): Wave index %d out of bounds." % [stage_name, index])
 	return null

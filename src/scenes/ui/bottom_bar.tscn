@@ -1,0 +1,53 @@
+[gd_scene format=3 uid="uid://bokydd4nvejt2"]
+
+[ext_resource type="Script" uid="uid://celcwx2brueh7" path="res://src/scenes/ui/bottom_bar.gd" id="1_sf614"]
+
+[node name="BottomBar" type="MarginContainer" unique_id=192044941]
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 0
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 32
+script = ExtResource("1_sf614")
+
+[node name="DockContainer" type="Control" parent="." unique_id=35361616]
+custom_minimum_size = Vector2(0, 160)
+layout_mode = 2
+
+[node name="BuildButton" type="Button" parent="DockContainer" unique_id=108226355]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = -64.0
+offset_right = 64.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 4
+text = "BUILD"
+
+[node name="NextWaveButton" type="Button" parent="DockContainer" unique_id=2015732806]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 128)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -8.0
+offset_top = -4.0
+offset_bottom = 4.0
+grow_horizontal = 0
+grow_vertical = 2
+text = "Next Wave"

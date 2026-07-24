@@ -37,6 +37,22 @@ window/handheld/orientation=1
 
 enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
 
+[file_customization]
+
+folder_colors={
+"res://src/autoload/": "green",
+"res://src/components/": "red",
+"res://src/data/": "gray",
+"res://src/scenes/": "blue",
+"res://src/scenes/towers/": "yellow",
+"res://src/scenes/ui/": "teal",
+"res://vendor/": "orange"
+}
+
+[gui]
+
+theme/custom="uid://fcjpxmjswpwu"
+
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true

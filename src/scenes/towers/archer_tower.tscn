@@ -1,0 +1,16 @@
+[gd_scene format=3 uid="uid://dg12a81rft006"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
+size = Vector2(16, 16)
+
+[node name="ArcherTower" type="StaticBody2D" unique_id=887214604]
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(0, 0, 0, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151446449]
+shape = SubResource("RectangleShape2D_hkjoh")

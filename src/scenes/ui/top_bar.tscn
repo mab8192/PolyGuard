@@ -1,0 +1,95 @@
+[gd_scene format=3 uid="uid://dsr7pdgsmpf0j"]
+
+[ext_resource type="Script" uid="uid://dshb7u6lyrtot" path="res://src/scenes/ui/top_bar.gd" id="1_scac0"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_pycr5"]
+bg_color = Color(0, 0, 0, 0.36078432)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_pycr5"]
+size = Vector2(32, 32)
+
+[sub_resource type="PlaceholderTexture2D" id="PlaceholderTexture2D_scac0"]
+size = Vector2(32, 32)
+
+[node name="TopBar" type="MarginContainer" unique_id=695341922]
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 64.0
+grow_horizontal = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 64
+theme_override_constants/margin_right = 16
+script = ExtResource("1_scac0")
+
+[node name="Background" type="Panel" parent="." unique_id=1038694241]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_styles/panel = SubResource("StyleBoxFlat_pycr5")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=865247588]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="HBoxContainer" type="HBoxContainer" parent="MarginContainer" unique_id=1895250488]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="LiveContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=2006078890]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="LivesImage" type="TextureRect" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=658645099]
+layout_mode = 2
+texture = SubResource("PlaceholderTexture2D_pycr5")
+stretch_mode = 3
+
+[node name="LivesLabel" type="Label" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=37523814]
+unique_name_in_owner = true
+layout_mode = 2
+text = "20"
+
+[node name="GoldContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=333753207]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="GoldImage" type="TextureRect" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=1088415156]
+layout_mode = 2
+texture = SubResource("PlaceholderTexture2D_scac0")
+stretch_mode = 3
+
+[node name="GoldLabel" type="Label" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=178869082]
+unique_name_in_owner = true
+layout_mode = 2
+text = "150"
+
+[node name="WaveLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=528913810]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+text = "Wave 1 / 10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ControlsContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=366886857]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="FastForwardButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=101367240]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+toggle_mode = true
+text = ">> 1x"
+
+[node name="PauseButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=215432644]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+text = "⏸"

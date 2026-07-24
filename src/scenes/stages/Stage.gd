@@ -5,16 +5,16 @@ class_name Stage extends Node2D
 
 @onready var tiles: TileMapLayer = $NavigationRegion2D/Tiles
 
+# Lives and gold for the currently loaded stage
+var lives: int
+var gold: int
+var wave: int
+
+var wave_active: bool = false
+var enemies_alive: int = 0
+
 # Debug
 @onready var color_rect: ColorRect = $ColorRect
-
-func _ready() -> void:
-	if data == null:
-		push_error("Need to provide data for stage")
-		return
-	
-	var wave_data: WaveData = data.get_wave(0)
-	spawners[0].run(wave_data.spawns[0])
 
 func get_map_pixel_rect() -> Rect2:
 	var used_rect: Rect2i = tiles.get_used_rect()
@@ -25,12 +25,47 @@ func get_map_pixel_rect() -> Rect2:
 	
 	return Rect2(world_pos, world_size)
 
-func _process(delta: float) -> void:
-	var grid_size = Vector2(16, 16)
-	var half_tile = grid_size / 2.0  # Vector2(16, 16)
-	
-	var touch_pos = get_global_mouse_position()
+func start_next_wave() -> void:
+	var wave_data: WaveData = data.get_wave(wave)
+	if wave_data:
+		wave_active = true
+		# TODO: Assign spawn groups to spawners and then call run()
+		spawners[0].run(wave_data.spawns[0])
+		wave += 1
+		SignalBus.wave_changed.emit(wave)
+		SignalBus.wave_started.emit()
+	else:
+		printerr("No more waves!")
 
-	# Shift back -> snap to corner -> shift forward to center
-	var cell_center = (touch_pos - half_tile).snapped(grid_size) + half_tile
-	color_rect.global_position = cell_center - half_tile
+func _ready() -> void:
+	if not data:
+		push_error("Need to provide data for stage")
+		return
+	
+	# Set starting values
+	lives = data.starting_lives
+	gold = data.starting_gold
+	wave = 0
+	SignalBus.gold_changed.emit(gold)
+	SignalBus.lives_changed.emit(lives)
+
+	# Hook up our signals
+	SignalBus.enemy_exit.connect(_on_enemy_exit)
+	SignalBus.enemy_spawned.connect(func (_enemy: Enemy): enemies_alive += 1)
+	SignalBus.enemy_died.connect(func (_enemy: Enemy): enemies_alive -= 1)
+
+	# DEBUG
+	# Immediately start wave 1
+	start_next_wave()
+	
+func _on_enemy_exit(enemy: Enemy) -> void:
+	lives -= enemy.lives_penalty
+	SignalBus.lives_changed.emit(lives)
+
+	if (lives <= 0):
+		print("YOU LOSE LOL")
+
+	if wave_active and spawners.all(func (x: Spawner): return !x.is_active()) and enemies_alive == 0:
+		print("WAVE COMPLETE")
+		wave_active = false
+		SignalBus.wave_completed.emit()

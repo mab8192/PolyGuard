@@ -1,9 +1,6 @@
 class_name Spawner
 extends Node2D
 
-## Emitted when a batch (SpawnGroup) finishes spawning
-signal group_completed()
-
 @export_group("References")
 ## Parent path or node to attach spawned enemies under (keeps scene tree clean)
 @export var enemy_container: Node2D
@@ -11,6 +8,7 @@ signal group_completed()
 
 # Internal state tracking
 var _active: bool = false
+var _noise: Noise = FastNoiseLite.new()
 
 func _ready() -> void:
 	# Fall back to root level or self if no container assigned
@@ -34,7 +32,6 @@ func run(group: SpawnGroup) -> void:
 	if not enemy_scene:
 		push_error("Spawner: Enemy type '%s' not found in Registry!" % group.enemy_type)
 		_active = false
-		group_completed.emit()
 		return
 
 	# 3. Spawn loop
@@ -46,8 +43,9 @@ func run(group: SpawnGroup) -> void:
 			await get_tree().create_timer(group.interval).timeout
 
 	_active = false
-	group_completed.emit()
 
+func is_active() -> bool:
+	return _active
 
 ## Internal helper to instantiate and place the enemy in the scene.
 func _instantiate_enemy(enemy_scene: PackedScene) -> void:
@@ -59,7 +57,7 @@ func _instantiate_enemy(enemy_scene: PackedScene) -> void:
 
 	# Set up required fields
 	enemy.target = exits[0]
-	enemy.global_position = global_position
+	enemy.global_position = global_position + Vector2(randf_range(-4, 4), randf_range(-4, 4))
 	
 	# Add it to the scene tree
 	enemy_container.add_child(enemy)
