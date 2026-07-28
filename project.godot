@@ -49,6 +49,11 @@ folder_colors={
 "res://vendor/": "orange"
 }
 
+[global_group]
+
+enemies=""
+exits=""
+
 [gui]
 
 theme/custom="uid://fcjpxmjswpwu"

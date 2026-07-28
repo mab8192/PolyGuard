@@ -2,7 +2,6 @@
 
 [ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/top_bar.tscn" id="1_m12ob"]
 [ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/bottom_bar.tscn" id="2_q3cwv"]
-[ext_resource type="PackedScene" uid="uid://dknn17gu6h3je" path="res://src/scenes/ui/build_menu.tscn" id="3_dqg30"]
 
 [node name="HUD" type="CanvasLayer" unique_id=1549892069]
 layer = 10
@@ -23,6 +22,3 @@ offset_bottom = 128.0
 [node name="BottomBar" parent="HUDControl" unique_id=192044941 instance=ExtResource("2_q3cwv")]
 layout_mode = 1
 offset_top = -192.0
-
-[node name="BuildMenu" parent="HUDControl" unique_id=2130383987 instance=ExtResource("3_dqg30")]
-layout_mode = 1

@@ -13,7 +13,7 @@ func _ready() -> void:
 	
 	fast_forward_button.toggled.connect(_on_ff_pressed)
 	pause_button.pressed.connect(_on_pause_pressed)
-	
+
 func _on_lives_changed(lives: int) -> void:
 	lives_label.text = str(lives)
 
@@ -21,12 +21,12 @@ func _on_gold_changed(gold: int) -> void:
 	gold_label.text = str(gold)
 
 func _on_wave_changed(wave: int) -> void:
-	wave_label.text = "Wave " + str(wave) + " / " + str(GameManager.current_stage.data.get_waves().size())
+	wave_label.text = str(wave) + " / " + str(GameManager.current_stage.data.get_waves().size())
 
 func _on_pause_pressed() -> void:
-	print("pause pressed")
-	Engine.time_scale = 0
+	get_tree().paused = !get_tree().paused
 	# TODO: Show pause menu
-	
+
 func _on_ff_pressed(toggled_on: bool) -> void:
 	Engine.time_scale = 2 if toggled_on else 1
+	fast_forward_button.text = "2x" if toggled_on else "1x"

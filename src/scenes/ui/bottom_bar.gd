@@ -1,9 +1,10 @@
 extends MarginContainer
 
 @onready var build_button: Button = %BuildButton
-@onready var next_wave_button: Button = %NextWaveButton
+@onready var next_wave_button: TextureButton = %NextWaveButton
 
 func _ready() -> void:
+	build_button.pressed.connect(_on_build_pressed)
 	next_wave_button.pressed.connect(_on_next_wave_pressed)
 	
 	SignalBus.wave_started.connect(func (): next_wave_button.hide())
@@ -11,3 +12,7 @@ func _ready() -> void:
 
 func _on_next_wave_pressed() -> void:
 	GameManager.current_stage.start_next_wave()
+
+func _on_build_pressed() -> void:
+	pass
+	# TODO: Open build menu

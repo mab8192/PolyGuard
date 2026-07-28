@@ -3,21 +3,22 @@
 	  "wave_number": 1,
 	  "reward_gold": 50,
 	  "spawns": [
-		{ "enemy_type": "basic", "count": 10, "interval": 0.1, "delay": 0.0 }
+		{ "enemy_type": "speeder", "count": 10, "interval": 0.1, "delay": 0.0 },
+		{ "enemy_type": "tank", "count": 3, "interval": 1, "delay": 1},
 	  ]
 	},
 	{
 	  "wave_number": 2,
 	  "reward_gold": 75,
 	  "spawns": [
-		{ "enemy_type": "basic", "count": 12, "interval": 0.6, "delay": 0.0 },
+		{ "enemy_type": "speeder", "count": 12, "interval": 0.6, "delay": 0.0 },
 	  ]
 	},
 	{
 	  "wave_number": 3,
 	  "reward_gold": 150,
 	  "spawns": [
-		{ "enemy_type": "basic", "count": 15, "interval": 0.3, "delay": 0.0 },
+		{ "enemy_type": "speeder", "count": 15, "interval": 0.3, "delay": 0.0 },
 	  ]
 	}
 ]

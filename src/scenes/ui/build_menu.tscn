@@ -1,5 +1,0 @@
-[gd_scene format=3 uid="uid://dknn17gu6h3je"]
-
-[node name="BuildMenu" type="Control" unique_id=2130383987]
-layout_mode = 3
-anchors_preset = 0

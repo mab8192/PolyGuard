@@ -2,12 +2,17 @@
 
 [ext_resource type="Script" uid="uid://cy04gqumfumjy" path="res://src/scenes/utility/spawner.gd" id="1_y5mdg"]
 
-[node name="Spawner" type="Node2D" unique_id=391670320]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
+size = Vector2(64, 64)
+
+[node name="Spawner" type="Area2D" unique_id=964929055]
 script = ExtResource("1_y5mdg")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1912200016]
-offset_left = -8.0
-offset_top = -8.0
-offset_right = 8.0
-offset_bottom = 8.0
+offset_right = 64.0
+offset_bottom = 64.0
 color = Color(0.9724042, 0, 0.08693842, 1)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1839956020]
+position = Vector2(32, 32)
+shape = SubResource("RectangleShape2D_naouo")

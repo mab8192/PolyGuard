@@ -1,6 +1,160 @@
 [gd_scene format=3 uid="uid://bokydd4nvejt2"]
 
 [ext_resource type="Script" uid="uid://celcwx2brueh7" path="res://src/scenes/ui/bottom_bar.gd" id="1_sf614"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_ojqie"]
+[ext_resource type="Texture2D" uid="uid://5a1a1b6f6q1i" path="res://vendor/arrow_sheet.png" id="3_chvpt"]
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_oibdf"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(0, 0, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_6hjsn"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(28, 0, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_8kyac"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(56, 0, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_3houk"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(84, 0, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ho5i4"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(0, 21, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_m54rs"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(28, 21, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_s4q6u"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(56, 21, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_qiain"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(84, 21, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_t6dlb"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(0, 42, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1ava0"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(28, 42, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_mqhxp"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(56, 42, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_v8l60"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(84, 42, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_1eakx"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(0, 63, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_5o823"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(28, 63, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_brkht"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(56, 63, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_16hk4"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(84, 63, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xbytf"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(0, 84, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_ooqaf"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(28, 84, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_xvtla"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(56, 84, 28, 21)
+
+[sub_resource type="AtlasTexture" id="AtlasTexture_56v1a"]
+atlas = ExtResource("3_chvpt")
+region = Rect2(84, 84, 28, 21)
+
+[sub_resource type="SpriteFrames" id="SpriteFrames_fkkip"]
+animations = [{
+"frames": [{
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_oibdf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_6hjsn")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_8kyac")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_3houk")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ho5i4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_m54rs")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_s4q6u")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_qiain")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_t6dlb")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1ava0")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_mqhxp")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_v8l60")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_1eakx")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_5o823")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_brkht")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_16hk4")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xbytf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_ooqaf")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_xvtla")
+}, {
+"duration": 1.0,
+"texture": SubResource("AtlasTexture_56v1a")
+}],
+"loop": true,
+"name": &"default",
+"speed": 15.0
+}]
+
+[sub_resource type="LabelSettings" id="LabelSettings_ihu3t"]
+font_size = 30
+font_color = Color(0, 0, 0, 1)
 
 [node name="BottomBar" type="MarginContainer" unique_id=192044941]
 anchors_preset = 12
@@ -11,7 +165,7 @@ grow_horizontal = 2
 grow_vertical = 0
 theme_override_constants/margin_left = 16
 theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 32
+theme_override_constants/margin_bottom = 156
 script = ExtResource("1_sf614")
 
 [node name="DockContainer" type="Control" parent="." unique_id=35361616]
@@ -34,20 +188,44 @@ offset_bottom = 64.0
 grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
-text = "BUILD"
+icon = ExtResource("2_ojqie")
 
-[node name="NextWaveButton" type="Button" parent="DockContainer" unique_id=2015732806]
+[node name="NextWaveButton" type="TextureButton" parent="DockContainer" unique_id=1722688413]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(128, 128)
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -8.0
-offset_top = -4.0
-offset_bottom = 4.0
+offset_left = -302.0
+offset_top = -64.0
+offset_bottom = 64.0
+grow_horizontal = 0
+grow_vertical = 2
+
+[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DockContainer/NextWaveButton" unique_id=2015720743]
+process_mode = 3
+position = Vector2(171, 64)
+scale = Vector2(7, 7)
+sprite_frames = SubResource("SpriteFrames_fkkip")
+autoplay = "default"
+frame_progress = 0.58475226
+
+[node name="Label" type="Label" parent="DockContainer/NextWaveButton" unique_id=673198725]
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -289.0
+offset_top = -38.0
+offset_bottom = 38.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "Next Wave"
+label_settings = SubResource("LabelSettings_ihu3t")
+horizontal_alignment = 1
+vertical_alignment = 1

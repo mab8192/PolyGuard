@@ -1,0 +1,19 @@
+[gd_scene format=3 uid="uid://b4p76fbmsemt4"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ewxlo"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
+size = Vector2(16, 16)
+
+[node name="Barricade" type="StaticBody2D" unique_id=887214604]
+script = ExtResource("1_ewxlo")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151446449]
+shape = SubResource("RectangleShape2D_hkjoh")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
+offset_left = -8.0
+offset_top = -8.0
+offset_right = 8.0
+offset_bottom = 8.0
+color = Color(1, 0.8539231, 0.6347234, 1)

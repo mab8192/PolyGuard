@@ -1,4 +1,8 @@
 [gd_resource type="Theme" format=3 uid="uid://fcjpxmjswpwu"]
 
+[sub_resource type="SystemFont" id="SystemFont_7ke2k"]
+font_names = PackedStringArray("Caladea")
+
 [resource]
+default_font = SubResource("SystemFont_7ke2k")
 default_font_size = 64

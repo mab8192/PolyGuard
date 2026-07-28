@@ -2,7 +2,8 @@ extends Node
 
 # Map of enemy types to scenes
 const ENEMY_MAP: Dictionary = {
-	"basic": "res://src/scenes/enemies/basic.tscn"
+	"speeder": "res://src/scenes/enemies/speeder.tscn",
+	"tank": "res://src/scenes/enemies/tank.tscn"
 }
 
 # Array of paths to stage scenes
