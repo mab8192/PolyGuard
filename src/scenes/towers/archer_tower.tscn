@@ -1,23 +1,15 @@
 [gd_scene format=3 uid="uid://dg12a81rft006"]
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_jim0o"]
-[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="2_jfgpo"]
-[ext_resource type="Script" uid="uid://cdwjp07jkbwlu" path="res://src/data/towers/TowerData.gd" id="2_xn221"]
-
-[sub_resource type="Resource" id="Resource_jfgpo"]
-script = ExtResource("2_xn221")
-name = "Archer Tower"
-cost = 100.0
-size = Vector2i(1, 1)
-preview = ExtResource("2_jfgpo")
-metadata/_custom_type_script = "uid://cdwjp07jkbwlu"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)
 
 [node name="ArcherTower" type="StaticBody2D" unique_id=887214604]
 script = ExtResource("1_jim0o")
-data = SubResource("Resource_jfgpo")
+tower_name = "Archer Tower"
+cost = 50.0
+size = Vector2i(1, 1)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
 offset_right = 64.0

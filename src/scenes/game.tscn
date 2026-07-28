@@ -7,10 +7,10 @@
 script = ExtResource("1_covw0")
 
 [node name="Background" type="ColorRect" parent="." unique_id=503248848]
-offset_left = -304.0
-offset_top = -200.0
-offset_right = 1384.0
-offset_bottom = 2336.0
+offset_left = -264.0
+offset_top = -616.0
+offset_right = 1424.0
+offset_bottom = 1920.0
 color = Color(0, 0, 0, 1)
 
 [node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]

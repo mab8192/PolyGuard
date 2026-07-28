@@ -36,7 +36,8 @@ agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
-max_speed = 500.0
+path_max_distance = 40.0
+avoidance_enabled = true
 debug_enabled = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]

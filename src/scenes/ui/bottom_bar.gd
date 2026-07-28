@@ -14,5 +14,5 @@ func _on_next_wave_pressed() -> void:
 	GameManager.current_stage.start_next_wave()
 
 func _on_build_pressed() -> void:
-	pass
-	# TODO: Open build menu
+	if GameManager.current_stage:
+		GameManager.current_stage.enter_placement_mode(Registry.TOWERS["Archer Tower"])

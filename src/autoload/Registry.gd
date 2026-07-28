@@ -10,3 +10,8 @@ const ENEMY_MAP: Dictionary = {
 const STAGES: Array[String] = [
 	"res://src/scenes/stages/Stage1.tscn"
 ]
+
+const TOWERS: Dictionary[String, PackedScene] = {
+	"Archer Tower": preload("res://src/scenes/towers/archer_tower.tscn"),
+	"Barricade": preload("res://src/scenes/towers/barricade.tscn")
+}

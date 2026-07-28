@@ -9,6 +9,7 @@
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_l622k")
+lives_penalty = 3
 health = NodePath("HealthComponent")
 movement = NodePath("MovementComponent")
 nav = NodePath("NavigationComponent")
@@ -39,6 +40,7 @@ agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
+avoidance_enabled = true
 max_speed = 500.0
 debug_enabled = true
 

@@ -33,8 +33,7 @@ func set_targets(new_targets: Array[Node2D]) -> void:
 func is_finished() -> bool:
 	return agent.is_navigation_finished()
 
-## Call from _physics_process. Will emit velocity_computed when navigation is complete
-func run() -> void:
+func _physics_process(_delta: float) -> void:
 	if agent.is_navigation_finished():
 		return
 	
