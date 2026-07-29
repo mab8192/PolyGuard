@@ -19,6 +19,14 @@ const GRID_SIZE = 64
 
 # Tower placement
 var preview_tower: Tower = null
+var preview_target_pos: Vector2 = Vector2.ZERO
+var is_dragging: bool = false
+var drag_direct: bool = false
+var drag_offset: Vector2 = Vector2.ZERO
+var last_input_pos: Vector2 = Vector2.ZERO
+var total_drag_distance: float = 0.0
+const FINE_TUNE_SPEED = 0.35
+var placement_ui: CanvasLayer = null
 
 # Debug
 var debug_drawer: Node2D
@@ -57,30 +65,90 @@ func enter_placement_mode(tower_scene: PackedScene) -> void:
 	preview_tower = tower_scene.instantiate() as Tower
 	if preview_tower:
 		preview_tower.is_preview = true
-		var mouse_pos = get_global_mouse_position()
-		var snapped_pos = (mouse_pos / GRID_SIZE).floor() * GRID_SIZE
+		
+		# Center on screen in world coordinates
+		var center_pos = Vector2.ZERO
+		if GameManager.camera:
+			center_pos = GameManager.camera.global_position
+		else:
+			center_pos = get_viewport_rect().size / 2.0
+			
+		var snapped_pos = (center_pos / GRID_SIZE).floor() * GRID_SIZE
 		preview_tower.global_position = snapped_pos
+		preview_target_pos = snapped_pos
+		
 		towers.add_child(preview_tower)
+		_create_placement_ui()
 
 func cancel_placement_mode() -> void:
 	if preview_tower:
 		preview_tower.queue_free()
 		preview_tower = null
+	_clean_placement_ui()
 
 func _input(event: InputEvent) -> void:
 	if preview_tower == null:
 		return
 		
-	if event is InputEventMouseButton:
-		if event.button_index == MOUSE_BUTTON_LEFT and event.pressed:
-			place_tower()
-		elif event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
-			cancel_placement_mode()
-	elif event is InputEventKey:
-		if event.keycode == KEY_ESCAPE and event.pressed:
-			cancel_placement_mode()
+	var is_press = false
+	var is_release = false
+	var is_motion = false
+	var touch_pos = Vector2.ZERO
+	
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
+		is_press = event.pressed
+		is_release = not event.pressed
+		touch_pos = get_global_mouse_position()
+	elif event is InputEventScreenTouch:
+		is_press = event.pressed
+		is_release = not event.pressed
+		touch_pos = get_viewport().get_canvas_transform().affine_inverse() * event.position
+	elif event is InputEventMouseMotion:
+		is_motion = true
+		touch_pos = get_global_mouse_position()
+	elif event is InputEventScreenDrag:
+		is_motion = true
+		touch_pos = get_viewport().get_canvas_transform().affine_inverse() * event.position
+	elif event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_RIGHT and event.pressed:
+		cancel_placement_mode()
+		return
+	elif event is InputEventKey and event.keycode == KEY_ESCAPE and event.pressed:
+		cancel_placement_mode()
+		return
+		
+	if is_press:
+		is_dragging = true
+		last_input_pos = touch_pos
+		total_drag_distance = 0.0
+		var tower_rect = Rect2(preview_tower.global_position, Vector2(preview_tower.size) * GRID_SIZE)
+		drag_direct = tower_rect.has_point(touch_pos)
+		if drag_direct:
+			drag_offset = preview_tower.global_position - touch_pos
+		
+	elif is_motion and is_dragging:
+		var delta = touch_pos - last_input_pos
+		last_input_pos = touch_pos
+		total_drag_distance += delta.length()
+		
+		if drag_direct:
+			preview_target_pos = touch_pos + drag_offset
+		else:
+			preview_target_pos += delta * FINE_TUNE_SPEED
+			
+		preview_tower.global_position = (preview_target_pos / GRID_SIZE).floor() * GRID_SIZE
+		
+	elif is_release:
+		if is_dragging:
+			is_dragging = false
+			if total_drag_distance < 15.0:
+				var tower_rect = Rect2(preview_tower.global_position, Vector2(preview_tower.size) * GRID_SIZE)
+				if tower_rect.has_point(touch_pos):
+					place_tower()
 
 func is_valid_placement(grid_pos: Vector2, size: Vector2i) -> bool:
+	if preview_tower.cost > gold:
+		return false
+	
 	var new_rect = Rect2(grid_pos, Vector2(size) * GRID_SIZE)
 	
 	for x in range(size.x):
@@ -148,15 +216,62 @@ func place_tower() -> void:
 	
 	navigation_region_2d.bake_navigation_polygon(true)
 	SignalBus.tower_placed.emit()
+	_clean_placement_ui()
 
 func _process(_delta: float) -> void:
-	if preview_tower:
-		var mouse_pos = get_global_mouse_position()
-		var snapped_pos = (mouse_pos / GRID_SIZE).floor() * GRID_SIZE
-		preview_tower.global_position = snapped_pos
-		
 	if debug_drawer:
 		debug_drawer.queue_redraw()
+
+func _create_placement_ui() -> void:
+	if placement_ui:
+		return
+		
+	placement_ui = CanvasLayer.new()
+	placement_ui.layer = 15
+	add_child(placement_ui)
+	
+	var control = Control.new()
+	control.anchor_right = 1.0
+	control.anchor_bottom = 1.0
+	placement_ui.add_child(control)
+	
+	var margin = MarginContainer.new()
+	margin.anchor_top = 1.0
+	margin.anchor_right = 1.0
+	margin.anchor_bottom = 1.0
+	margin.grow_horizontal = Control.GROW_DIRECTION_BOTH
+	margin.grow_vertical = Control.GROW_DIRECTION_BEGIN
+	margin.offset_top = -320
+	margin.offset_bottom = -200
+	control.add_child(margin)
+	
+	var center = CenterContainer.new()
+	margin.add_child(center)
+	
+	var hbox = HBoxContainer.new()
+	hbox.add_theme_constant_override("separation", 40)
+	center.add_child(hbox)
+	
+	# Confirm Button
+	var confirm_btn = Button.new()
+	confirm_btn.text = " Confirm "
+	confirm_btn.custom_minimum_size = Vector2(160, 60)
+	confirm_btn.add_theme_font_size_override("font_size", 24)
+	confirm_btn.pressed.connect(place_tower)
+	hbox.add_child(confirm_btn)
+	
+	# Cancel Button
+	var cancel_btn = Button.new()
+	cancel_btn.text = " Cancel "
+	cancel_btn.custom_minimum_size = Vector2(160, 60)
+	cancel_btn.add_theme_font_size_override("font_size", 24)
+	cancel_btn.pressed.connect(cancel_placement_mode)
+	hbox.add_child(cancel_btn)
+
+func _clean_placement_ui() -> void:
+	if placement_ui:
+		placement_ui.queue_free()
+		placement_ui = null
 
 func _on_debug_draw() -> void:
 	if not preview_tower:
@@ -210,12 +325,14 @@ func _ready() -> void:
 func _on_enemy_spawned(_enemy: Enemy) -> void:
 	enemies_alive += 1
 
-func _on_enemy_died(_enemy: Enemy) -> void:
+func _on_enemy_died(enemy: Enemy) -> void:
 	enemies_alive -= 1
+	gold += enemy.gold_reward
 	_check_wave_completion()
 
 func _on_enemy_exit(enemy: Enemy) -> void:
 	lives -= enemy.lives_penalty
+	enemies_alive -= 1
 	SignalBus.lives_changed.emit(lives)
 
 	if lives <= 0:

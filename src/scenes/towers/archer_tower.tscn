@@ -8,8 +8,6 @@ size = Vector2(64, 64)
 [node name="ArcherTower" type="StaticBody2D" unique_id=887214604]
 script = ExtResource("1_jim0o")
 tower_name = "Archer Tower"
-cost = 50.0
-size = Vector2i(1, 1)
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
 offset_right = 64.0

@@ -5,5 +5,4 @@ func _on_body_entered(body: Node2D) -> void:
 	if enemy == null: return
 	
 	enemy.queue_free()
-	SignalBus.enemy_died.emit(enemy)
 	SignalBus.enemy_exit.emit(enemy)

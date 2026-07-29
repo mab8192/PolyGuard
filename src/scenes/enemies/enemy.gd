@@ -1,6 +1,7 @@
 class_name Enemy extends CharacterBody2D
 
 @export var lives_penalty: int = 1
+@export var gold_reward: int = 1
 
 @export_category("Components")
 @export var health: HealthComponent
