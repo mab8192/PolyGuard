@@ -32,6 +32,21 @@ func set_targets(new_targets: Array[Node2D]) -> void:
 
 func is_finished() -> bool:
 	return agent.is_navigation_finished()
+	
+## Returns the path distance to the current goal
+func distance_to_goal() -> float:
+	var path: PackedVector2Array = agent.get_current_navigation_path()
+	var current_index: int = agent.get_current_navigation_path_index()
+
+	if path.is_empty() or current_index >= path.size():
+		return 0.0
+
+	var total_distance: float = _actor.global_position.distance_to(path[current_index])
+
+	for i in range(current_index, path.size() - 1):
+		total_distance += path[i].distance_to(path[i + 1])
+
+	return total_distance
 
 func _physics_process(_delta: float) -> void:
 	if agent.is_navigation_finished():

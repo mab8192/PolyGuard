@@ -1,19 +1,42 @@
 [gd_scene format=3 uid="uid://dg12a81rft006"]
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_jim0o"]
+[ext_resource type="Script" uid="uid://dah8lbipo02ai" path="res://src/components/HitboxComponent.gd" id="2_jfgpo"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_2o1o6"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="4_2o1o6"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(64, 64)
 
-[node name="ArcherTower" type="StaticBody2D" unique_id=887214604]
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 256.0
+
+[node name="ArcherTower" type="StaticBody2D" unique_id=887214604 node_paths=PackedStringArray("health", "hitbox", "targeting")]
 script = ExtResource("1_jim0o")
 tower_name = "Archer Tower"
+health = NodePath("HealthComponent")
+hitbox = NodePath("HitboxComponent")
+targeting = NodePath("TargetingComponent")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
-offset_right = 64.0
-offset_bottom = 64.0
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
 color = Color(0.33680907, 0.17885035, 0.035872858, 1)
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151446449]
-position = Vector2(32, 32)
-shape = SubResource("RectangleShape2D_hkjoh")
+[node name="HitboxComponent" type="CollisionShape2D" parent="." unique_id=2145783814]
+shape = SubResource("RectangleShape2D_qgbsg")
+script = ExtResource("2_jfgpo")
+metadata/_custom_type_script = "uid://dah8lbipo02ai"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=75994436]
+script = ExtResource("3_2o1o6")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=854869402]
+script = ExtResource("4_2o1o6")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
+shape = SubResource("CircleShape2D_qgbsg")

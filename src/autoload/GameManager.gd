@@ -40,26 +40,3 @@ func update_camera() -> void:
 	
 	# Apply zoom
 	camera.zoom = Vector2(target_zoom, target_zoom)
-	
-	# Center the camera on the middle of the stage
-	camera.global_position = bounds.get_center()
-	
-	# Lock the Camera2D scroll limits to the map edges, expanding them if the map is smaller than the screen
-	var visible_width = viewport_size.x / target_zoom
-	var visible_height = viewport_size.y / target_zoom
-	
-	if bounds.size.x < visible_width:
-		var diff = (visible_width - bounds.size.x) / 2.0
-		camera.limit_left = int(bounds.position.x - diff)
-		camera.limit_right = int(bounds.end.x + diff)
-	else:
-		camera.limit_left = int(bounds.position.x)
-		camera.limit_right = int(bounds.end.x)
-		
-	if bounds.size.y < visible_height:
-		var diff = (visible_height - bounds.size.y) / 2.0
-		camera.limit_top = int(bounds.position.y - diff)
-		camera.limit_bottom = int(bounds.end.y + diff)
-	else:
-		camera.limit_top = int(bounds.position.y)
-		camera.limit_bottom = int(bounds.end.y)

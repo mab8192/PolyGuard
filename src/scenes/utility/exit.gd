@@ -4,5 +4,5 @@ func _on_body_entered(body: Node2D) -> void:
 	var enemy: Enemy = body as Enemy
 	if enemy == null: return
 	
-	enemy.queue_free()
 	SignalBus.enemy_exit.emit(enemy)
+	enemy.queue_free()
