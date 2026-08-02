@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://ce4x7k5wan21m"]
+
+[ext_resource type="Script" uid="uid://cx6n4g14l30sk" path="res://src/scenes/ui/radial_menu.gd" id="1_menu_script"]
+
+[node name="RadialMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("1_menu_script")
+
+[node name="BGDim" type="ColorRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.4)
+
+[node name="ItemsContainer" type="Control" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2

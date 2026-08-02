@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://c8y4k27r65m8x"]
+
+[ext_resource type="Script" uid="uid://drwlw55la4a3w" path="res://src/scenes/ui/radial_menu_item.gd" id="1_item_script"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.0980392, 0.203922, 0.376471, 0.92)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.305882, 0.8, 0.639216, 1)
+corner_radius_top_left = 36
+corner_radius_top_right = 36
+corner_radius_bottom_right = 36
+corner_radius_bottom_left = 36
+shadow_color = Color(0, 0, 0, 0.4)
+shadow_size = 6
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 14
+outline_size = 4
+outline_color = Color(0, 0, 0, 1)
+
+[node name="RadialMenuItem" type="Control" unique_id=1280246680]
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 72.0
+offset_bottom = 72.0
+pivot_offset = Vector2(36, 36)
+script = ExtResource("1_item_script")
+
+[node name="BGPanel" type="Panel" parent="." unique_id=1701038251]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="IconRect" type="TextureRect" parent="." unique_id=1084264584]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -20.0
+offset_right = 20.0
+offset_bottom = 20.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="TitleLabel" type="Label" parent="." unique_id=82123440]
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -50.0
+offset_top = 2.0
+offset_right = 50.0
+offset_bottom = 25.0
+grow_horizontal = 2
+grow_vertical = 0
+text = "Item"
+label_settings = SubResource("LabelSettings_title")
+horizontal_alignment = 1
+vertical_alignment = 1

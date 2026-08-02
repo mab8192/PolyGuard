@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://celcwx2brueh7" path="res://src/scenes/ui/bottom_bar.gd" id="1_sf614"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_ojqie"]
 [ext_resource type="Texture2D" uid="uid://5a1a1b6f6q1i" path="res://vendor/arrow_sheet.png" id="3_chvpt"]
+[ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/radial_menu.tscn" id="3_oibdf"]
 
 [sub_resource type="AtlasTexture" id="AtlasTexture_oibdf"]
 atlas = ExtResource("3_chvpt")
@@ -147,7 +148,7 @@ animations = [{
 "duration": 1.0,
 "texture": SubResource("AtlasTexture_56v1a")
 }],
-"loop": true,
+"loop": 1,
 "name": &"default",
 "speed": 15.0
 }]
@@ -189,6 +190,10 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 icon = ExtResource("2_ojqie")
+
+[node name="RadialMenu" parent="DockContainer/BuildButton" unique_id=359601922 instance=ExtResource("3_oibdf")]
+visible = false
+layout_mode = 1
 
 [node name="NextWaveButton" type="TextureButton" parent="DockContainer" unique_id=1722688413]
 unique_name_in_owner = true

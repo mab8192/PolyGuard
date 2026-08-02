@@ -59,6 +59,9 @@ func start_next_wave() -> void:
 func enter_placement_mode(tower_scene: PackedScene) -> void:
 	exit_placement_mode()
 	
+	_is_dragging = false
+	_total_drag_distance_sq = 0
+	
 	# Create the new preview tower
 	_preview_tower = tower_scene.instantiate() as Tower
 	if not _preview_tower:
@@ -86,6 +89,7 @@ func exit_placement_mode() -> void:
 	if _preview_tower:
 		_preview_tower.queue_free()
 		_preview_tower = null
+	_is_dragging = false
 
 func can_place_preview() -> bool:
 	if _preview_tower.cost > gold: return false
@@ -146,6 +150,8 @@ func _handle_press(pos: Vector2) -> void:
 	_drag_speed_modifier = 1.0 if dist < 100 else 0.5
 	
 func _handle_release(_pos: Vector2) -> void:
+	if not _is_dragging:
+		return
 	_is_dragging = false
 	
 	var on_tower = true # TODO
@@ -171,17 +177,22 @@ func _input(event: InputEvent) -> void:
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
 		if event.is_pressed():
 			_handle_press(pos)
+			get_viewport().set_input_as_handled()
 		else:
-			_handle_release(pos)
+			if _is_dragging:
+				_handle_release(pos)
+				get_viewport().set_input_as_handled()
 	elif event is InputEventMouseMotion:
-		_handle_drag(pos - _last_input_pos)
-		_last_input_pos = pos
+		if _is_dragging:
+			_handle_drag(pos - _last_input_pos)
+			_last_input_pos = pos
+			get_viewport().set_input_as_handled()
 
 func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 	return glob_pos.snapped(Vector2(GRID_SIZE, GRID_SIZE))
 
 func _check_wave_completion() -> void:
-	if wave_active and spawners.all(func (x: Spawner): return !x.is_active()) and enemies_alive == 0:
+	if wave_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_alive == 0:
 		print("WAVE COMPLETE")
 		wave_active = false
 		SignalBus.wave_completed.emit()
