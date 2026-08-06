@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dn5ybska4h8fi"]
+
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="1_wdlj1"]
+[ext_resource type="PackedScene" uid="uid://dsd0rgrdxnjps" path="res://src/scenes/towers/tar_trap.tscn" id="2_wdlj1"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
+
+[resource]
+script = ExtResource("3_bigwe")
+display_name = "Tar Trap"
+icon = ExtResource("1_wdlj1")
+scene = ExtResource("2_wdlj1")
+description = "Non-solid trap that slows enemies who walk over it"

@@ -52,8 +52,8 @@ func is_active() -> bool:
 ## Returns a spawn point in global coordinates
 func _get_spawn_point() -> Vector2:
 	return global_position + Vector2(
-		randf_range(-16, 16),
-		randf_range(-16, 16)
+		randf_range(-32, 32),
+		randf_range(-32, 32)
 	)
 
 ## Internal helper to instantiate and place the enemy in the scene.

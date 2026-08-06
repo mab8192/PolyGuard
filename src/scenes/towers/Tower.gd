@@ -1,8 +1,7 @@
 class_name Tower extends StaticBody2D
 
-@export_group("Basic Info")
-@export var tower_name: String = "Tower"
-@export var cost: int = 50
+## Gets assigned by the TowerData type
+var data: TowerData
 
 @export_group("Components")
 @export var health: HealthComponent
@@ -21,8 +20,9 @@ func _process(_delta: float) -> void:
 	# Preview towers do not process anything
 	if is_preview: return
 	
-	if targeting and targeting.target:
-		print("Targeting! ", targeting.target.global_position)
+	if targeting:
+		for target in targeting.active_targets:
+			print("Targeting ! ", target.global_position)
 
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing

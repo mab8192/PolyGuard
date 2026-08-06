@@ -5,7 +5,7 @@
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
 size = Vector2(64, 64)
 
-[node name="Spawner" type="Area2D" unique_id=964929055]
+[node name="Spawner" type="Area2D" unique_id=964929055 groups=["spawners"]]
 script = ExtResource("1_y5mdg")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=1912200016]

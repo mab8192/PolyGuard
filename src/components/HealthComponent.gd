@@ -5,7 +5,7 @@ signal died()
 @export var max_health: float = 100
 @export var armor: float = 0
 
-@onready var health: float = max_health
+@onready var _health: float = max_health
 
 ## Affects how fast armor scales
 const ARMOR_CONSTANT = 50
@@ -16,11 +16,14 @@ func damage(amount: float) -> void:
 	var damage_multiplier: float = ARMOR_CONSTANT / (ARMOR_CONSTANT + effective_armor)
 	
 	var final_damage: float = amount * damage_multiplier
-	health -= final_damage
+	_health -= final_damage
 	
-	if health <= 0:
+	if _health <= 0:
 		died.emit()
 
 func heal(amount: float) -> void:
-	health += amount
-	health = min(health, max_health)
+	_health += amount
+	_health = min(_health, max_health)
+
+func get_health() -> float:
+	return _health

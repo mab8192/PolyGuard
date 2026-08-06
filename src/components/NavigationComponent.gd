@@ -10,7 +10,7 @@ enum NavStrategy {
 	FIRST,		# First in the targets array
 }
 
-@export var strategy: NavStrategy
+@export var strategy: NavStrategy = NavStrategy.CLOSEST
 @export var movement: MovementComponent # Only used to grab the actors current max speed
 
 @export var agent: NavigationAgent2D
@@ -74,6 +74,8 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
+	print("PICKING TARGET")
+	print("Number of targets: %d" % targets.size())
 	if strategy == NavStrategy.FIRST:
 		agent.target_position = targets[0].global_position
 		return
@@ -89,11 +91,22 @@ func _pick_target() -> void:
 		
 		distances.append(length)
 
+	print("Distances: ", distances)
+
 	match strategy:
 		NavStrategy.CLOSEST:
-			agent.target_position = targets[targets.find(targets.min())].global_position
+			# Find the lowest number in the distances array
+			var min_dist: float = distances.min()
+			# Find which index that number belongs to
+			var target_index: int = distances.find(min_dist)
+			# Grab the corresponding target
+			agent.target_position = targets[target_index].global_position
+			
 		NavStrategy.FARTHEST:
-			agent.target_position = targets[targets.find(targets.max())].global_position
+			# Do the exact same thing, but for the maximum distance
+			var max_dist: float = distances.max()
+			var target_index: int = distances.find(max_dist)
+			agent.target_position = targets[target_index].global_position
 
 func _calculate_path_length(path: PackedVector2Array) -> float:
 	if path.size() < 2:

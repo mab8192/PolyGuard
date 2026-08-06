@@ -53,6 +53,7 @@ folder_colors={
 
 enemies=""
 exits=""
+spawners=""
 
 [gui]
 
@@ -61,6 +62,15 @@ theme/custom="uid://fcjpxmjswpwu"
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[layer_names]
+
+2d_physics/layer_1="Default"
+2d_physics/layer_8="Non-Solid"
+
+[navigation]
+
+2d/default_cell_size=0.001
 
 [physics]
 

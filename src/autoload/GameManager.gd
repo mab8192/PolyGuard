@@ -39,4 +39,5 @@ func update_camera() -> void:
 	var target_zoom = min(zoom_x, zoom_y)
 	
 	# Apply zoom
+	camera.global_position = bounds.get_center()
 	camera.zoom = Vector2(target_zoom, target_zoom)

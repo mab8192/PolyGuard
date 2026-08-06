@@ -4,7 +4,7 @@
 	  "reward_gold": 50,
 	  "spawns": [
 		{ "enemy_type": "tank", "count": 3, "interval": 1, "delay": 1},
-		{ "enemy_type": "speeder", "count": 10, "interval": 0.2, "delay": 5.0 },
+		{ "enemy_type": "speeder", "count": 10, "interval": 0.2, "delay": 0 },
 	  ]
 	},
 	{

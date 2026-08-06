@@ -7,7 +7,6 @@ size = Vector2(64, 64)
 
 [node name="Barricade" type="StaticBody2D" unique_id=887214604]
 script = ExtResource("1_ewxlo")
-tower_name = "Barricade"
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
 offset_left = -32.0

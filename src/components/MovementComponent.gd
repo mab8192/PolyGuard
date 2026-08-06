@@ -29,6 +29,9 @@ func handle_movement(direction: Vector2, delta: float) -> void:
 	else:
 		body.velocity = body.velocity.move_toward(Vector2.ZERO, friction * delta)
 
+	if body.velocity.length() > max_speed:
+		body.velocity = body.velocity.normalized() * max_speed
+
 	body.move_and_slide()
 
 ## Instantly stops all movement velocity.

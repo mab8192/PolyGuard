@@ -40,6 +40,7 @@ agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
+simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
 debug_enabled = true

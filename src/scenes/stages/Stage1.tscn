@@ -17,10 +17,9 @@ polygons = Array[PackedInt32Array]([PackedInt32Array(0, 1, 2, 3), PackedInt32Arr
 outlines = Array[PackedVector2Array]([PackedVector2Array(-576, -384, 576, -384, 576, 448, -576, 448)])
 agent_radius = 12.0
 
-[node name="Stage1" type="Node2D" unique_id=1225741288 node_paths=PackedStringArray("spawners")]
+[node name="Stage1" type="Node2D" unique_id=1225741288]
 script = ExtResource("1_qbxl1")
 data = SubResource("Resource_5jk0g")
-spawners = [NodePath("Spawner")]
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1825745868]
 navigation_polygon = SubResource("NavigationPolygon_a1mjj")
