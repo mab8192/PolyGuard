@@ -10,3 +10,4 @@ display_name = "Tar Trap"
 icon = ExtResource("1_wdlj1")
 scene = ExtResource("2_wdlj1")
 description = "Non-solid trap that slows enemies who walk over it"
+is_solid = false

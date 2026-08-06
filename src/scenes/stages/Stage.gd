@@ -247,7 +247,7 @@ func _generate_navmesh() -> void:
 	var expanded_tower_rects: Array[Rect2] = []
 
 	for tower in towers.get_children():
-		if tower is Tower and not tower.is_preview:
+		if tower is Tower and not tower.is_preview and tower.data.is_solid:
 			var region_pos: Vector2 = navigation_region_2d.to_local(tower.global_position)
 			
 			var found_shape = false

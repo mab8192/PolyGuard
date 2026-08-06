@@ -7,6 +7,7 @@ class_name TowerData extends Resource
 @export_multiline var description: String = "" ## The description to show in-game
 
 @export_category("Stats")
+@export var is_solid: bool = true
 @export var cost: int = 50 ## How much gold this tower costs to place
 @export var damage: float = 10 ## How much damage per "shot" this tower does
 @export var attack_speed: float = 1 ## How many times per second this tower fires
@@ -29,5 +30,9 @@ func create(is_preview: bool = true) -> Tower:
 	if tower.health:
 		tower.health.armor = armor
 		tower.health.max_health = health
+	
+	if not is_solid:
+		tower.set_collision_layer_value(1, false)
+		tower.set_collision_mask_value(1, false)
 
 	return tower
