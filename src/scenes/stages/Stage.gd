@@ -31,7 +31,7 @@ var _total_drag_distance_sq: float = 0 ## Tracks how far was travelled between a
 var _is_dragging: bool = false
 var _last_input_pos: Vector2 = Vector2.ZERO
 var _drag_speed_modifier: float = 1.0
-const TOWER_TOUCH_DIST_THRESH: float = 150  ## Touch distance from the center of a tower to enter slow drag mode
+const TOWER_TOUCH_DIST_THRESH: float = 150 ## Touch distance from the center of a tower to enter slow drag mode
 
 ### PUBLIC API
 
@@ -229,8 +229,9 @@ func _check_wave_completion() -> void:
 			print("STAGE COMPLETE")
 
 const AGENT_TIERS: Array[Dictionary] = [
-	{"radius": 6.0, "layer": 1},   # Small enemies (< 16px, fits in 16x16 gaps)
-	{"radius": 12.0, "layer": 2},  # Large enemies (>= 16px, requires wider clearance)
+	{"radius": 6.0, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
+	{"radius": 12.0, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
+	{"radius": 6.0, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
 ]
 
 var _tier_regions: Dictionary = {}
@@ -329,6 +330,7 @@ func _generate_navmesh() -> void:
 	for tier in AGENT_TIERS:
 		var tier_radius: float = tier.radius
 		var safe_dist_sq: float = (tier_radius - 0.1) * (tier_radius - 0.1)
+		var ignore_towers: bool = tier.get("ignore_towers", false)
 		
 		var safe_grid: PackedByteArray = PackedByteArray()
 		safe_grid.resize(grid_w * grid_h)
@@ -352,10 +354,11 @@ func _generate_navmesh() -> void:
 
 					var is_safe: bool = true
 					
-					for obs_rect in tower_rects:
-						if _dist_sq_point_to_rect(sub_center, obs_rect) < safe_dist_sq:
-							is_safe = false
-							break
+					if not ignore_towers:
+						for obs_rect in tower_rects:
+							if _dist_sq_point_to_rect(sub_center, obs_rect) < safe_dist_sq:
+								is_safe = false
+								break
 								
 					if not is_safe:
 						continue
