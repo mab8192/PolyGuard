@@ -39,4 +39,5 @@ metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 polygon = PackedVector2Array(-4, -6, 6, 0, -4, 6)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
+navigation_layers = 1
 simplify_path = true

@@ -44,8 +44,11 @@ folder_colors={
 "res://src/components/": "red",
 "res://src/data/": "gray",
 "res://src/scenes/": "blue",
+"res://src/scenes/enemies/": "red",
+"res://src/scenes/stages/": "teal",
+"res://src/scenes/tiles/": "teal",
 "res://src/scenes/towers/": "yellow",
-"res://src/scenes/ui/": "teal",
+"res://src/scenes/ui/": "purple",
 "res://vendor/": "orange"
 }
 

@@ -85,7 +85,7 @@ func _pick_target() -> void:
 
 	for target in targets:
 		var path: PackedVector2Array = NavigationServer2D.map_get_path(
-			map, _actor.global_position, target.global_position, true
+			map, _actor.global_position, target.global_position, true, agent.navigation_layers
 		)
 		var length: float = _calculate_path_length(path)
 		
