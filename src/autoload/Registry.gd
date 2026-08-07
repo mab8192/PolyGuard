@@ -17,11 +17,6 @@ const STAGES: Array[String] = [
 const TOWERS: Dictionary[String, TowerData] = {
 	"archer_tower": preload("res://src/data/towers/archer_tower.tres"),
 	"barricade": preload("res://src/data/towers/barricade.tres"),
-	"bomb_tower": preload("res://src/data/towers/bomb_tower.tres"),
-	"tesla_tower": preload("res://src/data/towers/tesla_tower.tres"),
-	"brimstone": preload("res://src/data/towers/brimstone.tres"),
-	"spike_trap": preload("res://src/data/towers/spike_trap.tres"),
-	"ice_trap": preload("res://src/data/towers/ice_trap.tres"),
 	"tar_trap": preload("res://src/data/towers/tar_trap.tres")
 }
 

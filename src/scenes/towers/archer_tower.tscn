@@ -12,6 +12,8 @@ size = Vector2(64, 64)
 radius = 256.0
 
 [node name="ArcherTower" type="StaticBody2D" unique_id=887214604 node_paths=PackedStringArray("health", "hitbox", "targeting")]
+collision_layer = 2
+collision_mask = 0
 script = ExtResource("1_jim0o")
 health = NodePath("HealthComponent")
 hitbox = NodePath("HitboxComponent")

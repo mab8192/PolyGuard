@@ -50,7 +50,7 @@ func _ready() -> void:
 func is_open() -> bool:
 	return _is_open
 
-func open(item_data_list: Array, center_global_pos: Vector2, initial_press: bool = false) -> void:
+func open(item_data_list: Array, center_global_pos: Vector2) -> void:
 	_center_pos = center_global_pos
 	_clear_items()
 	

@@ -8,6 +8,8 @@ class_name TowerData extends Resource
 
 @export_category("Stats")
 @export var is_solid: bool = true
+@export var can_target_physical: bool = true
+@export var can_target_ghost: bool = false
 @export var cost: int = 50 ## How much gold this tower costs to place
 @export var damage: float = 10 ## How much damage per "shot" this tower does
 @export var attack_speed: float = 1 ## How many times per second this tower fires

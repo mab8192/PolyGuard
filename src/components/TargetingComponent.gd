@@ -1,16 +1,34 @@
 class_name TargetingComponent extends Area2D
 
-enum Strategy { FIRST, LAST, CLOSEST, STRONGEST }
+enum Strategy {FIRST, LAST, CLOSEST, STRONGEST}
 
 @export var strategy: Strategy = Strategy.FIRST
 @export var max_targets: int = 1
+@export var can_target_physical: bool = true:
+	set(val):
+		can_target_physical = val
+		_update_collision_mask()
+
+@export var can_target_ghost: bool = false:
+	set(val):
+		can_target_ghost = val
+		_update_collision_mask()
 
 var targets: Array[Enemy] = []
 var active_targets: Array[Enemy] = []
 
 func _ready() -> void:
+	_update_collision_mask()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+
+func _update_collision_mask() -> void:
+	var mask: int = 0
+	if can_target_physical:
+		mask |= 4 # Physics Layer 3 (Physical Enemies)
+	if can_target_ghost:
+		mask |= 8 # Physics Layer 4 (Ghost Enemies)
+	collision_mask = mask
 
 func _physics_process(_delta: float) -> void:
 	_select_target()
@@ -59,8 +77,9 @@ func _select_target() -> void:
 	active_targets = candidates.slice(0, limit)
 
 func _on_body_entered(body: Node2D) -> void:
-	if body is Enemy and not targets.has(body):
-		targets.append(body)
+	var enemy = body as Enemy
+	if body and not targets.has(body):
+		targets.append(enemy)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Enemy:

@@ -6,6 +6,8 @@
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_wnl36"]
 
 [node name="Tank" type="CharacterBody2D" unique_id=1825300398 node_paths=PackedStringArray("health", "movement", "nav") groups=["enemies"]]
+collision_layer = 4
+collision_mask = 7
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_l622k")

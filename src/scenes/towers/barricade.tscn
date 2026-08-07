@@ -6,6 +6,8 @@
 size = Vector2(64, 64)
 
 [node name="Barricade" type="StaticBody2D" unique_id=887214604]
+collision_layer = 2
+collision_mask = 0
 script = ExtResource("1_ewxlo")
 
 [node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]

@@ -1,6 +1,6 @@
 class_name Enemy extends CharacterBody2D
 
-enum EnemyType { PHYSICAL, GHOST }
+enum EnemyType {PHYSICAL, GHOST}
 
 @export var lives_penalty: int = 1
 @export var gold_reward: int = 1
@@ -16,12 +16,10 @@ var _active_effects: Array[ActiveEffect] = []
 func apply_effect(effect: ActiveEffect) -> void:
 	_active_effects.append(effect)
 	effect.apply(self)
-	print("Added effect! Effects active: " + str(_active_effects.size()))
 
 func remove_effect(effect: ActiveEffect) -> void:
 	_active_effects.erase(effect)
 	effect.remove()
-	print("Removed effect! Effects active: " + str(_active_effects.size()))
 
 func _ready() -> void:
 	if health:
@@ -32,8 +30,11 @@ func _ready() -> void:
 		
 		if type == EnemyType.GHOST:
 			nav.agent.navigation_layers = 4
-			set_collision_layer_value(1, false)
-			set_collision_mask_value(1, false)
+			collision_layer = 8 # Layer 4: Ghost Enemies
+			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
+		else:
+			collision_layer = 4 # Layer 3: Physical Enemies
+			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
 		
 		# Apply common settings shared by all enemies
 		nav.agent.path_max_distance = 10
