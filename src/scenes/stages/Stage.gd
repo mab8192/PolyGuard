@@ -10,6 +10,7 @@ class_name Stage extends Node2D
 var lives: int
 var gold: int
 var wave: int
+var current_wave: WaveData
 
 ## TODO: Set from loadout selection scene, probably in GameManager or perhaps a dedicated LoadoutManager
 var loadout: Array[TowerData] = [
@@ -19,7 +20,7 @@ var loadout: Array[TowerData] = [
 ]
 
 var spawners: Array[Spawner] = []
-var wave_active: bool = false
+var wave_is_active: bool = false
 var enemies_alive: int = 0
 
 const GRID_SIZE = 32
@@ -59,7 +60,8 @@ func get_map_pixel_rect() -> Rect2:
 func start_next_wave() -> void:
 	var wave_data: WaveData = data.get_wave(wave)
 	if wave_data:
-		wave_active = true
+		wave_is_active = true
+		current_wave = wave_data
 		
 		for node in get_tree().get_nodes_in_group("spawners"):
 			if node is Spawner:
@@ -220,10 +222,13 @@ func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 	return glob_pos.snapped(Vector2(GRID_SIZE, GRID_SIZE))
 
 func _check_wave_completion() -> void:
-	if wave_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_alive == 0:
+	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_alive == 0:
 		print("WAVE COMPLETE")
-		wave_active = false
+		wave_is_active = false
 		SignalBus.wave_completed.emit()
+		
+		gold += current_wave.reward_gold
+		SignalBus.gold_changed.emit(gold)
 		
 		if wave == data.get_waves().size():
 			print("STAGE COMPLETE")
@@ -465,6 +470,7 @@ func _on_enemy_spawned(_enemy: Enemy) -> void:
 func _on_enemy_died(enemy: Enemy) -> void:
 	enemies_alive -= 1
 	gold += enemy.gold_reward
+	SignalBus.gold_changed.emit(gold)
 	_check_wave_completion()
 
 func _on_enemy_exit(enemy: Enemy) -> void:

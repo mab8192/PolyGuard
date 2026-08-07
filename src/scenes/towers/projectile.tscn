@@ -1,0 +1,24 @@
+[gd_scene format=3 uid="uid://cjqnvert2lp6q"]
+
+[ext_resource type="Script" uid="uid://bp8o4xomf4ocl" path="res://src/scenes/towers/projectile.gd" id="1_yvkl1"]
+[ext_resource type="Script" uid="uid://bvdy44yq25vtv" path="res://src/components/DamageComponent.gd" id="2_d5pym"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
+radius = 4.0
+
+[node name="Projectile" type="Node2D" unique_id=1033502453]
+script = ExtResource("1_yvkl1")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=287040307]
+color = Color(1, 0, 0, 1)
+polygon = PackedVector2Array(0, -4, -4, 0, 0, 4, 4, 0)
+
+[node name="DamageComponent" type="Area2D" parent="." unique_id=881148203]
+script = ExtResource("2_d5pym")
+metadata/_custom_type_script = "uid://bvdy44yq25vtv"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent" unique_id=104444699]
+shape = SubResource("CircleShape2D_d56y3")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1913716860]
+rect = Rect2(-4, -4, 8, 8)

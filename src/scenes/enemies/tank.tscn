@@ -31,7 +31,7 @@ metadata/_custom_type_script = "uid://btkgrma8jeupr"
 
 [node name="HealthComponent" type="Node" parent="." unique_id=2023714483]
 script = ExtResource("3_34c0h")
-max_health = 500.0
+max_health = 50.0
 armor = 10.0
 metadata/_custom_type_script = "uid://b25aa5trewubh"
 
@@ -46,7 +46,6 @@ navigation_layers = 2
 simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
-debug_enabled = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
 polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)

@@ -12,7 +12,9 @@ class_name TowerData extends Resource
 @export var can_target_ghost: bool = false
 @export var cost: int = 50 ## How much gold this tower costs to place
 @export var damage: float = 10 ## How much damage per "shot" this tower does
-@export var attack_speed: float = 1 ## How many times per second this tower fires
+@export var damage_type: AttackComponent.DamageType = AttackComponent.DamageType.PHYSICAL
+@export var attack_cooldown: float = 1000 ## Milliseconds between attacks
+@export var projectile_speed: float = 400 ## How fast this towers projectiles move, if applicable
 @export var health: int = 100 ## How much hp this tower has
 @export var armor: float = 10 ## How much armor this tower has
 
@@ -36,5 +38,11 @@ func create(is_preview: bool = true) -> Tower:
 	if not is_solid:
 		tower.set_collision_layer_value(1, false)
 		tower.set_collision_mask_value(1, false)
+	
+	if tower.attack:
+		tower.attack.projectile_speed = projectile_speed
+		tower.attack.cooldown = attack_cooldown
+		tower.attack.damage = damage
+		tower.attack.damage_type = damage_type
 
 	return tower

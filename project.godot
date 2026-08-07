@@ -43,6 +43,7 @@ folder_colors={
 "res://src/autoload/": "green",
 "res://src/components/": "red",
 "res://src/data/": "gray",
+"res://src/data/towers/": "yellow",
 "res://src/scenes/": "blue",
 "res://src/scenes/enemies/": "red",
 "res://src/scenes/stages/": "teal",
@@ -68,7 +69,10 @@ pointing/emulate_touch_from_mouse=true
 
 [layer_names]
 
-2d_physics/layer_1="Default"
+2d_physics/layer_1="Level Colliders"
+2d_physics/layer_2="Solid Towers"
+2d_physics/layer_3="Physical Enemies"
+2d_physics/layer_4="Ghost Enemies"
 2d_physics/layer_8="Non-Solid"
 
 [navigation]

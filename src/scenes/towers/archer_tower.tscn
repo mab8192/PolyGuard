@@ -4,6 +4,8 @@
 [ext_resource type="Script" uid="uid://dah8lbipo02ai" path="res://src/components/HitboxComponent.gd" id="2_jfgpo"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_2o1o6"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="4_2o1o6"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="5_37hue"]
+[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectile.tscn" id="6_l8nwa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(64, 64)
@@ -11,13 +13,14 @@ size = Vector2(64, 64)
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
 radius = 256.0
 
-[node name="ArcherTower" type="StaticBody2D" unique_id=887214604 node_paths=PackedStringArray("health", "hitbox", "targeting")]
+[node name="ArcherTower" type="StaticBody2D" unique_id=887214604 node_paths=PackedStringArray("health", "hitbox", "targeting", "attack")]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_jim0o")
 health = NodePath("HealthComponent")
 hitbox = NodePath("HitboxComponent")
 targeting = NodePath("TargetingComponent")
+attack = NodePath("AttackComponent")
 
 [node name="HitboxComponent" type="CollisionShape2D" parent="." unique_id=2145783814]
 shape = SubResource("RectangleShape2D_qgbsg")
@@ -41,3 +44,12 @@ offset_top = -32.0
 offset_right = 32.0
 offset_bottom = 32.0
 color = Color(0.33680907, 0.17885035, 0.035872858, 1)
+
+[node name="AttackComponent" type="Node" parent="." unique_id=635266676 node_paths=PackedStringArray("attack_point", "targeting")]
+script = ExtResource("5_37hue")
+attack_point = NodePath("../Marker2D")
+projectile_scene = ExtResource("6_l8nwa")
+targeting = NodePath("../TargetingComponent")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
+
+[node name="Marker2D" type="Marker2D" parent="." unique_id=522312756]

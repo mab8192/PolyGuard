@@ -1,7 +1,0 @@
-[gd_scene format=3 uid="uid://cjqnvert2lp6q"]
-
-[node name="Bullet" type="Node2D" unique_id=1033502453]
-
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=287040307]
-color = Color(1, 0, 0, 1)
-polygon = PackedVector2Array(0, -4, -4, 0, 0, 4, 4, 0)

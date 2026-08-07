@@ -6,9 +6,10 @@
 
 [resource]
 script = ExtResource("1_script")
-id = "archer_tower"
 display_name = "Archer Tower"
 icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
-damage = 15.0
 description = "Ranged single-target arrow tower. Solid structure that blocks enemy movement."
+damage = 15.0
+attack_cooldown = 400.0
+projectile_speed = 800.0

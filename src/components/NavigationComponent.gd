@@ -17,6 +17,7 @@ enum NavStrategy {
 var targets: Array[Node2D] = []
 
 var _actor: CharacterBody2D
+var _no_path: bool = false
 
 func _ready() -> void:
 	_actor = get_parent() as CharacterBody2D
@@ -57,9 +58,12 @@ func _physics_process(_delta: float) -> void:
 	agent.get_current_navigation_path()
 	
 	if !agent.is_target_reachable():
-		no_path_available.emit()
-		# TODO: Instead find the first tower that blocks the previous path and attack it
+		if !_no_path:
+			no_path_available.emit()
+			_no_path = true
 		return
+	
+	_no_path = false
 	
 	var dir = _actor.global_position.direction_to(next_pos)
 	var intended_vel = dir * movement.max_speed
@@ -74,8 +78,6 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
-	print("PICKING TARGET")
-	print("Number of targets: %d" % targets.size())
 	if strategy == NavStrategy.FIRST:
 		agent.target_position = targets[0].global_position
 		return
@@ -90,8 +92,6 @@ func _pick_target() -> void:
 		var length: float = _calculate_path_length(path)
 		
 		distances.append(length)
-
-	print("Distances: ", distances)
 
 	match strategy:
 		NavStrategy.CLOSEST:

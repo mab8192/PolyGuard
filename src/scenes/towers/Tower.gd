@@ -7,6 +7,8 @@ var data: TowerData
 @export var health: HealthComponent
 @export var hitbox: HitboxComponent
 @export var targeting: TargetingComponent ## Can be null
+@export var attack: AttackComponent ## Can be null
+@export var effect_applier: EffectApplierComponent ## Can be null
 
 var is_preview: bool = false:
 	set(value):
@@ -20,9 +22,8 @@ func _process(_delta: float) -> void:
 	# Preview towers do not process anything
 	if is_preview: return
 	
-	if targeting:
-		for target in targeting.active_targets:
-			print("Targeting ! ", target.global_position)
+	if targeting and attack:
+		attack.attack_targets(targeting.active_targets)
 
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing

@@ -27,6 +27,7 @@ func _ready() -> void:
 	
 	if nav:
 		nav.velocity_computed.connect(_on_velocity_computed)
+		nav.no_path_available.connect(_on_no_path_available)
 		
 		if type == EnemyType.GHOST:
 			nav.agent.navigation_layers = 4
@@ -51,6 +52,7 @@ func _process(delta: float) -> void:
 		effect.tick(delta)
 
 func _on_died() -> void:
+	print("I DIED")
 	SignalBus.enemy_died.emit(self)
 	queue_free()
 
@@ -58,3 +60,7 @@ func _on_velocity_computed(vel: Vector2):
 	var dir = vel.normalized()
 	movement.handle_movement(dir, get_physics_process_delta_time())
 	look_at(global_position + velocity)
+
+func _on_no_path_available() -> void:
+	print("NO PATH! FINDING NEAREST TOWER TO DESTROYYYY ITTTT")
+	

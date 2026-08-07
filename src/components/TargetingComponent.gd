@@ -90,4 +90,5 @@ func _process(delta: float) -> void:
 
 func _draw() -> void:
 	for target in active_targets:
-		draw_circle(to_local(target.global_position), 20, Color.RED)
+		if is_instance_valid(target):
+			draw_circle(to_local(target.global_position), 20, Color.RED)
