@@ -175,7 +175,7 @@ layout_mode = 2
 
 [node name="BuildButton" type="Button" parent="DockContainer" unique_id=108226355]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 128)
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 1
 anchors_preset = 8
 anchor_left = 0.5
@@ -190,6 +190,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 4
 icon = ExtResource("2_ojqie")
+icon_alignment = 1
 
 [node name="RadialMenu" parent="DockContainer/BuildButton" unique_id=359601922 instance=ExtResource("3_oibdf")]
 visible = false
@@ -197,23 +198,24 @@ layout_mode = 1
 
 [node name="NextWaveButton" type="TextureButton" parent="DockContainer" unique_id=1722688413]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(128, 128)
+custom_minimum_size = Vector2(180, 180)
 layout_mode = 1
 anchors_preset = 6
 anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -302.0
-offset_top = -64.0
-offset_bottom = 64.0
+offset_left = -312.0
+offset_top = -92.0
+offset_right = -10.0
+offset_bottom = 88.0
 grow_horizontal = 0
 grow_vertical = 2
 
 [node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DockContainer/NextWaveButton" unique_id=2015720743]
 process_mode = 3
-position = Vector2(171, 64)
-scale = Vector2(7, 7)
+position = Vector2(163.00002, 93.00003)
+scale = Vector2(8.1071415, 8.261902)
 sprite_frames = SubResource("SpriteFrames_fkkip")
 autoplay = "default"
 frame_progress = 0.58475226
@@ -225,9 +227,10 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-offset_left = -289.0
-offset_top = -38.0
-offset_bottom = 38.0
+offset_left = -302.0
+offset_top = -36.0
+offset_right = -13.0
+offset_bottom = 40.0
 grow_horizontal = 0
 grow_vertical = 2
 text = "Next Wave"

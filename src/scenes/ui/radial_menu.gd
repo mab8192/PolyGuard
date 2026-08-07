@@ -7,20 +7,20 @@ signal menu_closed()
 @export var arc_angle_degrees: float = 240.0
 @export var center_angle_degrees: float = -90.0 # -90 deg points straight UP
 @export var max_items: int = 6
-@export var deadzone_radius: float = 40.0
-@export var max_select_distance: float = 340.0
+@export var deadzone_radius: float = 50.0
+@export var max_select_distance: float = 400.0
 
 @export var graphic_offset: Vector2 = Vector2.ZERO:
 	set(val):
 		graphic_offset = val
 		_apply_item_offsets()
 
-@export var label_offset: Vector2 = Vector2(0, 42):
+@export var label_offset: Vector2 = Vector2(0, 75):
 	set(val):
 		label_offset = val
 		_apply_item_offsets()
 
-@export var icon_size: Vector2 = Vector2(40, 40):
+@export var icon_size: Vector2 = Vector2(80, 80):
 	set(val):
 		icon_size = val
 		_apply_item_offsets()
@@ -199,7 +199,7 @@ func _update_hover_from_position(pos: Vector2) -> void:
 			min_dist = item_dist
 			closest_item = item
 	
-	if min_dist < 90.0:
+	if min_dist < 130.0:
 		_set_hovered_item(closest_item)
 	else:
 		_set_hovered_item(null)

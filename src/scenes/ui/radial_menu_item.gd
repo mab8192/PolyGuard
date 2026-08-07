@@ -7,12 +7,12 @@ signal item_clicked(item: RadialMenuItem)
 		graphic_offset = val
 		_update_positions()
 
-@export var label_offset: Vector2 = Vector2(0, 36):
+@export var label_offset: Vector2 = Vector2(0, 75):
 	set(val):
 		label_offset = val
 		_update_positions()
 
-@export var icon_size: Vector2 = Vector2(40, 40):
+@export var icon_size: Vector2 = Vector2(80, 80):
 	set(val):
 		icon_size = val
 		_update_positions()
@@ -74,15 +74,20 @@ func _update_positions() -> void:
 	if not is_inside_tree():
 		return
 	
-	var center = size / 2.0
-	
 	if icon_rect:
 		icon_rect.custom_minimum_size = icon_size
-		icon_rect.size = icon_size
-		icon_rect.position = center + graphic_offset - (icon_size / 2.0)
+		icon_rect.offset_left = graphic_offset.x - (icon_size.x / 2.0)
+		icon_rect.offset_right = graphic_offset.x + (icon_size.x / 2.0)
+		icon_rect.offset_top = graphic_offset.y - (icon_size.y / 2.0)
+		icon_rect.offset_bottom = graphic_offset.y + (icon_size.y / 2.0)
 	
 	if title_label:
-		title_label.position = center + label_offset - Vector2(title_label.size.x / 2.0, title_label.size.y / 2.0)
+		var half_lbl_w = max(title_label.size.x / 2.0, 50.0)
+		var half_lbl_h = max(title_label.size.y / 2.0, 11.5)
+		title_label.offset_left = label_offset.x - half_lbl_w
+		title_label.offset_right = label_offset.x + half_lbl_w
+		title_label.offset_top = label_offset.y - half_lbl_h
+		title_label.offset_bottom = label_offset.y + half_lbl_h
 
 func _on_gui_input(event: InputEvent) -> void:
 	if not is_enabled:

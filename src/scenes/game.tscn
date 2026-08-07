@@ -6,20 +6,17 @@
 [node name="Game" type="Node2D" unique_id=1753224795]
 script = ExtResource("1_covw0")
 
-[node name="Background" type="ColorRect" parent="." unique_id=503248848]
+[node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]
+
+[node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
+
+[node name="Background" type="ColorRect" parent="Camera2D" unique_id=503248848]
+z_index = -100
 offset_left = -864.0
 offset_top = -1224.0
 offset_right = 824.0
 offset_bottom = 1312.0
 mouse_filter = 2
 color = Color(0, 0, 0, 1)
-
-[node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]
-
-[node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
-
-[node name="DirectionalLight2D" type="DirectionalLight2D" parent="." unique_id=1016554598]
-position = Vector2(-1240, 632)
-energy = 0.33
 
 [node name="HUD" parent="." unique_id=4857712 instance=ExtResource("2_3rtjt")]
