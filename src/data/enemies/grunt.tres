@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://bpmn05bhqqj8h"]
+
+[ext_resource type="PackedScene" uid="uid://ctoyf62guxgdq" path="res://src/scenes/enemies/grunt.tscn" id="1_rahde"]
+[ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="2_rbqdr"]
+
+[resource]
+script = ExtResource("2_rbqdr")
+display_name = "Grunt"
+scene = ExtResource("1_rahde")
+max_health = 30.0
+armor = 5.0
+max_speed = 70.0

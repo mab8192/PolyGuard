@@ -4,12 +4,12 @@ enum Strategy {FIRST, LAST, CLOSEST, STRONGEST}
 
 @export var strategy: Strategy = Strategy.FIRST
 @export var max_targets: int = 1
-@export var can_target_physical: bool = true:
+var can_target_physical: bool = true:
 	set(val):
 		can_target_physical = val
 		_update_collision_mask()
 
-@export var can_target_ghost: bool = false:
+var can_target_ghost: bool = false:
 	set(val):
 		can_target_ghost = val
 		_update_collision_mask()

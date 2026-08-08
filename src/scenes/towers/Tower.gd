@@ -3,12 +3,16 @@ class_name Tower extends StaticBody2D
 ## Gets assigned by the TowerData type
 var data: TowerData
 
-@export_group("Components")
-@export var health: HealthComponent
-@export var hitbox: HitboxComponent
-@export var targeting: TargetingComponent ## Can be null
-@export var attack: AttackComponent ## Can be null
-@export var effect_applier: EffectApplierComponent ## Can be null
+var health: HealthComponent
+var hitbox: HitboxComponent
+var targeting: TargetingComponent ## Can be null
+var attack: AttackComponent ## Can be null
+var effect_applier: EffectApplierComponent ## Can be null
+
+var is_solid: bool = true:
+	set(value):
+		is_solid = value
+		_update_solid_state()
 
 var is_preview: bool = false:
 	set(value):
@@ -16,6 +20,13 @@ var is_preview: bool = false:
 		_update_preview_state()
 
 func _ready() -> void:
+	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+	hitbox = ComponentUtil.get_component(self, HitboxComponent) as HitboxComponent
+	targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
+	attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
+	effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
+	
+	_update_solid_state()
 	_update_preview_state()
 
 func _process(_delta: float) -> void:
@@ -24,6 +35,10 @@ func _process(_delta: float) -> void:
 	
 	if targeting and attack:
 		attack.attack_targets(targeting.active_targets)
+
+func _update_solid_state() -> void:
+	set_collision_layer_value(1, is_solid)
+	set_collision_mask_value(1, is_solid)
 
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing

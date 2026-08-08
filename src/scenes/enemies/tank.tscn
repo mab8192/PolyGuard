@@ -5,16 +5,12 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_34c0h"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_wnl36"]
 
-[node name="Tank" type="CharacterBody2D" unique_id=1825300398 node_paths=PackedStringArray("health", "movement", "nav") groups=["enemies"]]
+[node name="Tank" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
 collision_mask = 7
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_l622k")
-lives_penalty = 3
-health = NodePath("HealthComponent")
-movement = NodePath("MovementComponent")
-nav = NodePath("NavigationComponent")
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
 position = Vector2(-1, -1)
@@ -22,23 +18,16 @@ scale = Vector2(0.875, 0.875)
 color = Color(0.16470589, 0.6, 0, 1)
 polygon = PackedVector2Array(-17.142857, -17.142857, 19.42857, -17.142857, 19.42857, 19.42857, -17.142857, 19.42857)
 
-[node name="MovementComponent" type="Node" parent="." unique_id=588237634 node_paths=PackedStringArray("body")]
+[node name="MovementComponent" type="Node" parent="." unique_id=588237634]
 script = ExtResource("2_jq52y")
-max_speed = 80.0
-acceleration = 80.0
-body = NodePath("..")
 metadata/_custom_type_script = "uid://btkgrma8jeupr"
 
 [node name="HealthComponent" type="Node" parent="." unique_id=2023714483]
 script = ExtResource("3_34c0h")
-max_health = 50.0
-armor = 10.0
 metadata/_custom_type_script = "uid://b25aa5trewubh"
 
-[node name="NavigationComponent" type="Node" parent="." unique_id=587399604 node_paths=PackedStringArray("movement", "agent")]
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399604]
 script = ExtResource("4_wnl36")
-movement = NodePath("../MovementComponent")
-agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]

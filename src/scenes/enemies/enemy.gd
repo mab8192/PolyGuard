@@ -2,14 +2,16 @@ class_name Enemy extends CharacterBody2D
 
 enum EnemyType {PHYSICAL, GHOST}
 
-@export var lives_penalty: int = 1
-@export var gold_reward: int = 1
-@export var type: EnemyType = EnemyType.PHYSICAL
+## Gets assigned by the EnemyData type
+var data: EnemyData
 
-@export_category("Components")
-@export var health: HealthComponent
-@export var movement: MovementComponent
-@export var nav: NavigationComponent
+var lives_penalty: int = 1
+var gold_reward: int = 1
+var type: EnemyType = EnemyType.PHYSICAL
+
+var health: HealthComponent
+var movement: MovementComponent
+var nav: NavigationComponent
 
 var _active_effects: Array[ActiveEffect] = []
 
@@ -22,6 +24,10 @@ func remove_effect(effect: ActiveEffect) -> void:
 	effect.remove()
 
 func _ready() -> void:
+	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+	movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
+	nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
+
 	if health:
 		health.died.connect(_on_died)
 	
@@ -34,6 +40,7 @@ func _ready() -> void:
 			collision_layer = 8 # Layer 4: Ghost Enemies
 			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
 		else:
+			nav.agent.navigation_layers = 3 # Layer 1 (small) and Layer 2 (large) physical navigation
 			collision_layer = 4 # Layer 3: Physical Enemies
 			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
 		
@@ -52,7 +59,6 @@ func _process(delta: float) -> void:
 		effect.tick(delta)
 
 func _on_died() -> void:
-	print("I DIED")
 	SignalBus.enemy_died.emit(self)
 	queue_free()
 

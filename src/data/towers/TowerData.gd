@@ -30,23 +30,7 @@ func create(is_preview: bool = true) -> Tower:
 	
 	tower.is_preview = is_preview
 	
-	# Assign properties based on this tower data
-	if tower.health:
-		tower.health.armor = armor
-		tower.health.max_health = health
-	
-	if not is_solid:
-		tower.set_collision_layer_value(1, false)
-		tower.set_collision_mask_value(1, false)
-	
-	if tower.attack:
-		tower.attack.projectile_speed = projectile_speed
-		tower.attack.cooldown = attack_cooldown
-		tower.attack.damage = damage
-		tower.attack.damage_type = damage_type
-	
-	if tower.targeting:
-		tower.targeting.can_target_ghost = can_target_ghost
-		tower.targeting.can_target_physical = can_target_physical
+	# Sync properties top-down based on this tower data
+	ComponentUtil.sync_properties(self, tower)
 
 	return tower

@@ -2,12 +2,12 @@ class_name EffectApplierComponent extends Area2D
 
 @export var delay: float = 0 ## Delay in seconds from the enemy entering the area that the effect is applied
 @export var effects: Array[EffectData]
-@export var can_target_physical: bool = true:
+var can_target_physical: bool = true:
 	set(val):
 		can_target_physical = val
 		_update_collision_mask()
 
-@export var can_target_ghost: bool = false:
+var can_target_ghost: bool = false:
 	set(val):
 		can_target_ghost = val
 		_update_collision_mask()

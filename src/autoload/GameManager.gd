@@ -5,8 +5,8 @@ var camera: Camera2D
 var stage_root: Node2D
 
 func _ready() -> void:
-	get_viewport().size_changed.connect(update_camera)
-
+	get_viewport().size_changed.connect(_update_camera)
+	
 func load_stage(path: String) -> void:
 	# 1. Clean up old stage
 	if current_stage:
@@ -23,9 +23,9 @@ func load_stage(path: String) -> void:
 
 ## Setup the given stage. Update the camera, set economy, etc.
 func _setup_stage(stage: Stage) -> void:
-	update_camera()
+	_update_camera()
 
-func update_camera() -> void:
+func _update_camera() -> void:
 	if not current_stage or not camera:
 		return
 		

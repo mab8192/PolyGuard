@@ -2,11 +2,20 @@ class_name HealthComponent extends Node
 
 signal died()
 
-@export var max_health: float = 100
-@export var armor: float = 0
-@export var magic_resistance: float = 0
+var max_health: float = 100.0:
+	set(val):
+		max_health = val
+		_health = max_health
 
-@onready var _health: float = max_health
+var armor: float = 0.0
+var magic_resistance: float = 0.0
+
+var _health: float
+
+func _ready() -> void:
+	if get_parent():
+		get_parent().set_meta(&"HealthComponent", self)
+	_health = max_health
 
 ## Affects how fast armor scales
 const ARMOR_CONSTANT = 50

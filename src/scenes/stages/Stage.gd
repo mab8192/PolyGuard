@@ -126,7 +126,6 @@ func can_place_preview() -> bool:
 
 ## Converts the current preview_tower into an active tower on the stage and deducts gold
 func place_preview() -> void:
-	print("PLACE TOWER")
 	if not _preview_tower:
 		return
 
@@ -225,7 +224,6 @@ func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 
 func _check_wave_completion() -> void:
 	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_alive == 0:
-		print("WAVE COMPLETE")
 		wave_is_active = false
 		SignalBus.wave_completed.emit()
 		

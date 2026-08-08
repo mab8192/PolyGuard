@@ -10,22 +10,29 @@ enum NavStrategy {
 	FIRST,		# First in the targets array
 }
 
-@export var strategy: NavStrategy = NavStrategy.CLOSEST
-@export var movement: MovementComponent # Only used to grab the actors current max speed
-
-@export var agent: NavigationAgent2D
+var strategy: NavStrategy = NavStrategy.CLOSEST
+var movement: MovementComponent
+var agent: NavigationAgent2D
 var targets: Array[Node2D] = []
 
 var _actor: CharacterBody2D
 var _no_path: bool = false
 
 func _ready() -> void:
+	if get_parent():
+		get_parent().set_meta(&"NavigationComponent", self)
 	_actor = get_parent() as CharacterBody2D
 	if !_actor:
 		push_error("Must be child of a CharacterBody2D")
 		return
 
-	agent.velocity_computed.connect(_on_velocity_computed)
+	if not movement:
+		movement = ComponentUtil.get_component(_actor, MovementComponent) as MovementComponent
+	if not agent:
+		agent = _actor.find_child("NavigationAgent2D", false, false) as NavigationAgent2D
+
+	if agent:
+		agent.velocity_computed.connect(_on_velocity_computed)
 
 func set_targets(new_targets: Array[Node2D]) -> void:
 	targets = new_targets

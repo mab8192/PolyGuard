@@ -1,7 +1,7 @@
 class_name Projectile extends Node2D
 
 @onready var polygon: Polygon2D = $Polygon2D
-@onready var damage_component: DamageComponent = $DamageComponent
+var damage_component: DamageComponent
 @onready var visible_on_screen_notifier_2d: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
 
 var direction: Vector2 = Vector2.ZERO:
@@ -9,11 +9,15 @@ var direction: Vector2 = Vector2.ZERO:
 		direction = value.normalized()
 
 var target: Node2D
-var speed: float = 0
+var speed: float = 0.0
 
 func _ready() -> void:
-	damage_component.hit.connect(_on_hit)
-	visible_on_screen_notifier_2d.screen_exited.connect(_on_screen_exit)
+	if not damage_component:
+		damage_component = ComponentUtil.get_component(self, DamageComponent) as DamageComponent
+	if damage_component:
+		damage_component.hit.connect(_on_hit)
+	if visible_on_screen_notifier_2d:
+		visible_on_screen_notifier_2d.screen_exited.connect(_on_screen_exit)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:

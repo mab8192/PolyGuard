@@ -25,9 +25,9 @@ func run(group: SpawnGroup) -> void:
 	if group.delay > 0.0:
 		await get_tree().create_timer(group.delay, false).timeout
 
-	# 2. Lookup enemy PackedScene from Registry autoload
-	var enemy_scene: PackedScene = load(Registry.ENEMY_MAP.get(group.enemy_type))
-	if not enemy_scene:
+	# 2. Lookup EnemyData from Registry autoload
+	var enemy_data: EnemyData = Registry.get_enemy_data(group.enemy_type)
+	if not enemy_data:
 		push_error("Spawner: Enemy type '%s' not found in Registry!" % group.enemy_type)
 		_active_groups -= 1
 		if _active_groups == 0:
@@ -36,7 +36,7 @@ func run(group: SpawnGroup) -> void:
 
 	# 3. Spawn loop
 	for i in range(group.count):
-		_instantiate_enemy(enemy_scene)
+		_instantiate_enemy(enemy_data)
 		
 		# Wait interval time between spawns (unless it's the last unit)
 		if i < group.count - 1 and group.interval > 0.0:
@@ -57,11 +57,11 @@ func _get_spawn_point() -> Vector2:
 	)
 
 ## Internal helper to instantiate and place the enemy in the scene.
-func _instantiate_enemy(enemy_scene: PackedScene) -> void:
-	var enemy := enemy_scene.instantiate() as Enemy
+func _instantiate_enemy(enemy_data: EnemyData) -> void:
+	var enemy := enemy_data.create()
 
 	if not enemy:
-		push_error("Spawner: Failed to instantiate enemy scene.")
+		push_error("Spawner: Failed to instantiate enemy.")
 		return
 
 	# Set up required fields

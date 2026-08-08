@@ -2,7 +2,7 @@ extends Node
 
 # --- Configuration Properties ---
 @export_group("Music Crossfade")
-@export var crossfade_duration: float = 2.0
+@export var crossfade_duration: float = 1.0
 
 @export_group("SFX Pool Settings")
 @export var sfx_pool_size: int = 12
@@ -164,7 +164,6 @@ func _on_stage_completed() -> void:
 
 func _on_enemy_died(enemy: Enemy) -> void:
 	# Subtle pitch variation prevents repetitiveness when killing enemies rapidly
-	print("Playing enemy died sound")
 	play_random_sfx(sfx_enemy_died, 0.85, 1.15)
 
 func _on_enemy_exit(enemy: Enemy) -> void:

@@ -1,12 +1,16 @@
 extends Node
 
-# Map of enemy types to scenes
-const ENEMY_MAP: Dictionary = {
-	"speeder": "res://src/scenes/enemies/speeder.tscn",
-	"tank": "res://src/scenes/enemies/tank.tscn",
-	"ghost": "res://src/scenes/enemies/ghost.tscn",
-	"sniper": "res://src/scenes/enemies/sniper.tscn"
+# Map of enemy IDs to data-driven EnemyData resources
+const ENEMIES: Dictionary[String, EnemyData] = {
+	"speeder": preload("res://src/data/enemies/speeder.tres"),
+	"tank": preload("res://src/data/enemies/tank.tres"),
+	"ghost": preload("res://src/data/enemies/ghost.tres"),
+	"sniper": preload("res://src/data/enemies/sniper.tres"),
+	"grunt": preload("res://src/data/enemies/grunt.tres")
 }
+
+func get_enemy_data(id: String) -> EnemyData:
+	return ENEMIES.get(id, null)
 
 # Array of paths to stage scenes
 const STAGES: Array[String] = [

@@ -2,16 +2,15 @@ class_name MovementComponent extends Node
 
 ## Manages 2D movement physics (acceleration, friction, max speed) for a CharacterBody2D parent.
 
-@export_group("Speed & Acceleration")
-@export var max_speed: float = 100.0
-@export var acceleration: float = 1200.0
-@export var friction: float = 1000.0
+var max_speed: float = 100.0
+var acceleration: float = 1200.0
+var friction: float = 1000.0
 
-@export_group("Target")
-## Automatically detects the parent if left unassigned.
-@export var body: CharacterBody2D
+var body: CharacterBody2D
 
 func _ready() -> void:
+	if get_parent():
+		get_parent().set_meta(&"MovementComponent", self)
 	if not body:
 		if get_parent() is CharacterBody2D:
 			body = get_parent() as CharacterBody2D
