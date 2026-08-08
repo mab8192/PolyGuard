@@ -19,7 +19,7 @@ nav = NodePath("NavigationComponent")
 position = Vector2(-1, -1)
 scale = Vector2(0.875, 0.875)
 color = Color(1, 1, 0, 1)
-polygon = PackedVector2Array(-3.4285712, -5.7142854, 7.9999995, 1.1428571, -3.4285712, 7.9999995)
+polygon = PackedVector2Array(-3.4285712, -3.4285712, 7.9999995, 1.1428571, -3.4285712, 5.7142854)
 
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634 node_paths=PackedStringArray("body")]
 script = ExtResource("2_jxlv3")
@@ -39,7 +39,7 @@ agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-polygon = PackedVector2Array(-4, -6, 6, 0, -4, 6)
+polygon = PackedVector2Array(-4, -4, 6, 0, -4, 4)
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
 simplify_path = true

@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://by02w3nwlt7ub"
+path="res://.godot/imported/Teleport2_003.ogg-f5ad9e7d174916f10fe6a8f8480ef67c.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Teleport2/Ogg/Teleport2_003.ogg"
+dest_files=["res://.godot/imported/Teleport2_003.ogg-f5ad9e7d174916f10fe6a8f8480ef67c.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

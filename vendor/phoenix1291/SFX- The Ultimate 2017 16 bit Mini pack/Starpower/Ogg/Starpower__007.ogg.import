@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://djvrc7bls7wir"
+path="res://.godot/imported/Starpower__007.ogg-ba269a63a6007fe0abbe0548668cafdd.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Starpower/Ogg/Starpower__007.ogg"
+dest_files=["res://.godot/imported/Starpower__007.ogg-ba269a63a6007fe0abbe0548668cafdd.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bv4heefdm3ooi"
+path="res://.godot/imported/Footstep__003.wav-bc106e7dba3ed8af7e4ccdeac38ac7ef.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Footstep/Wav/Footstep__003.wav"
+dest_files=["res://.godot/imported/Footstep__003.wav-bc106e7dba3ed8af7e4ccdeac38ac7ef.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

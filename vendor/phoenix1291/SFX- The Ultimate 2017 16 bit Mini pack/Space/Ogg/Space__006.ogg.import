@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cv5crtdpwaldp"
+path="res://.godot/imported/Space__006.ogg-7b8f2ea1620516399e58c04663eea38a.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Space/Ogg/Space__006.ogg"
+dest_files=["res://.godot/imported/Space__006.ogg-7b8f2ea1620516399e58c04663eea38a.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

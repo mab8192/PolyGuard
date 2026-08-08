@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://buyidl52jgbeh"
+path="res://.godot/imported/Powerup__002.wav-74224ef50a35037ffa6277466cbbced5.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Powerup/Wav/Powerup__002.wav"
+dest_files=["res://.godot/imported/Powerup__002.wav-74224ef50a35037ffa6277466cbbced5.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://diwdvrmkb1sh2"
+path="res://.godot/imported/Instrument__003.wav-82f2e23ea35919ff5109b283a35e3c6a.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Instrument/Wav/Instrument__003.wav"
+dest_files=["res://.godot/imported/Instrument__003.wav-82f2e23ea35919ff5109b283a35e3c6a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

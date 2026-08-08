@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://wshjvwey5oyp"
+path="res://.godot/imported/Ouch__009.ogg-ad920aa52c8355bb2cb31e7f1170dd1b.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Ouch/Ogg/Ouch__009.ogg"
+dest_files=["res://.godot/imported/Ouch__009.ogg-ad920aa52c8355bb2cb31e7f1170dd1b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

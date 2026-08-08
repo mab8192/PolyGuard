@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://l1f1f5xo5ksx"
+path="res://.godot/imported/Snare__010.wav-a2ec904770c4140f1a550fa0d981dbcd.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Snare/Wav/Snare__010.wav"
+dest_files=["res://.godot/imported/Snare__010.wav-a2ec904770c4140f1a550fa0d981dbcd.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

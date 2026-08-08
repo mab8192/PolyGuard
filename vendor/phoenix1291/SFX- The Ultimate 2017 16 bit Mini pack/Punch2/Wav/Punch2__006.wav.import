@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://2w6tv8y2ex0r"
+path="res://.godot/imported/Punch2__006.wav-77e3ec70d44144667019c90422abe3fc.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Punch2/Wav/Punch2__006.wav"
+dest_files=["res://.godot/imported/Punch2__006.wav-77e3ec70d44144667019c90422abe3fc.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

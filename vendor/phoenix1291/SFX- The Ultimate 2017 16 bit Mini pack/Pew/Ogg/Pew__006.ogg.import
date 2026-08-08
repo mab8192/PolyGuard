@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cli0xvept3r26"
+path="res://.godot/imported/Pew__006.ogg-74d55b55e1aa1de9071bb2c1c8207a20.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Pew/Ogg/Pew__006.ogg"
+dest_files=["res://.godot/imported/Pew__006.ogg-74d55b55e1aa1de9071bb2c1c8207a20.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bk7bfyrhckojh"
+path="res://.godot/imported/Explosion3__006.wav-86a7c278813bee5cb49e1aa8e8d2e2bf.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Explosion3/Wav/Explosion3__006.wav"
+dest_files=["res://.godot/imported/Explosion3__006.wav-86a7c278813bee5cb49e1aa8e8d2e2bf.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

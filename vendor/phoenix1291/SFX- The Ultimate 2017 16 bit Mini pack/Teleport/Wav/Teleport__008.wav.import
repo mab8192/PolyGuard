@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://dhv6ljvdh0lc4"
+path="res://.godot/imported/Teleport__008.wav-6eaf2f2fdc7ff919f72718809b2bce44.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Teleport/Wav/Teleport__008.wav"
+dest_files=["res://.godot/imported/Teleport__008.wav-6eaf2f2fdc7ff919f72718809b2bce44.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

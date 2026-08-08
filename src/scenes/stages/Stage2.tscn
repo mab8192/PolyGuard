@@ -8,6 +8,7 @@
 
 [sub_resource type="Resource" id="Resource_5jk0g"]
 script = ExtResource("2_uxdc3")
+stage_id = "stage_02"
 wave_data_file = "res://src/data/stages/Stage1.json"
 metadata/_custom_type_script = "uid://xynccep1kdc5"
 

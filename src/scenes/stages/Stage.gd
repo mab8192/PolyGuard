@@ -167,6 +167,8 @@ func _ready() -> void:
 	SignalBus.enemy_exit.connect(_on_enemy_exit)
 	
 	_generate_navmesh()
+	
+	SignalBus.stage_loaded.emit()
 
 func _process(_delta: float) -> void:
 	pass
@@ -231,7 +233,7 @@ func _check_wave_completion() -> void:
 		SignalBus.gold_changed.emit(gold)
 		
 		if wave == data.get_waves().size():
-			print("STAGE COMPLETE")
+			SignalBus.stage_completed.emit()
 
 const AGENT_TIERS: Array[Dictionary] = [
 	{"radius": 6.0, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)

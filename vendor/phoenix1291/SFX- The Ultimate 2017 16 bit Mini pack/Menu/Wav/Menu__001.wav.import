@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://bp1qhc6jxs4e4"
+path="res://.godot/imported/Menu__001.wav-ef11a7397d5f66706ea69ac3a0ea8935.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Menu/Wav/Menu__001.wav"
+dest_files=["res://.godot/imported/Menu__001.wav-ef11a7397d5f66706ea69ac3a0ea8935.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

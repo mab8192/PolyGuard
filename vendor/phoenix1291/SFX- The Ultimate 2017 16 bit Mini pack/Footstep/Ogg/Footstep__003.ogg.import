@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dd5gt23oit2hh"
+path="res://.godot/imported/Footstep__003.ogg-0393e4049d7dda5364d62518e9de97bb.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Footstep/Ogg/Footstep__003.ogg"
+dest_files=["res://.godot/imported/Footstep__003.ogg-0393e4049d7dda5364d62518e9de97bb.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

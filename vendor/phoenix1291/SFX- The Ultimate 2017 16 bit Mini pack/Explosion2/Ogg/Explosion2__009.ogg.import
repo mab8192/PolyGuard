@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://bms3dnhug43nu"
+path="res://.godot/imported/Explosion2__009.ogg-68f5110d9425d1f40c86ce11560790a2.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Explosion2/Ogg/Explosion2__009.ogg"
+dest_files=["res://.godot/imported/Explosion2__009.ogg-68f5110d9425d1f40c86ce11560790a2.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

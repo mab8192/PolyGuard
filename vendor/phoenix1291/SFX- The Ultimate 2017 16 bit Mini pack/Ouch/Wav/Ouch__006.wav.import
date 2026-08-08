@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://di3akd4v45yme"
+path="res://.godot/imported/Ouch__006.wav-b3a5907baa9de872e1121e680ca61e24.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Ouch/Wav/Ouch__006.wav"
+dest_files=["res://.godot/imported/Ouch__006.wav-b3a5907baa9de872e1121e680ca61e24.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://6byqtjyxlt6l"
+path="res://.godot/imported/Pew__009.wav-a1e11456dfeedf15b3f6c09f3050ba6a.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Pew/Wav/Pew__009.wav"
+dest_files=["res://.godot/imported/Pew__009.wav-a1e11456dfeedf15b3f6c09f3050ba6a.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

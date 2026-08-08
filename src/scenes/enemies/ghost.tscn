@@ -47,4 +47,5 @@ avoidance_enabled = true
 max_speed = 500.0
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
+visible = false
 polygon = PackedVector2Array(-16, 0, 0, -12, 16, 0, 0, 12)

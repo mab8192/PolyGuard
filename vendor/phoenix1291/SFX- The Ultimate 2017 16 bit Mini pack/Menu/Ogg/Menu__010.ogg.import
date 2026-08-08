@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://8hmg4eu0io5y"
+path="res://.godot/imported/Menu__010.ogg-21f006c7bbb9e88c79e6f4a398b3ceca.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Menu/Ogg/Menu__010.ogg"
+dest_files=["res://.godot/imported/Menu__010.ogg-21f006c7bbb9e88c79e6f4a398b3ceca.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

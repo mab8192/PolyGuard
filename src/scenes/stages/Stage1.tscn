@@ -12,7 +12,6 @@ wave_data_file = "res://src/data/stages/Stage1.json"
 metadata/_custom_type_script = "uid://xynccep1kdc5"
 
 [sub_resource type="NavigationPolygon" id="NavigationPolygon_a1mjj"]
-outlines = Array[PackedVector2Array]([PackedVector2Array(-576, -384, 576, -384, 576, 448, -576, 448)])
 agent_radius = 12.0
 
 [node name="Stage1" type="Node2D" unique_id=1225741288]

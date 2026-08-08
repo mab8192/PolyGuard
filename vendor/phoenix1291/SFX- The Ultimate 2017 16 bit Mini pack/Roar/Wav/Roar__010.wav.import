@@ -1,0 +1,24 @@
+[remap]
+
+importer="wav"
+type="AudioStreamWAV"
+uid="uid://pl6df07yvp13"
+path="res://.godot/imported/Roar__010.wav-02becb0d70a0be4ae62a4ad49f3b18f3.sample"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Roar/Wav/Roar__010.wav"
+dest_files=["res://.godot/imported/Roar__010.wav-02becb0d70a0be4ae62a4ad49f3b18f3.sample"]
+
+[params]
+
+force/8_bit=false
+force/mono=false
+force/max_rate=false
+force/max_rate_hz=44100
+edit/trim=false
+edit/normalize=false
+edit/loop_mode=0
+edit/loop_begin=0
+edit/loop_end=-1
+compress/mode=2

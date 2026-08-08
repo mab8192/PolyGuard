@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://rng7t7axer27"
+path="res://.godot/imported/Snare__006.ogg-2267d2f8d80b302fa801d851c2d5672b.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Snare/Ogg/Snare__006.ogg"
+dest_files=["res://.godot/imported/Snare__006.ogg-2267d2f8d80b302fa801d851c2d5672b.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

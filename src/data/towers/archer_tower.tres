@@ -10,6 +10,7 @@ display_name = "Archer Tower"
 icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Ranged single-target arrow tower. Solid structure that blocks enemy movement."
+can_target_ghost = true
 damage = 15.0
 attack_cooldown = 400.0
 projectile_speed = 800.0

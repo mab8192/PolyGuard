@@ -10,7 +10,8 @@ const ENEMY_MAP: Dictionary = {
 # Array of paths to stage scenes
 const STAGES: Array[String] = [
 	"res://src/scenes/stages/Stage1.tscn",
-	"res://src/scenes/stages/Stage2.tscn"
+	"res://src/scenes/stages/Stage2.tscn",
+	"res://src/scenes/stages/Stage3.tscn"
 ]
 
 # Map of tower IDs to data-driven TowerData resources

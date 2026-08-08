@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://dqwspyltvv3fd"
+path="res://.godot/imported/Jump__010.ogg-46a92503dbba5d4b4f7f67ad17628771.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Jump/Ogg/Jump__010.ogg"
+dest_files=["res://.godot/imported/Jump__010.ogg-46a92503dbba5d4b4f7f67ad17628771.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

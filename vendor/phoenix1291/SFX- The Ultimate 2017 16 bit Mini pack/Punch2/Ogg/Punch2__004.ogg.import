@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://c7gje1j4mkhca"
+path="res://.godot/imported/Punch2__004.ogg-b3027876a09d2d786e1ad2de6c31b780.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Punch2/Ogg/Punch2__004.ogg"
+dest_files=["res://.godot/imported/Punch2__004.ogg-b3027876a09d2d786e1ad2de6c31b780.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

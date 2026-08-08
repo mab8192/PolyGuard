@@ -44,5 +44,9 @@ func create(is_preview: bool = true) -> Tower:
 		tower.attack.cooldown = attack_cooldown
 		tower.attack.damage = damage
 		tower.attack.damage_type = damage_type
+	
+	if tower.targeting:
+		tower.targeting.can_target_ghost = can_target_ghost
+		tower.targeting.can_target_physical = can_target_physical
 
 	return tower

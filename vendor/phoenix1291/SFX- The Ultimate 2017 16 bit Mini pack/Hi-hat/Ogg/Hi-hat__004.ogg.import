@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://cd6bp3fd0tt5d"
+path="res://.godot/imported/Hi-hat__004.ogg-1ca2f22ed88bb1d318b127a4acf78c7e.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Hi-hat/Ogg/Hi-hat__004.ogg"
+dest_files=["res://.godot/imported/Hi-hat__004.ogg-1ca2f22ed88bb1d318b127a4acf78c7e.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

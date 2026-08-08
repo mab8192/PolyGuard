@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://72vax2ckrsvc"
+path="res://.godot/imported/Roar__009.ogg-ea7a880e64ded4b9053780b761722ac7.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Roar/Ogg/Roar__009.ogg"
+dest_files=["res://.godot/imported/Roar__009.ogg-ea7a880e64ded4b9053780b761722ac7.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
