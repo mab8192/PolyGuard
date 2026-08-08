@@ -9,7 +9,6 @@ const DEFAULT_SUB_STEP: float = 4.0 ## Sub-pixel resolution in pixels (< 16px pr
 static var _thread: Thread = null
 
 static func generate_navmesh(
-	stage: Stage,
 	tiles: TileMapLayer,
 	towers: Node2D,
 	navigation_region_2d: NavigationRegion2D,

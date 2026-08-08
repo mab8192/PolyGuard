@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://dq7dblfl82ce5"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_udi68"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_ho1i0"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_a1clp"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_d2sg2"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
+radius = 32.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 96.0833
+
+[node name="TeslaTower" type="StaticBody2D" unique_id=887214604]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_udi68")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
+shape = SubResource("CircleShape2D_d56y3")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=75994436]
+script = ExtResource("2_ho1i0")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=854869402]
+script = ExtResource("3_a1clp")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
+shape = SubResource("CircleShape2D_qgbsg")
+debug_color = Color(0, 0.6, 0.69803923, 0.09411765)
+
+[node name="AttackComponent" type="Node" parent="." unique_id=635266676]
+script = ExtResource("4_d2sg2")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=1330926641]
+color = Color(0.65882355, 1, 1, 1)
+polygon = PackedVector2Array(-32, 0, 0, -32, 32, 0, 0, 32)

@@ -41,9 +41,11 @@ func attack_target(target: Node2D) -> void:
 	
 	attacked.emit(target)
 
-func attack_targets(targets: Array) -> void:
+func attack_targets(targets: Array) -> void:	
 	if not can_attack() or targets.is_empty():
 		return
+	
+	print(data.damage)
 	
 	last_attack_time = Time.get_ticks_msec()
 	
@@ -85,4 +87,8 @@ func _spawn_projectile(target: Node2D) -> void:
 func _deal_direct_damage(target: Node2D) -> void:
 	var health = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
 	if health:
-		health.damage(data.damage, data.damage_type)
+		var raw_damage = data.damage
+		if data.attack_mode == AttackMode.CONTINUOUS:
+			raw_damage *= get_process_delta_time()
+		
+		health.damage(raw_damage, data.damage_type)

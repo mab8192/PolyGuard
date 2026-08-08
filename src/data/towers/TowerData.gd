@@ -28,7 +28,6 @@ func create(is_preview: bool = true) -> Tower:
 	tower.is_preview = is_preview
 	
 	apply_to(tower)
-
 	return tower
 
 func apply_to(tower: Tower) -> void:
@@ -38,13 +37,13 @@ func apply_to(tower: Tower) -> void:
 	tower.is_solid = is_solid
 
 	if health and tower.health:
-		tower.health.data = health
+		tower.health.data = tower.data.health
 
 	if targeting and tower.targeting:
-		tower.targeting.data = targeting
+		tower.targeting.data = tower.data.targeting
 
 	if attack and tower.attack:
-		tower.attack.data = attack
+		tower.attack.data = tower.data.attack
 
 	if effect_applier and tower.effect_applier:
-		tower.effect_applier.data = effect_applier
+		tower.effect_applier.data = tower.data.effect_applier

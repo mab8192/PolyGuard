@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="1_mkqy8"]
 [ext_resource type="Resource" uid="uid://spad8ltoni7h" path="res://src/data/effects/TarSlowEffect.tres" id="5_c3qve"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="5_cdbo8"]
-[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/EffectData.gd" id="5_x24fm"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="5_x24fm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)

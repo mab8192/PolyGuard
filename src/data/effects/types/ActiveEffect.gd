@@ -9,7 +9,7 @@ func _init(effect_data: EffectData):
 func apply(target: Node2D) -> void:
 	_target = target
 
-func tick(delta: float) -> void:
+func tick(_delta: float) -> void:
 	pass
 	
 func remove() -> void:

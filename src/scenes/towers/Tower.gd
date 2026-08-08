@@ -32,6 +32,9 @@ var is_preview: bool = false:
 		_update_preview_state()
 
 func _ready() -> void:
+	if not data:
+		push_error("Missing TowerData! %s" % get_path())
+	
 	_update_solid_state()
 	_update_preview_state()
 

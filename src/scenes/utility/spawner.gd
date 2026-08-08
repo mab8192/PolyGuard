@@ -62,7 +62,7 @@ func _instantiate_enemy(enemy_data: EnemyData) -> void:
 	enemy.global_position = _get_spawn_point()
 	
 	# Add it to the scene tree
-	GameManager.stage_root.add_child(enemy)
+	GameManager.stage_root.enemies.add_child(enemy)
 
 	# Emit signals for UI, WaveManager, or Audio
 	SignalBus.enemy_spawned.emit(enemy)

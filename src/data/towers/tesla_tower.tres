@@ -3,22 +3,23 @@
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="3_icon"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
+[ext_resource type="PackedScene" uid="uid://dq7dblfl82ce5" path="res://src/scenes/towers/tesla_tower.tscn" id="4_tafxk"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
 
-[sub_resource type="Resource" id="SubResource_attack"]
+[sub_resource type="Resource" id="Resource_tafxk"]
 script = ExtResource("5_attack")
-damage = 2.0
 damage_type = 1
-cooldown = 100.0
+attack_mode = 2
 can_target_ghost = true
 
-[sub_resource type="Resource" id="SubResource_health"]
+[sub_resource type="Resource" id="Resource_yrpxl"]
 script = ExtResource("4_health")
 armor = 10.0
 
-[sub_resource type="Resource" id="SubResource_targeting"]
+[sub_resource type="Resource" id="Resource_nxvto"]
 script = ExtResource("6_targeting")
+strategy = 2
 max_targets = 3
 can_target_ghost = true
 
@@ -26,8 +27,9 @@ can_target_ghost = true
 script = ExtResource("1_script")
 display_name = "Tesla Tower"
 icon = ExtResource("3_icon")
+scene = ExtResource("4_tafxk")
 description = "Short-ranged multi-target lightning tower. Solid structure that blocks enemy movement."
 cost = 100
-health = SubResource("SubResource_health")
-attack = SubResource("SubResource_attack")
-targeting = SubResource("SubResource_targeting")
+health = SubResource("Resource_yrpxl")
+attack = SubResource("Resource_tafxk")
+targeting = SubResource("Resource_nxvto")

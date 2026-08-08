@@ -5,10 +5,6 @@ enum EnemyType {PHYSICAL, GHOST}
 ## Gets assigned by the EnemyData type
 var data: EnemyData
 
-var lives_penalty: int = 1
-var gold_reward: int = 1
-var type: EnemyType = EnemyType.PHYSICAL
-
 var health: HealthComponent:
 	get:
 		return ComponentUtil.get_component(self, HealthComponent) as HealthComponent
@@ -39,7 +35,7 @@ func _ready() -> void:
 		nav.velocity_computed.connect(_on_velocity_computed)
 		nav.no_path_available.connect(_on_no_path_available)
 		
-		if type == EnemyType.GHOST:
+		if data.type == EnemyType.GHOST:
 			nav.agent.navigation_layers = 4
 			collision_layer = 8 # Layer 4: Ghost Enemies
 			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
@@ -65,8 +61,8 @@ func _process(delta: float) -> void:
 		effect.tick(delta)
 
 func _on_died() -> void:
-	SignalBus.enemy_died.emit(self)
 	queue_free()
+	SignalBus.enemy_died.emit(self)
 
 func _on_velocity_computed(vel: Vector2):
 	var dir = vel.normalized()

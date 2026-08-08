@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="SlowEffectData" format=3 uid="uid://spad8ltoni7h"]
 
-[ext_resource type="Script" uid="uid://br4nwkh0b8psj" path="res://src/data/effects/SlowEffectData.gd" id="1_urnoq"]
+[ext_resource type="Script" uid="uid://br4nwkh0b8psj" path="res://src/data/effects/types/SlowEffectData.gd" id="1_urnoq"]
 
 [resource]
 script = ExtResource("1_urnoq")

@@ -6,5 +6,7 @@
 script = ExtResource("1_jdcq5")
 
 [node name="Enemies" type="Node2D" parent="." unique_id=1659340401]
+z_index = 1
 
 [node name="Effects" type="Node2D" parent="." unique_id=2092856954]
+z_index = 5

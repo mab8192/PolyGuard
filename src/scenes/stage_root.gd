@@ -13,6 +13,7 @@ func load_stage(stage_data: StageData) -> Stage:
 	if not current_stage:
 		push_error("Failed to create stage from StageData!")
 		return
+		
 	add_child(current_stage)
 	
 	return current_stage

@@ -16,12 +16,12 @@ var current_wave: WaveData
 var loadout: Array[TowerData] = [
 	Registry.get_tower_data("archer_tower"),
 	Registry.get_tower_data("barricade"),
-	Registry.get_tower_data("tar_trap")
+	Registry.get_tower_data("tar_trap"),
+	Registry.get_tower_data("tesla_tower")
 ]
 
 var spawners: Array[Spawner] = []
 var wave_is_active: bool = false
-var enemies_alive: int = 0
 
 const GRID_SIZE = 32
 
@@ -161,7 +161,6 @@ func _ready() -> void:
 	SignalBus.lives_changed.emit(lives)
 	SignalBus.gold_changed.emit(gold)
 	
-	SignalBus.enemy_spawned.connect(_on_enemy_spawned)
 	SignalBus.enemy_died.connect(_on_enemy_died)
 	SignalBus.enemy_exit.connect(_on_enemy_exit)
 	
@@ -223,7 +222,11 @@ func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 	return glob_pos.snapped(Vector2(GRID_SIZE, GRID_SIZE))
 
 func _check_wave_completion() -> void:
-	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_alive == 0:
+	var enemies_remaining: int = 0
+	for e in GameManager.stage_root.enemies.get_children():
+		if !e.is_queued_for_deletion(): enemies_remaining += 1
+	
+	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_remaining == 0:
 		wave_is_active = false
 		SignalBus.wave_completed.emit()
 		
@@ -234,9 +237,9 @@ func _check_wave_completion() -> void:
 			SignalBus.stage_completed.emit()
 
 const AGENT_TIERS: Array[Dictionary] = [
-	{"radius": 6.0, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
-	{"radius": 12.0, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
-	{"radius": 6.0, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
+	{"radius": 10, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
+	{"radius": 16, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
+	{"radius": 10, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
 ]
 
 var _tier_regions: Dictionary = {}
@@ -259,7 +262,6 @@ func _get_or_create_tier_region(layer: int) -> NavigationRegion2D:
 
 func _generate_navmesh() -> void:
 	NavMeshGenerator.generate_navmesh(
-		self,
 		tiles,
 		towers,
 		navigation_region_2d,
@@ -267,21 +269,13 @@ func _generate_navmesh() -> void:
 		_get_or_create_tier_region
 	)
 
-
-### SIGNAL HANDLERS
-
-func _on_enemy_spawned(_enemy: Enemy) -> void:
-	enemies_alive += 1
-
 func _on_enemy_died(enemy: Enemy) -> void:
-	enemies_alive -= 1
-	gold += enemy.gold_reward
+	gold += enemy.data.gold_reward
 	SignalBus.gold_changed.emit(gold)
 	_check_wave_completion()
 
 func _on_enemy_exit(enemy: Enemy) -> void:
-	lives -= enemy.lives_penalty
-	enemies_alive -= 1
+	lives -= enemy.data.lives_penalty
 	SignalBus.lives_changed.emit(lives)
 	
 	if lives <= 0:

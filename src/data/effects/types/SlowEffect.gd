@@ -8,8 +8,8 @@ func _init(effect_data: EffectData):
 func apply(target: Node2D) -> void:
 	super.apply(target)
 	if target is Enemy and target.movement:
-		target.movement.max_speed *= data.speed_multiplier
+		target.movement.data.max_speed *= data.speed_multiplier
 
 func remove() -> void:
 	if _target is Enemy and _target.movement:
-		_target.movement.max_speed /= data.speed_multiplier
+		_target.movement.data.max_speed /= data.speed_multiplier

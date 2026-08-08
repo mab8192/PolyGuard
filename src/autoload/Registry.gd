@@ -32,7 +32,8 @@ func get_all_stages() -> Array[StageData]:
 const TOWERS: Dictionary[String, TowerData] = {
 	"archer_tower": preload("res://src/data/towers/archer_tower.tres"),
 	"barricade": preload("res://src/data/towers/barricade.tres"),
-	"tar_trap": preload("res://src/data/towers/tar_trap.tres")
+	"tar_trap": preload("res://src/data/towers/tar_trap.tres"),
+	"tesla_tower": preload("res://src/data/towers/tesla_tower.tres")
 }
 
 func get_tower_data(id: String) -> TowerData:

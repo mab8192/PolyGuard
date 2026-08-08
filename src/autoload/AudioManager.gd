@@ -162,9 +162,9 @@ func _on_stage_completed() -> void:
 	play_music(music_victory)
 	play_sfx(sfx_stage_complete)
 
-func _on_enemy_died(enemy: Enemy) -> void:
+func _on_enemy_died(_enemy: Enemy) -> void:
 	# Subtle pitch variation prevents repetitiveness when killing enemies rapidly
 	play_random_sfx(sfx_enemy_died, 0.85, 1.15)
 
-func _on_enemy_exit(enemy: Enemy) -> void:
+func _on_enemy_exit(_enemy: Enemy) -> void:
 	play_random_sfx(sfx_enemy_exit, 0.95, 1.05)

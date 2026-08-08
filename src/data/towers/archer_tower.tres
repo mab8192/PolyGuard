@@ -8,7 +8,7 @@
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
 
-[sub_resource type="Resource" id="SubResource_attack"]
+[sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("5_attack")
 damage = 15.0
 cooldown = 400.0
@@ -16,13 +16,13 @@ projectile_scene = ExtResource("1_soe44")
 projectile_speed = 800.0
 can_target_ghost = true
 
-[sub_resource type="Resource" id="SubResource_health"]
+[sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("4_health")
 armor = 10.0
 
-[sub_resource type="Resource" id="SubResource_targeting"]
+[sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("6_targeting")
-max_targets = 2
+max_targets = 6
 can_target_ghost = true
 
 [resource]
@@ -31,6 +31,6 @@ display_name = "Archer Tower"
 icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Ranged single-target arrow tower. Solid structure that blocks enemy movement."
-health = SubResource("SubResource_health")
-attack = SubResource("SubResource_attack")
-targeting = SubResource("SubResource_targeting")
+health = SubResource("Resource_k6tlf")
+attack = SubResource("Resource_soe44")
+targeting = SubResource("Resource_1mbg1")

@@ -25,7 +25,7 @@ func create() -> Enemy:
 		push_error("Scene in EnemyData must inherit from Enemy!")
 		return null
 
-	enemy.data = self.duplicate()
+	enemy.data = self.duplicate(true)
 	apply_to(enemy)
 	return enemy
 
@@ -33,15 +33,11 @@ func apply_to(enemy: Enemy) -> void:
 	if not is_instance_valid(enemy):
 		return
 
-	enemy.lives_penalty = lives_penalty
-	enemy.gold_reward = gold_reward
-	enemy.type = type
-
 	if health and enemy.health:
-		enemy.health.data = health
+		enemy.health.data = enemy.data.health
 
 	if movement and enemy.movement:
-		enemy.movement.data = movement
+		enemy.movement.data = enemy.data.movement
 
 	if nav and enemy.nav:
-		enemy.nav.data = nav
+		enemy.nav.data = enemy.data.nav
