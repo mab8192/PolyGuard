@@ -2,11 +2,21 @@
 
 [ext_resource type="PackedScene" uid="uid://ctoyf62guxgdq" path="res://src/scenes/enemies/grunt.tscn" id="1_rahde"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="2_rbqdr"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="4_movement"]
+
+[sub_resource type="Resource" id="SubResource_health"]
+script = ExtResource("3_health")
+max_health = 30.0
+armor = 5.0
+
+[sub_resource type="Resource" id="SubResource_movement"]
+script = ExtResource("4_movement")
+max_speed = 70.0
 
 [resource]
 script = ExtResource("2_rbqdr")
 display_name = "Grunt"
 scene = ExtResource("1_rahde")
-max_health = 30.0
-armor = 5.0
-max_speed = 70.0
+health = SubResource("SubResource_health")
+movement = SubResource("SubResource_movement")

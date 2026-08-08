@@ -2,26 +2,48 @@ class_name TargetingComponent extends Area2D
 
 enum Strategy {FIRST, LAST, CLOSEST, STRONGEST}
 
-@export var strategy: Strategy
-@export var max_targets: int
+@export var data: TargetingData:
+	set(val):
+		data = val
+		if data:
+			apply_data(data)
 
-var can_target_physical: bool:
+var strategy: Strategy = Strategy.FIRST
+var max_targets: int = 1
+
+var can_target_physical: bool = true:
 	set(val):
 		can_target_physical = val
 		_update_collision_mask()
 
-var can_target_ghost: bool:
+var can_target_ghost: bool = false:
 	set(val):
 		can_target_ghost = val
 		_update_collision_mask()
 
+var is_configured: bool = false
 var _targets: Array[Enemy] = []
+var _rays: Array[RayCast2D] = []
 var _active_targets: Array[Enemy] = []
+
+func apply_data(config: TargetingData) -> void:
+	if not config:
+		return
+	strategy = config.strategy
+	max_targets = config.max_targets
+	can_target_physical = config.can_target_physical
+	can_target_ghost = config.can_target_ghost
+	is_configured = true
+	_update_collision_mask()
 
 func get_targets() -> Array[Enemy]:
 	return _active_targets
 
 func _ready() -> void:
+	if data:
+		apply_data(data)
+	elif not is_configured:
+		push_error("TargetingComponent on %s is unconfigured! Set data or call apply_data()." % get_path())
 	_update_collision_mask()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
@@ -47,6 +69,8 @@ func _select_target() -> void:
 
 	# Sort candidates according to the selected strategy
 	var candidates: Array[Enemy] = _targets.duplicate()
+	
+	# Filter out candidates we can't see (blocked by walls)
 
 	match strategy:
 		Strategy.FIRST:

@@ -9,7 +9,7 @@ var direction: Vector2 = Vector2.ZERO:
 		direction = value.normalized()
 
 var target: Node2D
-var speed: float = 0.0
+var projectile_speed: float = 0.0
 
 var _secs_alive: float = 0
 const MAX_LIFETIME: float = 10
@@ -27,7 +27,7 @@ func _process(delta: float) -> void:
 	if target and is_instance_valid(target):
 		direction = global_position.direction_to(target.global_position)
 
-	position += delta * direction * speed
+	position += delta * direction * projectile_speed
 	_secs_alive += delta
 	if _secs_alive >= MAX_LIFETIME:
 		queue_free()

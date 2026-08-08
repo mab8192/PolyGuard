@@ -2,6 +2,12 @@ class_name HealthComponent extends Node
 
 signal died()
 
+@export var data: HealthData:
+	set(val):
+		data = val
+		if data:
+			apply_data(data)
+
 var max_health: float = 100.0:
 	set(val):
 		max_health = val
@@ -11,10 +17,23 @@ var armor: float = 0.0
 var magic_resistance: float = 0.0
 
 var _health: float
+var is_configured: bool = false
+
+func apply_data(config: HealthData) -> void:
+	if not config:
+		return
+	max_health = config.max_health
+	armor = config.armor
+	magic_resistance = config.magic_resistance
+	is_configured = true
 
 func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"HealthComponent", self)
+	if data:
+		apply_data(data)
+	elif not is_configured:
+		push_error("HealthComponent on %s is unconfigured! Set data or call apply_data()." % get_path())
 	_health = max_health
 
 ## Affects how fast armor scales

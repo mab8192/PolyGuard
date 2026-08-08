@@ -21,7 +21,6 @@ position = Vector2(-352, 224)
 [node name="Exit2" parent="." unique_id=1499054331 instance=ExtResource("4_2uodn")]
 position = Vector2(352, 224)
 
-[node name="Spawner" parent="." unique_id=391670320 node_paths=PackedStringArray("enemy_container", "exits") instance=ExtResource("5_dcrpf")]
+[node name="Spawner" parent="." unique_id=391670320 node_paths=PackedStringArray("exits") instance=ExtResource("5_dcrpf")]
 position = Vector2(0, -256)
-enemy_container = NodePath("")
 exits = [NodePath("../Exit")]

@@ -8,17 +8,12 @@ class_name TowerData extends Resource
 
 @export_category("Stats")
 @export var is_solid: bool = true
-@export var can_target_physical: bool = true
-@export var can_target_ghost: bool = false
 @export var cost: int = 50 ## How much gold this tower costs to place
-@export var damage: float = 10 ## How much damage per "shot" this tower does
-@export var damage_type: AttackComponent.DamageType = AttackComponent.DamageType.PHYSICAL
-@export var attack_mode: AttackComponent.AttackMode = AttackComponent.AttackMode.PROJECTILE
-@export var max_targets: int = 1
-@export var attack_cooldown: float = 1000 ## Milliseconds between attacks
-@export var projectile_speed: float = 400 ## How fast this towers projectiles move, if applicable
-@export var health: int = 100 ## How much hp this tower has
-@export var armor: float = 10 ## How much armor this tower has
+
+@export_category("Components")
+@export var health: HealthData
+@export var attack: AttackData
+@export var targeting: TargetingData
 
 ## TODO: Upgrade System
 
@@ -29,10 +24,31 @@ func create(is_preview: bool = true) -> Tower:
 		return null
 
 	tower.data = self.duplicate()
-	
 	tower.is_preview = is_preview
 	
-	# Sync properties top-down based on this tower data
-	ComponentUtil.sync_properties(self, tower)
+	apply_to(tower)
 
 	return tower
+
+func apply_to(tower: Tower) -> void:
+	if not is_instance_valid(tower):
+		return
+		
+	tower.is_solid = is_solid
+
+	if health and tower.health:
+		health.apply_to(tower.health)
+
+	if targeting and tower.targeting:
+		targeting.apply_to(tower.targeting)
+
+	if attack and tower.attack:
+		attack.apply_to(tower.attack)
+
+	if tower.effect_applier:
+		if targeting:
+			tower.effect_applier.can_target_physical = targeting.can_target_physical
+			tower.effect_applier.can_target_ghost = targeting.can_target_ghost
+		elif attack:
+			tower.effect_applier.can_target_physical = attack.can_target_physical
+			tower.effect_applier.can_target_ghost = attack.can_target_ghost

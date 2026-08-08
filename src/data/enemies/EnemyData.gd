@@ -8,14 +8,11 @@ class_name EnemyData extends Resource
 @export var lives_penalty: int = 1
 @export var gold_reward: int = 1
 @export var type: Enemy.EnemyType = Enemy.EnemyType.PHYSICAL
+@export var nav_strategy: NavigationComponent.NavStrategy = NavigationComponent.NavStrategy.CLOSEST
 
-@export var max_health: float = 100.0
-@export var armor: float = 0.0
-@export var magic_resistance: float = 0.0
-
-@export var max_speed: float = 100.0
-@export var acceleration: float = 1200.0
-@export var friction: float = 1000.0
+@export_category("Components")
+@export var health: HealthData
+@export var movement: MovementData
 
 func create() -> Enemy:
 	if not scene:
@@ -28,5 +25,22 @@ func create() -> Enemy:
 		return null
 
 	enemy.data = self.duplicate()
-	ComponentUtil.sync_properties(self, enemy)
+	apply_to(enemy)
 	return enemy
+
+func apply_to(enemy: Enemy) -> void:
+	if not is_instance_valid(enemy):
+		return
+
+	enemy.lives_penalty = lives_penalty
+	enemy.gold_reward = gold_reward
+	enemy.type = type
+
+	if health and enemy.health:
+		health.apply_to(enemy.health)
+
+	if movement and enemy.movement:
+		movement.apply_to(enemy.movement)
+
+	if enemy.nav:
+		enemy.nav.strategy = nav_strategy

@@ -1,7 +1,19 @@
-[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://g1h2o3s4t5r6e"]
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://c52631vvaxwfm"]
 
-[ext_resource type="Script" uid="uid://c2a3b4e5f6g7" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://iyul5yfpdq8d" path="res://src/scenes/enemies/ghost.tscn" id="2_scene"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="4_movement"]
+
+[sub_resource type="Resource" id="SubResource_health"]
+script = ExtResource("3_health")
+max_health = 35.0
+armor = 10.0
+
+[sub_resource type="Resource" id="SubResource_movement"]
+script = ExtResource("4_movement")
+max_speed = 80.0
+acceleration = 240.0
 
 [resource]
 script = ExtResource("1_script")
@@ -10,8 +22,5 @@ scene = ExtResource("2_scene")
 lives_penalty = 2
 gold_reward = 2
 type = 1
-max_health = 35.0
-armor = 10.0
-max_speed = 80.0
-acceleration = 240.0
-friction = 1000.0
+health = SubResource("SubResource_health")
+movement = SubResource("SubResource_movement")

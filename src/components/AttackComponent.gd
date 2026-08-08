@@ -5,6 +5,12 @@ signal attacked(target: Node2D)
 enum DamageType { PHYSICAL, MAGIC, TRUE }
 enum AttackMode { PROJECTILE, MELEE, CONTINUOUS }
 
+@export var data: AttackData:
+	set(val):
+		data = val
+		if data:
+			apply_data(data)
+
 var damage: float = 10.0
 var damage_type: DamageType = DamageType.PHYSICAL
 var attack_mode: AttackMode = AttackMode.PROJECTILE
@@ -19,8 +25,22 @@ var can_target_physical: bool = true
 var can_target_ghost: bool = false
 
 var targeting: TargetingComponent ## Automatically discovered in _ready
-
 var last_attack_time: float = - INF
+var is_configured: bool = false
+
+func apply_data(config: AttackData) -> void:
+	if not config:
+		return
+	damage = config.damage
+	damage_type = config.damage_type
+	attack_mode = config.attack_mode
+	cooldown = config.cooldown
+	projectile_speed = config.projectile_speed
+	if config.projectile_scene:
+		projectile_scene = config.projectile_scene
+	can_target_physical = config.can_target_physical
+	can_target_ghost = config.can_target_ghost
+	is_configured = true
 
 func _ready() -> void:
 	if get_parent():
@@ -28,6 +48,10 @@ func _ready() -> void:
 		targeting = ComponentUtil.get_component(get_parent(), TargetingComponent) as TargetingComponent
 		if not attack_point:
 			attack_point = get_parent().find_child("Marker2D", false, false) as Marker2D
+	if data:
+		apply_data(data)
+	elif not is_configured:
+		push_error("AttackComponent on %s is unconfigured! Set data or call apply_data()." % get_path())
 
 func can_attack() -> bool:
 	if attack_mode == AttackMode.CONTINUOUS: return true
@@ -79,12 +103,14 @@ func _spawn_projectile(target: Node2D) -> void:
 	elif get_parent() is Node2D:
 		proj.global_position = (get_parent() as Node2D).global_position
 
-	# Top-down sync from tower data and AttackComponent to Projectile tree
-	var parent_node = get_parent()
-	if parent_node and &"data" in parent_node and parent_node.data:
-		ComponentUtil.sync_properties(parent_node.data, proj)
-	ComponentUtil.sync_properties(self, proj)
-	
+	proj.projectile_speed = projectile_speed
+	var dmg_comp = proj.damage_component if proj.damage_component else ComponentUtil.get_component(proj, DamageComponent) as DamageComponent
+	if dmg_comp:
+		dmg_comp.damage = damage
+		dmg_comp.damage_type = damage_type
+		dmg_comp.can_target_physical = can_target_physical
+		dmg_comp.can_target_ghost = can_target_ghost
+
 	proj.target = target
 
 func _deal_direct_damage(target: Node2D) -> void:
