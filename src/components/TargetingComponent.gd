@@ -84,11 +84,3 @@ func _on_body_entered(body: Node2D) -> void:
 func _on_body_exited(body: Node2D) -> void:
 	if body is Enemy:
 		targets.erase(body)
-
-func _process(delta: float) -> void:
-	queue_redraw()
-
-func _draw() -> void:
-	for target in active_targets:
-		if is_instance_valid(target):
-			draw_circle(to_local(target.global_position), 20, Color.RED)

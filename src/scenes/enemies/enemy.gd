@@ -46,6 +46,9 @@ func _ready() -> void:
 		# Apply common settings shared by all enemies
 		nav.agent.path_max_distance = 10
 		nav.agent.avoidance_enabled = true
+		nav.agent.simplify_path = false
+		nav.agent.path_desired_distance = 6.0
+		nav.agent.target_desired_distance = 8.0
 
 		# Assign targets from the stage
 		var targets: Array[Node2D] = []

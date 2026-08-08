@@ -241,13 +241,6 @@ const AGENT_TIERS: Array[Dictionary] = [
 
 var _tier_regions: Dictionary = {}
 
-func _dist_sq_point_to_rect(pt: Vector2, rect: Rect2) -> float:
-	var closest = Vector2(
-		clampf(pt.x, rect.position.x, rect.end.x),
-		clampf(pt.y, rect.position.y, rect.end.y)
-	)
-	return pt.distance_squared_to(closest)
-
 func _get_or_create_tier_region(layer: int) -> NavigationRegion2D:
 	if _tier_regions.has(layer):
 		return _tier_regions[layer]
@@ -265,202 +258,15 @@ func _get_or_create_tier_region(layer: int) -> NavigationRegion2D:
 	return new_region
 
 func _generate_navmesh() -> void:
-	var tile_size: Vector2 = Vector2(tiles.tile_set.tile_size) * tiles.scale
-	
-	var sub_step: float = GRID_SIZE / 2.0
-	var sub_size: Vector2 = Vector2(sub_step, sub_step)
-	var sub_half: Vector2 = sub_size / 2.0
+	NavMeshGenerator.generate_navmesh(
+		self,
+		tiles,
+		towers,
+		navigation_region_2d,
+		AGENT_TIERS,
+		_get_or_create_tier_region
+	)
 
-	var subs_per_tile_x: int = round(tile_size.x / sub_step)
-	var subs_per_tile_y: int = round(tile_size.y / sub_step)
-
-	var tower_rects: Array[Rect2] = []
-
-	for tower in towers.get_children():
-		if tower is Tower and not tower.is_preview and tower.data.is_solid:
-			var region_pos: Vector2 = navigation_region_2d.to_local(tower.global_position)
-			
-			var found_shape = false
-			for child in tower.get_children():
-				if child is CollisionShape2D and child.shape is RectangleShape2D:
-					var shape_size = child.shape.size
-					var local_offset = child.position
-					var rect = Rect2(region_pos + local_offset - (shape_size / 2.0), shape_size)
-					tower_rects.append(rect)
-					found_shape = true
-					break
-			
-			if not found_shape:
-				var tower_size: Vector2 = Vector2(64, 64)
-				var rect: Rect2 = Rect2(region_pos - (tower_size / 2.0), tower_size)
-				tower_rects.append(rect)
-
-	var used_cells = tiles.get_used_cells()
-	if used_cells.is_empty():
-		return
-
-	# Calculate grid bounds
-	var min_cell = used_cells[0]
-	var max_cell = used_cells[0]
-	for cell in used_cells:
-		if cell.x < min_cell.x: min_cell.x = cell.x
-		if cell.y < min_cell.y: min_cell.y = cell.y
-		if cell.x > max_cell.x: max_cell.x = cell.x
-		if cell.y > max_cell.y: max_cell.y = cell.y
-
-	var grid_offset_x = min_cell.x * subs_per_tile_x
-	var grid_offset_y = min_cell.y * subs_per_tile_y
-	var grid_w = (max_cell.x - min_cell.x + 1) * subs_per_tile_x
-	var grid_h = (max_cell.y - min_cell.y + 1) * subs_per_tile_y
-
-	# Pre-calculate wall rects for tiles with collision
-	var wall_rects_by_cell: Dictionary = {}
-	for cell_pos in used_cells:
-		var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
-		if tile_data and tile_data.get_collision_polygons_count(0) > 0:
-			continue
-
-		var local_wall_rects: Array[Rect2] = []
-		for nx in range(-1, 2):
-			for ny in range(-1, 2):
-				var neighbor = cell_pos + Vector2i(nx, ny)
-				var n_tile_data = tiles.get_cell_tile_data(neighbor)
-				if n_tile_data and n_tile_data.get_collision_polygons_count(0) > 0:
-					var n_global_center: Vector2 = tiles.to_global(tiles.map_to_local(neighbor))
-					var n_region_center: Vector2 = navigation_region_2d.to_local(n_global_center)
-					local_wall_rects.append(Rect2(n_region_center - (tile_size / 2.0), tile_size))
-		wall_rects_by_cell[cell_pos] = local_wall_rects
-
-	# Generate navmesh for each agent tier
-	for tier in AGENT_TIERS:
-		var tier_radius: float = tier.radius
-		var safe_dist_sq: float = (tier_radius - 0.1) * (tier_radius - 0.1)
-		var ignore_towers: bool = tier.get("ignore_towers", false)
-		
-		var safe_grid: PackedByteArray = PackedByteArray()
-		safe_grid.resize(grid_w * grid_h)
-		safe_grid.fill(0)
-
-		for cell_pos in used_cells:
-			if not wall_rects_by_cell.has(cell_pos):
-				continue
-
-			var global_center: Vector2 = tiles.to_global(tiles.map_to_local(cell_pos))
-			var region_center: Vector2 = navigation_region_2d.to_local(global_center)
-			var tile_top_left: Vector2 = region_center - (tile_size / 2.0)
-			var local_wall_rects: Array[Rect2] = wall_rects_by_cell[cell_pos]
-
-			for sub_x in range(subs_per_tile_x):
-				for sub_y in range(subs_per_tile_y):
-					var sub_center: Vector2 = tile_top_left + Vector2(
-						sub_x * sub_step + sub_half.x,
-						sub_y * sub_step + sub_half.y
-					)
-
-					var is_safe: bool = true
-					
-					if not ignore_towers:
-						for obs_rect in tower_rects:
-							if _dist_sq_point_to_rect(sub_center, obs_rect) < safe_dist_sq:
-								is_safe = false
-								break
-								
-					if not is_safe:
-						continue
-						
-					for obs_rect in local_wall_rects:
-						if _dist_sq_point_to_rect(sub_center, obs_rect) < safe_dist_sq:
-							is_safe = false
-							break
-
-					if is_safe:
-						var gx = cell_pos.x * subs_per_tile_x + sub_x - grid_offset_x
-						var gy = cell_pos.y * subs_per_tile_y + sub_y - grid_offset_y
-						safe_grid[gy * grid_w + gx] = 1
-
-		# Greedy Meshing Pass 1: Find Rectangles and Corners
-		var greedy_rects = []
-		var corners_set = {}
-		
-		for y in range(grid_h):
-			for x in range(grid_w):
-				if safe_grid[y * grid_w + x] == 1:
-					var w = 1
-					while x + w < grid_w and safe_grid[y * grid_w + (x + w)] == 1:
-						w += 1
-					
-					var h = 1
-					var can_expand_h = true
-					while y + h < grid_h and can_expand_h:
-						for dx in range(w):
-							if safe_grid[(y + h) * grid_w + (x + dx)] == 0:
-								can_expand_h = false
-								break
-						if can_expand_h:
-							h += 1
-					
-					for dy in range(h):
-						for dx in range(w):
-							safe_grid[(y + dy) * grid_w + (x + dx)] = 0
-							
-					greedy_rects.append(Rect2i(x, y, w, h))
-					
-					corners_set[Vector2i(x, y)] = true
-					corners_set[Vector2i(x + w, y)] = true
-					corners_set[Vector2i(x + w, y + h)] = true
-					corners_set[Vector2i(x, y + h)] = true
-
-		# Greedy Meshing Pass 2: Build T-Junction Free Polygons
-		var nav_poly: NavigationPolygon = NavigationPolygon.new()
-		var vertex_map: Dictionary = {}
-		var all_vertices: PackedVector2Array = []
-		
-		var get_vertex_idx = func(pos: Vector2) -> int:
-			var key = Vector2(round(pos.x), round(pos.y))
-			var idx = vertex_map.get(key, -1)
-			if idx != -1: return idx
-			idx = all_vertices.size()
-			all_vertices.append(pos)
-			vertex_map[key] = idx
-			return idx
-
-		var base_global = tiles.to_global(tiles.map_to_local(min_cell))
-		var base_local = navigation_region_2d.to_local(base_global)
-		var grid_origin = base_local - (tile_size / 2.0)
-
-		for rect in greedy_rects:
-			var x = rect.position.x
-			var y = rect.position.y
-			var w = rect.size.x
-			var h = rect.size.y
-			
-			var poly_points = PackedInt32Array()
-			
-			for gx in range(x, x + w):
-				if corners_set.has(Vector2i(gx, y)):
-					var pt = grid_origin + Vector2(gx * sub_step, y * sub_step)
-					poly_points.append(get_vertex_idx.call(pt))
-					
-			for gy in range(y, y + h):
-				if corners_set.has(Vector2i(x + w, gy)):
-					var pt = grid_origin + Vector2((x + w) * sub_step, gy * sub_step)
-					poly_points.append(get_vertex_idx.call(pt))
-					
-			for gx in range(x + w, x, -1):
-				if corners_set.has(Vector2i(gx, y + h)):
-					var pt = grid_origin + Vector2(gx * sub_step, (y + h) * sub_step)
-					poly_points.append(get_vertex_idx.call(pt))
-					
-			for gy in range(y + h, y, -1):
-				if corners_set.has(Vector2i(x, gy)):
-					var pt = grid_origin + Vector2(x * sub_step, gy * sub_step)
-					poly_points.append(get_vertex_idx.call(pt))
-					
-			nav_poly.add_polygon(poly_points)
-
-		nav_poly.vertices = all_vertices
-		var tier_region = _get_or_create_tier_region(tier.layer)
-		tier_region.navigation_polygon = nav_poly
 
 ### SIGNAL HANDLERS
 
