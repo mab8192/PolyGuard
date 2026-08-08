@@ -40,7 +40,6 @@ func _ready() -> void:
 			collision_layer = 8 # Layer 4: Ghost Enemies
 			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
 		else:
-			nav.agent.navigation_layers = 3 # Layer 1 (small) and Layer 2 (large) physical navigation
 			collision_layer = 4 # Layer 3: Physical Enemies
 			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
 		

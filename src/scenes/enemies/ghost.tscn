@@ -5,15 +5,10 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_rbr7q"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_18sgt"]
 
-[node name="Ghost" type="CharacterBody2D" unique_id=1825300398 node_paths=PackedStringArray("health", "movement", "nav") groups=["enemies"]]
+[node name="Ghost" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_garty")
-lives_penalty = 2
-type = 1
-health = NodePath("HealthComponent")
-movement = NodePath("MovementComponent")
-nav = NodePath("NavigationComponent")
 
 [node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
 position = Vector2(-1, -1)
@@ -21,27 +16,20 @@ scale = Vector2(0.875, 0.875)
 color = Color(0.5921569, 0.27450982, 1, 0.64705884)
 polygon = PackedVector2Array(-17.142857, 1.1428571, 1.1428571, -12.571428, 19.42857, 1.1428571, 1.1428571, 14.8571415)
 
-[node name="MovementComponent" type="Node" parent="." unique_id=588237634 node_paths=PackedStringArray("body")]
+[node name="MovementComponent" type="Node" parent="." unique_id=588237634]
 script = ExtResource("2_wsj3u")
-max_speed = 80.0
-acceleration = 240.0
-body = NodePath("..")
 metadata/_custom_type_script = "uid://btkgrma8jeupr"
 
 [node name="HealthComponent" type="Node" parent="." unique_id=2023714483]
 script = ExtResource("3_rbr7q")
-max_health = 35.0
-armor = 10.0
 metadata/_custom_type_script = "uid://b25aa5trewubh"
 
-[node name="NavigationComponent" type="Node" parent="." unique_id=587399604 node_paths=PackedStringArray("movement", "agent")]
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399604]
 script = ExtResource("4_18sgt")
-movement = NodePath("../MovementComponent")
-agent = NodePath("../NavigationAgent2D")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
-navigation_layers = 2
+navigation_layers = 4
 simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0

@@ -16,6 +16,10 @@ config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=240
 config/icon="res://icon.svg"
 
+[audio]
+
+buses/default_bus_layout="uid://b4qjryr1atj1f"
+
 [autoload]
 
 GameManager="*uid://bh6gjdf6wjx87"
@@ -70,8 +74,11 @@ pointing/emulate_touch_from_mouse=true
 [layer_names]
 
 2d_physics/layer_1="Level Colliders"
+2d_navigation/layer_1="Walls and towers < 16px"
 2d_physics/layer_2="Solid Towers"
+2d_navigation/layer_2="Walls and towers >= 16px"
 2d_physics/layer_3="Physical Enemies"
+2d_navigation/layer_3="Walls, no towers"
 2d_physics/layer_4="Ghost Enemies"
 2d_physics/layer_8="Non-Solid"
 
