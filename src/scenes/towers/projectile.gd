@@ -1,8 +1,9 @@
 class_name Projectile extends Node2D
 
 @onready var polygon: Polygon2D = $Polygon2D
-var damage_component: DamageComponent
 @onready var visible_on_screen_notifier_2d: VisibleOnScreenNotifier2D = $VisibleOnScreenNotifier2D
+
+var damage_component: DamageComponent
 
 var direction: Vector2 = Vector2.ZERO:
 	set(value):

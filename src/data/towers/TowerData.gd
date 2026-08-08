@@ -14,6 +14,7 @@ class_name TowerData extends Resource
 @export var health: HealthData
 @export var attack: AttackData
 @export var targeting: TargetingData
+@export var effect_applier: EffectApplierData
 
 ## TODO: Upgrade System
 
@@ -23,7 +24,7 @@ func create(is_preview: bool = true) -> Tower:
 		push_error("Scene must be a tower!")
 		return null
 
-	tower.data = self.duplicate()
+	tower.data = self.duplicate(true)
 	tower.is_preview = is_preview
 	
 	apply_to(tower)
@@ -37,18 +38,13 @@ func apply_to(tower: Tower) -> void:
 	tower.is_solid = is_solid
 
 	if health and tower.health:
-		health.apply_to(tower.health)
+		tower.health.data = health
 
 	if targeting and tower.targeting:
-		targeting.apply_to(tower.targeting)
+		tower.targeting.data = targeting
 
 	if attack and tower.attack:
-		attack.apply_to(tower.attack)
+		tower.attack.data = attack
 
-	if tower.effect_applier:
-		if targeting:
-			tower.effect_applier.can_target_physical = targeting.can_target_physical
-			tower.effect_applier.can_target_ghost = targeting.can_target_ghost
-		elif attack:
-			tower.effect_applier.can_target_physical = attack.can_target_physical
-			tower.effect_applier.can_target_ghost = attack.can_target_ghost
+	if effect_applier and tower.effect_applier:
+		tower.effect_applier.data = effect_applier

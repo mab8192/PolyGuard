@@ -10,7 +10,8 @@ enum NavStrategy {
 	FIRST,		# First in the targets array
 }
 
-var strategy: NavStrategy = NavStrategy.CLOSEST
+@export var data: NavigationData
+
 var movement: MovementComponent
 var agent: NavigationAgent2D
 var targets: Array[Node2D] = []
@@ -24,6 +25,10 @@ func _ready() -> void:
 	_actor = get_parent() as CharacterBody2D
 	if !_actor:
 		push_error("Must be child of a CharacterBody2D")
+		return
+
+	if not data:
+		push_error("Missing NavigationData! %s" % get_path())
 		return
 
 	if not movement:
@@ -73,10 +78,10 @@ func _physics_process(_delta: float) -> void:
 	_no_path = false
 	
 	var dir = _actor.global_position.direction_to(next_pos)
-	var intended_vel = dir * movement.max_speed
+	var intended_vel = dir * movement.data.max_speed
 	
 	if agent.avoidance_enabled:
-		agent.max_speed = movement.max_speed
+		agent.max_speed = movement.data.max_speed
 		agent.velocity = intended_vel
 	else:
 		velocity_computed.emit(intended_vel)
@@ -85,7 +90,7 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
-	if strategy == NavStrategy.FIRST:
+	if data.strategy == NavStrategy.FIRST:
 		agent.target_position = targets[0].global_position
 		return
 	
@@ -100,7 +105,7 @@ func _pick_target() -> void:
 		
 		distances.append(length)
 
-	match strategy:
+	match data.strategy:
 		NavStrategy.CLOSEST:
 			# Find the lowest number in the distances array
 			var min_dist: float = distances.min()

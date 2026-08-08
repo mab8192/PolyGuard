@@ -21,10 +21,3 @@ static func get_component(node: Node, type: Script) -> Node:
 			return child
 
 	return null
-
-## Type-safe shorthand helpers for frequent components
-static func get_health(node: Node) -> HealthComponent:
-	return get_component(node, HealthComponent) as HealthComponent
-
-static func get_attack(node: Node) -> AttackComponent:
-	return get_component(node, AttackComponent) as AttackComponent

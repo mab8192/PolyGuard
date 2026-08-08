@@ -2,25 +2,21 @@ class_name DamageComponent extends Area2D
 
 signal hit(target: Node2D)
 
-var damage: float = 10.0
-var damage_type: AttackComponent.DamageType = AttackComponent.DamageType.PHYSICAL:
+var damage: float
+var damage_type: AttackComponent.DamageType:
 	set(val):
 		damage_type = val
 		_update_collision_mask()
 
-var can_target_physical: bool = true:
+var can_target_physical: bool:
 	set(val):
 		can_target_physical = val
 		_update_collision_mask()
 
-var can_target_ghost: bool = false:
+var can_target_ghost: bool:
 	set(val):
 		can_target_ghost = val
 		_update_collision_mask()
-
-func update(amount: float, type: AttackComponent.DamageType) -> void:
-	damage = amount
-	damage_type = type
 
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)

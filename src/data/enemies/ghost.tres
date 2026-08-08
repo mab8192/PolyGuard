@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://iyul5yfpdq8d" path="res://src/scenes/enemies/ghost.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_ky8tn"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="4_movement"]
 
 [sub_resource type="Resource" id="SubResource_health"]
@@ -15,6 +16,11 @@ script = ExtResource("4_movement")
 max_speed = 80.0
 acceleration = 240.0
 
+[sub_resource type="Resource" id="Resource_m2ilo"]
+script = ExtResource("3_ky8tn")
+strategy = 1
+metadata/_custom_type_script = "uid://bllmo3a8geds7"
+
 [resource]
 script = ExtResource("1_script")
 display_name = "Ghost"
@@ -24,3 +30,4 @@ gold_reward = 2
 type = 1
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
+nav = SubResource("Resource_m2ilo")

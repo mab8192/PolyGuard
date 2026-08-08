@@ -1,13 +1,11 @@
 [gd_scene format=3 uid="uid://dg12a81rft006"]
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_jim0o"]
-[ext_resource type="Script" uid="uid://dah8lbipo02ai" path="res://src/components/HitboxComponent.gd" id="2_jfgpo"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_2o1o6"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="4_2o1o6"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="5_37hue"]
-[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectile.tscn" id="6_l8nwa"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(64, 64)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
@@ -18,10 +16,8 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_jim0o")
 
-[node name="HitboxComponent" type="CollisionShape2D" parent="." unique_id=2145783814]
-shape = SubResource("RectangleShape2D_qgbsg")
-script = ExtResource("2_jfgpo")
-metadata/_custom_type_script = "uid://dah8lbipo02ai"
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
+shape = SubResource("RectangleShape2D_d56y3")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=75994436]
 script = ExtResource("3_2o1o6")
@@ -43,7 +39,6 @@ color = Color(0.33680907, 0.17885035, 0.035872858, 1)
 
 [node name="AttackComponent" type="Node" parent="." unique_id=635266676]
 script = ExtResource("5_37hue")
-projectile_scene = ExtResource("6_l8nwa")
 metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
 
 [node name="Marker2D" type="Marker2D" parent="." unique_id=522312756]

@@ -13,6 +13,7 @@ class_name EnemyData extends Resource
 @export_category("Components")
 @export var health: HealthData
 @export var movement: MovementData
+@export var nav: NavigationData
 
 func create() -> Enemy:
 	if not scene:
@@ -37,10 +38,10 @@ func apply_to(enemy: Enemy) -> void:
 	enemy.type = type
 
 	if health and enemy.health:
-		health.apply_to(enemy.health)
+		enemy.health.data = health
 
 	if movement and enemy.movement:
-		movement.apply_to(enemy.movement)
+		enemy.movement.data = movement
 
-	if enemy.nav:
-		enemy.nav.strategy = nav_strategy
+	if nav and enemy.nav:
+		enemy.nav.data = nav

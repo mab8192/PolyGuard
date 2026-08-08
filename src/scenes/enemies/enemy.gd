@@ -9,9 +9,17 @@ var lives_penalty: int = 1
 var gold_reward: int = 1
 var type: EnemyType = EnemyType.PHYSICAL
 
-var health: HealthComponent
-var movement: MovementComponent
-var nav: NavigationComponent
+var health: HealthComponent:
+	get:
+		return ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+		
+var movement: MovementComponent:
+	get:
+		return ComponentUtil.get_component(self, MovementComponent) as MovementComponent
+		
+var nav: NavigationComponent:
+	get:
+		return ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
 
 var _active_effects: Array[ActiveEffect] = []
 
@@ -24,10 +32,6 @@ func remove_effect(effect: ActiveEffect) -> void:
 	effect.remove()
 
 func _ready() -> void:
-	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
-	movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
-	nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
-
 	if health:
 		health.died.connect(_on_died)
 	
