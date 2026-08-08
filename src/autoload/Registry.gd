@@ -5,6 +5,7 @@ const ENEMY_MAP: Dictionary = {
 	"speeder": "res://src/scenes/enemies/speeder.tscn",
 	"tank": "res://src/scenes/enemies/tank.tscn",
 	"ghost": "res://src/scenes/enemies/ghost.tscn",
+	"sniper": "res://src/scenes/enemies/sniper.tscn"
 }
 
 # Array of paths to stage scenes

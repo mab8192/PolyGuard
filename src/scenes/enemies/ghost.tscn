@@ -24,7 +24,7 @@ polygon = PackedVector2Array(-17.142857, 1.1428571, 1.1428571, -12.571428, 19.42
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634 node_paths=PackedStringArray("body")]
 script = ExtResource("2_wsj3u")
 max_speed = 80.0
-acceleration = 80.0
+acceleration = 240.0
 body = NodePath("..")
 metadata/_custom_type_script = "uid://btkgrma8jeupr"
 

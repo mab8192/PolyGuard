@@ -6,6 +6,7 @@
 		{ "enemy_type": "tank", "count": 3, "interval": 1, "delay": 1},
 		{ "enemy_type": "speeder", "count": 10, "interval": 0.2, "delay": 0 },
 		{ "enemy_type": "ghost", "count": 3, "interval": 0.7, "delay": 0.5 },
+		{ "enemy_type": "sniper", "count": 2, "interval": 2, "delay": 0.75 },
 	  ]
 	},
 	{
