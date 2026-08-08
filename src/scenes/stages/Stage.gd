@@ -1,6 +1,6 @@
 class_name Stage extends Node2D
 
-@export var data: StageData
+var data: StageData
 
 @onready var tiles: TileMapLayer = $NavigationRegion2D/Tiles
 @onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D

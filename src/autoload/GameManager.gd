@@ -1,28 +1,17 @@
 extends Node
 
-var current_stage: Stage = null
 var camera: Camera2D
-var stage_root: Node2D
+var stage_root: StageRoot
+
+var current_stage: Stage:
+	get:
+		return stage_root.current_stage
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_update_camera)
 	
-func load_stage(path: String) -> void:
-	# 1. Clean up old stage
-	if current_stage:
-		current_stage.queue_free()
-		current_stage = null
-	
-	# 2. Instantiate new stage
-	var stage_packed: PackedScene = load(path)
-	current_stage = stage_packed.instantiate() as Stage
-	stage_root.add_child(current_stage)
-	
-	# 3. Configure camera for the newly loaded stage
-	_setup_stage(current_stage)
-
-## Setup the given stage. Update the camera, set economy, etc.
-func _setup_stage(stage: Stage) -> void:
+func load_stage(stage_data: StageData) -> void:
+	stage_root.load_stage(stage_data)
 	_update_camera()
 
 func _update_camera() -> void:

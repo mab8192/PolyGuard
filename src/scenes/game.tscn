@@ -2,21 +2,21 @@
 
 [ext_resource type="Script" uid="uid://dtsyevv75wql0" path="res://src/scenes/game.gd" id="1_covw0"]
 [ext_resource type="PackedScene" uid="uid://ckbyw6p0dd4tr" path="res://src/scenes/ui/hud.tscn" id="2_3rtjt"]
+[ext_resource type="PackedScene" uid="uid://cxsn1h00q1jo3" path="res://src/scenes/stage_root.tscn" id="2_yufto"]
+
+[sub_resource type="Environment" id="Environment_qgbsg"]
+background_mode = 3
+glow_enabled = true
+glow_bloom = 0.51
 
 [node name="Game" type="Node2D" unique_id=1753224795]
 script = ExtResource("1_covw0")
 
-[node name="StageRoot" type="Node2D" parent="." unique_id=1738489036]
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=1088727556]
+environment = SubResource("Environment_qgbsg")
+
+[node name="StageRoot" parent="." unique_id=28076084 instance=ExtResource("2_yufto")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
-
-[node name="Background" type="ColorRect" parent="Camera2D" unique_id=503248848]
-z_index = -100
-offset_left = -864.0
-offset_top = -1224.0
-offset_right = 824.0
-offset_bottom = 1312.0
-mouse_filter = 2
-color = Color(0, 0, 0, 1)
 
 [node name="HUD" parent="." unique_id=4857712 instance=ExtResource("2_3rtjt")]

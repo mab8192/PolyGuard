@@ -1,20 +1,12 @@
 [gd_scene format=4 uid="uid://dj5myt3gky8fk"]
 
 [ext_resource type="Script" uid="uid://djqjbhfaeaqt2" path="res://src/scenes/stages/Stage.gd" id="1_w3o5t"]
-[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_05oof"]
 [ext_resource type="PackedScene" uid="uid://c3o5j8cdgdxmc" path="res://src/scenes/tiles/tiles.tscn" id="3_bokl8"]
 [ext_resource type="PackedScene" uid="uid://xyww0xmxe1ss" path="res://src/scenes/utility/exit.tscn" id="4_njxte"]
 [ext_resource type="PackedScene" uid="uid://cq3ofdmp8sxea" path="res://src/scenes/utility/spawner.tscn" id="5_jjcye"]
 
-[sub_resource type="Resource" id="Resource_5jk0g"]
-script = ExtResource("2_05oof")
-stage_id = "stage_03"
-wave_data_file = "res://src/data/stages/Stage3.json"
-metadata/_custom_type_script = "uid://xynccep1kdc5"
-
 [node name="Stage3" type="Node2D" unique_id=1225741288]
 script = ExtResource("1_w3o5t")
-data = SubResource("Resource_5jk0g")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=871223285]
 
@@ -28,12 +20,10 @@ position = Vector2(128, 768)
 
 [node name="Spawner" parent="." unique_id=391670320 node_paths=PackedStringArray("enemy_container", "exits") instance=ExtResource("5_jjcye")]
 position = Vector2(448, -256)
-enemy_container = NodePath("../Enemies")
+enemy_container = NodePath("")
 exits = [NodePath("../Exit")]
 
 [node name="Spawner2" parent="." unique_id=964929055 node_paths=PackedStringArray("enemy_container", "exits") instance=ExtResource("5_jjcye")]
 position = Vector2(-448, -256)
-enemy_container = NodePath("../Enemies")
+enemy_container = NodePath("")
 exits = [NodePath("../Exit")]
-
-[node name="Enemies" type="Node2D" parent="." unique_id=1697946207]

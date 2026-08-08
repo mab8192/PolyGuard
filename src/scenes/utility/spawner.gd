@@ -3,7 +3,6 @@ extends Area2D
 
 @export_group("References")
 ## Parent path or node to attach spawned enemies under (keeps scene tree clean)
-@export var enemy_container: Node2D
 @export var exits: Array[Node2D]
 @onready var collision_shape_2d: CollisionShape2D = $CollisionShape2D
 
@@ -11,11 +10,6 @@ signal finished()
 
 # Internal state tracking
 var _active_groups: int = 0
-
-func _ready() -> void:
-	# Fall back to root level or self if no container assigned
-	if not enemy_container:
-		enemy_container = get_tree().current_scene
 
 ## Spawns a full batch of enemies defined by a SpawnGroup object.
 func run(group: SpawnGroup) -> void:
@@ -68,7 +62,7 @@ func _instantiate_enemy(enemy_data: EnemyData) -> void:
 	enemy.global_position = _get_spawn_point()
 	
 	# Add it to the scene tree
-	enemy_container.add_child(enemy)
+	GameManager.stage_root.add_child(enemy)
 
 	# Emit signals for UI, WaveManager, or Audio
 	SignalBus.enemy_spawned.emit(enemy)

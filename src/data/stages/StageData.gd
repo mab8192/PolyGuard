@@ -4,6 +4,7 @@ extends Resource
 @export_group("Stage Info")
 @export var stage_id: String = "stage_01"
 @export var stage_name: String = "Grassland Outpost"
+@export var scene: PackedScene ## The scene for this stage
 
 @export_group("Economy & Rules")
 @export var starting_gold: int = 100
@@ -54,3 +55,16 @@ func get_wave(index: int) -> WaveData:
 		return waves[index]
 	printerr("StageData (%s): Wave index %d out of bounds." % [stage_name, index])
 	return null
+
+func create() -> Stage:
+	if not scene:
+		push_error("StageData (%s) has no scene assigned!" % resource_path)
+		return null
+
+	var stage = scene.instantiate() as Stage
+	if not stage:
+		push_error("Scene in StageData must inherit from Stage!")
+		return null
+
+	stage.data = self
+	return stage

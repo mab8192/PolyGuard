@@ -13,6 +13,8 @@ class_name TowerData extends Resource
 @export var cost: int = 50 ## How much gold this tower costs to place
 @export var damage: float = 10 ## How much damage per "shot" this tower does
 @export var damage_type: AttackComponent.DamageType = AttackComponent.DamageType.PHYSICAL
+@export var attack_mode: AttackComponent.AttackMode = AttackComponent.AttackMode.PROJECTILE
+@export var max_targets: int = 1
 @export var attack_cooldown: float = 1000 ## Milliseconds between attacks
 @export var projectile_speed: float = 400 ## How fast this towers projectiles move, if applicable
 @export var health: int = 100 ## How much hp this tower has

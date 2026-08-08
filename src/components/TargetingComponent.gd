@@ -2,20 +2,24 @@ class_name TargetingComponent extends Area2D
 
 enum Strategy {FIRST, LAST, CLOSEST, STRONGEST}
 
-@export var strategy: Strategy = Strategy.FIRST
-@export var max_targets: int = 1
-var can_target_physical: bool = true:
+@export var strategy: Strategy
+@export var max_targets: int
+
+var can_target_physical: bool:
 	set(val):
 		can_target_physical = val
 		_update_collision_mask()
 
-var can_target_ghost: bool = false:
+var can_target_ghost: bool:
 	set(val):
 		can_target_ghost = val
 		_update_collision_mask()
 
-var targets: Array[Enemy] = []
-var active_targets: Array[Enemy] = []
+var _targets: Array[Enemy] = []
+var _active_targets: Array[Enemy] = []
+
+func get_targets() -> Array[Enemy]:
+	return _active_targets
 
 func _ready() -> void:
 	_update_collision_mask()
@@ -35,14 +39,14 @@ func _physics_process(_delta: float) -> void:
 
 ## Assigns up to `max_targets` enemies from `targets` to `active_targets` according to `strategy`
 func _select_target() -> void:
-	targets = targets.filter(func(t: Enemy) -> bool: return is_instance_valid(t))
-	active_targets.clear()
+	_targets = _targets.filter(func(t: Enemy) -> bool: return is_instance_valid(t))
+	_active_targets.clear()
 
-	if targets.is_empty():
+	if _targets.is_empty():
 		return
 
 	# Sort candidates according to the selected strategy
-	var candidates: Array[Enemy] = targets.duplicate()
+	var candidates: Array[Enemy] = _targets.duplicate()
 
 	match strategy:
 		Strategy.FIRST:
@@ -74,13 +78,13 @@ func _select_target() -> void:
 	if max_targets > 0:
 		limit = min(max_targets, candidates.size())
 
-	active_targets = candidates.slice(0, limit)
+	_active_targets = candidates.slice(0, limit)
 
 func _on_body_entered(body: Node2D) -> void:
 	var enemy = body as Enemy
-	if body and not targets.has(body):
-		targets.append(enemy)
+	if body and not _targets.has(body):
+		_targets.append(enemy)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Enemy:
-		targets.erase(body)
+		_targets.erase(body)

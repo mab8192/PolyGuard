@@ -39,7 +39,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/script-ide/plugin.cfg")
+enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/script-ide/plugin.cfg")
 
 [file_customization]
 
@@ -80,7 +80,6 @@ pointing/emulate_touch_from_mouse=true
 2d_physics/layer_3="Physical Enemies"
 2d_navigation/layer_3="Walls, no towers"
 2d_physics/layer_4="Ghost Enemies"
-2d_physics/layer_8="Non-Solid"
 
 [navigation]
 
@@ -96,3 +95,4 @@ textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
+environment/defaults/default_clear_color=Color(0, 0, 0, 1)

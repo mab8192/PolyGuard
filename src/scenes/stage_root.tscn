@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://cxsn1h00q1jo3"]
+
+[ext_resource type="Script" uid="uid://cyla187oqfk7a" path="res://src/scenes/stage_root.gd" id="1_jdcq5"]
+
+[node name="StageRoot" type="Node2D" unique_id=28076084]
+script = ExtResource("1_jdcq5")
+
+[node name="Enemies" type="Node2D" parent="." unique_id=1659340401]
+
+[node name="Effects" type="Node2D" parent="." unique_id=2092856954]

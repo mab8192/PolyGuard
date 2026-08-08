@@ -3,8 +3,8 @@ class_name Tower extends StaticBody2D
 ## Gets assigned by the TowerData type
 var data: TowerData
 
+## Components that CAN be attached. Most are not required
 var health: HealthComponent
-var hitbox: HitboxComponent
 var targeting: TargetingComponent ## Can be null
 var attack: AttackComponent ## Can be null
 var effect_applier: EffectApplierComponent ## Can be null
@@ -21,7 +21,6 @@ var is_preview: bool = false:
 
 func _ready() -> void:
 	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
-	hitbox = ComponentUtil.get_component(self, HitboxComponent) as HitboxComponent
 	targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
 	attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
 	effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
@@ -34,7 +33,7 @@ func _process(_delta: float) -> void:
 	if is_preview: return
 	
 	if targeting and attack:
-		attack.attack_targets(targeting.active_targets)
+		attack.attack_targets(targeting.get_targets())
 
 func _update_solid_state() -> void:
 	set_collision_layer_value(1, is_solid)

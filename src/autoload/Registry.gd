@@ -12,12 +12,21 @@ const ENEMIES: Dictionary[String, EnemyData] = {
 func get_enemy_data(id: String) -> EnemyData:
 	return ENEMIES.get(id, null)
 
-# Array of paths to stage scenes
-const STAGES: Array[String] = [
-	"res://src/scenes/stages/Stage1.tscn",
-	"res://src/scenes/stages/Stage2.tscn",
-	"res://src/scenes/stages/Stage3.tscn"
-]
+# Map of stage IDs to data-driven StageData resources
+const STAGES: Dictionary[String, StageData] = {
+	"stage_01": preload("res://src/data/stages/stage_01.tres"),
+	"stage_02": preload("res://src/data/stages/stage_02.tres"),
+	"stage_03": preload("res://src/data/stages/stage_03.tres")
+}
+
+func get_stage_data(id: String) -> StageData:
+	return STAGES.get(id, null)
+
+func get_all_stages() -> Array[StageData]:
+	var result: Array[StageData] = []
+	for key in STAGES:
+		result.append(STAGES[key])
+	return result
 
 # Map of tower IDs to data-driven TowerData resources
 const TOWERS: Dictionary[String, TowerData] = {

@@ -1,0 +1,15 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://7thtpc5diif0"]
+
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="3_icon"]
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Tesla Tower"
+icon = ExtResource("3_icon")
+description = "Short-ranged multi-target lightning tower. Solid structure that blocks enemy movement."
+can_target_ghost = true
+cost = 100
+damage = 2.0
+damage_type = 1
+attack_cooldown = 100.0

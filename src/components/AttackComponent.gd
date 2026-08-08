@@ -2,12 +2,12 @@ class_name AttackComponent extends Node
 
 signal attacked(target: Node2D)
 
-enum DamageType {PHYSICAL, MAGIC, TRUE}
-enum AttackType {PROJECTILE, MELEE, CONTINUOUS}
+enum DamageType { PHYSICAL, MAGIC, TRUE }
+enum AttackMode { PROJECTILE, MELEE, CONTINUOUS }
 
 var damage: float = 10.0
 var damage_type: DamageType = DamageType.PHYSICAL
-var attack_type: AttackType = AttackType.PROJECTILE
+var attack_mode: AttackMode = AttackMode.PROJECTILE
 var cooldown: float = 1000.0
 var attack_point: Marker2D
 
@@ -30,6 +30,8 @@ func _ready() -> void:
 			attack_point = get_parent().find_child("Marker2D", false, false) as Marker2D
 
 func can_attack() -> bool:
+	if attack_mode == AttackMode.CONTINUOUS: return true
+
 	return Time.get_ticks_msec() - last_attack_time >= cooldown
 
 func attack_target(target: Node2D) -> void:
@@ -38,10 +40,10 @@ func attack_target(target: Node2D) -> void:
 	
 	last_attack_time = Time.get_ticks_msec()
 	
-	match attack_type:
-		AttackType.PROJECTILE:
+	match attack_mode:
+		AttackMode.PROJECTILE:
 			_spawn_projectile(target)
-		AttackType.MELEE, AttackType.CONTINUOUS:
+		AttackMode.MELEE, AttackMode.CONTINUOUS:
 			_deal_direct_damage(target)
 	
 	attacked.emit(target)
@@ -53,18 +55,17 @@ func attack_targets(targets: Array) -> void:
 	last_attack_time = Time.get_ticks_msec()
 	
 	for t in targets:
-		if is_instance_valid(t) and t is Node2D:
-			match attack_type:
-				AttackType.PROJECTILE:
+		if is_instance_valid(t):
+			match attack_mode:
+				AttackMode.PROJECTILE:
 					_spawn_projectile(t)
-				AttackType.MELEE, AttackType.CONTINUOUS:
+				AttackMode.MELEE, AttackMode.CONTINUOUS:
 					_deal_direct_damage(t)
 			attacked.emit(t)
 
 func _spawn_projectile(target: Node2D) -> void:
 	if not projectile_scene:
-		var parent_name = owner.name if owner else (get_parent().name if get_parent() else "node")
-		push_warning("AttackComponent on %s has AttackType.PROJECTILE but no projectile_scene assigned." % parent_name)
+		push_warning("AttackComponent on %s has AttackMode.PROJECTILE but no projectile_scene assigned." % get_path())
 		return
 	
 	var proj = projectile_scene.instantiate() as Projectile
