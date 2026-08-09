@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dsr7pdgsmpf0j"]
 
-[ext_resource type="Script" uid="uid://dshb7u6lyrtot" path="res://src/scenes/ui/top_bar.gd" id="1_scac0"]
+[ext_resource type="Script" uid="uid://dshb7u6lyrtot" path="res://src/scenes/ui/in_game/top_bar.gd" id="1_scac0"]
 [ext_resource type="Texture2D" uid="uid://c43kdbbj6ibvy" path="res://vendor/heart.png" id="2_eatui"]
 [ext_resource type="Texture2D" uid="uid://hshxtspc2ow4" path="res://vendor/goldCoin/goldCoin5.png" id="3_x07ed"]
 

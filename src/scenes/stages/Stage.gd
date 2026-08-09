@@ -85,21 +85,6 @@ func start_next_wave() -> void:
 func enter_placement_mode(tower_input: TowerData) -> void:
 	exit_placement_mode()
 	
-	_is_dragging = false
-	_total_drag_distance_sq = 0
-	
-	# Create the new preview tower
-	_preview_tower = tower_input.create()
-	if not _preview_tower:
-		push_error("Must be a tower scene!")
-		return
-
-	# Add it to the scene tree
-	towers.add_child(_preview_tower)
-	
-	# Mark this tower as a preview
-	_preview_tower.is_preview = true
-	
 	# Center on screen in world coordinates (snapped to the placement grid)
 	var center_pos = Vector2.ZERO
 	if GameManager.camera:
@@ -107,7 +92,21 @@ func enter_placement_mode(tower_input: TowerData) -> void:
 	else:
 		center_pos = get_viewport_rect().size / 2.0
 	
-	var snapped_pos = _snap_to_grid(center_pos)
+	_create_preview_tower(tower_input, center_pos)
+
+func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
+	_is_dragging = false
+	_total_drag_distance_sq = 0
+	
+	_preview_tower = tower_data.create()
+	if not _preview_tower:
+		push_error("Must be a tower scene!")
+		return
+
+	towers.add_child(_preview_tower)
+	_preview_tower.is_preview = true
+	
+	var snapped_pos = _snap_to_grid(pos)
 	_preview_tower.global_position = snapped_pos
 	_preview_pos = snapped_pos
 	
@@ -186,6 +185,9 @@ func place_preview() -> void:
 	if not can_place_preview():
 		return
 
+	var tower_data: TowerData = _preview_tower.data
+	var last_pos: Vector2 = _preview_tower.global_position
+
 	# All checks passed, place the tower!
 	gold -= _preview_tower.data.cost
 	SignalBus.gold_changed.emit(gold)
@@ -198,7 +200,9 @@ func place_preview() -> void:
 	
 	_preview_tower = null
 	_is_dragging = false
-	SignalBus.placement_mode_changed.emit(false)
+	
+	if tower_data:
+		_create_preview_tower(tower_data, last_pos)
 
 ### PRIVATE FUNCTIONS
 

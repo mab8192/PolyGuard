@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8y4k27r65m8x"]
 
-[ext_resource type="Script" uid="uid://drwlw55la4a3w" path="res://src/scenes/ui/radial_menu_item.gd" id="1_item_script"]
+[ext_resource type="Script" uid="uid://drwlw55la4a3w" path="res://src/scenes/ui/in_game/radial_menu_item.gd" id="1_item_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.0980392, 0.203922, 0.376471, 0.92)

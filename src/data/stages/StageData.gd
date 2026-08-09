@@ -5,6 +5,7 @@ extends Resource
 @export var stage_id: String = "stage_01"
 @export var stage_name: String = "Grassland Outpost"
 @export var scene: PackedScene ## The scene for this stage
+@export var icon: Texture2D = preload("res://vendor/HAMMA.png")
 
 @export_group("Economy & Rules")
 @export var starting_gold: int = 600
