@@ -16,7 +16,19 @@ collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_jim0o")
 
+[node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
+offset_left = -32.0
+offset_top = -32.0
+offset_right = 32.0
+offset_bottom = 32.0
+color = Color(0.33680907, 0.17885035, 0.035872858, 1)
+
+[node name="Polygon2D" type="Polygon2D" parent="ColorRect" unique_id=1319650272]
+color = Color(0, 0, 0, 1)
+polygon = PackedVector2Array(32, 16, 16, 32, 32, 48, 48, 32)
+
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
+visible = false
 shape = SubResource("RectangleShape2D_d56y3")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=75994436]
@@ -28,14 +40,8 @@ script = ExtResource("4_2o1o6")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
+visible = false
 shape = SubResource("CircleShape2D_qgbsg")
-
-[node name="ColorRect" type="ColorRect" parent="TargetingComponent" unique_id=86212005]
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-color = Color(0.33680907, 0.17885035, 0.035872858, 1)
 
 [node name="AttackComponent" type="Node" parent="." unique_id=635266676]
 script = ExtResource("5_37hue")

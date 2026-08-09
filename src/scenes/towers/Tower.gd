@@ -24,7 +24,7 @@ var effect_applier: EffectApplierComponent: ## Can be null
 var is_solid: bool = true:
 	set(value):
 		is_solid = value
-		_update_solid_state()
+		_update_solid_state() 
 
 var is_preview: bool = false:
 	set(value):
@@ -40,7 +40,8 @@ func _ready() -> void:
 
 func _process(_delta: float) -> void:
 	# Preview towers do not process anything
-	if is_preview: return
+	if is_preview:
+		return
 	
 	if targeting and attack:
 		attack.attack_targets(targeting.get_targets())
@@ -52,7 +53,7 @@ func _update_solid_state() -> void:
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing
 	for child in get_children():
-		if child is CollisionShape2D:
+		if child is CollisionShape2D or child is CollisionPolygon2D:
 			child.disabled = is_preview
 	
 	# Semi-transparent ghost look when previewing

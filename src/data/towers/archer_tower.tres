@@ -22,8 +22,6 @@ armor = 10.0
 
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("6_targeting")
-max_targets = 6
-can_target_ghost = true
 
 [resource]
 script = ExtResource("1_script")

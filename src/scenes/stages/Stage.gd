@@ -32,7 +32,7 @@ var _total_drag_distance_sq: float = 0 ## Tracks how far was travelled between a
 var _is_dragging: bool = false
 var _last_input_pos: Vector2 = Vector2.ZERO
 var _drag_speed_modifier: float = 1.0
-const TOWER_TOUCH_DIST_THRESH: float = 150 ## Touch distance from the center of a tower to enter slow drag mode
+const TOWER_TOUCH_DIST_THRESH: float = 96 ## Touch distance from the center of a tower to enter slow drag mode
 
 ### PUBLIC API
 
