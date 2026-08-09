@@ -45,8 +45,6 @@ func attack_targets(targets: Array) -> void:
 	if not can_attack() or targets.is_empty():
 		return
 	
-	print(data.damage)
-	
 	last_attack_time = Time.get_ticks_msec()
 	
 	for t in targets:

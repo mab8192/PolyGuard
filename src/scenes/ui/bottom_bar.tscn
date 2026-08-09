@@ -5,6 +5,27 @@
 [ext_resource type="Texture2D" uid="uid://5a1a1b6f6q1i" path="res://vendor/arrow_sheet.png" id="3_chvpt"]
 [ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/radial_menu.tscn" id="3_oibdf"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cancel"]
+bg_color = Color(0.913725, 0.270588, 0.376471, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm"]
+bg_color = Color(0.305882, 0.803922, 0.639216, 1)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_confirm_disabled"]
+bg_color = Color(0.305882, 0.803922, 0.639216, 0.35)
+corner_radius_top_left = 40
+corner_radius_top_right = 40
+corner_radius_bottom_right = 40
+corner_radius_bottom_left = 40
+
 [sub_resource type="AtlasTexture" id="AtlasTexture_oibdf"]
 atlas = ExtResource("3_chvpt")
 region = Rect2(0, 0, 28, 21)
@@ -172,6 +193,63 @@ script = ExtResource("1_sf614")
 [node name="DockContainer" type="Control" parent="." unique_id=35361616]
 custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
+
+[node name="PlacementButtons" type="Control" parent="DockContainer" unique_id=104857601]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="CancelPlacementButton" type="Button" parent="DockContainer/PlacementButtons" unique_id=104857602]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -200.0
+offset_top = -170.0
+offset_right = -120.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_cancel")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_cancel")
+theme_override_styles/hover = SubResource("StyleBoxFlat_cancel")
+text = "✕"
+
+[node name="ConfirmPlacementButton" type="Button" parent="DockContainer/PlacementButtons" unique_id=104857603]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(80, 80)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 120.0
+offset_top = -170.0
+offset_right = 200.0
+offset_bottom = -90.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_override_colors/font_color = Color(1, 1, 1, 1)
+theme_override_font_sizes/font_size = 36
+theme_override_styles/normal = SubResource("StyleBoxFlat_confirm")
+theme_override_styles/pressed = SubResource("StyleBoxFlat_confirm")
+theme_override_styles/hover = SubResource("StyleBoxFlat_confirm")
+theme_override_styles/disabled = SubResource("StyleBoxFlat_confirm_disabled")
+text = "✓"
 
 [node name="BuildButton" type="Button" parent="DockContainer" unique_id=108226355]
 unique_name_in_owner = true

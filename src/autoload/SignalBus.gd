@@ -3,6 +3,8 @@ extends Node
 signal tower_placed()
 signal tower_destroyed()
 
+signal placement_mode_changed(is_active: bool)
+
 signal enemy_spawned(enemy: Enemy)
 signal enemy_died(enemy: Enemy)
 signal enemy_exit(enemy: Enemy)

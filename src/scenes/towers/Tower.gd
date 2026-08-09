@@ -56,5 +56,15 @@ func _update_preview_state() -> void:
 		if child is CollisionShape2D or child is CollisionPolygon2D:
 			child.disabled = is_preview
 	
+	# Let placement input pass through preview visuals to the stage
+	_set_controls_mouse_filter(self, is_preview)
+	
 	# Semi-transparent ghost look when previewing
 	modulate.a = 0.5 if is_preview else 1.0
+
+func _set_controls_mouse_filter(node: Node, ignore: bool) -> void:
+	var filter := Control.MOUSE_FILTER_IGNORE if ignore else Control.MOUSE_FILTER_STOP
+	for child in node.get_children():
+		if child is Control:
+			child.mouse_filter = filter
+		_set_controls_mouse_filter(child, ignore)

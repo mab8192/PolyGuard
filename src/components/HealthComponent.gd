@@ -30,7 +30,6 @@ func damage(amount: float, type: AttackComponent.DamageType) -> void:
 		damage_multiplier = ARMOR_CONSTANT / (ARMOR_CONSTANT + effective_resistance)
 	
 	var final_damage: float = amount * damage_multiplier
-	print("Taking %f damage" % final_damage)
 	_health -= final_damage
 	
 	if _health <= 0:

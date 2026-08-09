@@ -11,6 +11,13 @@ func _ready() -> void:
 	get_viewport().size_changed.connect(_update_camera)
 	
 func load_stage(stage_data: StageData) -> void:
+	if Engine.is_in_physics_frame():
+		call_deferred("_deferred_load_stage", stage_data)
+		return
+
+	_deferred_load_stage(stage_data)
+
+func _deferred_load_stage(stage_data: StageData) -> void:
 	stage_root.load_stage(stage_data)
 	_update_camera()
 

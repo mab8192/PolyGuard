@@ -12,6 +12,11 @@ signal item_clicked(item: RadialMenuItem)
 		label_offset = val
 		_update_positions()
 
+@export var cost_offset: Vector2 = Vector2(0, 52):
+	set(val):
+		cost_offset = val
+		_update_positions()
+
 @export var icon_size: Vector2 = Vector2(80, 80):
 	set(val):
 		icon_size = val
@@ -23,6 +28,8 @@ var is_enabled: bool = true
 
 @onready var bg_panel: Panel = $BGPanel
 @onready var icon_rect: TextureRect = $IconRect
+@onready var cost_badge: Panel = $CostBadge
+@onready var cost_label: Label = $CostBadge/CostLabel
 @onready var title_label: Label = $TitleLabel
 
 func _ready() -> void:
@@ -51,6 +58,14 @@ func setup(item_data: Dictionary) -> void:
 	elif icon_rect:
 		# Fallback if no texture provided
 		icon_rect.texture = null
+	
+	var cost: int = item_data.get("cost", -1)
+	if cost >= 0 and cost_label and cost_badge:
+		cost_label.text = "%dg" % cost
+		cost_label.modulate = Color(1, 0.85, 0.35) if is_enabled else Color(1, 0.45, 0.45)
+		cost_badge.show()
+	elif cost_badge:
+		cost_badge.hide()
 	
 	modulate = Color.WHITE if is_enabled else Color(0.5, 0.5, 0.5, 0.6)
 	_update_positions()
@@ -88,6 +103,14 @@ func _update_positions() -> void:
 		title_label.offset_right = label_offset.x + half_lbl_w
 		title_label.offset_top = label_offset.y - half_lbl_h
 		title_label.offset_bottom = label_offset.y + half_lbl_h
+	
+	if cost_badge:
+		var badge_width := 56.0
+		var badge_height := 24.0
+		cost_badge.offset_left = cost_offset.x - (badge_width / 2.0)
+		cost_badge.offset_right = cost_offset.x + (badge_width / 2.0)
+		cost_badge.offset_top = cost_offset.y - (badge_height / 2.0)
+		cost_badge.offset_bottom = cost_offset.y + (badge_height / 2.0)
 
 func _on_gui_input(event: InputEvent) -> void:
 	if not is_enabled:

@@ -110,18 +110,72 @@ func enter_placement_mode(tower_input: TowerData) -> void:
 	var snapped_pos = _snap_to_grid(center_pos)
 	_preview_tower.global_position = snapped_pos
 	_preview_pos = snapped_pos
+	
+	SignalBus.placement_mode_changed.emit(true)
 
 func exit_placement_mode() -> void:
-	if _preview_tower:
-		_preview_tower.queue_free()
-		_preview_tower = null
+	if not is_in_placement_mode():
+		return
+	
+	_preview_tower.queue_free()
+	_preview_tower = null
 	_is_dragging = false
+	SignalBus.placement_mode_changed.emit(false)
+
+func is_in_placement_mode() -> bool:
+	return _preview_tower != null and is_instance_valid(_preview_tower)
+
+func get_preview_tower_position() -> Vector2:
+	if is_in_placement_mode():
+		return _preview_tower.global_position
+	return Vector2.ZERO
 
 func can_place_preview() -> bool:
-	if _preview_tower.data.cost > gold: return false
-	
-	# TODO: Check enemies, "walls", previously placed towers, etc.
-	
+	if not _preview_tower or not is_instance_valid(_preview_tower):
+		return false
+
+	if _preview_tower.data and _preview_tower.data.cost > gold:
+		return false
+
+	var preview_rect: Rect2 = _get_tower_global_rect(_preview_tower)
+
+	# 1. Map boundary check
+	var map_rect: Rect2 = get_map_pixel_rect()
+	if map_rect.has_area() and not map_rect.encloses(preview_rect):
+		return false
+
+	# 2. Tilemap terrain check (every cell covered by preview_rect must be walkable)
+	if tiles:
+		var min_cell: Vector2i = tiles.local_to_map(tiles.to_local(preview_rect.position + Vector2(1, 1)))
+		var max_cell: Vector2i = tiles.local_to_map(tiles.to_local(preview_rect.end - Vector2(1, 1)))
+
+		for x in range(min_cell.x, max_cell.x + 1):
+			for y in range(min_cell.y, max_cell.y + 1):
+				var cell_pos := Vector2i(x, y)
+				var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
+				if not tile_data or tile_data.get_collision_polygons_count(0) > 0:
+					return false
+
+	# 3. Check for overlap with already placed towers
+	if towers:
+		for child in towers.get_children():
+			if child is Tower and child != _preview_tower and not child.is_preview:
+				var child_rect: Rect2 = _get_tower_global_rect(child)
+				if preview_rect.intersects(child_rect):
+					return false
+
+	# 4. Check for overlap with active enemies
+	var enemy_nodes: Array = []
+	if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
+		enemy_nodes = GameManager.stage_root.enemies.get_children()
+	else:
+		enemy_nodes = get_tree().get_nodes_in_group("enemies")
+
+	for enemy in enemy_nodes:
+		if enemy is CharacterBody2D and is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
+			if preview_rect.grow(16.0).has_point(enemy.global_position):
+				return false
+
 	return true
 
 ## Converts the current preview_tower into an active tower on the stage and deducts gold
@@ -137,14 +191,54 @@ func place_preview() -> void:
 	SignalBus.gold_changed.emit(gold)
 	
 	_preview_tower.is_preview = false
+	_preview_tower.modulate = Color.WHITE
 	
 	_generate_navmesh()
 	SignalBus.tower_placed.emit()
 	
 	_preview_tower = null
-	exit_placement_mode()
+	_is_dragging = false
+	SignalBus.placement_mode_changed.emit(false)
 
 ### PRIVATE FUNCTIONS
+
+func _get_tower_local_rect(tower: Tower) -> Rect2:
+	if not is_instance_valid(tower):
+		return Rect2(-Vector2(16, 16), Vector2(32, 32))
+
+	for child in tower.get_children():
+		if child is CollisionShape2D and child.shape:
+			var shape = child.shape
+			if shape is RectangleShape2D:
+				var size = shape.size
+				return Rect2(child.position - size / 2.0, size)
+			elif shape is CircleShape2D:
+				var r = shape.radius
+				return Rect2(child.position - Vector2(r, r), Vector2(r * 2, r * 2))
+			elif shape is CapsuleShape2D:
+				var r = shape.radius
+				var h = shape.height
+				var size = Vector2(r * 2, h)
+				return Rect2(child.position - size / 2.0, size)
+		elif child is CollisionPolygon2D and child.polygon.size() > 0:
+			var min_pt = child.polygon[0]
+			var max_pt = child.polygon[0]
+			for pt in child.polygon:
+				min_pt.x = minf(min_pt.x, pt.x)
+				min_pt.y = minf(min_pt.y, pt.y)
+				max_pt.x = maxf(max_pt.x, pt.x)
+				max_pt.y = maxf(max_pt.y, pt.y)
+			return Rect2(child.position + min_pt, max_pt - min_pt)
+
+	var color_rect = tower.find_child("ColorRect", false, false) as ColorRect
+	if color_rect:
+		return color_rect.get_rect()
+
+	return Rect2(-Vector2(GRID_SIZE, GRID_SIZE), Vector2(GRID_SIZE * 2, GRID_SIZE * 2))
+
+func _get_tower_global_rect(tower: Tower) -> Rect2:
+	var local_rect: Rect2 = _get_tower_local_rect(tower)
+	return Rect2(tower.global_position + local_rect.position, local_rect.size)
 
 func _rect_intersects_circle(rect: Rect2, circle_center: Vector2, radius: float) -> bool:
 	var closest_point = Vector2(
@@ -169,7 +263,10 @@ func _ready() -> void:
 	SignalBus.stage_loaded.emit()
 
 func _process(_delta: float) -> void:
-	pass
+	if _preview_tower and is_instance_valid(_preview_tower):
+		var valid: bool = can_place_preview()
+		_preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
+
 
 func _handle_press(pos: Vector2) -> void:
 	_is_dragging = true
@@ -198,7 +295,7 @@ func _handle_drag(delta: Vector2) -> void:
 	
 	_preview_tower.global_position = _snap_to_grid(_preview_pos)
 
-func _input(event: InputEvent) -> void:
+func _unhandled_input(event: InputEvent) -> void:
 	if _preview_tower == null:
 		return
 

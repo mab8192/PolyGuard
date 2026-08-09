@@ -2,6 +2,9 @@ extends MarginContainer
 
 @onready var build_button: Button = %BuildButton
 @onready var next_wave_button: TextureButton = %NextWaveButton
+@onready var placement_buttons: Control = %PlacementButtons
+@onready var cancel_button: Button = %CancelPlacementButton
+@onready var confirm_button: Button = %ConfirmPlacementButton
 
 @export var radial_menu_scene: PackedScene = preload("res://src/scenes/ui/radial_menu.tscn")
 @onready var radial_menu: RadialMenu = $DockContainer/BuildButton/RadialMenu
@@ -9,6 +12,10 @@ extends MarginContainer
 func _ready() -> void:
 	build_button.focus_mode = Control.FOCUS_NONE
 	next_wave_button.focus_mode = Control.FOCUS_NONE
+	cancel_button.focus_mode = Control.FOCUS_NONE
+	confirm_button.focus_mode = Control.FOCUS_NONE
+
+	placement_buttons.hide()
 
 	radial_menu.arc_angle_degrees = 180
 
@@ -16,9 +23,20 @@ func _ready() -> void:
 	
 	build_button.gui_input.connect(_on_build_button_gui_input)
 	next_wave_button.pressed.connect(_on_next_wave_pressed)
+	cancel_button.pressed.connect(_on_cancel_placement_pressed)
+	confirm_button.pressed.connect(_on_confirm_placement_pressed)
+	SignalBus.placement_mode_changed.connect(_on_placement_mode_changed)
 	
 	SignalBus.wave_started.connect(func(): next_wave_button.hide())
 	SignalBus.wave_completed.connect(func(): next_wave_button.show())
+
+func _process(_delta: float) -> void:
+	if not placement_buttons.visible:
+		return
+	
+	var stage := GameManager.current_stage
+	if stage and stage.is_in_placement_mode():
+		confirm_button.disabled = not stage.can_place_preview()
 
 func open_build_radial_menu() -> void:
 	var items: Array[Dictionary] = []
@@ -32,6 +50,7 @@ func open_build_radial_menu() -> void:
 			"title": tower_data.display_name,
 			"payload": tower_data,
 			"icon": tower_data.icon,
+			"cost": tower_data.cost,
 			"enabled": (current_gold >= tower_data.cost)
 		})
 	
@@ -54,3 +73,14 @@ func _on_build_button_gui_input(event: InputEvent) -> void:
 func _on_radial_item_selected(payload: TowerData) -> void:
 	if GameManager.current_stage:
 		GameManager.current_stage.enter_placement_mode(payload)
+
+func _on_placement_mode_changed(is_active: bool) -> void:
+	placement_buttons.visible = is_active
+
+func _on_cancel_placement_pressed() -> void:
+	if GameManager.current_stage:
+		GameManager.current_stage.exit_placement_mode()
+
+func _on_confirm_placement_pressed() -> void:
+	if GameManager.current_stage:
+		GameManager.current_stage.place_preview()

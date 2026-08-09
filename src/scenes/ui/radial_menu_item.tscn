@@ -21,6 +21,22 @@ font_size = 28
 outline_size = 4
 outline_color = Color(0, 0, 0, 1)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost"]
+bg_color = Color(0, 0, 0, 0.85)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
+
+[sub_resource type="LabelSettings" id="LabelSettings_cost"]
+font_size = 18
+outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
 [node name="RadialMenuItem" type="Control" unique_id=1280246680]
 custom_minimum_size = Vector2(120, 120)
 layout_mode = 3
@@ -56,6 +72,34 @@ grow_vertical = 2
 mouse_filter = 2
 expand_mode = 1
 stretch_mode = 5
+
+[node name="CostBadge" type="Panel" parent="." unique_id=104857701]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -28.0
+offset_top = 40.0
+offset_right = 28.0
+offset_bottom = 64.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_cost")
+
+[node name="CostLabel" type="Label" parent="CostBadge" unique_id=104857702]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+text = "50g"
+label_settings = SubResource("LabelSettings_cost")
+horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="TitleLabel" type="Label" parent="." unique_id=82123440]
 layout_mode = 1
