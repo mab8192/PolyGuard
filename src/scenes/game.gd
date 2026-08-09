@@ -9,12 +9,14 @@ func start_next_stage() -> void:
 		GameManager.load_stage(Registry.STAGES[stage_ids[stage_index]])
 
 func _ready() -> void:
-	SignalBus.stage_completed.connect(_on_stage_complete)
-	
 	GameManager.camera = $Camera2D
 	GameManager.stage_root = $StageRoot
 	
-	GameManager.load_stage(Registry.STAGES[stage_ids[stage_index]])
-
-func _on_stage_complete() -> void:
-	start_next_stage()
+	var stage_to_load = GameManager.selected_stage
+	if not stage_to_load:
+		if not stage_ids.is_empty():
+			stage_to_load = Registry.STAGES[stage_ids[0]]
+			GameManager.selected_stage = stage_to_load
+	
+	if stage_to_load:
+		GameManager.load_stage(stage_to_load)

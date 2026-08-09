@@ -1,9 +1,93 @@
 [gd_scene format=3 uid="uid://bsvav2810uhuh"]
 
-[node name="Defeat" type="Control" unique_id=1504119879]
-layout_mode = 3
+[ext_resource type="Script" uid="uid://cv3xa5xvbcuvx" path="res://src/scenes/ui/defeat.gd" id="1_defeat"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim"]
+bg_color = Color(0, 0, 0, 0.8)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.14902, 0.0627451, 0.0823529, 0.95)
+border_width_left = 3
+border_width_top = 3
+border_width_right = 3
+border_width_bottom = 3
+border_color = Color(0.913725, 0.270588, 0.376471, 1)
+corner_radius_top_left = 24
+corner_radius_top_right = 24
+corner_radius_bottom_right = 24
+corner_radius_bottom_left = 24
+
+[node name="Defeat" type="CanvasLayer" unique_id=2160001]
+layer = 15
+script = ExtResource("1_defeat")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2160002]
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_dim")
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2160003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2160004]
+custom_minimum_size = Vector2(800, 700)
+layout_mode = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2160005]
+layout_mode = 2
+theme_override_constants/margin_left = 48
+theme_override_constants/margin_top = 48
+theme_override_constants/margin_right = 48
+theme_override_constants/margin_bottom = 48
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2160006]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2160007]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.913725, 0.270588, 0.376471, 1)
+theme_override_font_sizes/font_size = 64
+text = "DEFEAT"
+horizontal_alignment = 1
+
+[node name="DescLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2160008]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "Overwhelmed on Wave 3"
+horizontal_alignment = 1
+
+[node name="ButtonsVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2160009]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="RetryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2160010]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+theme_override_font_sizes/font_size = 32
+text = "RETRY"
+
+[node name="LoadoutButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2160011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "CHANGE LOADOUT"
+
+[node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2160012]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_override_font_sizes/font_size = 28
+text = "MAIN MENU"

@@ -253,6 +253,9 @@ func _rect_intersects_circle(rect: Rect2, circle_center: Vector2, radius: float)
 	return distance_squared < (radius * radius)
 
 func _ready() -> void:
+	if GameManager.selected_loadout.size() > 0:
+		loadout = GameManager.selected_loadout
+
 	lives = data.starting_lives
 	gold = data.starting_gold
 	
@@ -380,6 +383,8 @@ func _on_enemy_exit(enemy: Enemy) -> void:
 	SignalBus.lives_changed.emit(lives)
 	
 	if lives <= 0:
-		print("YOU LOSE LOL")
+		lives = 0
+		SignalBus.lives_changed.emit(lives)
+		SignalBus.stage_failed.emit()
 
 	_check_wave_completion()

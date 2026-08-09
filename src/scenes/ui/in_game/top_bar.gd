@@ -28,8 +28,10 @@ func _on_wave_changed(wave: int) -> void:
 	wave_label.text = str(wave) + " / " + str(GameManager.current_stage.data.get_waves().size())
 
 func _on_pause_pressed() -> void:
-	get_tree().paused = !get_tree().paused
-	# TODO: Show pause menu
+	var hud = find_parent("HUD")
+	if hud and hud.has_method("open_pause_menu"):
+		hud.open_pause_menu()
+
 
 func _on_ff_pressed(toggled_on: bool) -> void:
 	Engine.time_scale = 2 if toggled_on else 1

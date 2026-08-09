@@ -3,6 +3,10 @@ extends Node
 var camera: Camera2D
 var stage_root: StageRoot
 
+# Transition states
+var selected_stage: StageData
+var selected_loadout: Array[TowerData] = []
+
 var current_stage: Stage:
 	get:
 		return stage_root.current_stage
@@ -37,3 +41,22 @@ func _update_camera() -> void:
 	# Apply zoom
 	camera.global_position = bounds.get_center()
 	camera.zoom = Vector2(target_zoom, target_zoom)
+
+func start_game(stage_data: StageData = null, loadout: Array[TowerData] = []) -> void:
+	if stage_data:
+		selected_stage = stage_data
+	if not loadout.is_empty():
+		selected_loadout = loadout
+	get_tree().change_scene_to_file("res://src/scenes/game.tscn")
+
+func get_next_stage() -> StageData:
+	var stages = Registry.get_all_stages()
+	if stages.is_empty():
+		return null
+	if not selected_stage:
+		return stages[0]
+	var idx = stages.find(selected_stage)
+	if idx != -1 and idx + 1 < stages.size():
+		return stages[idx + 1]
+	return null
+

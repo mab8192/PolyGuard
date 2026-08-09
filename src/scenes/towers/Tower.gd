@@ -47,8 +47,7 @@ func _process(_delta: float) -> void:
 		attack.attack_targets(targeting.get_targets())
 
 func _update_solid_state() -> void:
-	set_collision_layer_value(1, is_solid)
-	set_collision_mask_value(1, is_solid)
+	collision_layer = 2
 
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing

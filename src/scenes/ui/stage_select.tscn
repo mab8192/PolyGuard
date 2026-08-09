@@ -1,4 +1,28 @@
-[gd_scene format=3 uid="uid://00nwki7nros1"]
+[gd_scene load_steps=5 format=3 uid="uid://00nwki7nros1"]
+
+[ext_resource type="Script" uid="uid://cptj65f57q31k" path="res://src/scenes/ui/stage_select.gd" id="1_stage_select"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.101961, 0.101961, 0.180392, 1)
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
+bg_color = Color(0.0862745, 0.129412, 0.243137, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.305882, 0.8, 0.639216, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn"]
+bg_color = Color(0.913725, 0.270588, 0.376471, 1)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [node name="LevelSelect" type="Control" unique_id=2022486544]
 layout_mode = 3
@@ -7,3 +31,76 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+script = ExtResource("1_stage_select")
+
+[node name="Background" type="Panel" parent="." unique_id=1000001]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=1000002]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 40
+theme_override_constants/margin_top = 80
+theme_override_constants/margin_right = 40
+theme_override_constants/margin_bottom = 60
+
+[node name="VBox" type="VBoxContainer" parent="MarginContainer" unique_id=1000003]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="HeaderLabel" type="Label" parent="MarginContainer/VBox" unique_id=1000004]
+layout_mode = 2
+theme_override_colors/font_color = Color(0.305882, 0.8, 0.639216, 1)
+theme_override_font_sizes/font_size = 56
+text = "SELECT STAGE"
+horizontal_alignment = 1
+
+[node name="SelectedStageLabel" type="Label" parent="MarginContainer/VBox" unique_id=1000005]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_colors/font_color = Color(0.85, 0.85, 0.85, 1)
+theme_override_font_sizes/font_size = 28
+text = "Selected: None"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="MarginContainer/VBox" unique_id=1000006]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="StageListContainer" type="VBoxContainer" parent="MarginContainer/VBox/ScrollContainer" unique_id=1000007]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="NavButtons" type="HBoxContainer" parent="MarginContainer/VBox" unique_id=1000008]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBox/NavButtons" unique_id=1000009]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+text = "BACK"
+
+[node name="ContinueButton" type="Button" parent="MarginContainer/VBox/NavButtons" unique_id=1000010]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 28
+theme_override_styles/normal = SubResource("StyleBoxFlat_btn")
+text = "SELECT LOADOUT"

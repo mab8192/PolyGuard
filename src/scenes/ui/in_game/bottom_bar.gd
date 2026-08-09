@@ -6,7 +6,7 @@ extends MarginContainer
 @onready var cancel_button: Button = %CancelPlacementButton
 @onready var confirm_button: Button = %ConfirmPlacementButton
 
-@export var radial_menu_scene: PackedScene = preload("res://src/scenes/ui/radial_menu.tscn")
+@export var radial_menu_scene: PackedScene = preload("res://src/scenes/ui/in_game/radial_menu.tscn")
 @onready var radial_menu: RadialMenu = $DockContainer/BuildButton/RadialMenu
 
 func _ready() -> void:

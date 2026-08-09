@@ -1,10 +1,16 @@
-[gd_scene format=3 uid="uid://ckbyw6p0dd4tr"]
+[gd_scene load_steps=7 format=3 uid="uid://ckbyw6p0dd4tr"]
+
+[ext_resource type="Script" uid="uid://xsnc3sc0c8y1" path="res://src/scenes/ui/in_game/hud.gd" id="1_hud"]
 
 [ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/in_game/top_bar.tscn" id="1_m12ob"]
 [ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/in_game/bottom_bar.tscn" id="2_q3cwv"]
+[ext_resource type="PackedScene" uid="uid://pausemenu001" path="res://src/scenes/ui/pause_menu.tscn" id="3_pause"]
+[ext_resource type="PackedScene" uid="uid://victoryscreen001" path="res://src/scenes/ui/victory.tscn" id="4_victory"]
+[ext_resource type="PackedScene" uid="uid://defeatscreen001" path="res://src/scenes/ui/defeat.tscn" id="5_defeat"]
 
 [node name="HUD" type="CanvasLayer" unique_id=1549892069]
 layer = 10
+script = ExtResource("1_hud")
 
 [node name="HUDControl" type="Control" parent="." unique_id=2038072447]
 layout_mode = 3
@@ -22,3 +28,9 @@ offset_bottom = 128.0
 [node name="BottomBar" parent="HUDControl" unique_id=192044941 instance=ExtResource("2_q3cwv")]
 layout_mode = 1
 offset_top = -192.0
+
+[node name="PauseMenu" parent="." instance=ExtResource("3_pause")]
+
+[node name="Victory" parent="." instance=ExtResource("4_victory")]
+
+[node name="Defeat" parent="." instance=ExtResource("5_defeat")]
