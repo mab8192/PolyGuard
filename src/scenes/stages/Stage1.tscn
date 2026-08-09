@@ -22,7 +22,6 @@ tile_map_data = PackedByteArray("AAD//wAAAAAQAAAAAAD//wEAAAABAAEAAAD//wIAAAABAAE
 [node name="Exit" parent="." unique_id=2011848074 instance=ExtResource("6_pl0l6")]
 position = Vector2(-448, 320)
 
-[node name="Spawner" parent="." unique_id=391670320 node_paths=PackedStringArray("enemy_container", "exits") instance=ExtResource("7_6uvhc")]
+[node name="Spawner" parent="." unique_id=391670320 node_paths=PackedStringArray("exits") instance=ExtResource("7_6uvhc")]
 position = Vector2(-448, -256)
-enemy_container = NodePath("")
 exits = [NodePath("../Exit")]

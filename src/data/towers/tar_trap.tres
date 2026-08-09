@@ -15,4 +15,5 @@ icon = ExtResource("1_wdlj1")
 scene = ExtResource("2_wdlj1")
 description = "Non-solid trap that slows enemies who walk over it"
 is_solid = false
+cost = 150
 targeting = SubResource("SubResource_targeting")

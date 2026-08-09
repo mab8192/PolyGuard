@@ -7,7 +7,8 @@
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("4_health")
-armor = 10.0
+max_health = 1500.0
+armor = 30.0
 
 [resource]
 script = ExtResource("1_script")
@@ -15,5 +16,5 @@ display_name = "Barricade"
 icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Solid blockade to reroute or slow enemy progression."
-cost = 25
+cost = 100
 health = SubResource("SubResource_health")

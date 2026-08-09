@@ -1,25 +1,26 @@
 [
 	{
-	  "wave_number": 1,
-	  "reward_gold": 50,
-	  "spawns": [
-		{ "enemy_type": "grunt", "count": 20, "interval": 0.2, "delay": 0.5}
-	  ]
+		"wave_number": 1,
+		"reward_gold": 200,
+		"spawns": [
+			{ "enemy_type": "grunt", "count": 15, "interval": 0.6, "delay": 0.5 }
+		]
 	},
 	{
-	  "wave_number": 2,
-	  "reward_gold": 75,
-	  "spawns": [
-		{ "enemy_type": "grunt", "count": 10, "interval": 0.3, "delay": 0.5},
-		{ "enemy_type": "speeder", "count": 5, "interval": 0.6, "delay": 4 }
-	  ]
+		"wave_number": 2,
+		"reward_gold": 300,
+		"spawns": [
+			{ "enemy_type": "grunt", "count": 12, "interval": 0.5, "delay": 0.5 },
+			{ "enemy_type": "speeder", "count": 6, "interval": 0.5, "delay": 3.0 }
+		]
 	},
 	{
-	  "wave_number": 3,
-	  "reward_gold": 150,
-	  "spawns": [
-		{ "enemy_type": "grunt", "count": 15, "interval": 0.3, "delay": 0.5},
-		{ "enemy_type": "speeder", "count": 10, "interval": 0.3, "delay": 4 }
-	  ]
+		"wave_number": 3,
+		"reward_gold": 500,
+		"spawns": [
+			{ "enemy_type": "grunt", "count": 20, "interval": 0.4, "delay": 0.5 },
+			{ "enemy_type": "speeder", "count": 10, "interval": 0.4, "delay": 4.0 },
+			{ "enemy_type": "tank", "count": 2, "interval": 2.0, "delay": 6.0 }
+		]
 	}
 ]

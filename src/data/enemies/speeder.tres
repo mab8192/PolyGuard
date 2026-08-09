@@ -8,7 +8,8 @@
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
-max_health = 20.0
+max_health = 140.0
+armor = 5.0
 
 [sub_resource type="Resource" id="SubResource_movement"]
 script = ExtResource("4_movement")
@@ -22,6 +23,7 @@ metadata/_custom_type_script = "uid://bllmo3a8geds7"
 script = ExtResource("1_script")
 display_name = "Speeder"
 scene = ExtResource("2_scene")
+gold_reward = 15
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_w3jxf")

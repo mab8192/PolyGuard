@@ -7,4 +7,6 @@
 script = ExtResource("1_script")
 stage_id = "stage_03"
 scene = ExtResource("2_scene")
+starting_gold = 1000
+starting_lives = 20
 wave_data_file = "res://src/data/stages/waves/Stage3.json"

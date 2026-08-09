@@ -9,13 +9,15 @@
 
 [sub_resource type="Resource" id="Resource_tafxk"]
 script = ExtResource("5_attack")
+damage = 80.0
 damage_type = 1
 attack_mode = 2
 can_target_ghost = true
 
 [sub_resource type="Resource" id="Resource_yrpxl"]
 script = ExtResource("4_health")
-armor = 10.0
+max_health = 400.0
+armor = 15.0
 
 [sub_resource type="Resource" id="Resource_nxvto"]
 script = ExtResource("6_targeting")
@@ -29,7 +31,7 @@ display_name = "Tesla Tower"
 icon = ExtResource("3_icon")
 scene = ExtResource("4_tafxk")
 description = "Short-ranged multi-target lightning tower. Solid structure that blocks enemy movement."
-cost = 100
+cost = 450
 health = SubResource("Resource_yrpxl")
 attack = SubResource("Resource_tafxk")
 targeting = SubResource("Resource_nxvto")

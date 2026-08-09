@@ -6,7 +6,8 @@ const ENEMIES: Dictionary[String, EnemyData] = {
 	"tank": preload("res://src/data/enemies/tank.tres"),
 	"ghost": preload("res://src/data/enemies/ghost.tres"),
 	"sniper": preload("res://src/data/enemies/sniper.tres"),
-	"grunt": preload("res://src/data/enemies/grunt.tres")
+	"grunt": preload("res://src/data/enemies/grunt.tres"),
+	"citadel": preload("res://src/data/enemies/citadel.tres")
 }
 
 func get_enemy_data(id: String) -> EnemyData:
@@ -14,6 +15,7 @@ func get_enemy_data(id: String) -> EnemyData:
 
 # Map of stage IDs to data-driven StageData resources
 const STAGES: Dictionary[String, StageData] = {
+	"test_stage": preload("res://src/data/stages/TestStage.tres"),
 	"stage_01": preload("res://src/data/stages/stage_01.tres"),
 	"stage_02": preload("res://src/data/stages/stage_02.tres"),
 	"stage_03": preload("res://src/data/stages/stage_03.tres")

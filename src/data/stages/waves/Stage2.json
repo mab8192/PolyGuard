@@ -1,36 +1,38 @@
 [
 	{
-	  "wave_number": 1,
-	  "reward_gold": 50,
-	  "spawns": [
-		{ "enemy_type": "tank", "count": 3, "interval": 0.5, "delay": 0.5 },
-		{ "enemy_type": "grunt", "count": 15, "interval": 0.5, "delay": 5 }
-	  ]
+		"wave_number": 1,
+		"reward_gold": 300,
+		"spawns": [
+			{ "enemy_type": "tank", "count": 4, "interval": 1.5, "delay": 0.5 },
+			{ "enemy_type": "grunt", "count": 15, "interval": 0.5, "delay": 4.0 }
+		]
 	},
 	{
-	  "wave_number": 2,
-	  "reward_gold": 50,
-	  "spawns": [
-		{ "enemy_type": "tank", "count": 3, "interval": 0.5, "delay": 0.5 },
-		{ "enemy_type": "grunt", "count": 10, "interval": 0.5, "delay": 3 },
-		{ "enemy_type": "speeder", "count": 5, "interval": 0.6, "delay": 6 }
-	  ]
+		"wave_number": 2,
+		"reward_gold": 400,
+		"spawns": [
+			{ "enemy_type": "tank", "count": 4, "interval": 1.5, "delay": 0.5 },
+			{ "enemy_type": "grunt", "count": 12, "interval": 0.5, "delay": 3.0 },
+			{ "enemy_type": "speeder", "count": 8, "interval": 0.4, "delay": 6.0 }
+		]
 	},
 	{
-	  "wave_number": 3,
-	  "reward_gold": 60,
-	  "spawns": [
-		{ "enemy_type": "tank", "count": 5, "interval": 0.5, "delay": 0.5 },
-		{ "enemy_type": "grunt", "count": 15, "interval": 0.5, "delay": 2 },
-		{ "enemy_type": "speeder", "count": 10, "interval": 0.3, "delay": 4 }
-	  ]
+		"wave_number": 3,
+		"reward_gold": 500,
+		"spawns": [
+			{ "enemy_type": "tank", "count": 6, "interval": 1.2, "delay": 0.5 },
+			{ "enemy_type": "grunt", "count": 20, "interval": 0.4, "delay": 2.0 },
+			{ "enemy_type": "speeder", "count": 12, "interval": 0.3, "delay": 4.0 },
+			{ "enemy_type": "ghost", "count": 4, "interval": 0.8, "delay": 6.0 }
+		]
 	},
 	{
-	  "wave_number": 4,
-	  "reward_gold": 100,
-	  "spawns": [
-		{ "enemy_type": "tank", "count": 10, "interval": 0.5, "delay": 0.5 },
-		{ "enemy_type": "speeder", "count": 10, "interval": 0.3, "delay": 5 }
-	  ]
+		"wave_number": 4,
+		"reward_gold": 800,
+		"spawns": [
+			{ "enemy_type": "tank", "count": 12, "interval": 1.0, "delay": 0.5 },
+			{ "enemy_type": "speeder", "count": 15, "interval": 0.3, "delay": 5.0 },
+			{ "enemy_type": "citadel", "count": 1, "interval": 1.0, "delay": 10.0 }
+		]
 	}
 ]

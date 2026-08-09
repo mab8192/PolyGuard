@@ -153,7 +153,7 @@ func can_place_preview() -> bool:
 			for y in range(min_cell.y, max_cell.y + 1):
 				var cell_pos := Vector2i(x, y)
 				var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
-				if not tile_data or tile_data.get_collision_polygons_count(0) > 0:
+				if tile_data and tile_data.get_collision_polygons_count(0) > 0:
 					return false
 
 	# 3. Check for overlap with already placed towers

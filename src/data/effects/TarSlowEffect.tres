@@ -4,5 +4,5 @@
 
 [resource]
 script = ExtResource("1_urnoq")
-speed_multiplier = 0.4
+speed_multiplier = 0.5
 metadata/_custom_type_script = "uid://br4nwkh0b8psj"

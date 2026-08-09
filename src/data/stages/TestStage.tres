@@ -1,0 +1,12 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://ub510wc7nh4k"]
+
+[ext_resource type="PackedScene" uid="uid://b5dn78a0watmf" path="res://src/scenes/stages/TestStage.tscn" id="1_0wwm5"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_k4d32"]
+
+[resource]
+script = ExtResource("2_k4d32")
+stage_id = "test_stage"
+stage_name = "Test Stage"
+scene = ExtResource("1_0wwm5")
+starting_gold = 99999
+wave_data_file = "res://src/data/stages/waves/TestStageData.json"

@@ -7,7 +7,7 @@ extends Resource
 @export var scene: PackedScene ## The scene for this stage
 
 @export_group("Economy & Rules")
-@export var starting_gold: int = 100
+@export var starting_gold: int = 600
 @export var starting_lives: int = 20
 
 @export_group("Wave Configuration")

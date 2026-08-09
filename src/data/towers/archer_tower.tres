@@ -10,15 +10,14 @@
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("5_attack")
-damage = 15.0
-cooldown = 400.0
+damage = 60.0
 projectile_scene = ExtResource("1_soe44")
 projectile_speed = 800.0
 can_target_ghost = true
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("4_health")
-armor = 10.0
+armor = 20.0
 
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("6_targeting")
