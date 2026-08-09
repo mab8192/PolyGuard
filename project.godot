@@ -45,8 +45,9 @@ enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", 
 
 folder_colors={
 "res://src/autoload/": "green",
-"res://src/components/": "red",
+"res://src/components/": "gray",
 "res://src/data/": "gray",
+"res://src/data/enemies/": "red",
 "res://src/data/towers/": "yellow",
 "res://src/scenes/": "blue",
 "res://src/scenes/enemies/": "red",

@@ -38,6 +38,14 @@ func _ready() -> void:
 
 	if agent:
 		agent.velocity_computed.connect(_on_velocity_computed)
+		
+		# Apply common settings shared by all enemies
+		agent.navigation_layers = data.nav_layer
+		agent.path_max_distance = 10
+		agent.avoidance_enabled = true
+		agent.simplify_path = false
+		agent.path_desired_distance = 6.0
+		agent.target_desired_distance = 8.0
 
 func set_targets(new_targets: Array[Node2D]) -> void:
 	targets = new_targets

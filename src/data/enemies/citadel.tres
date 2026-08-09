@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b0srep3dyx1ik"]
+
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_05nbg"]
+[ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="2_4pduu"]
+[ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_kl3b5"]
+[ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="5_4d7iv"]
+
+[sub_resource type="Resource" id="Resource_k13t0"]
+script = ExtResource("1_05nbg")
+max_health = 500.0
+armor = 20.0
+magic_resistance = 5.0
+
+[sub_resource type="Resource" id="Resource_05nbg"]
+script = ExtResource("2_4pduu")
+max_speed = 30.0
+acceleration = 30.0
+
+[sub_resource type="Resource" id="Resource_4pduu"]
+script = ExtResource("3_kl3b5")
+strategy = 1
+nav_layer = 2
+metadata/_custom_type_script = "uid://bllmo3a8geds7"
+
+[resource]
+script = ExtResource("5_4d7iv")
+display_name = "Citadel"
+lives_penalty = 5
+gold_reward = 25
+health = SubResource("Resource_k13t0")
+movement = SubResource("Resource_05nbg")
+nav = SubResource("Resource_4pduu")

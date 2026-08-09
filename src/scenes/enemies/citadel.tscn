@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://dkokxv5so7fsg"]
+
+[ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_kd6ek"]
+[ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_synga"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_4rgg6"]
+[ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_ay2dt"]
+
+[node name="Citadel" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
+collision_layer = 4
+collision_mask = 7
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_kd6ek")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
+position = Vector2(-1, -1)
+scale = Vector2(0.875, 0.875)
+color = Color(0.38197273, 0.39959982, 0.39053088, 1)
+polygon = PackedVector2Array(-12.571428, -21.714285, 14.8571415, -21.714285, 28.571426, 1.1428571, 14.8571415, 23.999998, -12.571428, 23.999998, -26.285713, 1.1428571)
+
+[node name="MovementComponent" type="Node" parent="." unique_id=588237634]
+script = ExtResource("2_synga")
+metadata/_custom_type_script = "uid://btkgrma8jeupr"
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2023714483]
+script = ExtResource("3_4rgg6")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399604]
+script = ExtResource("4_ay2dt")
+metadata/_custom_type_script = "uid://v8wb72hbi8fk"
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
+navigation_layers = 2
+simplify_path = true
+avoidance_enabled = true
+max_speed = 500.0
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
+visible = false
+polygon = PackedVector2Array(-12, -20, 12, -20, 24, 0, 12, 20, -12, 20, -24, 0)

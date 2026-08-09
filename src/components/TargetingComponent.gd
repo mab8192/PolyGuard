@@ -5,7 +5,7 @@ enum Strategy {FIRST, LAST, CLOSEST, STRONGEST}
 @export var data: TargetingData
 
 var _targets: Array[Enemy] = []
-var _rays: Array[RayCast2D] = []
+var _rays: Dictionary[Enemy, RayCast2D] = {}
 var _active_targets: Array[Enemy] = []
 
 func get_targets() -> Array[Enemy]:
@@ -34,6 +34,12 @@ func _physics_process(_delta: float) -> void:
 ## Assigns up to `max_targets` enemies from `targets` to `active_targets` according to `strategy`
 func _select_target() -> void:
 	_targets = _targets.filter(func(t: Enemy) -> bool: return is_instance_valid(t))
+
+	# Clean up rays for enemies that are no longer valid or in _targets
+	for enemy in _rays.keys():
+		if not is_instance_valid(enemy) or not _targets.has(enemy):
+			_remove_ray_for(enemy)
+
 	_active_targets.clear()
 
 	if _targets.is_empty():
@@ -41,8 +47,10 @@ func _select_target() -> void:
 
 	# Sort candidates according to the selected strategy
 	var candidates: Array[Enemy] = _targets.duplicate()
-	
+
 	# Filter out candidates we can't see (blocked by walls)
+	if data and not data.can_target_through_walls:
+		candidates = candidates.filter(_has_line_of_sight)
 
 	match data.strategy:
 		Strategy.FIRST:
@@ -76,12 +84,48 @@ func _select_target() -> void:
 
 	_active_targets = candidates.slice(0, limit)
 
+func _has_line_of_sight(enemy: Enemy) -> bool:
+	if not is_instance_valid(enemy):
+		return false
+	var ray: RayCast2D = _rays.get(enemy)
+	if not ray or not is_instance_valid(ray):
+		_create_ray_for(enemy)
+		ray = _rays.get(enemy)
+	if not ray:
+		return true
+
+	ray.target_position = ray.to_local(enemy.global_position)
+	ray.force_raycast_update()
+	return not ray.is_colliding()
+
+func _create_ray_for(enemy: Enemy) -> void:
+	if _rays.has(enemy) or not is_instance_valid(enemy):
+		return
+	var ray := RayCast2D.new()
+	ray.collision_mask = 1 # Layer 1: Walls / Environment
+	ray.enabled = true
+	if get_parent() is CollisionObject2D:
+		ray.add_exception(get_parent())
+	add_child(ray)
+	_rays[enemy] = ray
+
+func _remove_ray_for(enemy: Enemy) -> void:
+	if _rays.has(enemy):
+		var ray = _rays[enemy]
+		if is_instance_valid(ray):
+			ray.queue_free()
+		_rays.erase(enemy)
+
 func _on_body_entered(body: Node2D) -> void:
 	var enemy = body as Enemy
-	if body and not _targets.has(body):
+	if enemy and not _targets.has(enemy):
 		_targets.append(enemy)
+		if not data.can_target_through_walls:
+			_create_ray_for(enemy)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Enemy:
-		_targets.erase(body)
-		_active_targets.erase(body)
+		var enemy = body as Enemy
+		_targets.erase(enemy)
+		_active_targets.erase(enemy)
+		_remove_ray_for(enemy)

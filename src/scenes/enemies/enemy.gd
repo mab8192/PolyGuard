@@ -36,19 +36,11 @@ func _ready() -> void:
 		nav.no_path_available.connect(_on_no_path_available)
 		
 		if data.type == EnemyType.GHOST:
-			nav.agent.navigation_layers = 4
 			collision_layer = 8 # Layer 4: Ghost Enemies
 			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
 		else:
 			collision_layer = 4 # Layer 3: Physical Enemies
 			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
-		
-		# Apply common settings shared by all enemies
-		nav.agent.path_max_distance = 10
-		nav.agent.avoidance_enabled = true
-		nav.agent.simplify_path = false
-		nav.agent.path_desired_distance = 6.0
-		nav.agent.target_desired_distance = 8.0
 
 		# Assign targets from the stage
 		var targets: Array[Node2D] = []
