@@ -1,0 +1,22 @@
+class_name CampaignView extends Control
+
+@onready var carousel: Carousel = %Carousel
+
+
+# Called when the node enters the scene tree for the first time.
+func _ready() -> void:
+	var items: Array[Dictionary] = []
+	for stage in Registry.get_all_stages():
+		items.append({
+			"text": stage.stage_name,
+			"image": stage.icon,
+			"payload": stage
+		})
+	
+	carousel.set_items(items)
+	carousel.item_selected.connect(_on_carousel_select)
+
+func _on_carousel_select(payload: Variant) -> void:
+	if payload is StageData:
+		GameManager.selected_stage = payload
+		get_tree().change_scene_to_file("res://src/scenes/game.tscn")

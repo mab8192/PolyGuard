@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://bsvav2810uhuh"]
 
-[ext_resource type="Script" uid="uid://cv3xa5xvbcuvx" path="res://src/scenes/ui/defeat.gd" id="1_defeat"]
+[ext_resource type="Script" uid="uid://cv3xa5xvbcuvx" path="res://src/scenes/ui/popups/defeat.gd" id="1_defeat"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim"]
 bg_color = Color(0, 0, 0, 0.8)

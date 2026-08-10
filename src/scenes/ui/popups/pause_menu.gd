@@ -1,8 +1,7 @@
-extends CanvasLayer
+class_name PauseMenu extends CanvasLayer
 
 @onready var resume_button: Button = %ResumeButton
 @onready var restart_button: Button = %RestartButton
-@onready var stage_select_button: Button = %StageSelectButton
 @onready var main_menu_button: Button = %MainMenuButton
 
 @onready var bgm_slider: HSlider = %BGMSlider
@@ -14,7 +13,6 @@ func _ready() -> void:
 
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
-	stage_select_button.pressed.connect(_on_stage_select_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 	_setup_audio_sliders()
@@ -50,10 +48,6 @@ func _on_restart_pressed() -> void:
 	close()
 	get_tree().reload_current_scene()
 
-func _on_stage_select_pressed() -> void:
-	close()
-	get_tree().change_scene_to_file("res://src/scenes/ui/stage_select.tscn")
-
 func _on_main_menu_pressed() -> void:
 	close()
-	get_tree().change_scene_to_file("res://src/scenes/ui/main_menu.tscn")
+	get_tree().change_scene_to_file("res://src/scenes/main_menu.tscn")

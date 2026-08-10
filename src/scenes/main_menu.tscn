@@ -1,0 +1,79 @@
+[gd_scene format=3 uid="uid://duii2yuv2y63u"]
+
+[ext_resource type="Script" uid="uid://utvcj85tf0tf" path="res://src/scenes/main_menu.gd" id="1_rm437"]
+[ext_resource type="PackedScene" uid="uid://b1cqsdagcbdmg" path="res://src/scenes/ui/nav_bar.tscn" id="2_mob6k"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_rkeyg"]
+[ext_resource type="PackedScene" uid="uid://b7j6pm6x3hbq3" path="res://src/scenes/ui/views/campaign.tscn" id="3_yrdre"]
+[ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
+[ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
+[ext_resource type="PackedScene" uid="uid://27i631gkjm1k" path="res://src/scenes/ui/views/settings.tscn" id="6_n5k5b"]
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
+bg_color = Color(0.101961, 0.101961, 0.180392, 1)
+
+[node name="MainMenu" type="Control" unique_id=374769933]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_rm437")
+
+[node name="Background" type="Panel" parent="." unique_id=111111111]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_styles/panel = SubResource("StyleBoxFlat_bg")
+
+[node name="MarginContainer" type="MarginContainer" parent="." unique_id=222222222]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_top = 160
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1952931871]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2046030932]
+layout_mode = 2
+theme = ExtResource("2_rkeyg")
+theme_type_variation = &"HeaderText"
+theme_override_colors/font_color = Color(0, 0.7120507, 0.7160072, 1)
+text = "POLY GUARD"
+horizontal_alignment = 1
+
+[node name="ViewContainer" type="Control" parent="MarginContainer/VBoxContainer" unique_id=577285053]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="Campaign" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=916197880 instance=ExtResource("3_yrdre")]
+unique_name_in_owner = true
+layout_mode = 1
+
+[node name="Codex" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=682405425 instance=ExtResource("4_klrpn")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="Inventory" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=733795307 instance=ExtResource("5_1ipax")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="Settings" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=1047120522 instance=ExtResource("6_n5k5b")]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+
+[node name="NavBar" parent="MarginContainer/VBoxContainer" unique_id=645505814 instance=ExtResource("2_mob6k")]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 8

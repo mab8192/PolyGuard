@@ -1,12 +1,12 @@
-[gd_scene load_steps=8 format=3 uid="uid://ckbyw6p0dd4tr"]
+[gd_scene format=3 uid="uid://ckbyw6p0dd4tr"]
 
 [ext_resource type="Script" uid="uid://61ygublj6ljm" path="res://src/scenes/ui/in_game/hud.gd" id="1_hud"]
 [ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/in_game/top_bar.tscn" id="1_m12ob"]
-[ext_resource type="PackedScene" uid="uid://subtopbar001" path="res://src/scenes/ui/in_game/sub_top_bar.tscn" id="2_subtop"]
+[ext_resource type="PackedScene" uid="uid://bt16ii41hcq3a" path="res://src/scenes/ui/in_game/sub_top_bar.tscn" id="2_subtop"]
 [ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/in_game/bottom_bar.tscn" id="3_q3cwv"]
-[ext_resource type="PackedScene" uid="uid://pausemenu001" path="res://src/scenes/ui/pause_menu.tscn" id="4_pause"]
-[ext_resource type="PackedScene" uid="uid://w2hviyxoe2ky" path="res://src/scenes/ui/victory.tscn" id="5_victory"]
-[ext_resource type="PackedScene" uid="uid://bsvav2810uhuh" path="res://src/scenes/ui/defeat.tscn" id="6_defeat"]
+[ext_resource type="PackedScene" uid="uid://pausemenu001" path="res://src/scenes/ui/popups/pause_menu.tscn" id="4_pause"]
+[ext_resource type="PackedScene" uid="uid://w2hviyxoe2ky" path="res://src/scenes/ui/popups/victory.tscn" id="5_victory"]
+[ext_resource type="PackedScene" uid="uid://bsvav2810uhuh" path="res://src/scenes/ui/popups/defeat.tscn" id="6_defeat"]
 
 [node name="HUD" type="CanvasLayer" unique_id=1549892069]
 layer = 10
@@ -29,21 +29,21 @@ offset_bottom = 320.0
 grow_horizontal = 2
 theme_override_constants/separation = 8
 
-[node name="TopBar" parent="HUDControl/TopHeader" instance=ExtResource("1_m12ob")]
+[node name="TopBar" parent="HUDControl/TopHeader" unique_id=1340369557 instance=ExtResource("1_m12ob")]
 layout_mode = 2
 
-[node name="SubTopBar" parent="HUDControl/TopHeader" instance=ExtResource("2_subtop")]
+[node name="SubTopBar" parent="HUDControl/TopHeader" unique_id=1371529855 instance=ExtResource("2_subtop")]
 layout_mode = 2
 
 [node name="BottomBar" parent="HUDControl" unique_id=192044941 instance=ExtResource("3_q3cwv")]
 layout_mode = 1
 offset_top = -192.0
 
-[node name="PauseMenu" parent="." unique_id=1002973770 instance=ExtResource("4_pause")]
+[node name="Defeat" parent="." unique_id=2160001 instance=ExtResource("6_defeat")]
 visible = false
 
-[node name="Victory" parent="." unique_id=1740708778 instance=ExtResource("5_victory")]
+[node name="PauseMenu" parent="." unique_id=2180001 instance=ExtResource("4_pause")]
 visible = false
 
-[node name="Defeat" parent="." unique_id=1577883363 instance=ExtResource("6_defeat")]
+[node name="Victory" parent="." unique_id=2170001 instance=ExtResource("5_victory")]
 visible = false

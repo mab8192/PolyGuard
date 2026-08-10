@@ -11,7 +11,9 @@ var active_preset_index: int = 1
 
 var current_stage: Stage:
 	get:
-		return stage_root.current_stage
+		if stage_root:
+			return stage_root.current_stage
+		return null
 
 func _ready() -> void:
 	get_viewport().size_changed.connect(_update_camera)

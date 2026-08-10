@@ -1,6 +1,6 @@
-[gd_scene load_steps=4 format=3 uid="uid://pausemenu001"]
+[gd_scene format=3 uid="uid://pausemenu001"]
 
-[ext_resource type="Script" uid="uid://cb334u7v5f1" path="res://src/scenes/ui/pause_menu.gd" id="1_pause"]
+[ext_resource type="Script" uid="uid://dl7h7kymjid55" path="res://src/scenes/ui/popups/pause_menu.gd" id="1_pause"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim"]
 bg_color = Color(0, 0, 0, 0.7)
@@ -114,13 +114,6 @@ custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_override_font_sizes/font_size = 28
 text = "RESTART STAGE"
-
-[node name="StageSelectButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180018]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
-layout_mode = 2
-theme_override_font_sizes/font_size = 28
-text = "STAGE SELECT"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180019]
 unique_name_in_owner = true

@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://celcwx2brueh7" path="res://src/scenes/ui/in_game/bottom_bar.gd" id="1_sf614"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_ojqie"]
 [ext_resource type="Texture2D" uid="uid://5a1a1b6f6q1i" path="res://vendor/arrow_sheet.png" id="3_chvpt"]
-[ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/in_game/radial_menu.tscn" id="3_oibdf"]
-[ext_resource type="Script" uid="uid://i0rnk2gh17ei" path="res://src/scenes/ui/in_game/radial_menu.gd" id="4_3lhge"]
+[ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/elements/radial_menu.tscn" id="3_oibdf"]
+[ext_resource type="Script" uid="uid://i0rnk2gh17ei" path="res://src/scenes/ui/elements/radial_menu.gd" id="4_3lhge"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cancel"]
 bg_color = Color(0.913725, 0.270588, 0.376471, 1)

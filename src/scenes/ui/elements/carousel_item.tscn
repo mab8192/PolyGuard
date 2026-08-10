@@ -1,0 +1,40 @@
+[gd_scene format=3 uid="uid://w0rpag4s34xj"]
+
+[ext_resource type="Script" uid="uid://cvvukkii8pqd6" path="res://src/scenes/ui/elements/carousel_item.gd" id="1_aokbl"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="1_kcwpw"]
+
+[node name="CarouselItem" type="Control" unique_id=768978057]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_right = -472.0
+offset_bottom = -1312.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+script = ExtResource("1_aokbl")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1033551840]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/separation = 64
+
+[node name="TextureButton" type="TextureButton" parent="VBoxContainer" unique_id=1060349481]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+texture_normal = ExtResource("1_kcwpw")
+stretch_mode = 5
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=59652091]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+theme_type_variation = &"BodyText"
+text = "LABEL"

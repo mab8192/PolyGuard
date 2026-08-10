@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8y4k27r65m8x"]
 
-[ext_resource type="Script" uid="uid://drwlw55la4a3w" path="res://src/scenes/ui/in_game/radial_menu_item.gd" id="1_item_script"]
+[ext_resource type="Script" uid="uid://drwlw55la4a3w" path="res://src/scenes/ui/elements/radial_menu_item.gd" id="1_item_script"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.0980392, 0.203922, 0.376471, 0.92)
@@ -16,25 +16,25 @@ corner_radius_bottom_left = 60
 shadow_color = Color(0, 0, 0, 0.4)
 shadow_size = 8
 
-[sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 28
-outline_size = 4
-outline_color = Color(0, 0, 0, 1)
-
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost"]
+content_margin_left = 8.0
+content_margin_top = 2.0
+content_margin_right = 8.0
+content_margin_bottom = 2.0
 bg_color = Color(0, 0, 0, 0.85)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
-content_margin_left = 8.0
-content_margin_top = 2.0
-content_margin_right = 8.0
-content_margin_bottom = 2.0
 
 [sub_resource type="LabelSettings" id="LabelSettings_cost"]
 font_size = 18
 outline_size = 2
+outline_color = Color(0, 0, 0, 1)
+
+[sub_resource type="LabelSettings" id="LabelSettings_title"]
+font_size = 28
+outline_size = 4
 outline_color = Color(0, 0, 0, 1)
 
 [node name="RadialMenuItem" type="Control" unique_id=1280246680]

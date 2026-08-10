@@ -25,7 +25,7 @@ signal menu_closed()
 		icon_size = val
 		_apply_item_offsets()
 
-@export var item_scene: PackedScene = preload("res://src/scenes/ui/in_game/radial_menu_item.tscn")
+@export var item_scene: PackedScene = preload("res://src/scenes/ui/elements/radial_menu_item.tscn")
 
 var _items: Array[RadialMenuItem] = []
 var _hovered_item: RadialMenuItem = null
