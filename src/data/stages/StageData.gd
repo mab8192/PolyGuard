@@ -10,6 +10,7 @@ extends Resource
 @export_group("Economy & Rules")
 @export var starting_gold: int = 600
 @export var starting_lives: int = 20
+@export var loadout_size: int = 4
 
 @export_group("Wave Configuration")
 @export_file("*.json") var wave_data_file: String = ""

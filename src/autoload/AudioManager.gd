@@ -24,7 +24,7 @@ var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Vict
 
 # Music Streams
 @export_group("Music Tracks")
-@export var music_menu: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")
+@export var music_menu: AudioStream = preload("res://vendor/mrpoly/awesomeness.wav")
 @export var music_build: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")
 @export var music_combat: AudioStream = preload("res://vendor/celestialghost8/newbattle.wav")
 @export var music_victory: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")

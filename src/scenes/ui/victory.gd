@@ -17,7 +17,8 @@ func _on_stage_completed() -> void:
 	if GameManager.current_stage:
 		var lives = GameManager.current_stage.lives
 		var gold = GameManager.current_stage.gold
-		stats_label.text = "Remaining Lives: %d\nFinal Gold: %d" % [lives, gold]
+		var score = GameManager.current_stage.score
+		stats_label.text = "Remaining Lives: %d\nFinal Gold: %d\nFinal Score: %d" % [lives, gold, score]
 	show()
 
 func _on_next_stage_pressed() -> void:

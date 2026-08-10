@@ -6,6 +6,8 @@ var stage_root: StageRoot
 # Transition states
 var selected_stage: StageData
 var selected_loadout: Array[TowerData] = []
+var loadout_presets: Dictionary = {} # int -> Array[TowerData]
+var active_preset_index: int = 1
 
 var current_stage: Stage:
 	get:
@@ -59,4 +61,3 @@ func get_next_stage() -> StageData:
 	if idx != -1 and idx + 1 < stages.size():
 		return stages[idx + 1]
 	return null
-

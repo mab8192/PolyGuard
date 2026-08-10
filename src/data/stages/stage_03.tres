@@ -1,12 +1,14 @@
 [gd_resource type="Resource" script_class="StageData" format=3 uid="uid://bgsianpre2mbh"]
 
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="1_j748k"]
 [ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://dj5myt3gky8fk" path="res://src/scenes/stages/Stage3.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_script")
 stage_id = "stage_03"
+stage_name = "Vienna's Stage"
 scene = ExtResource("2_scene")
 starting_gold = 1000
-starting_lives = 20
+loadout_size = 6
 wave_data_file = "res://src/data/stages/waves/Stage3.json"

@@ -17,7 +17,8 @@ func _on_stage_failed() -> void:
 	if GameManager.current_stage:
 		var wave = GameManager.current_stage.wave
 		var total_waves = GameManager.current_stage.data.get_waves().size()
-		desc_label.text = "Overwhelmed on Wave %d of %d" % [wave, total_waves]
+		var score = GameManager.current_stage.score
+		desc_label.text = "Overwhelmed on Wave %d of %d\nScore: %d" % [wave, total_waves, score]
 	else:
 		desc_label.text = "Your defenses failed!"
 	show()

@@ -1,11 +1,11 @@
 [gd_resource type="Resource" script_class="StageData" format=3 uid="uid://3hcobco3ep70"]
 
 [ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="1_y2oy0"]
 [ext_resource type="PackedScene" uid="uid://dplj7iq0og77i" path="res://src/scenes/stages/Stage1.tscn" id="2_scene"]
 
 [resource]
 script = ExtResource("1_script")
+stage_name = "Stage 1"
 scene = ExtResource("2_scene")
-starting_gold = 600
-starting_lives = 20
 wave_data_file = "res://src/data/stages/waves/Stage1.json"

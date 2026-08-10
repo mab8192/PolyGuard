@@ -12,6 +12,11 @@ var gold: int
 var wave: int
 var current_wave: WaveData
 
+# Timer and Score tracking
+var stage_time: float = 0.0
+var score: int = 0
+var is_stage_active: bool = true
+
 ## TODO: Set from loadout selection scene, probably in GameManager or perhaps a dedicated LoadoutManager
 var loadout: Array[TowerData] = [
 	Registry.get_tower_data("archer_tower"),
@@ -268,11 +273,21 @@ func _ready() -> void:
 	_generate_navmesh()
 	
 	SignalBus.stage_loaded.emit()
+	SignalBus.score_changed.emit(score)
+	SignalBus.stage_time_changed.emit("00:00")
 
-func _process(_delta: float) -> void:
+func _process(delta: float) -> void:
+	if wave_is_active:
+		stage_time += delta
+		var total_secs = int(stage_time)
+		var mins = total_secs / 60
+		var secs = total_secs % 60
+		SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])
+
 	if _preview_tower and is_instance_valid(_preview_tower):
 		var valid: bool = can_place_preview()
 		_preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
+
 
 
 func _handle_press(pos: Vector2) -> void:
@@ -337,8 +352,18 @@ func _check_wave_completion() -> void:
 		gold += current_wave.reward_gold
 		SignalBus.gold_changed.emit(gold)
 		
+		var wave_bonus = wave * 250
+		score += wave_bonus
+		SignalBus.score_changed.emit(score)
+		
 		if wave == data.get_waves().size():
+			is_stage_active = false
+			var time_bonus = max(0, 5000 - int(stage_time) * 10)
+			var lives_bonus = lives * 1000
+			score += (lives_bonus + time_bonus)
+			SignalBus.score_changed.emit(score)
 			SignalBus.stage_completed.emit()
+
 
 const AGENT_TIERS: Array[Dictionary] = [
 	{"radius": 10, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
@@ -376,6 +401,11 @@ func _generate_navmesh() -> void:
 func _on_enemy_died(enemy: Enemy) -> void:
 	gold += enemy.data.gold_reward
 	SignalBus.gold_changed.emit(gold)
+	
+	var enemy_pts = enemy.data.gold_reward * 10 if (enemy and enemy.data) else 100
+	score += enemy_pts
+	SignalBus.score_changed.emit(score)
+	
 	_check_wave_completion()
 
 func _on_enemy_exit(enemy: Enemy) -> void:
@@ -384,6 +414,7 @@ func _on_enemy_exit(enemy: Enemy) -> void:
 	
 	if lives <= 0:
 		lives = 0
+		is_stage_active = false
 		SignalBus.lives_changed.emit(lives)
 		SignalBus.stage_failed.emit()
 

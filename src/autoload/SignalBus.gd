@@ -18,3 +18,7 @@ signal wave_completed()
 signal stage_loaded()
 signal stage_completed()
 signal stage_failed()
+
+signal score_changed(score: int)
+signal stage_time_changed(formatted_time: String)
+

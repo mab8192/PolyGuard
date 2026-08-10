@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://ce4x7k5wan21m"]
 
-[ext_resource type="Script" uid="uid://cx6n4g14l30sk" path="res://src/scenes/ui/radial_menu.gd" id="1_menu_script"]
+[ext_resource type="Script" uid="uid://cx6n4g14l30sk" path="res://src/scenes/ui/in_game/radial_menu.gd" id="1_menu_script"]
 
 [node name="RadialMenu" type="Control"]
 layout_mode = 3
