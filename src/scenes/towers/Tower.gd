@@ -43,6 +43,11 @@ var is_preview: bool = false:
 		is_preview = value
 		_update_preview_state()
 
+var is_selected: bool = false:
+	set(value):
+		is_selected = value
+		_update_selected_state()
+
 func _ready() -> void:
 	if not data:
 		push_error("Missing TowerData! %s" % get_path())
@@ -82,6 +87,9 @@ func _update_preview_state() -> void:
 			effect_applier.disable()
 		else:
 			effect_applier.enable()
+
+func _update_selected_state() -> void:
+	pass
 
 func _set_controls_mouse_filter(node: Node, ignore: bool) -> void:
 	var filter := Control.MOUSE_FILTER_IGNORE if ignore else Control.MOUSE_FILTER_STOP
