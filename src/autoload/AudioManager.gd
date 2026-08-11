@@ -25,8 +25,14 @@ var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Vict
 # Music Streams
 @export_group("Music Tracks")
 @export var music_menu: AudioStream = preload("res://vendor/mrpoly/awesomeness.wav")
-@export var music_build: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")
-@export var music_combat: AudioStream = preload("res://vendor/celestialghost8/newbattle.wav")
+@export var music_build: AudioStream = preload("res://vendor/Zefz/TheLoomingBattle.ogg")
+@export var music_combat: Array[AudioStream] = [
+	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 1.mp3"),
+	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 2.mp3"),
+	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 3.mp3"),
+	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 4.mp3"),
+	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 5.mp3")
+]
 @export var music_victory: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")
 
 # --- Node References ---
@@ -150,7 +156,7 @@ func _get_available_sfx_player() -> AudioStreamPlayer:
 # ==============================================================================
 
 func _on_wave_started() -> void:
-	play_music(music_combat)
+	play_music(music_combat.pick_random())
 
 func _on_wave_completed() -> void:
 	play_music(music_build)

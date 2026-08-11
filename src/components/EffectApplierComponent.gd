@@ -24,8 +24,9 @@ func _on_body_entered(body: Node2D) -> void:
 		_applied_effects[enemy] = []
 		for effect in data.effects:
 			var ac = effect.create_instance()
-			enemy.apply_effect(ac)
-			_applied_effects[enemy].append(ac)
+			if not enemy.has_effect(effect.name):
+				enemy.apply_effect(ac)
+				_applied_effects[enemy].append(ac)
 
 func _on_body_exited(body: Node2D) -> void:
 	if body is Enemy and body in _applied_effects:

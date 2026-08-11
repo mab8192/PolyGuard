@@ -15,43 +15,33 @@ var current_stage: Stage:
 			return stage_root.current_stage
 		return null
 
-func _ready() -> void:
-	get_viewport().size_changed.connect(_update_camera)
-	
-func load_stage(stage_data: StageData) -> void:
+enum View { MAIN_MENU, LOADOUT, GAME }
+
+const MAIN_MENU: PackedScene = preload("res://src/scenes/main_menu.tscn")
+#const LOADOUT: PackedScene = ...
+const GAME: PackedScene = preload("res://src/scenes/game.tscn")
+
+func load_view(view: View) -> void:
+	match view:
+		View.MAIN_MENU:
+			get_tree().change_scene_to_packed(MAIN_MENU)
+		View.LOADOUT:
+			print("Go to loadout!")
+		View.GAME:
+			get_tree().change_scene_to_packed(GAME)
+
+func load_stage(stage_data: StageData, loadout: Array[TowerData]) -> void:
 	if Engine.is_in_physics_frame():
 		call_deferred("_deferred_load_stage", stage_data)
 		return
 
-	_deferred_load_stage(stage_data)
+	_deferred_load_stage(stage_data, loadout)
 
-func _deferred_load_stage(stage_data: StageData) -> void:
-	stage_root.load_stage(stage_data)
-	_update_camera()
-
-func _update_camera() -> void:
-	if not current_stage or not camera:
-		return
-		
-	var bounds: Rect2 = current_stage.get_map_pixel_rect()
-	var viewport_size = camera.get_viewport_rect().size
+func _deferred_load_stage(stage_data: StageData, loadout: Array[TowerData]) -> void:
+	selected_stage = stage_data
+	selected_loadout = loadout
 	
-	# Determine the best zoom to fit the stage bounds in the current viewport
-	var padding = 0.95
-	var zoom_x = (viewport_size.x * padding) / bounds.size.x
-	var zoom_y = (viewport_size.y * padding) / bounds.size.y
-	var target_zoom = min(zoom_x, zoom_y)
-	
-	# Apply zoom
-	camera.global_position = bounds.get_center()
-	camera.zoom = Vector2(target_zoom, target_zoom)
-
-func start_game(stage_data: StageData = null, loadout: Array[TowerData] = []) -> void:
-	if stage_data:
-		selected_stage = stage_data
-	if not loadout.is_empty():
-		selected_loadout = loadout
-	get_tree().change_scene_to_file("res://src/scenes/game.tscn")
+	GameManager.load_view(GameManager.View.GAME)
 
 func get_next_stage() -> StageData:
 	var stages = Registry.get_all_stages()

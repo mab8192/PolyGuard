@@ -1,12 +1,8 @@
 extends Node2D
 
 var stage_ids: Array[String] = Registry.STAGES.keys()
-var stage_index: int = 0
-
-func start_next_stage() -> void:
-	stage_index += 1
-	if stage_index < stage_ids.size():
-		GameManager.load_stage(Registry.STAGES[stage_ids[stage_index]])
+@onready var stage_root: StageRoot = $StageRoot
+@onready var camera: Camera2D = $Camera2D
 
 func _ready() -> void:
 	GameManager.camera = $Camera2D
@@ -19,4 +15,24 @@ func _ready() -> void:
 			GameManager.selected_stage = stage_to_load
 	
 	if stage_to_load:
-		GameManager.load_stage(stage_to_load)
+		stage_root.load_stage(stage_to_load)
+		_update_camera()
+	
+	get_viewport().size_changed.connect(_update_camera)
+
+func _update_camera() -> void:
+	if not stage_root.current_stage or not camera:
+		return
+		
+	var bounds: Rect2 = stage_root.current_stage.get_map_pixel_rect()
+	var viewport_size = camera.get_viewport_rect().size
+	
+	# Determine the best zoom to fit the stage bounds in the current viewport
+	var padding = 0.95
+	var zoom_x = (viewport_size.x * padding) / bounds.size.x
+	var zoom_y = (viewport_size.y * padding) / bounds.size.y
+	var target_zoom = min(zoom_x, zoom_y)
+	
+	# Apply zoom
+	camera.global_position = bounds.get_center()
+	camera.zoom = Vector2(target_zoom, target_zoom)

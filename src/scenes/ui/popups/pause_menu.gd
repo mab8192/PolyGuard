@@ -50,4 +50,4 @@ func _on_restart_pressed() -> void:
 
 func _on_main_menu_pressed() -> void:
 	close()
-	get_tree().change_scene_to_file("res://src/scenes/main_menu.tscn")
+	GameManager.load_view(GameManager.View.MAIN_MENU)

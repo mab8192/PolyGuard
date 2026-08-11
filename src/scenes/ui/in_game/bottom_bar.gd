@@ -41,7 +41,7 @@ func _process(_delta: float) -> void:
 func open_build_radial_menu() -> void:
 	var items: Array[Dictionary] = []
 	
-	var towers: Array[TowerData] = GameManager.current_stage.loadout
+	var towers: Array[TowerData] = GameManager.selected_loadouta
 	var current_gold: int = GameManager.current_stage.gold if GameManager.current_stage else 999
 	
 	# Populate menu entries directly from TowerData resources (up to 6 items)

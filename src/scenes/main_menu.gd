@@ -9,6 +9,7 @@ class_name MainMenu extends Control
 
 func _ready() -> void:
 	nav_bar.tab_select.connect(_on_tab_select)
+	AudioManager.play_music(AudioManager.music_menu)
 	
 func _on_tab_select(tab: NavBar.Tab) -> void:
 	match tab:

@@ -19,4 +19,4 @@ func _ready() -> void:
 func _on_carousel_select(payload: Variant) -> void:
 	if payload is StageData:
 		GameManager.selected_stage = payload
-		get_tree().change_scene_to_file("res://src/scenes/game.tscn")
+		GameManager.load_view(GameManager.View.GAME)

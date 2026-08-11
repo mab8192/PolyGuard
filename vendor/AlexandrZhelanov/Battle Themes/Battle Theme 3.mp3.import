@@ -1,0 +1,19 @@
+[remap]
+
+importer="mp3"
+type="AudioStreamMP3"
+uid="uid://b6pq838l1o5es"
+path="res://.godot/imported/Battle Theme 3.mp3-da66390036f7b125d7121d41d11f5d85.mp3str"
+
+[deps]
+
+source_file="res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 3.mp3"
+dest_files=["res://.godot/imported/Battle Theme 3.mp3-da66390036f7b125d7121d41d11f5d85.mp3str"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4

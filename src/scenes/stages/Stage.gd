@@ -17,14 +17,6 @@ var stage_time: float = 0.0
 var score: int = 0
 var is_stage_active: bool = true
 
-## TODO: Set from loadout selection scene, probably in GameManager or perhaps a dedicated LoadoutManager
-var loadout: Array[TowerData] = [
-	Registry.get_tower_data("archer_tower"),
-	Registry.get_tower_data("barricade"),
-	Registry.get_tower_data("tar_trap"),
-	Registry.get_tower_data("tesla_tower")
-]
-
 var spawners: Array[Spawner] = []
 var wave_is_active: bool = false
 
@@ -258,9 +250,6 @@ func _rect_intersects_circle(rect: Rect2, circle_center: Vector2, radius: float)
 	return distance_squared < (radius * radius)
 
 func _ready() -> void:
-	if GameManager.selected_loadout.size() > 0:
-		loadout = GameManager.selected_loadout
-
 	lives = data.starting_lives
 	gold = data.starting_gold
 	
@@ -288,8 +277,6 @@ func _process(delta: float) -> void:
 		var valid: bool = can_place_preview()
 		_preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
 
-
-
 func _handle_press(pos: Vector2) -> void:
 	_is_dragging = true
 	_last_input_pos = pos
@@ -305,6 +292,7 @@ func _handle_release(_pos: Vector2) -> void:
 	
 	var on_tower = _pos.distance_to(_preview_tower.global_position) < TOWER_TOUCH_DIST_THRESH
 	if _total_drag_distance_sq < 100 and on_tower and can_place_preview():
+		print(_total_drag_distance_sq)
 		place_preview()
 	
 func _handle_drag(delta: Vector2) -> void:
@@ -402,8 +390,7 @@ func _on_enemy_died(enemy: Enemy) -> void:
 	gold += enemy.data.gold_reward
 	SignalBus.gold_changed.emit(gold)
 	
-	var enemy_pts = enemy.data.gold_reward * 10 if (enemy and enemy.data) else 100
-	score += enemy_pts
+	score += enemy.data.gold_reward * 10
 	SignalBus.score_changed.emit(score)
 	
 	_check_wave_completion()

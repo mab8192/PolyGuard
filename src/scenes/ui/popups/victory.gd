@@ -22,14 +22,13 @@ func _on_stage_completed() -> void:
 	show()
 
 func _on_next_stage_pressed() -> void:
-	var next_stage = GameManager.get_next_stage()
+	var next_stage: StageData = GameManager.get_next_stage()
 	if next_stage:
-		GameManager.start_game(next_stage, GameManager.selected_loadout)
-	else:
-		get_tree().change_scene_to_file("res://src/scenes/ui/stage_select.tscn")
+		GameManager.selected_stage = next_stage
+		GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_retry_pressed() -> void:
 	get_tree().reload_current_scene()
 
 func _on_main_menu_pressed() -> void:
-	get_tree().change_scene_to_file("res://src/scenes/ui/main_menu.tscn")
+	GameManager.load_view(GameManager.View.MAIN_MENU)

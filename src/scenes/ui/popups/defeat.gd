@@ -27,7 +27,7 @@ func _on_retry_pressed() -> void:
 	get_tree().reload_current_scene()
 
 func _on_loadout_pressed() -> void:
-	get_tree().change_scene_to_file("res://src/scenes/ui/loadout_selection.tscn")
+	GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_main_menu_pressed() -> void:
-	get_tree().change_scene_to_file("res://src/scenes/ui/main_menu.tscn")
+	GameManager.load_view(GameManager.View.MAIN_MENU)

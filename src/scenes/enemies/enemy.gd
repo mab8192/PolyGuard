@@ -23,6 +23,9 @@ func apply_effect(effect: ActiveEffect) -> void:
 	_active_effects.append(effect)
 	effect.apply(self)
 
+func has_effect(effect_name: String) -> bool:
+	return _active_effects.any(func(x: ActiveEffect): return x.data.name == effect_name)
+
 func remove_effect(effect: ActiveEffect) -> void:
 	_active_effects.erase(effect)
 	effect.remove()
