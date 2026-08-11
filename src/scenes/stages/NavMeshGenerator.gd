@@ -7,6 +7,7 @@ class_name NavMeshGenerator
 const DEFAULT_SUB_STEP: float = 4.0 ## Sub-pixel resolution in pixels (< 16px precision)
 
 static var _thread: Thread = null
+static var _pending_snapshot: Dictionary = {}
 
 static func generate_navmesh(
 	tiles: TileMapLayer,
@@ -59,9 +60,9 @@ static func generate_navmesh(
 		"get_tier_region_func": get_tier_region_func
 	}
 
-	# Ensure previous single background thread task is finished before starting a new one
 	if _thread and _thread.is_started():
-		_thread.wait_to_finish()
+		_pending_snapshot = snapshot
+		return
 
 	_thread = Thread.new()
 	_thread.start(_thread_worker.bind(snapshot))
@@ -281,6 +282,16 @@ static func _apply_results_on_main_thread(tier_results: Array[Dictionary], get_t
 		var tier_region: NavigationRegion2D = get_tier_region_func.call(layer)
 		if tier_region:
 			tier_region.navigation_polygon = nav_poly
+
+	if _thread and _thread.is_started():
+		_thread.wait_to_finish()
+	_thread = null
+
+	if not _pending_snapshot.is_empty():
+		var next_snap = _pending_snapshot.duplicate()
+		_pending_snapshot.clear()
+		_thread = Thread.new()
+		_thread.start(_thread_worker.bind(next_snap))
 
 static func _calc_bounding_rect(poly: PackedVector2Array) -> Rect2:
 	if poly.is_empty():

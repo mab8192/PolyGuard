@@ -28,7 +28,7 @@ func _process(delta: float) -> void:
 	if target and is_instance_valid(target):
 		direction = global_position.direction_to(target.global_position)
 
-	position += delta * direction * projectile_speed
+	global_position += delta * direction * projectile_speed
 	_secs_alive += delta
 	if _secs_alive >= MAX_LIFETIME:
 		queue_free()

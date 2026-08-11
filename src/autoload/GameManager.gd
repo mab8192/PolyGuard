@@ -18,7 +18,7 @@ var current_stage: Stage:
 enum View { MAIN_MENU, LOADOUT, GAME }
 
 const MAIN_MENU: PackedScene = preload("res://src/scenes/main_menu.tscn")
-#const LOADOUT: PackedScene = ...
+const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
 const GAME: PackedScene = preload("res://src/scenes/game.tscn")
 
 func load_view(view: View) -> void:
@@ -26,13 +26,13 @@ func load_view(view: View) -> void:
 		View.MAIN_MENU:
 			get_tree().change_scene_to_packed(MAIN_MENU)
 		View.LOADOUT:
-			print("Go to loadout!")
+			get_tree().change_scene_to_packed(LOADOUT)
 		View.GAME:
 			get_tree().change_scene_to_packed(GAME)
 
 func load_stage(stage_data: StageData, loadout: Array[TowerData]) -> void:
 	if Engine.is_in_physics_frame():
-		call_deferred("_deferred_load_stage", stage_data)
+		call_deferred("_deferred_load_stage", stage_data, loadout)
 		return
 
 	_deferred_load_stage(stage_data, loadout)

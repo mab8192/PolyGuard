@@ -26,20 +26,15 @@ func close() -> void:
 	hide()
 
 func _setup_audio_sliders() -> void:
-	var music_bus_idx = AudioServer.get_bus_index("Music")
-	var sfx_bus_idx = AudioServer.get_bus_index("SFX")
+	bgm_slider.value = SettingsManager.get_bus_volume("Music", 1.0)
+	bgm_slider.value_changed.connect(func(val: float):
+		SettingsManager.set_bus_volume("Music", val)
+	)
 
-	if music_bus_idx != -1:
-		bgm_slider.value = db_to_linear(AudioServer.get_bus_volume_db(music_bus_idx))
-		bgm_slider.value_changed.connect(func(val: float):
-			AudioServer.set_bus_volume_db(music_bus_idx, linear_to_db(val))
-		)
-
-	if sfx_bus_idx != -1:
-		sfx_slider.value = db_to_linear(AudioServer.get_bus_volume_db(sfx_bus_idx))
-		sfx_slider.value_changed.connect(func(val: float):
-			AudioServer.set_bus_volume_db(sfx_bus_idx, linear_to_db(val))
-		)
+	sfx_slider.value = SettingsManager.get_bus_volume("SFX", 1.0)
+	sfx_slider.value_changed.connect(func(val: float):
+		SettingsManager.set_bus_volume("SFX", val)
+	)
 
 func _on_resume_pressed() -> void:
 	close()

@@ -16,19 +16,27 @@ func _ready() -> void:
 		else:
 			push_error("MovementComponent needs a CharacterBody2D parent or assigned body reference!")
 
+var speed_multiplier: float = 1.0
+
+func get_speed() -> float:
+	if not data:
+		return 0.0
+	return data.max_speed * speed_multiplier
+
 ## Accelerates towards a direction vector and applies friction when direction is zero.
 func handle_movement(direction: Vector2, delta: float) -> void:
 	if not _body:
 		return
 
+	var current_max_speed = get_speed()
 	if direction != Vector2.ZERO:
 		var dir_norm: Vector2 = direction.normalized()
-		_body.velocity = _body.velocity.move_toward(dir_norm * data.max_speed, data.acceleration * delta)
+		_body.velocity = _body.velocity.move_toward(dir_norm * current_max_speed, data.acceleration * delta)
 	else:
 		_body.velocity = _body.velocity.move_toward(Vector2.ZERO, data.friction * delta)
 
-	if _body.velocity.length() > data.max_speed:
-		_body.velocity = _body.velocity.normalized() * data.max_speed
+	if _body.velocity.length() > current_max_speed:
+		_body.velocity = _body.velocity.normalized() * current_max_speed
 
 	_body.move_and_slide()
 

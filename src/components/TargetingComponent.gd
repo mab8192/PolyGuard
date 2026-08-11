@@ -36,7 +36,7 @@ func _select_target() -> void:
 	_targets = _targets.filter(func(t: Enemy) -> bool: return is_instance_valid(t))
 
 	# Clean up rays for enemies that are no longer valid or in _targets
-	for enemy in _rays.keys():
+	for enemy in _rays.keys().duplicate():
 		if not is_instance_valid(enemy) or not _targets.has(enemy):
 			_remove_ray_for(enemy)
 
@@ -73,8 +73,8 @@ func _select_target() -> void:
 			)
 		Strategy.STRONGEST:
 			candidates.sort_custom(func(a: Enemy, b: Enemy) -> bool:
-				var hp_a = a.health.health if a.health else 0.0
-				var hp_b = b.health.health if b.health else 0.0
+				var hp_a = a.health.get_health() if a.health else 0.0
+				var hp_b = b.health.get_health() if b.health else 0.0
 				return hp_a > hp_b
 			)
 

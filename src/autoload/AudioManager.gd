@@ -19,6 +19,9 @@ extends Node
 	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Teleport/Wav/Teleport__007.wav"),
 	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Pew/Wav/Pew__008.wav")
 ]
+@export var sfx_tower_placed: Array[AudioStream] = [
+	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Pew/Wav/Pew__008.wav")
+]
 
 var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Victory.mp3")
 
@@ -79,6 +82,7 @@ func _connect_signal_bus() -> void:
 	SignalBus.stage_completed.connect(_on_stage_completed)
 	SignalBus.enemy_died.connect(_on_enemy_died)
 	SignalBus.enemy_exit.connect(_on_enemy_exit)
+	SignalBus.tower_placed.connect(_on_tower_placed)
 
 # ==============================================================================
 # MUSIC CROSSFADING
@@ -174,3 +178,6 @@ func _on_enemy_died(_enemy: Enemy) -> void:
 
 func _on_enemy_exit(_enemy: Enemy) -> void:
 	play_random_sfx(sfx_enemy_exit, 0.95, 1.05)
+
+func _on_tower_placed() -> void:
+	play_random_sfx(sfx_tower_placed, 1.1, 1.3)

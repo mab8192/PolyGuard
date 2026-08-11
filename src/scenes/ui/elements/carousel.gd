@@ -15,6 +15,8 @@ var _items: Array[CarouselItem] = []
 func set_items(items: Array[Dictionary]) -> void:
 	for item in items_container.get_children():
 		item.queue_free()
+	_items.clear()
+	_index = 0
 	
 	for item in items:
 		var new_item = _create_item(item)

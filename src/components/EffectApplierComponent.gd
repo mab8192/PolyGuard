@@ -29,7 +29,11 @@ func _on_body_entered(body: Node2D) -> void:
 				_applied_effects[enemy].append(ac)
 
 func _on_body_exited(body: Node2D) -> void:
-	if body is Enemy and body in _applied_effects:
+	for enemy in _applied_effects.keys().duplicate():
+		if not is_instance_valid(enemy):
+			_applied_effects.erase(enemy)
+
+	if is_instance_valid(body) and body is Enemy and body in _applied_effects:
 		for effect in _applied_effects[body]:
 			body.remove_effect(effect)
 		_applied_effects.erase(body)

@@ -18,6 +18,8 @@ func run(group: SpawnGroup) -> void:
 	# 1. Handle delay before group starts
 	if group.delay > 0.0:
 		await get_tree().create_timer(group.delay, false).timeout
+		if not is_inside_tree():
+			return
 
 	# 2. Lookup EnemyData from Registry autoload
 	var enemy_data: EnemyData = Registry.get_enemy_data(group.enemy_type)
@@ -35,6 +37,8 @@ func run(group: SpawnGroup) -> void:
 		# Wait interval time between spawns (unless it's the last unit)
 		if i < group.count - 1 and group.interval > 0.0:
 			await get_tree().create_timer(group.interval, false).timeout
+			if not is_inside_tree():
+				return
 
 	_active_groups -= 1
 	if _active_groups == 0:
@@ -62,7 +66,10 @@ func _instantiate_enemy(enemy_data: EnemyData) -> void:
 	enemy.global_position = _get_spawn_point()
 	
 	# Add it to the scene tree
-	GameManager.stage_root.enemies.add_child(enemy)
+	if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
+		GameManager.stage_root.enemies.add_child(enemy)
+	else:
+		add_child(enemy)
 
 	# Emit signals for UI, WaveManager, or Audio
 	SignalBus.enemy_spawned.emit(enemy)

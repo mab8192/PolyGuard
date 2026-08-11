@@ -5,17 +5,9 @@ enum EnemyType {PHYSICAL, GHOST}
 ## Gets assigned by the EnemyData type
 var data: EnemyData
 
-var health: HealthComponent:
-	get:
-		return ComponentUtil.get_component(self, HealthComponent) as HealthComponent
-		
-var movement: MovementComponent:
-	get:
-		return ComponentUtil.get_component(self, MovementComponent) as MovementComponent
-		
-var nav: NavigationComponent:
-	get:
-		return ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
+var health: HealthComponent
+var movement: MovementComponent
+var nav: NavigationComponent
 
 var _active_effects: Array[ActiveEffect] = []
 
@@ -31,6 +23,10 @@ func remove_effect(effect: ActiveEffect) -> void:
 	effect.remove()
 
 func _ready() -> void:
+	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+	movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
+	nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
+
 	if health:
 		health.died.connect(_on_died)
 	
@@ -61,8 +57,10 @@ func _on_died() -> void:
 
 func _on_velocity_computed(vel: Vector2):
 	var dir = vel.normalized()
-	movement.handle_movement(dir, get_physics_process_delta_time())
-	look_at(global_position + velocity)
+	if movement:
+		movement.handle_movement(dir, get_physics_process_delta_time())
+	if velocity.length_squared() > 0.1:
+		look_at(global_position + velocity)
 
 func _on_no_path_available() -> void:
 	print("NO PATH! FINDING NEAREST TOWER TO DESTROYYYY ITTTT")

@@ -75,8 +75,6 @@ func _physics_process(_delta: float) -> void:
 	
 	var next_pos = agent.get_next_path_position()
 	
-	agent.get_current_navigation_path()
-	
 	if !agent.is_target_reachable():
 		if !_no_path:
 			no_path_available.emit()
@@ -86,10 +84,11 @@ func _physics_process(_delta: float) -> void:
 	_no_path = false
 	
 	var dir = _actor.global_position.direction_to(next_pos)
-	var intended_vel = dir * movement.data.max_speed
+	var max_speed = movement.get_speed() if movement else 0.0
+	var intended_vel = dir * max_speed
 	
 	if agent.avoidance_enabled:
-		agent.max_speed = movement.data.max_speed
+		agent.max_speed = max_speed
 		agent.velocity = intended_vel
 	else:
 		velocity_computed.emit(intended_vel)
@@ -98,6 +97,9 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
+	if targets.is_empty():
+		return
+
 	if data.strategy == NavStrategy.FIRST:
 		agent.target_position = targets[0].global_position
 		return
@@ -112,6 +114,9 @@ func _pick_target() -> void:
 		var length: float = _calculate_path_length(path)
 		
 		distances.append(length)
+
+	if distances.is_empty():
+		return
 
 	match data.strategy:
 		NavStrategy.CLOSEST:

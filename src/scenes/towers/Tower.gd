@@ -5,21 +5,10 @@ var data: TowerData
 
 ## Components that CAN be attached. Most are not required
 
-var health: HealthComponent:
-	get:
-		return ComponentUtil.get_component(self, HealthComponent) as HealthComponent
-		
-var targeting: TargetingComponent: ## Can be null
-	get:
-		return ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
-		
-var attack: AttackComponent: ## Can be null
-	get:
-		return ComponentUtil.get_component(self, AttackComponent) as AttackComponent
-		
-var effect_applier: EffectApplierComponent: ## Can be null
-	get:
-		return ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
+var health: HealthComponent
+var targeting: TargetingComponent
+var attack: AttackComponent
+var effect_applier: EffectApplierComponent
 
 var is_solid: bool = true:
 	set(value):
@@ -32,6 +21,11 @@ var is_preview: bool = false:
 		_update_preview_state()
 
 func _ready() -> void:
+	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+	targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
+	attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
+	effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
+
 	if not data:
 		push_error("Missing TowerData! %s" % get_path())
 	

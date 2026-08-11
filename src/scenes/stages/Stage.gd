@@ -198,8 +198,24 @@ func place_preview() -> void:
 	_preview_tower = null
 	_is_dragging = false
 	
-	if tower_data:
-		_create_preview_tower(tower_data, last_pos)
+	if tower_data and gold >= tower_data.cost:
+		var adjacent_offsets: Array[Vector2] = [
+			Vector2(GRID_SIZE, 0),
+			Vector2(0, GRID_SIZE),
+			Vector2(-GRID_SIZE, 0),
+			Vector2(0, -GRID_SIZE)
+		]
+		var spawned: bool = false
+		for offset in adjacent_offsets:
+			var test_pos = last_pos + offset
+			_create_preview_tower(tower_data, test_pos)
+			if can_place_preview():
+				spawned = true
+				break
+			else:
+				exit_placement_mode()
+		if not spawned:
+			exit_placement_mode()
 
 ### PRIVATE FUNCTIONS
 
@@ -258,12 +274,16 @@ func _ready() -> void:
 	
 	SignalBus.enemy_died.connect(_on_enemy_died)
 	SignalBus.enemy_exit.connect(_on_enemy_exit)
+	SignalBus.wave_started.connect(_on_wave_started)
 	
 	_generate_navmesh()
 	
 	SignalBus.stage_loaded.emit()
 	SignalBus.score_changed.emit(score)
 	SignalBus.stage_time_changed.emit("00:00")
+
+func _on_wave_started() -> void:
+	exit_placement_mode()
 
 func _process(delta: float) -> void:
 	if wave_is_active:
@@ -306,6 +326,18 @@ func _handle_drag(delta: Vector2) -> void:
 	_preview_tower.global_position = _snap_to_grid(_preview_pos)
 
 func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		if is_in_placement_mode():
+			exit_placement_mode()
+			get_viewport().set_input_as_handled()
+			return
+		else:
+			var hud = get_tree().current_scene.find_child("HUD", true, false)
+			if hud and hud.has_method("open_pause_menu"):
+				hud.open_pause_menu()
+				get_viewport().set_input_as_handled()
+				return
+
 	if _preview_tower == null:
 		return
 
@@ -330,8 +362,10 @@ func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 
 func _check_wave_completion() -> void:
 	var enemies_remaining: int = 0
-	for e in GameManager.stage_root.enemies.get_children():
-		if !e.is_queued_for_deletion(): enemies_remaining += 1
+	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.enemies):
+		for e in GameManager.stage_root.enemies.get_children():
+			if is_instance_valid(e) and !e.is_queued_for_deletion():
+				enemies_remaining += 1
 	
 	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_remaining == 0:
 		wave_is_active = false
