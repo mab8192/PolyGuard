@@ -6,5 +6,3 @@ class_name AttackData extends Resource
 @export var cooldown: float = 500.0
 @export var projectile_scene: PackedScene
 @export var projectile_speed: float = 400.0
-@export var can_target_physical: bool = true
-@export var can_target_ghost: bool = false

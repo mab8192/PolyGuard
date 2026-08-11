@@ -4,6 +4,17 @@ class_name EffectApplierComponent extends Area2D
 
 ## Node2D -> Array[ActiveEffect]
 var _applied_effects: Dictionary = {}
+var _enabled: bool = true
+
+func enable() -> void:
+	_enabled = true
+	for body in get_overlapping_bodies():
+		_on_body_entered(body)
+
+func disable() -> void:
+	_enabled = false
+	for body in get_overlapping_bodies():
+		_on_body_exited(body)
 
 func _ready() -> void:
 	_update_collision_mask()
@@ -19,6 +30,8 @@ func _update_collision_mask() -> void:
 	collision_mask = mask
 
 func _on_body_entered(body: Node2D) -> void:
+	if !_enabled: return
+	
 	var enemy = body as Enemy
 	if enemy:
 		_applied_effects[enemy] = []
@@ -29,6 +42,8 @@ func _on_body_entered(body: Node2D) -> void:
 				_applied_effects[enemy].append(ac)
 
 func _on_body_exited(body: Node2D) -> void:
+	if !_enabled: return
+
 	for enemy in _applied_effects.keys().duplicate():
 		if not is_instance_valid(enemy):
 			_applied_effects.erase(enemy)

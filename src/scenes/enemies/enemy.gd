@@ -5,9 +5,26 @@ enum EnemyType {PHYSICAL, GHOST}
 ## Gets assigned by the EnemyData type
 var data: EnemyData
 
-var health: HealthComponent
-var movement: MovementComponent
-var nav: NavigationComponent
+var _health: HealthComponent
+var health: HealthComponent:
+	get:
+		if _health: return _health
+		_health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+		return _health
+
+var _movement: MovementComponent
+var movement: MovementComponent:
+	get:
+		if _movement: return _movement
+		_movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
+		return _movement
+
+var _nav: NavigationComponent
+var nav: NavigationComponent:
+	get:
+		if _nav: return _nav
+		_nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
+		return _nav
 
 var _active_effects: Array[ActiveEffect] = []
 

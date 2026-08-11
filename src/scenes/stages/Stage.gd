@@ -92,6 +92,10 @@ func enter_placement_mode(tower_input: TowerData) -> void:
 	_create_preview_tower(tower_input, center_pos)
 
 func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
+	if _preview_tower:
+		_preview_tower.queue_free()
+		_preview_tower = null
+
 	_is_dragging = false
 	_total_drag_distance_sq = 0
 	
@@ -161,16 +165,17 @@ func can_place_preview() -> bool:
 					return false
 
 	# 4. Check for overlap with active enemies
-	var enemy_nodes: Array = []
-	if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
-		enemy_nodes = GameManager.stage_root.enemies.get_children()
-	else:
-		enemy_nodes = get_tree().get_nodes_in_group("enemies")
+	if _preview_tower.is_solid:
+		var enemy_nodes: Array = []
+		if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
+			enemy_nodes = GameManager.stage_root.enemies.get_children()
+		else:
+			enemy_nodes = get_tree().get_nodes_in_group("enemies")
 
-	for enemy in enemy_nodes:
-		if enemy is CharacterBody2D and is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
-			if preview_rect.grow(16.0).has_point(enemy.global_position):
-				return false
+		for enemy in enemy_nodes:
+			if enemy is CharacterBody2D and is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
+				if preview_rect.grow(16.0).has_point(enemy.global_position):
+					return false
 
 	return true
 
@@ -200,10 +205,10 @@ func place_preview() -> void:
 	
 	if tower_data and gold >= tower_data.cost:
 		var adjacent_offsets: Array[Vector2] = [
-			Vector2(GRID_SIZE, 0),
-			Vector2(0, GRID_SIZE),
-			Vector2(-GRID_SIZE, 0),
-			Vector2(0, -GRID_SIZE)
+			Vector2(GRID_SIZE*2, 0),
+			Vector2(0, GRID_SIZE*2),
+			Vector2(-GRID_SIZE*2, 0),
+			Vector2(0, -GRID_SIZE*2)
 		]
 		var spawned: bool = false
 		for offset in adjacent_offsets:
@@ -212,8 +217,6 @@ func place_preview() -> void:
 			if can_place_preview():
 				spawned = true
 				break
-			else:
-				exit_placement_mode()
 		if not spawned:
 			exit_placement_mode()
 
