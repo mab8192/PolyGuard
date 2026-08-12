@@ -6,32 +6,91 @@ var data: StageData
 @onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
 @onready var towers: Node2D = $NavigationRegion2D/Towers
 
-# Lives and gold for the currently loaded stage
+var wave_manager: WaveManager
+var placement_manager: TowerPlacementManager
+
+# Stage economy and life tracking state
 var lives: int
 var gold: int
-var wave: int
-var current_wave: WaveData
-
-# Timer and Score tracking
-var stage_time: float = 0.0
 var score: int = 0
-var is_stage_active: bool = true
 
-var spawners: Array[Spawner] = []
-var wave_is_active: bool = false
+# Accessors delegated to WaveManager for external callers
+var wave: int:
+	get: return wave_manager.wave if wave_manager else 0
+	set(v): if wave_manager: wave_manager.wave = v
 
-const GRID_SIZE = 32
+var current_wave: WaveData:
+	get: return wave_manager.current_wave if wave_manager else null
 
-# Tower placement
-var _preview_tower: Tower = null
-var _preview_pos: Vector2 = Vector2.ZERO ## Used to track placement BEFORE grid snapping, helps the movement feel more natural
-var _total_drag_distance_sq: float = 0 ## Tracks how far was travelled between a press and a release. Used to detect tower clicks
-var _is_dragging: bool = false
-var _last_input_pos: Vector2 = Vector2.ZERO
-var _drag_speed_modifier: float = 1.0
-const TOWER_TOUCH_DIST_THRESH: float = 96 ## Touch distance from the center of a tower to enter slow drag mode
+var stage_time: float:
+	get: return wave_manager.stage_time if wave_manager else 0.0
 
-### PUBLIC API
+var is_stage_active: bool:
+	get: return wave_manager.is_stage_active if wave_manager else false
+	set(v): if wave_manager: wave_manager.is_stage_active = v
+
+var wave_is_active: bool:
+	get: return wave_manager.wave_is_active if wave_manager else false
+
+var spawners: Array[Spawner]:
+	get: return wave_manager.spawners if wave_manager else []
+
+func _ready() -> void:
+	if data:
+		lives = data.starting_lives
+		gold = data.starting_gold
+	
+	SignalBus.lives_changed.emit(lives)
+	SignalBus.gold_changed.emit(gold)
+	SignalBus.score_changed.emit(score)
+	
+	wave_manager = WaveManager.new()
+	wave_manager.name = "WaveManager"
+	add_child(wave_manager)
+	
+	placement_manager = TowerPlacementManager.new()
+	placement_manager.name = "TowerPlacementManager"
+	add_child(placement_manager)
+	
+	wave_manager.setup(self)
+	placement_manager.setup(self, wave_manager)
+	
+	generate_navmesh()
+
+func _unhandled_input(event: InputEvent) -> void:
+	if placement_manager and placement_manager.handle_unhandled_input(event):
+		get_viewport().set_input_as_handled()
+		return
+		
+	if event.is_action_pressed("ui_cancel"):
+		var hud = get_tree().current_scene.find_child("HUD", true, false)
+		if hud and hud.has_method("open_pause_menu"):
+			hud.open_pause_menu()
+			get_viewport().set_input_as_handled()
+
+### PUBLIC API & ECONOMY HELPERS
+
+func deduct_gold(amount: int) -> void:
+	gold -= amount
+	SignalBus.gold_changed.emit(gold)
+
+func add_gold(amount: int) -> void:
+	gold += amount
+	SignalBus.gold_changed.emit(gold)
+
+func add_score(amount: int) -> void:
+	score += amount
+	SignalBus.score_changed.emit(score)
+
+func take_lives(amount: int) -> void:
+	lives -= amount
+	if lives <= 0:
+		lives = 0
+		is_stage_active = false
+		SignalBus.lives_changed.emit(lives)
+		SignalBus.stage_failed.emit()
+	else:
+		SignalBus.lives_changed.emit(lives)
 
 func get_map_pixel_rect() -> Rect2:
 	var used_rect: Rect2i = tiles.get_used_rect()
@@ -55,393 +114,29 @@ func get_map_pixel_rect() -> Rect2:
 	return Rect2(global_min, global_size)
 
 func start_next_wave() -> void:
-	var wave_data: WaveData = data.get_wave(wave)
-	if wave_data:
-		wave_is_active = true
-		current_wave = wave_data
-		
-		for node in get_tree().get_nodes_in_group("spawners"):
-			if node is Spawner:
-				spawners.append(node)
-		
-		# Assign spawn groups to spawners in round-robin fashion and run them
-		var spawner_count = spawners.size()
-		if spawner_count > 0:
-			for i in range(wave_data.spawns.size()):
-				var spawn_group = wave_data.spawns[i]
-				var spawner = spawners[i % spawner_count]
-				spawner.run(spawn_group)
-		
-		wave += 1
-		SignalBus.wave_changed.emit(wave)
-		SignalBus.wave_started.emit()
-	else:
-		printerr("No more waves!")
+	if wave_manager:
+		wave_manager.start_next_wave()
 
-## Creates a new preview_tower out of the given tower data or scene
 func enter_placement_mode(tower_input: TowerData) -> void:
-	exit_placement_mode()
-	
-	# Center on screen in world coordinates (snapped to the placement grid)
-	var center_pos = Vector2.ZERO
-	if GameManager.camera:
-		center_pos = GameManager.camera.global_position
-	else:
-		center_pos = get_viewport_rect().size / 2.0
-	
-	_create_preview_tower(tower_input, center_pos)
-	
-	SignalBus.placement_mode_changed.emit(true)
-
-func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
-	if _preview_tower:
-		_preview_tower.queue_free()
-		_preview_tower = null
-
-	_is_dragging = false
-	_total_drag_distance_sq = 0
-	
-	_preview_tower = tower_data.create()
-	if not _preview_tower:
-		push_error("Must be a tower scene!")
-		return
-
-	towers.add_child(_preview_tower)
-	_preview_tower.is_preview = true
-	
-	var snapped_pos = _snap_to_grid(pos)
-	_preview_tower.global_position = snapped_pos
-	_preview_pos = snapped_pos
-	
-	
+	if placement_manager:
+		placement_manager.enter_placement_mode(tower_input)
 
 func exit_placement_mode() -> void:
-	if not is_in_placement_mode():
-		return
-	
-	_preview_tower.queue_free()
-	_preview_tower = null
-	_is_dragging = false
-	SignalBus.placement_mode_changed.emit(false)
+	if placement_manager:
+		placement_manager.exit_placement_mode()
 
 func is_in_placement_mode() -> bool:
-	return _preview_tower != null and is_instance_valid(_preview_tower)
+	return placement_manager.is_in_placement_mode() if placement_manager else false
 
 func get_preview_tower_position() -> Vector2:
-	if is_in_placement_mode():
-		return _preview_tower.global_position
-	return Vector2.ZERO
+	return placement_manager.get_preview_tower_position() if placement_manager else Vector2.ZERO
 
 func can_place_preview() -> bool:
-	if not _preview_tower or not is_instance_valid(_preview_tower):
-		return false
+	return placement_manager.can_place_preview() if placement_manager else false
 
-	if _preview_tower.data and _preview_tower.data.cost > gold:
-		return false
-
-	var preview_rect: Rect2 = _get_tower_global_rect(_preview_tower)
-
-	# 1. Map boundary check
-	var map_rect: Rect2 = get_map_pixel_rect()
-	if map_rect.has_area() and not map_rect.encloses(preview_rect):
-		return false
-
-	# 2. Tilemap terrain check (every cell covered by preview_rect must be walkable)
-	if tiles:
-		var min_cell: Vector2i = tiles.local_to_map(tiles.to_local(preview_rect.position + Vector2(1, 1)))
-		var max_cell: Vector2i = tiles.local_to_map(tiles.to_local(preview_rect.end - Vector2(1, 1)))
-
-		for x in range(min_cell.x, max_cell.x + 1):
-			for y in range(min_cell.y, max_cell.y + 1):
-				var cell_pos := Vector2i(x, y)
-				var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
-				if tile_data and tile_data.get_collision_polygons_count(0) > 0:
-					return false
-
-	# 3. Check for overlap with already placed towers
-	if towers:
-		for child in towers.get_children():
-			if child is Tower and child != _preview_tower and not child.is_preview:
-				var child_rect: Rect2 = _get_tower_global_rect(child)
-				if preview_rect.intersects(child_rect):
-					return false
-
-	# 4. Check for overlap with active enemies
-	if _preview_tower.is_solid:
-		var enemy_nodes: Array = []
-		if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
-			enemy_nodes = GameManager.stage_root.enemies.get_children()
-		else:
-			enemy_nodes = get_tree().get_nodes_in_group("enemies")
-
-		for enemy in enemy_nodes:
-			if enemy is CharacterBody2D and is_instance_valid(enemy) and not enemy.is_queued_for_deletion():
-				if preview_rect.grow(16.0).has_point(enemy.global_position):
-					return false
-
-	return true
-
-## Converts the current preview_tower into an active tower on the stage and deducts gold
 func place_preview() -> void:
-	if not _preview_tower:
-		return
+	if placement_manager:
+		placement_manager.place_preview()
 
-	if not can_place_preview():
-		return
-
-	var tower_data: TowerData = _preview_tower.data
-	var last_pos: Vector2 = _preview_tower.global_position
-
-	# All checks passed, place the tower!
-	gold -= _preview_tower.data.cost
-	SignalBus.gold_changed.emit(gold)
-	
-	_preview_tower.is_preview = false
-	_preview_tower.modulate = Color.WHITE
-	
-	_generate_navmesh()
-	SignalBus.tower_placed.emit()
-	
-	_preview_tower = null
-	_is_dragging = false
-	
-	if tower_data and gold >= tower_data.cost:
-		var adjacent_offsets: Array[Vector2] = [
-			Vector2(GRID_SIZE*2, 0),
-			Vector2(0, GRID_SIZE*2),
-			Vector2(-GRID_SIZE*2, 0),
-			Vector2(0, -GRID_SIZE*2)
-		]
-		var spawned: bool = false
-		for offset in adjacent_offsets:
-			var test_pos = last_pos + offset
-			_create_preview_tower(tower_data, test_pos)
-			if can_place_preview():
-				spawned = true
-				break
-		if not spawned:
-			exit_placement_mode()
-
-### PRIVATE FUNCTIONS
-
-func _get_tower_local_rect(tower: Tower) -> Rect2:
-	if not is_instance_valid(tower):
-		return Rect2(-Vector2(16, 16), Vector2(32, 32))
-
-	for child in tower.get_children():
-		if child is CollisionShape2D and child.shape:
-			var shape = child.shape
-			if shape is RectangleShape2D:
-				var size = shape.size
-				return Rect2(child.position - size / 2.0, size)
-			elif shape is CircleShape2D:
-				var r = shape.radius
-				return Rect2(child.position - Vector2(r, r), Vector2(r * 2, r * 2))
-			elif shape is CapsuleShape2D:
-				var r = shape.radius
-				var h = shape.height
-				var size = Vector2(r * 2, h)
-				return Rect2(child.position - size / 2.0, size)
-		elif child is CollisionPolygon2D and child.polygon.size() > 0:
-			var min_pt = child.polygon[0]
-			var max_pt = child.polygon[0]
-			for pt in child.polygon:
-				min_pt.x = minf(min_pt.x, pt.x)
-				min_pt.y = minf(min_pt.y, pt.y)
-				max_pt.x = maxf(max_pt.x, pt.x)
-				max_pt.y = maxf(max_pt.y, pt.y)
-			return Rect2(child.position + min_pt, max_pt - min_pt)
-
-	var color_rect = tower.find_child("ColorRect", false, false) as ColorRect
-	if color_rect:
-		return color_rect.get_rect()
-
-	return Rect2(-Vector2(GRID_SIZE, GRID_SIZE), Vector2(GRID_SIZE * 2, GRID_SIZE * 2))
-
-func _get_tower_global_rect(tower: Tower) -> Rect2:
-	var local_rect: Rect2 = _get_tower_local_rect(tower)
-	return Rect2(tower.global_position + local_rect.position, local_rect.size)
-
-func _rect_intersects_circle(rect: Rect2, circle_center: Vector2, radius: float) -> bool:
-	var closest_point = Vector2(
-		clamp(circle_center.x, rect.position.x, rect.end.x),
-		clamp(circle_center.y, rect.position.y, rect.end.y)
-	)
-	var distance_squared = circle_center.distance_squared_to(closest_point)
-	return distance_squared < (radius * radius)
-
-func _ready() -> void:
-	lives = data.starting_lives
-	gold = data.starting_gold
-	
-	SignalBus.lives_changed.emit(lives)
-	SignalBus.gold_changed.emit(gold)
-	
-	SignalBus.enemy_died.connect(_on_enemy_died)
-	SignalBus.enemy_exit.connect(_on_enemy_exit)
-	SignalBus.wave_started.connect(_on_wave_started)
-	
-	_generate_navmesh()
-	
-	SignalBus.stage_loaded.emit()
-	SignalBus.score_changed.emit(score)
-	SignalBus.stage_time_changed.emit("00:00")
-
-func _on_wave_started() -> void:
-	exit_placement_mode()
-
-func _process(delta: float) -> void:
-	if wave_is_active:
-		stage_time += delta
-		var total_secs = int(stage_time)
-		var mins = total_secs / 60
-		var secs = total_secs % 60
-		SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])
-
-	if _preview_tower and is_instance_valid(_preview_tower):
-		var valid: bool = can_place_preview()
-		_preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
-
-func _handle_press(pos: Vector2) -> void:
-	_is_dragging = true
-	_last_input_pos = pos
-	_total_drag_distance_sq = 0
-	
-	var dist = pos.distance_to(_preview_tower.global_position)
-	_drag_speed_modifier = 1.0 if dist < TOWER_TOUCH_DIST_THRESH else 0.5
-	
-func _handle_release(_pos: Vector2) -> void:
-	if not _is_dragging:
-		return
-	_is_dragging = false
-	
-	var on_tower = _pos.distance_to(_preview_tower.global_position) < TOWER_TOUCH_DIST_THRESH
-	if _total_drag_distance_sq < 100 and on_tower and can_place_preview():
-		print(_total_drag_distance_sq)
-		place_preview()
-	
-func _handle_drag(delta: Vector2) -> void:
-	if not _is_dragging: return
-	
-	delta *= _drag_speed_modifier
-	
-	_preview_pos += delta
-	_total_drag_distance_sq += delta.length_squared()
-	
-	_preview_tower.global_position = _snap_to_grid(_preview_pos)
-
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("ui_cancel"):
-		if is_in_placement_mode():
-			exit_placement_mode()
-			get_viewport().set_input_as_handled()
-			return
-		else:
-			var hud = get_tree().current_scene.find_child("HUD", true, false)
-			if hud and hud.has_method("open_pause_menu"):
-				hud.open_pause_menu()
-				get_viewport().set_input_as_handled()
-				return
-
-	if _preview_tower == null:
-		return
-
-	var pos = get_global_mouse_position()
-	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.is_pressed():
-			_handle_press(pos)
-			get_viewport().set_input_as_handled()
-		else:
-			if _is_dragging:
-				_handle_release(pos)
-				get_viewport().set_input_as_handled()
-	elif event is InputEventMouseMotion:
-		if _is_dragging:
-			_handle_drag(pos - _last_input_pos)
-			_last_input_pos = pos
-			get_viewport().set_input_as_handled()
-
-func _snap_to_grid(glob_pos: Vector2) -> Vector2:
-	return glob_pos.snapped(Vector2(GRID_SIZE, GRID_SIZE))
-
-func _check_wave_completion() -> void:
-	var enemies_remaining: int = 0
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.enemies):
-		for e in GameManager.stage_root.enemies.get_children():
-			if is_instance_valid(e) and !e.is_queued_for_deletion():
-				enemies_remaining += 1
-	
-	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_active()) and enemies_remaining == 0:
-		wave_is_active = false
-		SignalBus.wave_completed.emit()
-		
-		gold += current_wave.reward_gold
-		SignalBus.gold_changed.emit(gold)
-		
-		var wave_bonus = wave * 250
-		score += wave_bonus
-		SignalBus.score_changed.emit(score)
-		
-		if wave == data.get_waves().size():
-			is_stage_active = false
-			var time_bonus = max(0, 5000 - int(stage_time) * 10)
-			var lives_bonus = lives * 1000
-			score += (lives_bonus + time_bonus)
-			SignalBus.score_changed.emit(score)
-			SignalBus.stage_completed.emit()
-
-
-const AGENT_TIERS: Array[Dictionary] = [
-	{"radius": 10, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
-	{"radius": 16, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
-	{"radius": 10, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
-]
-
-var _tier_regions: Dictionary = {}
-
-func _get_or_create_tier_region(layer: int) -> NavigationRegion2D:
-	if _tier_regions.has(layer):
-		return _tier_regions[layer]
-	
-	if navigation_region_2d and (_tier_regions.is_empty() or navigation_region_2d.navigation_layers == layer):
-		navigation_region_2d.navigation_layers = layer
-		_tier_regions[layer] = navigation_region_2d
-		return navigation_region_2d
-		
-	var new_region = NavigationRegion2D.new()
-	new_region.name = "NavRegion_Layer%d" % layer
-	new_region.navigation_layers = layer
-	add_child(new_region)
-	_tier_regions[layer] = new_region
-	return new_region
-
-func _generate_navmesh() -> void:
-	NavMeshGenerator.generate_navmesh(
-		tiles,
-		towers,
-		navigation_region_2d,
-		AGENT_TIERS,
-		_get_or_create_tier_region
-	)
-
-func _on_enemy_died(enemy: Enemy) -> void:
-	gold += enemy.data.gold_reward
-	SignalBus.gold_changed.emit(gold)
-	
-	score += enemy.data.gold_reward * 10
-	SignalBus.score_changed.emit(score)
-	
-	_check_wave_completion()
-
-func _on_enemy_exit(enemy: Enemy) -> void:
-	lives -= enemy.data.lives_penalty
-	SignalBus.lives_changed.emit(lives)
-	
-	if lives <= 0:
-		lives = 0
-		is_stage_active = false
-		SignalBus.lives_changed.emit(lives)
-		SignalBus.stage_failed.emit()
-
-	_check_wave_completion()
+func generate_navmesh() -> void:
+	NavMeshGenerator.generate_navmesh(self)

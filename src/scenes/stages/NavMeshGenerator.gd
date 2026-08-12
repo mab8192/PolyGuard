@@ -6,17 +6,51 @@ class_name NavMeshGenerator
 
 const DEFAULT_SUB_STEP: float = 4.0 ## Sub-pixel resolution in pixels (< 16px precision)
 
+const AGENT_TIERS: Array[Dictionary] = [
+	{"radius": 10, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
+	{"radius": 16, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
+	{"radius": 10, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
+]
+
 static var _thread: Thread = null
 static var _pending_snapshot: Dictionary = {}
+static var _tier_regions: Dictionary = {}
+
+static func get_or_create_tier_region(stage: Stage, layer: int) -> NavigationRegion2D:
+	if not is_instance_valid(stage):
+		return null
+		
+	var stage_id = stage.get_instance_id()
+	if not _tier_regions.has(stage_id):
+		_tier_regions[stage_id] = {}
+	
+	var regions_for_stage: Dictionary = _tier_regions[stage_id]
+	if regions_for_stage.has(layer):
+		return regions_for_stage[layer]
+	
+	if stage.navigation_region_2d and (regions_for_stage.is_empty() or stage.navigation_region_2d.navigation_layers == layer):
+		stage.navigation_region_2d.navigation_layers = layer
+		regions_for_stage[layer] = stage.navigation_region_2d
+		return stage.navigation_region_2d
+		
+	var new_region = NavigationRegion2D.new()
+	new_region.name = "NavRegion_Layer%d" % layer
+	new_region.navigation_layers = layer
+	stage.add_child(new_region)
+	regions_for_stage[layer] = new_region
+	return new_region
 
 static func generate_navmesh(
-	tiles: TileMapLayer,
-	towers: Node2D,
-	navigation_region_2d: NavigationRegion2D,
-	agent_tiers: Array,
-	get_tier_region_func: Callable,
+	stage: Stage,
 	sub_step: float = DEFAULT_SUB_STEP
 ) -> void:
+	if not stage or not is_instance_valid(stage):
+		return
+
+	var tiles: TileMapLayer = stage.tiles
+	var towers: Node2D = stage.towers
+	var navigation_region_2d: NavigationRegion2D = stage.navigation_region_2d
+
 	if not tiles or not navigation_region_2d:
 		return
 
@@ -49,15 +83,15 @@ static func generate_navmesh(
 	var tower_polys: Array[PackedVector2Array] = _extract_tower_polygons(towers, navigation_region_2d)
 
 	var snapshot = {
+		"stage": stage,
 		"used_cells": used_cells,
 		"walkable_cells_set": walkable_cells_set,
 		"wall_polys": wall_polys,
 		"tower_polys": tower_polys,
 		"tile_size": tile_size,
 		"cell_local_centers": cell_local_centers,
-		"agent_tiers": agent_tiers,
-		"sub_step": sub_step,
-		"get_tier_region_func": get_tier_region_func
+		"agent_tiers": AGENT_TIERS,
+		"sub_step": sub_step
 	}
 
 	if _thread and _thread.is_started():
@@ -265,23 +299,24 @@ static func _thread_worker(snapshot: Dictionary) -> void:
 		})
 
 	# Phase 3: Pass results back to main thread via deferred call
-	var get_tier_region_func = snapshot.get_tier_region_func
-	Callable(_apply_results_on_main_thread).call_deferred(tier_results, get_tier_region_func)
+	var stage = snapshot.stage
+	Callable(_apply_results_on_main_thread).call_deferred(tier_results, stage)
 
-static func _apply_results_on_main_thread(tier_results: Array[Dictionary], get_tier_region_func: Callable) -> void:
-	for res in tier_results:
-		var layer: int = res.layer
-		var vertices: PackedVector2Array = res.vertices
-		var polygons: Array = res.polygons
+static func _apply_results_on_main_thread(tier_results: Array[Dictionary], stage: Stage) -> void:
+	if is_instance_valid(stage):
+		for res in tier_results:
+			var layer: int = res.layer
+			var vertices: PackedVector2Array = res.vertices
+			var polygons: Array = res.polygons
 
-		var nav_poly: NavigationPolygon = NavigationPolygon.new()
-		nav_poly.vertices = vertices
-		for poly in polygons:
-			nav_poly.add_polygon(poly)
+			var nav_poly: NavigationPolygon = NavigationPolygon.new()
+			nav_poly.vertices = vertices
+			for poly in polygons:
+				nav_poly.add_polygon(poly)
 
-		var tier_region: NavigationRegion2D = get_tier_region_func.call(layer)
-		if tier_region:
-			tier_region.navigation_polygon = nav_poly
+			var tier_region: NavigationRegion2D = get_or_create_tier_region(stage, layer)
+			if tier_region:
+				tier_region.navigation_polygon = nav_poly
 
 	if _thread and _thread.is_started():
 		_thread.wait_to_finish()
