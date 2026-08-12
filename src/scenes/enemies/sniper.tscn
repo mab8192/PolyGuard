@@ -5,6 +5,9 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_62wuf"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_b23ku"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
+radius = 12.0
+
 [node name="Sniper" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 motion_mode = 1
 wall_min_slide_angle = 0.0
@@ -33,7 +36,5 @@ simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-visible = false
-position = Vector2(-1.7254902, -0.15686275)
-polygon = PackedVector2Array(17.72549, 0.15686275, 9.725491, -3.8431373, 9.725491, -11.843137, 1.7254902, -7.8431373, -6.27451, -11.843137, -6.27451, -3.8431373, -14.274509, 0.15686275, -6.27451, 4.1568627, -6.27451, 12.156863, 1.7254902, 8.156863, 9.725491, 12.156863, 9.725491, 4.1568627)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1627706772]
+shape = SubResource("CircleShape2D_d56y3")

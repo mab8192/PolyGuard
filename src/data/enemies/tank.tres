@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b7m2s3t4r5e6n"]
 
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_m2ilo"]
 [ext_resource type="PackedScene" uid="uid://cqhi14urkcmc7" path="res://src/scenes/enemies/tank.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_ahs2r"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
@@ -8,8 +9,8 @@
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
-max_health = 1200.0
-armor = 50.0
+max_health = 750.0
+armor = 40.0
 magic_resistance = 10.0
 
 [sub_resource type="Resource" id="SubResource_movement"]

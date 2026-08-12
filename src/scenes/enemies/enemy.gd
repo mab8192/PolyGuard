@@ -40,10 +40,6 @@ func remove_effect(effect: ActiveEffect) -> void:
 	effect.remove()
 
 func _ready() -> void:
-	health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
-	movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
-	nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
-
 	if health:
 		health.died.connect(_on_died)
 	
@@ -62,7 +58,9 @@ func _ready() -> void:
 		var targets: Array[Node2D] = []
 		for exit in get_tree().get_nodes_in_group("exits"):
 			targets.append(exit)
-		nav.set_targets(targets)
+		nav.set_exits(targets)
+	
+	SignalBus.tower_destroyed.connect(_on_tower_destroyed)
 
 func _process(delta: float) -> void:
 	for effect in _active_effects:
@@ -80,5 +78,10 @@ func _on_velocity_computed(vel: Vector2):
 		look_at(global_position + velocity)
 
 func _on_no_path_available() -> void:
-	print("NO PATH! FINDING NEAREST TOWER TO DESTROYYYY ITTTT")
+	pass
+	## TODO: Change targets to the first tower along the last valid path that now blocks it
+	## and attack that tower instead of going for the exit
 	
+func _on_tower_destroyed() -> void:
+	pass
+	## TODO: If there was no path available, check for a path now and follow it

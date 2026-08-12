@@ -11,6 +11,7 @@ func _ready() -> void:
 	SignalBus.gold_changed.connect(_on_gold_changed)
 	SignalBus.wave_changed.connect(_on_wave_changed)
 	SignalBus.stage_loaded.connect(_on_stage_loaded)
+	SignalBus.stage_completed.connect(_on_stage_complete)
 	
 	fast_forward_button.toggled.connect(_on_ff_pressed)
 	pause_button.pressed.connect(_on_pause_pressed)
@@ -32,7 +33,9 @@ func _on_pause_pressed() -> void:
 	if hud and hud.has_method("open_pause_menu"):
 		hud.open_pause_menu()
 
-
 func _on_ff_pressed(toggled_on: bool) -> void:
 	Engine.time_scale = 2 if toggled_on else 1
 	fast_forward_button.text = "2x" if toggled_on else "1x"
+
+func _on_stage_complete() -> void:
+	Engine.time_scale = 1

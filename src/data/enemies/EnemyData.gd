@@ -3,6 +3,7 @@ class_name EnemyData extends Resource
 @export_category("Info")
 @export var display_name: String = ""
 @export var scene: PackedScene
+@export var icon: Texture2D = preload("res://vendor/HAMMA.png")
 
 @export_category("Stats")
 @export var lives_penalty: int = 1

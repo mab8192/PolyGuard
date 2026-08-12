@@ -11,6 +11,7 @@ var attack_point: Marker2D
 
 var targeting: TargetingComponent ## Automatically discovered in _ready
 var last_attack_time: float = - INF
+var _time: float = 0
 
 func _ready() -> void:
 	if not data:
@@ -22,16 +23,19 @@ func _ready() -> void:
 		if not attack_point:
 			attack_point = get_parent().find_child("Marker2D", false, false) as Marker2D
 
+func _process(delta: float) -> void:
+	_time += delta
+
 func can_attack() -> bool:
 	if data.attack_mode == AttackMode.CONTINUOUS: return true
 
-	return Time.get_ticks_msec() - last_attack_time >= data.cooldown
+	return _time - last_attack_time >= data.cooldown
 
 func attack_target(target: Node2D) -> void:
 	if not can_attack() or not is_instance_valid(target):
 		return
-	
-	last_attack_time = Time.get_ticks_msec()
+
+	last_attack_time = _time
 	
 	match data.attack_mode:
 		AttackMode.PROJECTILE:
@@ -45,7 +49,7 @@ func attack_targets(targets: Array) -> void:
 	if not can_attack() or targets.is_empty():
 		return
 	
-	last_attack_time = Time.get_ticks_msec()
+	last_attack_time = _time
 	
 	for t in targets:
 		if is_instance_valid(t):

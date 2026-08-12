@@ -5,6 +5,9 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_4rgg6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_ay2dt"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 24.0
+
 [node name="Citadel" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
 collision_mask = 7
@@ -36,6 +39,5 @@ simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-visible = false
-polygon = PackedVector2Array(-12, -20, 12, -20, 24, 0, 12, 20, -12, 20, -24, 0)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=766904884]
+shape = SubResource("CircleShape2D_qgbsg")

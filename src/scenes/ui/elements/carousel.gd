@@ -22,7 +22,7 @@ func set_items(items: Array[Dictionary]) -> void:
 		var new_item = _create_item(item)
 		_items.append(new_item)
 	
-	_show_selected_item()
+	_update()
 
 func _ready() -> void:
 	left_button.pressed.connect(_on_left_pressed)
@@ -32,26 +32,29 @@ func _ready() -> void:
 		if item is CarouselItem:
 			_items.append(item)
 
-	_show_selected_item()
+	_update()
 
 func _on_left_pressed() -> void:
 	if _items.is_empty(): return
 	_index -= 1
 	_index = clamp(_index, 0, _items.size() - 1)
-	_show_selected_item()
+	_update()
 
 func _on_right_pressed() -> void:
 	if _items.is_empty(): return
 	_index += 1 
 	_index = clamp(_index, 0, _items.size() - 1)
-	_show_selected_item()
+	_update()
 
-func _show_selected_item() -> void:
+func _update() -> void:
 	for i in range(_items.size()):
 		if i == _index:
 			_items[i].show()
 		else:
 			_items[i].hide()
+
+	left_button.modulate.a = 0 if _index == 0 else 1
+	right_button.modulate.a = 0 if _index == _items.size() - 1 or _items.size() == 1 else 1
 
 func _create_item(data: Dictionary) -> CarouselItem:
 	var item = ITEM_SCENE.instantiate() as CarouselItem

@@ -6,7 +6,6 @@
 [ext_resource type="PackedScene" uid="uid://b7j6pm6x3hbq3" path="res://src/scenes/ui/views/campaign.tscn" id="3_yrdre"]
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
-[ext_resource type="PackedScene" uid="uid://27i631gkjm1k" path="res://src/scenes/ui/views/settings.tscn" id="6_n5k5b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
 bg_color = Color(0.035972454, 0.0359551, 0.08152015, 1)
@@ -64,11 +63,6 @@ visible = false
 layout_mode = 1
 
 [node name="Inventory" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=733795307 instance=ExtResource("5_1ipax")]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-
-[node name="Settings" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=1047120522 instance=ExtResource("6_n5k5b")]
 unique_name_in_owner = true
 visible = false
 layout_mode = 1

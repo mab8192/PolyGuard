@@ -18,7 +18,7 @@ var current_stage: Stage:
 enum View { MAIN_MENU, LOADOUT, GAME }
 
 const MAIN_MENU: PackedScene = preload("res://src/scenes/main_menu.tscn")
-const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
+#const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
 const GAME: PackedScene = preload("res://src/scenes/game.tscn")
 
 func load_view(view: View) -> void:
@@ -26,7 +26,8 @@ func load_view(view: View) -> void:
 		View.MAIN_MENU:
 			get_tree().change_scene_to_packed(MAIN_MENU)
 		View.LOADOUT:
-			get_tree().change_scene_to_packed(LOADOUT)
+			#get_tree().change_scene_to_packed(LOADOUT)
+			print("LOADOUT")
 		View.GAME:
 			get_tree().change_scene_to_packed(GAME)
 

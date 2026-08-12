@@ -1,0 +1,38 @@
+[gd_scene format=3 uid="uid://dugvyo11tdwdg"]
+
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="1_kwbdq"]
+[ext_resource type="Script" uid="uid://d1jc06mf5xu8s" path="res://src/scenes/ui/elements/card.gd" id="1_m2d4e"]
+
+[node name="Card" type="MarginContainer" unique_id=1465083894]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+script = ExtResource("1_m2d4e")
+
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1765607811]
+layout_mode = 2
+
+[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=185023805]
+unique_name_in_owner = true
+layout_mode = 2
+texture = ExtResource("1_kwbdq")
+stretch_mode = 3
+
+[node name="Label" type="Label" parent="VBoxContainer" unique_id=1020956434]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Label"
+horizontal_alignment = 1
+
+[node name="Button" type="Button" parent="." unique_id=440661223]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"FlatButton"

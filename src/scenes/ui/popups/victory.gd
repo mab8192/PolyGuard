@@ -25,7 +25,7 @@ func _on_next_stage_pressed() -> void:
 	var next_stage: StageData = GameManager.get_next_stage()
 	if next_stage:
 		GameManager.selected_stage = next_stage
-		GameManager.load_view(GameManager.View.LOADOUT)
+		GameManager.load_view(GameManager.View.GAME)
 
 func _on_retry_pressed() -> void:
 	get_tree().reload_current_scene()

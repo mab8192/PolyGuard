@@ -7,14 +7,14 @@ signal no_path_available()
 enum NavStrategy {
 	CLOSEST,		# Closest by path length
 	FARTHEST,	# Farthest away by path length
-	FIRST,		# First in the targets array
+	FIRST,		# First in the _exits array
 }
 
 @export var data: NavigationData
 
 var movement: MovementComponent
 var agent: NavigationAgent2D
-var targets: Array[Node2D] = []
+var _exits: Array[Node2D] = []
 
 var _actor: CharacterBody2D
 var _no_path: bool = false
@@ -47,8 +47,8 @@ func _ready() -> void:
 		agent.path_desired_distance = 6.0
 		agent.target_desired_distance = 8.0
 
-func set_targets(new_targets: Array[Node2D]) -> void:
-	targets = new_targets
+func set_exits(new_exits: Array[Node2D]) -> void:
+	_exits = new_exits
 	_pick_target()
 
 func is_finished() -> bool:
@@ -97,17 +97,17 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
-	if targets.is_empty():
+	if _exits.is_empty():
 		return
 
 	if data.strategy == NavStrategy.FIRST:
-		agent.target_position = targets[0].global_position
+		agent.target_position = _exits[0].global_position
 		return
 	
 	var map: RID = _actor.get_world_2d().navigation_map
 	var distances = []
 
-	for target in targets:
+	for target in _exits:
 		var path: PackedVector2Array = NavigationServer2D.map_get_path(
 			map, _actor.global_position, target.global_position, true, agent.navigation_layers
 		)
@@ -125,13 +125,13 @@ func _pick_target() -> void:
 			# Find which index that number belongs to
 			var target_index: int = distances.find(min_dist)
 			# Grab the corresponding target
-			agent.target_position = targets[target_index].global_position
+			agent.target_position = _exits[target_index].global_position
 			
 		NavStrategy.FARTHEST:
 			# Do the exact same thing, but for the maximum distance
 			var max_dist: float = distances.max()
 			var target_index: int = distances.find(max_dist)
-			agent.target_position = targets[target_index].global_position
+			agent.target_position = _exits[target_index].global_position
 
 func _calculate_path_length(path: PackedVector2Array) -> float:
 	if path.size() < 2:

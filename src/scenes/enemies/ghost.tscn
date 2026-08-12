@@ -5,6 +5,9 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_rbr7q"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_18sgt"]
 
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 12.0
+
 [node name="Ghost" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 motion_mode = 1
 wall_min_slide_angle = 0.0
@@ -33,6 +36,5 @@ simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-visible = false
-polygon = PackedVector2Array(-16, 0, 0, -12, 16, 0, 0, 12)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1457276718]
+shape = SubResource("CircleShape2D_qgbsg")
