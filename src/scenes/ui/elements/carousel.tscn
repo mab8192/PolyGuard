@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://di0i56l0ko2su"]
 
 [ext_resource type="Script" uid="uid://fo8ikgmer3ld" path="res://src/scenes/ui/elements/carousel.gd" id="1_tday6"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_8u5fm"]
 
 [node name="Carousel" type="Control" unique_id=1931280036]
 custom_minimum_size = Vector2(0, 900)
@@ -25,6 +26,8 @@ grow_vertical = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
+theme = ExtResource("2_8u5fm")
+theme_type_variation = &"FlatButton"
 text = "<"
 
 [node name="ItemsContainer" type="MarginContainer" parent="HBoxContainer" unique_id=1605870733]
@@ -40,4 +43,5 @@ theme_override_constants/margin_bottom = 128
 unique_name_in_owner = true
 custom_minimum_size = Vector2(128, 0)
 layout_mode = 2
+theme_type_variation = &"FlatButton"
 text = ">"

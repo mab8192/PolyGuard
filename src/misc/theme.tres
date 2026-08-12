@@ -66,6 +66,21 @@ corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8u5fm"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_ppyvs"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_h2nai"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_8savm"]
+draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_5r38j"]
+draw_center = false
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
 bg_color = Color(0.07, 0.1, 0.17, 0.9)
 border_width_left = 2
@@ -91,6 +106,11 @@ Button/styles/focus = SubResource("StyleBoxFlat_btn_hover")
 Button/styles/hover = SubResource("StyleBoxFlat_btn_hover")
 Button/styles/normal = SubResource("StyleBoxFlat_btn_normal")
 Button/styles/pressed = SubResource("StyleBoxFlat_btn_pressed")
+FlatButton/styles/disabled = SubResource("StyleBoxFlat_8u5fm")
+FlatButton/styles/focus = SubResource("StyleBoxFlat_ppyvs")
+FlatButton/styles/hover = SubResource("StyleBoxFlat_h2nai")
+FlatButton/styles/normal = SubResource("StyleBoxFlat_8savm")
+FlatButton/styles/pressed = SubResource("StyleBoxFlat_5r38j")
 HeaderText/base_type = &"Label"
 HeaderText/font_sizes/font_size = 72
 PanelContainer/styles/panel = SubResource("StyleBoxFlat_panel")

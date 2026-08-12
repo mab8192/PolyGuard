@@ -19,7 +19,6 @@ func _ready() -> void:
 	_health = data.max_health
 	
 	if data.show_health_bar:
-		print("HEALTH BAR")
 		_health_bar = ProgressBar.new()
 		_health_bar.max_value = data.max_health
 		_health_bar.value = _health
@@ -68,6 +67,5 @@ func get_health() -> float:
 	return _health
 
 func _on_health_changed(health: float) -> void:
-	print("Helath canged, ", health)
 	_health_bar.visible = health < data.max_health
 	_health_bar.value = health

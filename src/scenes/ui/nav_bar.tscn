@@ -4,7 +4,6 @@
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="2_sf63h"]
 [ext_resource type="Texture2D" uid="uid://bnwqhwxpcd1sq" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/home.png" id="3_7xm17"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="3_54k72"]
-[ext_resource type="Texture2D" uid="uid://gyp6w56objiw" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/gear.png" id="4_xy8vh"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_54k72"]
 bg_color = Color(0.101240985, 0.101241, 0.10124094, 1)
@@ -42,28 +41,6 @@ theme_override_constants/margin_bottom = 8
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1406891057]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="CampaignButton" type="TextureButton" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1342006020]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-theme = ExtResource("3_54k72")
-texture_normal = ExtResource("3_7xm17")
-stretch_mode = 3
-
-[node name="CampaignLabel" type="Label" parent="MarginContainer/HBoxContainer/VBoxContainer" unique_id=1745587942]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-theme = ExtResource("3_54k72")
-theme_type_variation = &"BodyText"
-text = "Campaign"
-horizontal_alignment = 1
-
 [node name="InventoryContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=535336335]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -86,6 +63,28 @@ theme_type_variation = &"BodyText"
 text = "Inventory"
 horizontal_alignment = 1
 
+[node name="CampaignContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1406891057]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="CampaignButton" type="TextureButton" parent="MarginContainer/HBoxContainer/CampaignContainer" unique_id=1342006020]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme = ExtResource("3_54k72")
+texture_normal = ExtResource("3_7xm17")
+stretch_mode = 3
+
+[node name="CampaignLabel" type="Label" parent="MarginContainer/HBoxContainer/CampaignContainer" unique_id=1745587942]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme = ExtResource("3_54k72")
+theme_type_variation = &"BodyText"
+text = "Campaign"
+horizontal_alignment = 1
+
 [node name="CodexContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=441874441]
 layout_mode = 2
 size_flags_horizontal = 3
@@ -106,26 +105,4 @@ layout_mode = 2
 theme = ExtResource("3_54k72")
 theme_type_variation = &"BodyText"
 text = "Enemies"
-horizontal_alignment = 1
-
-[node name="SettingsContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=305366961]
-layout_mode = 2
-size_flags_horizontal = 3
-
-[node name="SettingsButton" type="TextureButton" parent="MarginContainer/HBoxContainer/SettingsContainer" unique_id=1182138637]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
-texture_normal = ExtResource("4_xy8vh")
-stretch_mode = 3
-
-[node name="SettingsLabel" type="Label" parent="MarginContainer/HBoxContainer/SettingsContainer" unique_id=1676004622]
-unique_name_in_owner = true
-visible = false
-custom_minimum_size = Vector2(0, 64)
-layout_mode = 2
-theme = ExtResource("3_54k72")
-theme_type_variation = &"BodyText"
-text = "Settings"
 horizontal_alignment = 1

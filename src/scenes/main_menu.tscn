@@ -9,7 +9,7 @@
 [ext_resource type="PackedScene" uid="uid://27i631gkjm1k" path="res://src/scenes/ui/views/settings.tscn" id="6_n5k5b"]
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_bg"]
-bg_color = Color(0.101961, 0.101961, 0.180392, 1)
+bg_color = Color(0.035972454, 0.0359551, 0.08152015, 1)
 
 [node name="MainMenu" type="Control" unique_id=374769933]
 layout_mode = 3

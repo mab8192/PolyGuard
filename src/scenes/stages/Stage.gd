@@ -90,6 +90,8 @@ func enter_placement_mode(tower_input: TowerData) -> void:
 		center_pos = get_viewport_rect().size / 2.0
 	
 	_create_preview_tower(tower_input, center_pos)
+	
+	SignalBus.placement_mode_changed.emit(true)
 
 func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
 	if _preview_tower:
@@ -111,7 +113,7 @@ func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
 	_preview_tower.global_position = snapped_pos
 	_preview_pos = snapped_pos
 	
-	SignalBus.placement_mode_changed.emit(true)
+	
 
 func exit_placement_mode() -> void:
 	if not is_in_placement_mode():

@@ -18,7 +18,8 @@ const STAGES: Dictionary[String, StageData] = {
 	"test_stage": preload("res://src/data/stages/TestStage.tres"),
 	"stage_01": preload("res://src/data/stages/stage_01.tres"),
 	"stage_02": preload("res://src/data/stages/stage_02.tres"),
-	"stage_03": preload("res://src/data/stages/stage_03.tres")
+	"stage_03": preload("res://src/data/stages/stage_03.tres"),
+	"stage_04": preload("res://src/data/stages/stage_04.tres")
 }
 
 func get_stage_data(id: String) -> StageData:
