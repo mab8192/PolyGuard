@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://utvcj85tf0tf" path="res://src/scenes/main_menu.gd" id="1_rm437"]
 [ext_resource type="PackedScene" uid="uid://b1cqsdagcbdmg" path="res://src/scenes/ui/nav_bar.tscn" id="2_mob6k"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_rkeyg"]
+[ext_resource type="Texture2D" uid="uid://gyp6w56objiw" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/gear.png" id="3_klrpn"]
 [ext_resource type="PackedScene" uid="uid://b7j6pm6x3hbq3" path="res://src/scenes/ui/views/campaign.tscn" id="3_yrdre"]
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
@@ -47,6 +48,24 @@ theme_type_variation = &"HeaderText"
 theme_override_colors/font_color = Color(0, 0.7120507, 0.7160072, 1)
 text = "POLY GUARD"
 horizontal_alignment = 1
+
+[node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/Label" unique_id=2038286645]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 1.0
+anchor_top = 0.5
+anchor_right = 1.0
+anchor_bottom = 0.5
+offset_left = -180.0
+offset_top = -50.0
+offset_right = -80.0
+offset_bottom = 50.0
+grow_horizontal = 0
+grow_vertical = 2
+size_flags_horizontal = 8
+texture_normal = ExtResource("3_klrpn")
+metadata/_edit_use_anchors_ = true
 
 [node name="ViewContainer" type="Control" parent="MarginContainer/VBoxContainer" unique_id=577285053]
 unique_name_in_owner = true

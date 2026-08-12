@@ -104,5 +104,5 @@ custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 theme = ExtResource("3_54k72")
 theme_type_variation = &"BodyText"
-text = "Enemies"
+text = "Codex"
 horizontal_alignment = 1

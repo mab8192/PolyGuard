@@ -21,7 +21,7 @@ grow_vertical = 2
 
 [node name="Label" type="Label" parent="VBoxContainer" unique_id=448504113]
 layout_mode = 2
-text = "INVENTORY"
+text = "CODEX"
 horizontal_alignment = 1
 
 [node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=274716796]
