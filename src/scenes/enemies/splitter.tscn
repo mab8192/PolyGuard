@@ -5,6 +5,8 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_6o8p4"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_cohcr"]
 [ext_resource type="Script" uid="uid://diueli1qa2811" path="res://src/components/SplitterComponent.gd" id="5_1dije"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="6_6o8p4"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="7_cohcr"]
 
 [sub_resource type="Gradient" id="Gradient_6bxcj"]
 offsets = PackedFloat32Array(0.7105263, 0.71671826)
@@ -17,6 +19,9 @@ fill_from = Vector2(0.5, 0.5)
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
 radius = 16.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_1dije"]
+size = Vector2(22, 42)
 
 [node name="Splitter" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -56,3 +61,15 @@ metadata/_custom_type_script = "uid://diueli1qa2811"
 [node name="MovementComponent" type="Node" parent="." unique_id=1615024044]
 script = ExtResource("2_6ixyf")
 metadata/_custom_type_script = "uid://btkgrma8jeupr"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=1017472941]
+script = ExtResource("6_6o8p4")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=399455394]
+position = Vector2(22, 0)
+shape = SubResource("RectangleShape2D_1dije")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=2135017906]
+script = ExtResource("7_cohcr")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"

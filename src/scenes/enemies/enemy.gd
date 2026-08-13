@@ -47,9 +47,6 @@ var targeting: TargetingComponent:
 		_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
 		return _targeting
 
-enum Mode { EXIT, ATTACK }
-
-var _mode: Mode = Mode.EXIT
 var _active_effects: Array[ActiveEffect] = []
 
 func apply_effect(effect: ActiveEffect) -> void:
@@ -84,17 +81,15 @@ func _ready() -> void:
 			targets.append(exit)
 		nav.set_exits(targets)
 	
-	SignalBus.tower_destroyed.connect(_on_tower_destroyed)
-
 func _process(delta: float) -> void:
 	for effect in _active_effects:
 		effect.tick(delta)
 	
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if targeting and attack and targeting.get_targets().size() > 0:
-		movement.stop()
+		if movement:
+			movement.stop()
 		attack.attack_targets(targeting.get_targets())
-
 
 func _on_died() -> void:
 	queue_free()
@@ -108,11 +103,12 @@ func _on_velocity_computed(vel: Vector2):
 		look_at(global_position + velocity)
 
 func _on_no_path_available() -> void:
-	_mode = Mode.ATTACK
-	## TODO: Change targets to the first tower along the last valid path that now blocks it
-	## and attack that tower instead of going for the exit
-	
-func _on_tower_destroyed() -> void:
-	pass
-	## TODO: If there was no path available, check for a path now and follow it
-	_mode = Mode.EXIT
+	if not nav:
+		return
+
+	var path = nav.get_shortest_path_to_exit_ignoring_towers()
+	var tower = nav.find_first_obstructing_tower(path)
+
+	if is_instance_valid(tower) and not tower.is_queued_for_deletion():
+		if nav and nav.agent:
+			nav.agent.target_position = tower.global_position

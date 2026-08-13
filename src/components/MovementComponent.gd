@@ -6,7 +6,6 @@ class_name MovementComponent extends Node
 
 var _body: CharacterBody2D
 
-
 func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"MovementComponent", self)

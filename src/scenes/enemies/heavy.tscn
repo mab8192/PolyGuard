@@ -4,8 +4,13 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_mh5y8"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_3op8g"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_bwfcq"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_3op8g"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_bwfcq"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_tgnmj"]
+size = Vector2(18, 32)
 
 [node name="Heavy" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -37,3 +42,15 @@ debug_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 shape = SubResource("RectangleShape2D_qgbsg")
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=2133352098]
+script = ExtResource("5_3op8g")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=683406477]
+position = Vector2(15, 0)
+shape = SubResource("RectangleShape2D_tgnmj")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=112668103]
+script = ExtResource("6_bwfcq")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"

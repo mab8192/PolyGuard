@@ -158,9 +158,6 @@ func place_preview() -> void:
 	preview_tower.is_preview = false
 	preview_tower.modulate = Color.WHITE
 	
-	if stage:
-		stage.generate_navmesh()
-		
 	SignalBus.tower_placed.emit()
 	
 	preview_tower = null

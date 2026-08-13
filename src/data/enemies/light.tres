@@ -1,11 +1,20 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://c7nb83xnyyd1n"]
 
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_0qo1k"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_74qf7"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_e1hlv"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="3_0qo1k"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_ebr51"]
 [ext_resource type="PackedScene" uid="uid://bnvfyppxn7r2h" path="res://src/scenes/enemies/light.tscn" id="5_74qf7"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="6_mmioh"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_ebr51"]
+
+[sub_resource type="Resource" id="Resource_qlflu"]
+script = ExtResource("1_0qo1k")
+damage = 30.0
+attack_mode = 1
+cooldown = 1.5
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("1_74qf7")
@@ -19,6 +28,11 @@ max_speed = 90.0
 script = ExtResource("4_ebr51")
 metadata/_custom_type_script = "uid://bllmo3a8geds7"
 
+[sub_resource type="Resource" id="Resource_bctmv"]
+script = ExtResource("8_ebr51")
+targeting_mask = 2
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("6_mmioh")
 display_name = "Light"
@@ -27,3 +41,5 @@ gold_reward = 10
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_c3qve")
+attack = SubResource("Resource_qlflu")
+targeting = SubResource("Resource_bctmv")

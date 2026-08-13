@@ -4,9 +4,14 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_synga"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_4rgg6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_ay2dt"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_4rgg6"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_ay2dt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
 radius = 24.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_fiwra"]
+size = Vector2(24, 48)
 
 [node name="Citadel" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -41,3 +46,15 @@ max_speed = 500.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=766904884]
 shape = SubResource("CircleShape2D_qgbsg")
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=1280877684]
+script = ExtResource("5_4rgg6")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=493160893]
+position = Vector2(28, 0)
+shape = SubResource("RectangleShape2D_fiwra")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=546700547]
+script = ExtResource("6_ay2dt")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"

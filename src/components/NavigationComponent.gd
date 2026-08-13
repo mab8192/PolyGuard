@@ -5,9 +5,9 @@ signal velocity_computed(vel: Vector2)
 signal no_path_available()
 
 enum NavStrategy {
-	CLOSEST,		# Closest by path length
-	FARTHEST,	# Farthest away by path length
-	FIRST,		# First in the _exits array
+	CLOSEST, # Closest by path length
+	FARTHEST, # Farthest away by path length
+	FIRST, # First in the _exits array
 }
 
 @export var data: NavigationData
@@ -50,6 +50,8 @@ func _ready() -> void:
 		agent.simplify_path = false
 		agent.path_desired_distance = 6.0
 		agent.target_desired_distance = 8.0
+	
+	SignalBus.navmesh_updated.connect(_pick_target)
 
 func set_exits(new_exits: Array[Node2D]) -> void:
 	_exits = new_exits
@@ -77,16 +79,14 @@ func _physics_process(_delta: float) -> void:
 	if agent.is_navigation_finished():
 		return
 	
-	var next_pos = agent.get_next_path_position()
-	
 	if !agent.is_target_reachable():
 		if !_no_path:
 			no_path_available.emit()
 			_no_path = true
-		return
-	
-	_no_path = false
-	
+	else:
+		_no_path = false
+
+	var next_pos = agent.get_next_path_position()
 	var dir = _actor.global_position.direction_to(next_pos)
 	var max_speed = movement.get_speed() if movement else 0.0
 	var intended_vel = dir * max_speed
@@ -101,10 +101,11 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
+	agent.target_position = _actor.global_position
 	if _exits.is_empty():
 		return
 
-	if data.strategy == NavStrategy.FIRST:
+	if data and data.strategy == NavStrategy.FIRST:
 		agent.target_position = _exits[0].global_position
 		return
 	
@@ -116,26 +117,23 @@ func _pick_target() -> void:
 			map, _actor.global_position, target.global_position, true, agent.navigation_layers
 		)
 		var length: float = _calculate_path_length(path)
-		
 		distances.append(length)
 
 	if distances.is_empty():
 		return
 
-	match data.strategy:
+	match data.strategy if data else NavStrategy.CLOSEST:
 		NavStrategy.CLOSEST:
-			# Find the lowest number in the distances array
 			var min_dist: float = distances.min()
-			# Find which index that number belongs to
 			var target_index: int = distances.find(min_dist)
-			# Grab the corresponding target
-			agent.target_position = _exits[target_index].global_position
+			if target_index >= 0 and target_index < _exits.size():
+				agent.target_position = _exits[target_index].global_position
 			
 		NavStrategy.FARTHEST:
-			# Do the exact same thing, but for the maximum distance
 			var max_dist: float = distances.max()
 			var target_index: int = distances.find(max_dist)
-			agent.target_position = _exits[target_index].global_position
+			if target_index >= 0 and target_index < _exits.size():
+				agent.target_position = _exits[target_index].global_position
 
 func _calculate_path_length(path: PackedVector2Array) -> float:
 	if path.size() < 2:
@@ -144,3 +142,79 @@ func _calculate_path_length(path: PackedVector2Array) -> float:
 	for i in range(path.size() - 1):
 		total_len += path[i].distance_to(path[i + 1])
 	return total_len
+
+## Calculates the shortest path to an exit ignoring towers (using nav layer 4 for walls-only)
+func get_shortest_path_to_exit_ignoring_towers() -> PackedVector2Array:
+	if _exits.is_empty() or not is_instance_valid(_actor):
+		return PackedVector2Array()
+
+	var map: RID = _actor.get_world_2d().navigation_map
+	var shortest_path: PackedVector2Array = PackedVector2Array()
+	var min_length: float = INF
+
+	for exit in _exits:
+		if not is_instance_valid(exit):
+			continue
+		# Layer 4 in NavMeshGenerator is navigation layer that ignores towers and only respects stage walls
+		var path: PackedVector2Array = NavigationServer2D.map_get_path(
+			map, _actor.global_position, exit.global_position, true, 4
+		)
+		var length: float = _calculate_path_length(path)
+		if length < min_length:
+			min_length = length
+			shortest_path = path
+
+	return shortest_path
+
+
+
+## Finds the first solid tower obstructing the given path segments
+func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
+	if path.size() < 2 or not is_instance_valid(_actor):
+		return null
+
+	var space_state = _actor.get_world_2d().direct_space_state
+	if not space_state:
+		return null
+
+	# Trace raycasts along path segments to find first obstructing solid tower
+	for i in range(path.size() - 1):
+		var p_start: Vector2 = path[i]
+		var p_end: Vector2 = path[i + 1]
+
+		var query := PhysicsRayQueryParameters2D.create(p_start, p_end, 2) # Layer 2: Towers
+		query.collide_with_bodies = true
+		query.collide_with_areas = false
+
+		var result: Dictionary = space_state.intersect_ray(query)
+		if not result.is_empty() and is_instance_valid(result.get("collider")):
+			var body = result.collider
+			if body is Tower and (body as Tower).is_solid and not (body as Tower).is_queued_for_deletion():
+				return body as Tower
+
+	# Fallback: find closest solid tower along the path
+	var first_tower: Tower = null
+	var min_dist_from_actor: float = INF
+
+	var towers_container = _actor.get_tree().get_nodes_in_group("towers")
+	for node in towers_container:
+		var tower = node as Tower
+		if is_instance_valid(tower) and tower.is_solid and not tower.is_queued_for_deletion() and not tower.is_preview:
+			for i in range(path.size() - 1):
+				var dist_sq = _dist_to_segment_squared(tower.global_position, path[i], path[i + 1])
+				if dist_sq < 36.0 * 36.0:
+					var dist_from_actor = _actor.global_position.distance_squared_to(tower.global_position)
+					if dist_from_actor < min_dist_from_actor:
+						min_dist_from_actor = dist_from_actor
+						first_tower = tower
+
+	return first_tower
+
+
+static func _dist_to_segment_squared(p: Vector2, a: Vector2, b: Vector2) -> float:
+	var l2 = a.distance_squared_to(b)
+	if l2 == 0.0:
+		return p.distance_squared_to(a)
+	var t = clampf(((p.x - a.x) * (b.x - a.x) + (p.y - a.y) * (b.y - a.y)) / l2, 0.0, 1.0)
+	var projection = a + t * (b - a)
+	return p.distance_squared_to(projection)

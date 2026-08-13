@@ -318,7 +318,10 @@ static func _apply_results_on_main_thread(tier_results: Array[Dictionary], stage
 			if tier_region:
 				tier_region.navigation_polygon = nav_poly
 
+		SignalBus.navmesh_updated.emit()
+
 	if _thread and _thread.is_started():
+
 		_thread.wait_to_finish()
 	_thread = null
 
@@ -362,7 +365,7 @@ static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion
 		return result
 
 	for tower in towers.get_children():
-		if tower is Tower and not tower.is_preview and (tower.is_solid or (tower.data and tower.data.is_solid)):
+		if tower is Tower and not tower.is_queued_for_deletion() and not tower.is_preview and (tower.is_solid or (tower.data and tower.data.is_solid)):
 			var found_shape = false
 
 			for child in tower.get_children():

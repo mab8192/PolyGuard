@@ -4,10 +4,14 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jihhj"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_u8cj6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_t5ldr"]
-[ext_resource type="Script" uid="uid://diueli1qa2811" path="res://src/components/SplitterComponent.gd" id="5_jihhj"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_u8cj6"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_t5ldr"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(16, 16)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
+size = Vector2(18, 32)
 
 [node name="Grunt" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -41,6 +45,14 @@ debug_enabled = true
 visible = false
 shape = SubResource("RectangleShape2D_qgbsg")
 
-[node name="SplitterComponent" type="Node" parent="." unique_id=309144475]
-script = ExtResource("5_jihhj")
-metadata/_custom_type_script = "uid://diueli1qa2811"
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=1463687455]
+script = ExtResource("5_u8cj6")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=1768159313]
+position = Vector2(15, 0)
+shape = SubResource("RectangleShape2D_d56y3")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=550468470]
+script = ExtResource("6_t5ldr")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"

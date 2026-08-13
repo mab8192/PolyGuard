@@ -52,10 +52,21 @@ func _ready() -> void:
 	if not data:
 		push_error("Missing TowerData! %s" % get_path())
 	
+	if not is_in_group("towers"):
+		add_to_group("towers")
+
 	_update_solid_state()
 	_update_preview_state()
 
+	if health:
+		health.died.connect(_on_died)
+
+func _on_died() -> void:
+	queue_free()
+	SignalBus.tower_destroyed.emit()
+
 func _process(_delta: float) -> void:
+
 	# Preview towers do not process anything
 	if is_preview:
 		return

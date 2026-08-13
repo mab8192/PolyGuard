@@ -1,11 +1,20 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b7m2s3t4r5e6n"]
 
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_jj7ur"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_m2ilo"]
 [ext_resource type="PackedScene" uid="uid://cqhi14urkcmc7" path="res://src/scenes/enemies/tank.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_ahs2r"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="4_movement"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_vi7y0"]
+
+[sub_resource type="Resource" id="Resource_ay2dt"]
+script = ExtResource("1_jj7ur")
+damage = 150.0
+attack_mode = 1
+cooldown = 3.0
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
@@ -24,6 +33,11 @@ strategy = 1
 nav_layer = 2
 metadata/_custom_type_script = "uid://bllmo3a8geds7"
 
+[sub_resource type="Resource" id="Resource_4rgg6"]
+script = ExtResource("8_vi7y0")
+targeting_mask = 2
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("1_script")
 display_name = "Tank"
@@ -33,3 +47,5 @@ gold_reward = 50
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_jmxdv")
+attack = SubResource("Resource_ay2dt")
+targeting = SubResource("Resource_4rgg6")
