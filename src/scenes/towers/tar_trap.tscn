@@ -5,6 +5,7 @@
 [ext_resource type="Resource" uid="uid://spad8ltoni7h" path="res://src/data/effects/TarSlowEffect.tres" id="5_c3qve"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="5_cdbo8"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="5_x24fm"]
+[ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/tar_trap.png" id="6_x24fm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)
@@ -33,9 +34,5 @@ metadata/_custom_type_script = "uid://bi5cw4m6km75g"
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=97465353]
 shape = SubResource("RectangleShape2D_qgbsg")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-color = Color(0.19076246, 0.19076228, 0.1907624, 1)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764189137]
+texture = ExtResource("6_x24fm")

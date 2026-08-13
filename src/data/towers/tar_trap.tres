@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dn5ybska4h8fi"]
 
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="1_wdlj1"]
+[ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/tar_trap.png" id="1_wdlj1"]
 [ext_resource type="PackedScene" uid="uid://dsd0rgrdxnjps" path="res://src/scenes/towers/tar_trap.tscn" id="2_wdlj1"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="4_targeting"]

@@ -31,7 +31,7 @@ metadata/_custom_type_script = "uid://dbyd3fxjpaqkg"
 
 [resource]
 script = ExtResource("6_i6dcn")
-display_name = "Grunt"
+display_name = "Splitter"
 scene = ExtResource("5_an1m1")
 gold_reward = 15
 health = SubResource("SubResource_health")

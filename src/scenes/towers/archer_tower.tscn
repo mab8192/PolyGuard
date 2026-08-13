@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_2o1o6"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="4_2o1o6"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="5_37hue"]
+[ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/archer_tower.png" id="5_l8nwa"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(64, 64)
@@ -15,17 +16,6 @@ radius = 256.0
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_jim0o")
-
-[node name="ColorRect" type="ColorRect" parent="." unique_id=86212005]
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-color = Color(0.33680907, 0.17885035, 0.035872858, 1)
-
-[node name="Polygon2D" type="Polygon2D" parent="ColorRect" unique_id=1319650272]
-color = Color(0, 0, 0, 1)
-polygon = PackedVector2Array(32, 16, 16, 32, 32, 48, 48, 32)
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
 visible = false
@@ -48,3 +38,6 @@ script = ExtResource("5_37hue")
 metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
 
 [node name="Marker2D" type="Marker2D" parent="." unique_id=522312756]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1795764947]
+texture = ExtResource("5_l8nwa")

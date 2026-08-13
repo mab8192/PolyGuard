@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://b4p76fbmsemt4" path="res://src/scenes/towers/barricade.tscn" id="2_scene"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://c4eufxkxcpsys" path="res://src/textures/barricade.png" id="3_icon"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
 
 [sub_resource type="Resource" id="SubResource_health"]

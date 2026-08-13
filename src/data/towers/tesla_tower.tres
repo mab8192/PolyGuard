@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://7thtpc5diif0"]
 
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://dl76pbu2a8ce5" path="res://src/textures/tesla_tower.png" id="3_icon"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
 [ext_resource type="PackedScene" uid="uid://dq7dblfl82ce5" path="res://src/scenes/towers/tesla_tower.tscn" id="4_tafxk"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
