@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jihhj"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_u8cj6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_t5ldr"]
+[ext_resource type="Script" uid="uid://diueli1qa2811" path="res://src/components/SplitterComponent.gd" id="5_jihhj"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(16, 16)
@@ -39,3 +40,7 @@ debug_enabled = true
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 visible = false
 shape = SubResource("RectangleShape2D_qgbsg")
+
+[node name="SplitterComponent" type="Node" parent="." unique_id=309144475]
+script = ExtResource("5_jihhj")
+metadata/_custom_type_script = "uid://diueli1qa2811"

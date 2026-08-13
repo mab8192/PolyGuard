@@ -22,12 +22,9 @@ func _ready() -> void:
 	body_exited.connect(_on_body_exited)
 
 func _update_collision_mask() -> void:
-	var mask: int = 0
-	if data.can_target_physical:
-		mask |= 4 # Physics Layer 3 (Physical Enemies)
-	if data.can_target_ghost:
-		mask |= 8 # Physics Layer 4 (Ghost Enemies)
-	collision_mask = mask
+	if data:
+		collision_mask = data.targeting_mask
+
 
 func _on_body_entered(body: Node2D) -> void:
 	if !_enabled: return

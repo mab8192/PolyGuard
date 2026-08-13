@@ -22,7 +22,7 @@ armor = 15.0
 script = ExtResource("6_targeting")
 strategy = 2
 max_targets = 3
-can_target_ghost = true
+targeting_mask = 12
 
 [resource]
 script = ExtResource("1_script")

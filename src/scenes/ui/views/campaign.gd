@@ -1,4 +1,4 @@
-class_name CampaignView extends Control
+class_name CampaignView extends MarginContainer
 
 @onready var carousel: Carousel = %Carousel
 

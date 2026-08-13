@@ -35,6 +35,10 @@ func _ready() -> void:
 		movement = ComponentUtil.get_component(_actor, MovementComponent) as MovementComponent
 	if not agent:
 		agent = _actor.find_child("NavigationAgent2D", false, false) as NavigationAgent2D
+		if not agent:
+			agent = NavigationAgent2D.new()
+			agent.name = "NavigationAgent2D"
+			_actor.add_child(agent)
 
 	if agent:
 		agent.velocity_computed.connect(_on_velocity_computed)

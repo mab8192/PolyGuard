@@ -21,3 +21,17 @@ static func get_component(node: Node, type: Script) -> Node:
 			return child
 
 	return null
+
+## Retrieves an existing component or dynamically instantiates and attaches one if it doesn't exist.
+static func ensure_component(node: Node, type: Script, data_resource: Resource = null) -> Node:
+	if not is_instance_valid(node):
+		return null
+
+	var comp = get_component(node, type)
+	if not comp:
+		push_error("Missing component!")
+		return null
+	elif data_resource:
+		comp.set("data", data_resource)
+
+	return comp

@@ -9,7 +9,8 @@ const ENEMIES: Dictionary[String, EnemyData] = {
 	"light": preload("res://src/data/enemies/light.tres"),
 	"grunt": preload("res://src/data/enemies/grunt.tres"),
 	"heavy": preload("res://src/data/enemies/heavy.tres"),
-	"citadel": preload("res://src/data/enemies/citadel.tres")
+	"citadel": preload("res://src/data/enemies/citadel.tres"),
+	"splitter": preload("res://src/data/enemies/splitter.tres")
 }
 
 func get_enemy_data(id: String) -> EnemyData:

@@ -36,14 +36,15 @@ func apply_to(tower: Tower) -> void:
 		
 	tower.is_solid = is_solid
 
-	if health and tower.health:
-		tower.health.data = tower.data.health
+	if health:
+		ComponentUtil.ensure_component(tower, HealthComponent, tower.data.health)
 
-	if targeting and tower.targeting:
-		tower.targeting.data = tower.data.targeting
+	if targeting:
+		ComponentUtil.ensure_component(tower, TargetingComponent, tower.data.targeting)
 
-	if attack and tower.attack:
-		tower.attack.data = tower.data.attack
+	if attack:
+		ComponentUtil.ensure_component(tower, AttackComponent, tower.data.attack)
 
-	if effect_applier and tower.effect_applier:
-		tower.effect_applier.data = tower.data.effect_applier
+	if effect_applier:
+		ComponentUtil.ensure_component(tower, EffectApplierComponent, tower.data.effect_applier)
+

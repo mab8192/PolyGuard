@@ -15,6 +15,7 @@ class_name EnemyData extends Resource
 @export var health: HealthData
 @export var movement: MovementData
 @export var nav: NavigationData
+@export var splitter: SplitterData
 
 func create() -> Enemy:
 	if not scene:
@@ -34,11 +35,14 @@ func apply_to(enemy: Enemy) -> void:
 	if not is_instance_valid(enemy):
 		return
 
-	if health and enemy.health:
-		enemy.health.data = enemy.data.health
+	if health:
+		ComponentUtil.ensure_component(enemy, HealthComponent, enemy.data.health)
 
-	if movement and enemy.movement:
-		enemy.movement.data = enemy.data.movement
+	if movement:
+		ComponentUtil.ensure_component(enemy, MovementComponent, enemy.data.movement)
 
-	if nav and enemy.nav:
-		enemy.nav.data = enemy.data.nav
+	if nav:
+		ComponentUtil.ensure_component(enemy, NavigationComponent, enemy.data.nav)
+		
+	if splitter:
+		ComponentUtil.ensure_component(enemy, SplitterComponent, enemy.data.splitter)

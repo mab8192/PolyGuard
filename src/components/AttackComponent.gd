@@ -86,11 +86,10 @@ func _spawn_projectile(target: Node2D) -> void:
 		dmg_comp.damage = data.damage
 		dmg_comp.damage_type = data.damage_type
 		if targeting and targeting.data:
-			dmg_comp.can_target_physical = targeting.data.can_target_physical
-			dmg_comp.can_target_ghost = targeting.data.can_target_ghost
+			dmg_comp.targeting_mask = targeting.data.targeting_mask
 		else:
-			dmg_comp.can_target_physical = true
-			dmg_comp.can_target_ghost = false
+			dmg_comp.targeting_mask = 4
+
 
 	proj.target = target
 

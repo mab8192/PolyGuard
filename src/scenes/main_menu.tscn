@@ -67,24 +67,25 @@ size_flags_horizontal = 8
 texture_normal = ExtResource("3_klrpn")
 metadata/_edit_use_anchors_ = true
 
-[node name="ViewContainer" type="Control" parent="MarginContainer/VBoxContainer" unique_id=577285053]
+[node name="ViewContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1809813061]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
+theme_override_constants/margin_top = 30
 
 [node name="Campaign" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=916197880 instance=ExtResource("3_yrdre")]
 unique_name_in_owner = true
-layout_mode = 1
+layout_mode = 2
 
 [node name="Codex" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=682405425 instance=ExtResource("4_klrpn")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
+layout_mode = 2
 
 [node name="Inventory" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=733795307 instance=ExtResource("5_1ipax")]
 unique_name_in_owner = true
 visible = false
-layout_mode = 1
+layout_mode = 2
 
 [node name="NavBar" parent="MarginContainer/VBoxContainer" unique_id=645505814 instance=ExtResource("2_mob6k")]
 unique_name_in_owner = true

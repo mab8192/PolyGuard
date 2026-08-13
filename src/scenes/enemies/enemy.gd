@@ -25,6 +25,13 @@ var nav: NavigationComponent:
 		if _nav: return _nav
 		_nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
 		return _nav
+		
+var _splitter: SplitterComponent
+var splitter: SplitterComponent:
+	get:
+		if _splitter: return _splitter
+		_splitter = ComponentUtil.get_component(self, SplitterComponent) as SplitterComponent
+		return _splitter
 
 var _active_effects: Array[ActiveEffect] = []
 

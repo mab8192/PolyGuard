@@ -1,4 +1,4 @@
-class_name InventoryView extends Control
+class_name InventoryView extends MarginContainer
 
 const CARD_SCENE: PackedScene = preload("res://src/scenes/ui/elements/card.tscn")
 
@@ -11,7 +11,3 @@ func _ready() -> void:
 		card.image = tower.icon
 		card.text = tower.display_name
 		grid_container.add_child(card)
-
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
-	pass
