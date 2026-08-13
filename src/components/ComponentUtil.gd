@@ -29,7 +29,7 @@ static func ensure_component(node: Node, type: Script, data_resource: Resource =
 
 	var comp = get_component(node, type)
 	if not comp:
-		push_error("Missing component!")
+		push_error("Missing %s! " % type.get_global_name(), node.get_path())
 		return null
 	elif data_resource:
 		comp.set("data", data_resource)

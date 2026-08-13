@@ -15,6 +15,8 @@ class_name EnemyData extends Resource
 @export var health: HealthData
 @export var movement: MovementData
 @export var nav: NavigationData
+@export var attack: AttackData
+@export var targeting: TargetingData
 @export var splitter: SplitterData
 
 func create() -> Enemy:
@@ -46,3 +48,9 @@ func apply_to(enemy: Enemy) -> void:
 		
 	if splitter:
 		ComponentUtil.ensure_component(enemy, SplitterComponent, enemy.data.splitter)
+		
+	if attack:
+		ComponentUtil.ensure_component(enemy, AttackComponent, enemy.data.attack)
+		
+	if targeting:
+		ComponentUtil.ensure_component(enemy, TargetingComponent, enemy.data.targeting)

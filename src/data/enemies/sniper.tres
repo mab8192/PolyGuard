@@ -1,10 +1,19 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dr1sds32kbc3c"]
 
+[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectile.tscn" id="1_aacki"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_8g4oy"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_dyd85"]
 [ext_resource type="PackedScene" uid="uid://bf83dxfklx1sf" path="res://src/scenes/enemies/sniper.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_begw7"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="4_movement"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_ixl5l"]
+
+[sub_resource type="Resource" id="Resource_aacki"]
+script = ExtResource("2_dyd85")
+projectile_scene = ExtResource("1_aacki")
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
@@ -21,6 +30,12 @@ script = ExtResource("3_begw7")
 nav_layer = 2
 metadata/_custom_type_script = "uid://bllmo3a8geds7"
 
+[sub_resource type="Resource" id="Resource_62wuf"]
+script = ExtResource("7_ixl5l")
+targeting_mask = 2
+can_target_through_walls = true
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("1_script")
 display_name = "Sniper"
@@ -30,3 +45,5 @@ gold_reward = 35
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_jksdh")
+attack = SubResource("Resource_aacki")
+targeting = SubResource("Resource_62wuf")

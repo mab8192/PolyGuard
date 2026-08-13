@@ -4,9 +4,14 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_lmnr2"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_62wuf"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_b23ku"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_lmnr2"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_62wuf"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
 radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 60.133186
 
 [node name="Sniper" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 motion_mode = 1
@@ -38,3 +43,15 @@ max_speed = 500.0
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1627706772]
 shape = SubResource("CircleShape2D_d56y3")
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=238821746]
+script = ExtResource("5_lmnr2")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=547268866]
+position = Vector2(60, 0)
+shape = SubResource("CircleShape2D_qgbsg")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=1505279834]
+script = ExtResource("6_62wuf")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"

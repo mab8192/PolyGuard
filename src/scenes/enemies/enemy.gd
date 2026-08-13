@@ -32,7 +32,24 @@ var splitter: SplitterComponent:
 		if _splitter: return _splitter
 		_splitter = ComponentUtil.get_component(self, SplitterComponent) as SplitterComponent
 		return _splitter
+		
+var _attack: AttackComponent
+var attack: AttackComponent:
+	get:
+		if _attack: return _attack
+		_attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
+		return _attack
+		
+var _targeting: TargetingComponent
+var targeting: TargetingComponent:
+	get:
+		if _targeting: return _targeting
+		_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
+		return _targeting
 
+enum Mode { EXIT, ATTACK }
+
+var _mode: Mode = Mode.EXIT
 var _active_effects: Array[ActiveEffect] = []
 
 func apply_effect(effect: ActiveEffect) -> void:
@@ -72,6 +89,12 @@ func _ready() -> void:
 func _process(delta: float) -> void:
 	for effect in _active_effects:
 		effect.tick(delta)
+	
+func _physics_process(delta: float) -> void:
+	if targeting and attack and targeting.get_targets().size() > 0:
+		movement.stop()
+		attack.attack_targets(targeting.get_targets())
+
 
 func _on_died() -> void:
 	queue_free()
@@ -85,10 +108,11 @@ func _on_velocity_computed(vel: Vector2):
 		look_at(global_position + velocity)
 
 func _on_no_path_available() -> void:
-	pass
+	_mode = Mode.ATTACK
 	## TODO: Change targets to the first tower along the last valid path that now blocks it
 	## and attack that tower instead of going for the exit
 	
 func _on_tower_destroyed() -> void:
 	pass
 	## TODO: If there was no path available, check for a path now and follow it
+	_mode = Mode.EXIT
