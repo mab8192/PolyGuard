@@ -1,5 +1,8 @@
 class_name EffectApplierComponent extends Area2D
 
+signal applied_effect(node: Node2D)
+signal removed_effect(node: Node2D)
+
 @export var data: EffectApplierData
 
 ## Node2D -> Array[ActiveEffect]
@@ -25,7 +28,6 @@ func _update_collision_mask() -> void:
 	if data:
 		collision_mask = data.targeting_mask
 
-
 func _on_body_entered(body: Node2D) -> void:
 	if !_enabled: return
 	
@@ -37,6 +39,7 @@ func _on_body_entered(body: Node2D) -> void:
 			if not enemy.has_effect(effect.name):
 				enemy.apply_effect(ac)
 				_applied_effects[enemy].append(ac)
+				applied_effect.emit(enemy)
 
 func _on_body_exited(body: Node2D) -> void:
 	if !_enabled: return
@@ -48,4 +51,6 @@ func _on_body_exited(body: Node2D) -> void:
 	if is_instance_valid(body) and body is Enemy and body in _applied_effects:
 		for effect in _applied_effects[body]:
 			body.remove_effect(effect)
+			removed_effect.emit(body)
+			
 		_applied_effects.erase(body)
