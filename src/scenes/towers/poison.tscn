@@ -15,7 +15,6 @@ size = Vector2(64, 64)
 script = ExtResource("5_4x0g2")
 mode = 2
 delay = 0.5
-active_duration = 3.0
 cooldown = 6.0
 effects = Array[ExtResource("3_hg6e0")]([ExtResource("4_uyobu")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
@@ -24,10 +23,18 @@ metadata/_custom_type_script = "uid://b6m2boucd8dke"
 size = Vector2(64, 64)
 
 [sub_resource type="Gradient" id="Gradient_gas"]
-colors = PackedColorArray(0.3, 0.95, 0.25, 0.85, 0.1, 0.6, 0.15, 0.0)
+colors = PackedColorArray(0.3, 0.95, 0.25, 0.85, 0.1, 0.6, 0.15, 0)
 
 [sub_resource type="GradientTexture1D" id="GradientTexture1D_gas"]
 gradient = SubResource("Gradient_gas")
+
+[sub_resource type="Curve" id="Curve_hg6e0"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0.28402376), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_0pr3y"]
+curve = SubResource("Curve_hg6e0")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sg31k"]
 particle_flag_disable_z = true
@@ -38,7 +45,8 @@ gravity = Vector3(0, -10, 0)
 damping_min = 5.0
 damping_max = 15.0
 scale_min = 0.4
-scale_max = 1.0
+scale_over_velocity_max = 40.0
+scale_over_velocity_curve = SubResource("CurveTexture_0pr3y")
 color_ramp = SubResource("GradientTexture1D_gas")
 
 [node name="Poison Trap" type="StaticBody2D" unique_id=1776429960]
@@ -66,6 +74,5 @@ emitting = false
 amount = 20
 texture = ExtResource("7_0pr3y")
 lifetime = 1.5
-one_shot = false
 explosiveness = 0.2
 process_material = SubResource("ParticleProcessMaterial_sg31k")

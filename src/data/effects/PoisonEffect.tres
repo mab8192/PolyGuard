@@ -5,6 +5,8 @@
 [resource]
 script = ExtResource("1_poison_data")
 damage_per_second = 80.0
+lambda = 0.7
+damage_type = 2
 name = "Poison"
 duration = 10.0
 remove_on_exit = false
