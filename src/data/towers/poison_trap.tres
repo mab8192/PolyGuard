@@ -1,0 +1,27 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dbmdlysqibjyw"]
+
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_7rdgg"]
+[ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/poison_trap.png" id="1_icon"]
+[ext_resource type="Resource" uid="uid://cpoison12345" path="res://src/data/effects/PoisonEffect.tres" id="2_1grd6"]
+[ext_resource type="PackedScene" uid="uid://bky7ibv66m81f" path="res://src/scenes/towers/poison.tscn" id="2_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_towerdata"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_ydhdu"]
+
+[sub_resource type="Resource" id="Resource_gconv"]
+script = ExtResource("3_ydhdu")
+mode = 2
+delay = 0.5
+active_duration = 3.0
+cooldown = 6.0
+effects = Array[ExtResource("1_7rdgg")]([ExtResource("2_1grd6")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[resource]
+script = ExtResource("3_towerdata")
+display_name = "Poison Trap"
+icon = ExtResource("1_icon")
+scene = ExtResource("2_scene")
+description = "Non-solid trap that triggers after a short delay to poison all enemies in range"
+is_solid = false
+cost = 200
+effect_applier = SubResource("Resource_gconv")

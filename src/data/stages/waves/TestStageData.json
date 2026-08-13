@@ -3,7 +3,7 @@
 		"wave_number": 1,
 		"reward_gold": 400,
 		"spawns": [
-			{ "enemy_type": "sniper", "count": 4, "interval": 1.5, "delay": 0.0 }
+			{ "enemy_type": "sniper", "count": 10, "interval": 0.5, "delay": 0.0 }
 		]
 	},
 	{

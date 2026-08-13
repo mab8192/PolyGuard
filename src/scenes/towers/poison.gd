@@ -3,7 +3,18 @@ extends Tower
 @onready var gas_effect: GPUParticles2D = $"Gas Effect"
 
 func _ready() -> void:
-	effect_applier.applied_effect.connect(_on_effect_applied)
-	
-func _on_effect_applied() -> void:
-	gas_effect.emitting = true
+	super._ready()
+	if effect_applier:
+		if not effect_applier.triggered.is_connected(_on_triggered):
+			effect_applier.triggered.connect(_on_triggered)
+		if not effect_applier.deactivated.is_connected(_on_deactivated):
+			effect_applier.deactivated.connect(_on_deactivated)
+
+func _on_triggered() -> void:
+	if gas_effect:
+		gas_effect.emitting = true
+		gas_effect.restart()
+
+func _on_deactivated() -> void:
+	if gas_effect:
+		gas_effect.emitting = false

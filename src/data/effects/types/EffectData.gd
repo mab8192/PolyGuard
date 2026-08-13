@@ -2,6 +2,7 @@ class_name EffectData extends Resource
 
 @export var name: String = "" ## Name of the effect
 @export var duration: float = INF ## How long the effect lasts
+@export var remove_on_exit: bool = true
 @export var icon: Texture2D ## Icon to show
 
 func create_instance() -> ActiveEffect:

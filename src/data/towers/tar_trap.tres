@@ -1,12 +1,16 @@
 [gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dn5ybska4h8fi"]
 
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_il3ue"]
 [ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/tar_trap.png" id="1_wdlj1"]
 [ext_resource type="PackedScene" uid="uid://dsd0rgrdxnjps" path="res://src/scenes/towers/tar_trap.tscn" id="2_wdlj1"]
+[ext_resource type="Resource" uid="uid://spad8ltoni7h" path="res://src/data/effects/TarSlowEffect.tres" id="2_xqd7v"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
-[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="4_targeting"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_di8xt"]
 
-[sub_resource type="Resource" id="SubResource_targeting"]
-script = ExtResource("4_targeting")
+[sub_resource type="Resource" id="Resource_x5pvt"]
+script = ExtResource("3_di8xt")
+effects = Array[ExtResource("1_il3ue")]([ExtResource("2_xqd7v")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [resource]
 script = ExtResource("3_bigwe")
@@ -16,4 +20,4 @@ scene = ExtResource("2_wdlj1")
 description = "Non-solid trap that slows enemies who walk over it"
 is_solid = false
 cost = 150
-targeting = SubResource("SubResource_targeting")
+effect_applier = SubResource("Resource_x5pvt")

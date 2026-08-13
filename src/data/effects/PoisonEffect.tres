@@ -1,0 +1,10 @@
+[gd_resource type="Resource" script_class="PoisonEffectData" format=3 uid="uid://cpoison12345"]
+
+[ext_resource type="Script" uid="uid://d3o4x5p8qkb54" path="res://src/data/effects/types/PoisonEffectData.gd" id="1_poison_data"]
+
+[resource]
+script = ExtResource("1_poison_data")
+damage_per_second = 80.0
+name = "Poison"
+duration = 10.0
+remove_on_exit = false

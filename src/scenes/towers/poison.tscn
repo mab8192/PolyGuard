@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://cejvfjijxkwil" path="res://src/scenes/towers/poison.gd" id="1_0pr3y"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_0pr3y"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="3_hg6e0"]
-[ext_resource type="Resource" uid="uid://spad8ltoni7h" path="res://src/data/effects/TarSlowEffect.tres" id="4_uyobu"]
+[ext_resource type="Resource" uid="uid://cpoison12345" path="res://src/data/effects/PoisonEffect.tres" id="4_uyobu"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="5_4x0g2"]
 [ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/poison_trap.png" id="6_sg31k"]
 [ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="7_0pr3y"]
@@ -13,30 +13,33 @@ size = Vector2(64, 64)
 
 [sub_resource type="Resource" id="Resource_jdcq5"]
 script = ExtResource("5_4x0g2")
+mode = 2
+delay = 0.5
+active_duration = 3.0
+cooldown = 6.0
 effects = Array[ExtResource("3_hg6e0")]([ExtResource("4_uyobu")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(64, 64)
 
-[sub_resource type="Curve" id="Curve_hg6e0"]
-_limits = [0.0, 3.0, 0.0, 1.0]
-_data = [Vector2(0, 0.28402376), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
-point_count = 2
+[sub_resource type="Gradient" id="Gradient_gas"]
+colors = PackedColorArray(0.3, 0.95, 0.25, 0.85, 0.1, 0.6, 0.15, 0.0)
 
-[sub_resource type="CurveTexture" id="CurveTexture_0pr3y"]
-curve = SubResource("Curve_hg6e0")
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_gas"]
+gradient = SubResource("Gradient_gas")
 
 [sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sg31k"]
 particle_flag_disable_z = true
 spread = 180.0
-initial_velocity_min = 10.0
-initial_velocity_max = 40.0
-gravity = Vector3(0, 0, 0)
-damping_min = 7.0000005
-damping_max = 15.000001
-scale_over_velocity_max = 40.0
-scale_over_velocity_curve = SubResource("CurveTexture_0pr3y")
+initial_velocity_min = 20.0
+initial_velocity_max = 60.0
+gravity = Vector3(0, -10, 0)
+damping_min = 5.0
+damping_max = 15.0
+scale_min = 0.4
+scale_max = 1.0
+color_ramp = SubResource("GradientTexture1D_gas")
 
 [node name="Poison Trap" type="StaticBody2D" unique_id=1776429960]
 collision_layer = 0
@@ -58,8 +61,11 @@ shape = SubResource("RectangleShape2D_qgbsg")
 texture = ExtResource("6_sg31k")
 
 [node name="Gas Effect" type="GPUParticles2D" parent="." unique_id=1731327836]
+z_index = 1
 emitting = false
-amount = 14
+amount = 20
 texture = ExtResource("7_0pr3y")
-lifetime = 3.0
+lifetime = 1.5
+one_shot = false
+explosiveness = 0.2
 process_material = SubResource("ParticleProcessMaterial_sg31k")
