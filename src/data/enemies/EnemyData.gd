@@ -38,19 +38,19 @@ func apply_to(enemy: Enemy) -> void:
 		return
 
 	if health:
-		ComponentUtil.ensure_component(enemy, HealthComponent, enemy.data.health)
+		ComponentUtil.update_component(enemy, HealthComponent, enemy.data.health)
 
 	if movement:
-		ComponentUtil.ensure_component(enemy, MovementComponent, enemy.data.movement)
+		ComponentUtil.update_component(enemy, MovementComponent, enemy.data.movement)
 
 	if nav:
-		ComponentUtil.ensure_component(enemy, NavigationComponent, enemy.data.nav)
+		ComponentUtil.update_component(enemy, NavigationComponent, enemy.data.nav)
 		
 	if splitter:
-		ComponentUtil.ensure_component(enemy, SplitterComponent, enemy.data.splitter)
+		ComponentUtil.update_component(enemy, SplitterComponent, enemy.data.splitter)
 		
 	if attack:
-		ComponentUtil.ensure_component(enemy, AttackComponent, enemy.data.attack)
+		ComponentUtil.update_component(enemy, AttackComponent, enemy.data.attack)
 		
 	if targeting:
-		ComponentUtil.ensure_component(enemy, TargetingComponent, enemy.data.targeting)
+		ComponentUtil.update_component(enemy, TargetingComponent, enemy.data.targeting)

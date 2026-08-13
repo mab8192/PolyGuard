@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://b4p76fbmsemt4"]
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ewxlo"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_fojd5"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)
@@ -28,3 +29,7 @@ color = Color(0.47058824, 0.33333334, 0.09803922, 1)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151446449]
 visible = false
 shape = SubResource("RectangleShape2D_hkjoh")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=160437523]
+script = ExtResource("2_fojd5")
+metadata/_custom_type_script = "uid://b25aa5trewubh"

@@ -38,7 +38,7 @@ metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
 simplify_path = true
-debug_enabled = true
+avoidance_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 shape = SubResource("RectangleShape2D_qgbsg")

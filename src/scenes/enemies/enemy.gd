@@ -86,7 +86,7 @@ func _process(delta: float) -> void:
 		effect.tick(delta)
 	
 func _physics_process(_delta: float) -> void:
-	if targeting and attack and targeting.get_targets().size() > 0:
+	if not nav.can_reach_exit() and targeting and attack and targeting.get_targets().size() > 0:
 		if movement:
 			movement.stop()
 		attack.attack_targets(targeting.get_targets())

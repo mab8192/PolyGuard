@@ -47,6 +47,8 @@ func _ready() -> void:
 		agent.navigation_layers = data.nav_layer
 		agent.path_max_distance = 10
 		agent.avoidance_enabled = true
+		agent.neighbor_distance = 100
+		agent.radius = 4
 		agent.simplify_path = false
 		agent.path_desired_distance = 6.0
 		agent.target_desired_distance = 8.0
@@ -59,6 +61,9 @@ func set_exits(new_exits: Array[Node2D]) -> void:
 
 func is_finished() -> bool:
 	return agent.is_navigation_finished()
+	
+func can_reach_exit() -> bool:
+	return not _no_path
 	
 ## Returns the path distance to the current goal
 func distance_to_goal() -> float:
@@ -101,6 +106,7 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
+	_no_path = false
 	agent.target_position = _actor.global_position
 	if _exits.is_empty():
 		return
@@ -185,12 +191,28 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 		var query := PhysicsRayQueryParameters2D.create(p_start, p_end, 2) # Layer 2: Towers
 		query.collide_with_bodies = true
 		query.collide_with_areas = false
+		var exclude_rids: Array[RID] = []
 
-		var result: Dictionary = space_state.intersect_ray(query)
-		if not result.is_empty() and is_instance_valid(result.get("collider")):
-			var body = result.collider
-			if body is Tower and (body as Tower).is_solid and not (body as Tower).is_queued_for_deletion():
-				return body as Tower
+		while true:
+			query.exclude = exclude_rids
+			var result: Dictionary = space_state.intersect_ray(query)
+			if result.is_empty():
+				break
+			var body = result.get("collider")
+			if is_instance_valid(body) and body is Tower:
+				var tower = body as Tower
+				if tower.is_solid and not tower.is_queued_for_deletion() and not tower.is_preview:
+					return tower
+				else:
+					if result.has("rid"):
+						exclude_rids.append(result.get("rid"))
+					else:
+						break
+			else:
+				if result.has("rid"):
+					exclude_rids.append(result.get("rid"))
+				else:
+					break
 
 	# Fallback: find closest solid tower along the path
 	var first_tower: Tower = null

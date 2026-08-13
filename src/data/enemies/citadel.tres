@@ -1,10 +1,22 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://b0srep3dyx1ik"]
 
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_05nbg"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_igubi"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="2_4pduu"]
+[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="3_13e37"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_kl3b5"]
-[ext_resource type="PackedScene" uid="uid://dkokxv5so7fsg" path="res://src/scenes/enemies/citadel.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="5_4d7iv"]
+[ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="6_b3u4s"]
+[ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="7_i4hg1"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="8_ogpsv"]
+[ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="9_vc8dg"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="11_xqjf2"]
+
+[sub_resource type="Resource" id="Resource_4rgg6"]
+script = ExtResource("1_igubi")
+damage = 250.0
+cooldown = 4.0
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="Resource_k13t0"]
 script = ExtResource("1_05nbg")
@@ -23,12 +35,34 @@ strategy = 1
 nav_layer = 2
 metadata/_custom_type_script = "uid://bllmo3a8geds7"
 
+[sub_resource type="PackedScene" id="PackedScene_bcoww"]
+_bundled = {
+"conn_count": 0,
+"conns": PackedInt32Array(),
+"editable_instances": [],
+"id_paths": [PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array(), PackedInt32Array()],
+"names": PackedStringArray("Citadel", "CharacterBody2D", "enemies", "collision_layer", "collision_mask", "motion_mode", "wall_min_slide_angle", "script", "Polygon2D", "Polygon2D", "position", "scale", "color", "polygon", "MovementComponent", "Node", "script", "metadata/_custom_type_script", "HealthComponent", "Node", "script", "metadata/_custom_type_script", "NavigationComponent", "Node", "script", "metadata/_custom_type_script", "NavigationAgent2D", "NavigationAgent2D", "navigation_layers", "simplify_path", "avoidance_enabled", "max_speed", "CollisionPolygon2D", "CollisionPolygon2D", "visible", "polygon"),
+"node_count": 7,
+"node_ids": PackedInt32Array(1825300398, 111494191, 588237634, 2023714483, 587399604, 1564134390, 879432682),
+"node_paths": [NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath("."), NodePath(".")],
+"nodes": PackedInt32Array(-1, -1, 1, 0, -1, 5, 3, 0, 4, 1, 5, 2, 6, 3, 7, 4, 1, 2, 1073741824, 0, 9, 8, -1, 4, 10, 5, 11, 6, 12, 7, 13, 8, 0, 1073741825, 0, 15, 14, -1, 2, 16, 9, 17, 10, 0, 1073741826, 0, 19, 18, -1, 2, 20, 11, 21, 12, 0, 1073741827, 0, 23, 22, -1, 2, 24, 13, 25, 14, 0, 1073741828, 0, 27, 26, -1, 4, 28, 15, 29, 16, 30, 17, 31, 18, 0, 1073741829, 0, 33, 32, -1, 2, 34, 19, 35, 20, 0),
+"variants": [4, 7, 1, 0.0, ExtResource("6_b3u4s"), Vector2(-1, -1), Vector2(0.875, 0.875), Color(0.38197273, 0.39959982, 0.39053088, 1), PackedVector2Array(-12.571428, -21.714285, 14.8571415, -21.714285, 28.571426, 1.1428571, 14.8571415, 23.999998, -12.571428, 23.999998, -26.285713, 1.1428571), ExtResource("7_i4hg1"), "uid://btkgrma8jeupr", ExtResource("8_ogpsv"), "uid://b25aa5trewubh", ExtResource("9_vc8dg"), "uid://v8wb72hbi8fk", 2, true, true, 500.0, false, PackedVector2Array(-12, -20, 12, -20, 24, 0, 12, 20, -12, 20, -24, 0)],
+"version": 3
+}
+
+[sub_resource type="Resource" id="Resource_ay2dt"]
+script = ExtResource("11_xqjf2")
+targeting_mask = 2
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("5_4d7iv")
 display_name = "Citadel"
-scene = ExtResource("4_scene")
+scene = SubResource("PackedScene_bcoww")
 lives_penalty = 5
 gold_reward = 250
 health = SubResource("Resource_k13t0")
 movement = SubResource("Resource_05nbg")
 nav = SubResource("Resource_4pduu")
+attack = SubResource("Resource_4rgg6")
+targeting = SubResource("Resource_ay2dt")
