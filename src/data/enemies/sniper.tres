@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dr1sds32kbc3c"]
 
-[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectile.tscn" id="1_aacki"]
+[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectiles/projectile.tscn" id="1_aacki"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_8g4oy"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_dyd85"]

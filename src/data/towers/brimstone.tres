@@ -1,0 +1,31 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dpt7qhy3p2n4e"]
+
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_onxbk"]
+[ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="2_onxbk"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_xuunk"]
+[ext_resource type="Texture2D" uid="uid://dybeb7xv2w4i4" path="res://src/textures/brimstone.png" id="4_onxbk"]
+[ext_resource type="PackedScene" uid="uid://b2k4xt3p0yf8i" path="res://src/scenes/towers/brimstone.tscn" id="5_8mal4"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_y670i"]
+
+[sub_resource type="Resource" id="Resource_xi70r"]
+script = ExtResource("2_onxbk")
+damage_per_second = 30.0
+damage_type = 0
+name = "Brimstone Fire"
+duration = 5.0
+metadata/_custom_type_script = "uid://dsor16spgwgow"
+
+[sub_resource type="Resource" id="Resource_x5pvt"]
+script = ExtResource("3_xuunk")
+effects = Array[ExtResource("1_onxbk")]([SubResource("Resource_xi70r")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[resource]
+script = ExtResource("6_y670i")
+display_name = "Brimstone"
+icon = ExtResource("4_onxbk")
+scene = ExtResource("5_8mal4")
+description = "Non-solid trap that burns enemies when they walk on top of it."
+is_solid = false
+cost = 400
+effect_applier = SubResource("Resource_x5pvt")

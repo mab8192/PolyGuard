@@ -10,6 +10,9 @@
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
 radius = 128.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
+size = Vector2(64, 64)
+
 [node name="TeslaTower" type="StaticBody2D" unique_id=887214604]
 collision_layer = 2
 collision_mask = 0
@@ -34,9 +37,8 @@ metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
 [node name="LightningVisualizer" type="Node2D" parent="." unique_id=905728372]
 script = ExtResource("5_ho1i0")
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=1521123223]
-visible = false
-polygon = PackedVector2Array(0, -32, 32, 0, 0, 32, -32, 0)
-
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1845019364]
 texture = ExtResource("6_a1clp")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195477804]
+shape = SubResource("RectangleShape2D_qgbsg")

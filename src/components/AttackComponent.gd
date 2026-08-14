@@ -81,6 +81,7 @@ func _spawn_projectile(target: Node2D) -> void:
 		proj.global_position = (get_parent() as Node2D).global_position
 
 	proj.projectile_speed = data.projectile_speed
+	proj.follow_target = data.projectile_follow_target
 	var dmg_comp = proj.damage_component if proj.damage_component else ComponentUtil.get_component(proj, DamageComponent) as DamageComponent
 	if dmg_comp:
 		dmg_comp.damage = data.damage
@@ -89,7 +90,6 @@ func _spawn_projectile(target: Node2D) -> void:
 			dmg_comp.targeting_mask = targeting.data.targeting_mask
 		else:
 			dmg_comp.targeting_mask = 4
-
 
 	proj.target = target
 

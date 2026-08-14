@@ -23,7 +23,6 @@ func _update_collision_mask() -> void:
 		mask |= 8 # Physics Layer 4 (Ghost Enemies)
 	collision_mask = mask
 
-
 func _on_body_entered(body: Node2D) -> void:
 	_try_deal_damage(body)
 	hit.emit(body)

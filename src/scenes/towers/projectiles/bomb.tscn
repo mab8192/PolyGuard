@@ -1,0 +1,27 @@
+[gd_scene format=3 uid="uid://bl4xxumk5fn6u"]
+
+[ext_resource type="Script" uid="uid://chkbtvegpiskt" path="res://src/scenes/towers/projectiles/bomb.gd" id="1_3b2n4"]
+[ext_resource type="Script" uid="uid://bvdy44yq25vtv" path="res://src/components/DamageComponent.gd" id="2_lmcd0"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
+radius = 8.0
+
+[node name="Bomb" type="Node2D" unique_id=1033502453]
+script = ExtResource("1_3b2n4")
+
+[node name="Polygon2D" type="Polygon2D" parent="." unique_id=287040307]
+position = Vector2(-2.3841858e-07, -2.3841858e-07)
+scale = Vector2(2, 2)
+color = Color(0.41461143, 9.3854965e-07, 1.4439226e-07, 1)
+polygon = PackedVector2Array(0, -4, -4, 0, 0, 4, 4, 0)
+
+[node name="DamageComponent" type="Area2D" parent="." unique_id=881148203]
+script = ExtResource("2_lmcd0")
+metadata/_custom_type_script = "uid://bvdy44yq25vtv"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent" unique_id=104444699]
+shape = SubResource("CircleShape2D_d56y3")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1913716860]
+visible = false
+rect = Rect2(-8, -8, 16, 16)

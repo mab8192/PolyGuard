@@ -8,6 +8,7 @@ var data: StageData
 
 var wave_manager: WaveManager
 var placement_manager: TowerPlacementManager
+var effect_manager: EffectManager
 
 # Stage economy and life tracking state
 var lives: int
@@ -52,6 +53,9 @@ func _ready() -> void:
 	placement_manager.name = "TowerPlacementManager"
 	add_child(placement_manager)
 	
+	effect_manager = EffectManager.new()
+	
+	effect_manager.setup()
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
 	

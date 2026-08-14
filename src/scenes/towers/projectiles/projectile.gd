@@ -11,6 +11,7 @@ var direction: Vector2 = Vector2.ZERO:
 
 var target: Node2D
 var projectile_speed: float = 0.0
+var follow_target: bool = true
 
 var _secs_alive: float = 0
 const MAX_LIFETIME: float = 10
@@ -22,10 +23,13 @@ func _ready() -> void:
 		damage_component.hit.connect(_on_hit)
 	if visible_on_screen_notifier_2d:
 		visible_on_screen_notifier_2d.screen_exited.connect(_on_screen_exit)
+	
+	if target and is_instance_valid(target):
+		direction = global_position.direction_to(target.global_position)
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if target and is_instance_valid(target):
+	if follow_target and target and is_instance_valid(target):
 		direction = global_position.direction_to(target.global_position)
 
 	global_position += delta * direction * projectile_speed

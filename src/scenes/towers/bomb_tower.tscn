@@ -1,0 +1,42 @@
+[gd_scene format=3 uid="uid://c5h3tfowoxgd7"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ugiga"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_bfwhb"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_75758"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_ax7nv"]
+[ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/archer_tower.png" id="5_8ijc8"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
+size = Vector2(64, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 256.0
+
+[node name="Bomb Tower" type="StaticBody2D" unique_id=887214604]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_ugiga")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
+visible = false
+shape = SubResource("RectangleShape2D_d56y3")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=75994436]
+script = ExtResource("2_bfwhb")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=854869402]
+script = ExtResource("3_75758")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
+shape = SubResource("CircleShape2D_qgbsg")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=635266676]
+script = ExtResource("4_ax7nv")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
+
+[node name="Marker2D" type="Marker2D" parent="." unique_id=522312756]
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1795764947]
+texture = ExtResource("5_8ijc8")

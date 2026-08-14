@@ -1,0 +1,35 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://cx1klremi131m"]
+
+[ext_resource type="PackedScene" uid="uid://bl4xxumk5fn6u" path="res://src/scenes/towers/projectiles/bomb.tscn" id="1_ju8xy"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_mg0rn"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_dk2il"]
+[ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/archer_tower.png" id="4_8vrtx"]
+[ext_resource type="PackedScene" uid="uid://c5h3tfowoxgd7" path="res://src/scenes/towers/bomb_tower.tscn" id="5_ju8xy"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_v285l"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_fy0nx"]
+
+[sub_resource type="Resource" id="Resource_soe44"]
+script = ExtResource("2_mg0rn")
+damage = 100.0
+projectile_scene = ExtResource("1_ju8xy")
+projectile_speed = 500.0
+projectile_follow_target = false
+
+[sub_resource type="Resource" id="Resource_k6tlf"]
+script = ExtResource("3_dk2il")
+max_health = 600.0
+armor = 25.0
+
+[sub_resource type="Resource" id="Resource_1mbg1"]
+script = ExtResource("7_fy0nx")
+
+[resource]
+script = ExtResource("6_v285l")
+display_name = "Bomb Tower"
+icon = ExtResource("4_8vrtx")
+scene = ExtResource("5_ju8xy")
+description = "Shoots bombs that can damage groups of enemies"
+cost = 450
+health = SubResource("Resource_k6tlf")
+attack = SubResource("Resource_soe44")
+targeting = SubResource("Resource_1mbg1")

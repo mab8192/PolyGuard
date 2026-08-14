@@ -1,16 +1,30 @@
 class_name ActiveEffect extends RefCounted
 
+signal expired()
+
 var data: EffectData
 var _target: Node2D
+
+var _counting_time: bool = false
+var _elapsed_time_counted: float = 0 ## Elapsed time since _counting_time was set
+var _elapsed_time_total: float = 0 ## Elapsed time since the effect first applied
 
 func _init(effect_data: EffectData):
 	data = effect_data
 
+func count_time() -> void:
+	_counting_time = true
+
 func apply(target: Node2D) -> void:
 	_target = target
 
-func tick(_delta: float) -> void:
-	pass
+func tick(delta: float) -> void:
+	if _counting_time:
+		_elapsed_time_counted += delta
+	_elapsed_time_total += delta
 	
+	if data.duration != INF and _elapsed_time_counted >= data.duration:
+		expired.emit()
+
 func remove() -> void:
 	pass
