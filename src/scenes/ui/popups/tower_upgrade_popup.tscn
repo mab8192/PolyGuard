@@ -1,0 +1,271 @@
+[gd_scene format=3 uid="uid://c3pkyojs8gtfc"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/tower_upgrade_popup.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+
+[node name="TowerUpgradePopup" type="CanvasLayer" unique_id=9870001]
+layer = 20
+script = ExtResource("1_script")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=9870002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=9870003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="ModalPanel" type="PanelContainer" parent="CenterContainer" unique_id=9870004]
+custom_minimum_size = Vector2(960, 1400)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/ModalPanel" unique_id=9870005]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 28
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 28
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer" unique_id=9870006]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="HeaderHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870007]
+layout_mode = 2
+alignment = 1
+
+[node name="HeaderTitle" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/HeaderHBox" unique_id=9870008]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SubHeaderText"
+text = "TOWER UPGRADE & LAB"
+vertical_alignment = 1
+
+[node name="CloseButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/HeaderHBox" unique_id=9870009]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(64, 64)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "X"
+
+[node name="BannerPanel" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870010]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="BannerHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel" unique_id=9870011]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="TowerIcon" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox" unique_id=9870012]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="BannerInfoVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox" unique_id=9870013]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 6
+alignment = 1
+
+[node name="TowerNameLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox" unique_id=9870014]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "Archer Tower"
+
+[node name="BadgesHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox" unique_id=9870015]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LevelBadge" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox/BadgesHBox" unique_id=9870016]
+layout_mode = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="LevelBadgeLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox/BadgesHBox/LevelBadge" unique_id=9870017]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "LEVEL 1 / 5"
+
+[node name="DamageTypeBadge" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox/BadgesHBox" unique_id=9870018]
+layout_mode = 2
+theme_type_variation = &"TypeBadge"
+
+[node name="DamageTypeBadgeLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox/BannerInfoVBox/BadgesHBox/DamageTypeBadge" unique_id=9870019]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "PHYSICAL DAMAGE"
+
+[node name="StatsPanel" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870020]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="StatsVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/StatsPanel" unique_id=9870021]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="StatsTitle" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/StatsPanel/StatsVBox" unique_id=9870022]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "ATTRIBUTES & UPGRADE PROJECTION"
+
+[node name="StatsComparisonLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/StatsPanel/StatsVBox" unique_id=9870023]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Damage: 60 -> 72 (+20%)
+Rate: Every 0.50s -> 0.46s
+Max HP: 200 -> 250 (+25%)"
+
+[node name="ChoicesSectionVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870024]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 10
+
+[node name="ChoicesTitle" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox" unique_id=9870025]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "SPECIALIZATION PATH (SELECT ONE)"
+
+[node name="ChoicesHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox" unique_id=9870026]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="ChoiceCardA" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870027]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="MarginA" type="MarginContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA" unique_id=9870028]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxA" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA" unique_id=9870029]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChoiceTitleA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870030]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "Arcane Infusion"
+
+[node name="ChoiceTypeBadgeA" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870031]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"TypeBadge"
+
+[node name="ChoiceTypeLabelA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/ChoiceTypeBadgeA" unique_id=9870032]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "MAGIC DAMAGE"
+
+[node name="ChoiceDescA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870033]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"SmallText"
+text = "Converts damage to Magic (+20% bonus)."
+autowrap_mode = 2
+
+[node name="ChoiceSelectBtnA" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870034]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "ACTIVATE"
+
+[node name="ChoiceCardB" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870035]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"CardPanel"
+
+[node name="MarginB" type="MarginContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB" unique_id=9870036]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="VBoxB" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB" unique_id=9870037]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChoiceTitleB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870038]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "True Piercer"
+
+[node name="ChoiceTypeBadgeB" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870039]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 0
+theme_type_variation = &"TypeBadge"
+
+[node name="ChoiceTypeLabelB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/ChoiceTypeBadgeB" unique_id=9870040]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "TRUE DAMAGE"
+
+[node name="ChoiceDescB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870041]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"SmallText"
+text = "Converts damage to True Damage."
+autowrap_mode = 2
+
+[node name="ChoiceSelectBtnB" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870042]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 56)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "ACTIVATE"
+
+[node name="FooterVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870043]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UpgradeActionButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/FooterVBox" unique_id=9870044]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "UPGRADE TO LEVEL 2 (150 CREDITS)"
+
+[node name="CreditsBalanceLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/FooterVBox" unique_id=9870045]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "AVAILABLE: 450 CREDITS"
+horizontal_alignment = 1

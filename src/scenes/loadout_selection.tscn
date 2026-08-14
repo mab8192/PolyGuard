@@ -51,7 +51,7 @@ layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
-text = "← BACK"
+text = "< BACK"
 
 [node name="TitleBox" type="VBoxContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681854]
 layout_mode = 2
@@ -79,9 +79,16 @@ theme_type_variation = &"SmallText"
 text = "Starting Gold: 700g • Base Lives: 20"
 horizontal_alignment = 1
 
-[node name="TopBarSpacer" type="Control" parent="MainMargin/RootVBox/TopBar" unique_id=637681855]
-custom_minimum_size = Vector2(160, 0)
+[node name="CreditsBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681855]
 layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"CostBadge"
+
+[node name="CreditsLabel" type="Label" parent="MainMargin/RootVBox/TopBar/CreditsBadgeContainer" unique_id=637681885]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "0 CREDITS"
 
 [node name="LoadoutHeaderHBox" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681856]
 layout_mode = 2
@@ -160,6 +167,17 @@ text = "250g"
 
 [node name="BadgeRowHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681870]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailLevelBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681883]
+layout_mode = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="DetailLevelBadge" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox/DetailLevelBadgeContainer" unique_id=637681884]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "LEVEL 1"
 
 [node name="TypeBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681871]
 layout_mode = 2
@@ -173,7 +191,7 @@ text = "SOLID DEFENSE"
 
 [node name="DetailActionButton" type="Button" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681873]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(210, 64)
+custom_minimum_size = Vector2(240, 64)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
@@ -195,7 +213,7 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"StatText"
-text = "⚔ Damage: 50 | ⏱ Rate: Every 0.5s"
+text = "Damage: 50 | Rate: Every 0.5s"
 autowrap_mode = 2
 
 [node name="AvailableHeader" type="Label" parent="MainMargin/RootVBox" unique_id=637681877]

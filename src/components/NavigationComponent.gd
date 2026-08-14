@@ -48,7 +48,7 @@ func _ready() -> void:
 		agent.path_max_distance = 10
 		agent.avoidance_enabled = true
 		agent.neighbor_distance = 100
-		agent.radius = 4
+		agent.radius = 8
 		agent.simplify_path = false
 		agent.path_desired_distance = 6.0
 		agent.target_desired_distance = 8.0

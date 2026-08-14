@@ -275,6 +275,17 @@ corner_radius_top_right = 6
 corner_radius_bottom_right = 6
 corner_radius_bottom_left = 6
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_locked_badge"]
+content_margin_left = 8.0
+content_margin_top = 3.0
+content_margin_right = 8.0
+content_margin_bottom = 3.0
+bg_color = Color(0.75, 0.18, 0.25, 1)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_panel"]
 content_margin_left = 36.0
 content_margin_top = 36.0
@@ -562,6 +573,11 @@ IncomingBadge/styles/panel = SubResource("StyleBoxFlat_incoming_badge")
 IncomingText/base_type = &"Label"
 IncomingText/colors/font_color = Color(1, 0.35, 0.35, 1)
 IncomingText/font_sizes/font_size = 14
+LockedBadge/base_type = &"PanelContainer"
+LockedBadge/styles/panel = SubResource("StyleBoxFlat_locked_badge")
+LockedText/base_type = &"Label"
+LockedText/colors/font_color = Color(1, 0.4, 0.45, 1)
+LockedText/font_sizes/font_size = 20
 ModalPanel/base_type = &"PanelContainer"
 ModalPanel/styles/panel = SubResource("StyleBoxFlat_modal_panel")
 NavBarPanel/base_type = &"Panel"

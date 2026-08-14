@@ -7,6 +7,7 @@
 [ext_resource type="PackedScene" uid="uid://b7j6pm6x3hbq3" path="res://src/scenes/ui/views/campaign.tscn" id="3_yrdre"]
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
+[ext_resource type="PackedScene" uid="uid://settingspopup001" path="res://src/scenes/ui/popups/settings_popup.tscn" id="6_settings_popup"]
 
 [node name="MainMenu" type="Control" unique_id=374769933]
 layout_mode = 3
@@ -34,40 +35,66 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_top = 160
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 130
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 24
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1952931871]
 layout_mode = 2
+theme_override_constants/separation = 12
 
-[node name="Label" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2046030932]
+[node name="HeaderTitleLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2046030932]
 layout_mode = 2
 theme_type_variation = &"HeaderText"
 text = "POLY GUARD"
 horizontal_alignment = 1
 
-[node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/Label" unique_id=2038286645]
+[node name="SubBarContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=2046030933]
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+theme_type_variation = &"SubTopBarPanel"
+
+[node name="SubBarMargin" type="MarginContainer" parent="MarginContainer/VBoxContainer/SubBarContainer" unique_id=2046030934]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 8
+
+[node name="SubBarHBox" type="HBoxContainer" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin" unique_id=2046030935]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="CreditsBadge" type="PanelContainer" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2046030936]
+layout_mode = 2
+size_flags_vertical = 4
+theme_type_variation = &"CostBadge"
+
+[node name="MainMenuCreditsLabel" type="Label" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox/CreditsBadge" unique_id=2046030937]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -180.0
-offset_top = -50.0
-offset_right = -80.0
-offset_bottom = 50.0
-grow_horizontal = 0
-grow_vertical = 2
-size_flags_horizontal = 8
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "0 CREDITS"
+
+[node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2046030938]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2038286645]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 2
+size_flags_vertical = 4
 texture_normal = ExtResource("3_klrpn")
-metadata/_edit_use_anchors_ = true
+ignore_texture_size = true
+stretch_mode = 5
 
 [node name="ViewContainer" type="MarginContainer" parent="MarginContainer/VBoxContainer" unique_id=1809813061]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_top = 30
+theme_override_constants/margin_top = 10
 
 [node name="Campaign" parent="MarginContainer/VBoxContainer/ViewContainer" unique_id=916197880 instance=ExtResource("3_yrdre")]
 unique_name_in_owner = true
@@ -87,3 +114,6 @@ layout_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_vertical = 8
+
+[node name="SettingsPopup" parent="." unique_id=2046030939 instance=ExtResource("6_settings_popup")]
+unique_name_in_owner = true

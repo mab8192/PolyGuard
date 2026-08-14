@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://m32i65vf0cy6" path="res://src/scenes/ui/views/inventory.gd" id="1_7a65l"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://c6xupgradepopup01" path="res://src/scenes/ui/popups/tower_upgrade_popup.tscn" id="4_upgrade_popup"]
 
 [node name="Inventory" type="MarginContainer" unique_id=1988686629]
 anchors_preset = 15
@@ -26,7 +27,7 @@ theme_override_constants/separation = 14
 [node name="TitleLabel" type="Label" parent="RootVBox" unique_id=448504113]
 layout_mode = 2
 theme_type_variation = &"SubHeaderText"
-text = "TOWER INVENTORY"
+text = "TOWER ARSENAL"
 horizontal_alignment = 1
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
@@ -35,7 +36,7 @@ theme_type_variation = &"DetailPanel"
 
 [node name="DetailVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel" unique_id=637681902]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="DetailTopHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681903]
 layout_mode = 2
@@ -76,6 +77,17 @@ text = "250g"
 
 [node name="BadgeRowHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681910]
 layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="LevelBadgeContainer" type="PanelContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681913]
+layout_mode = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="DetailLevelBadge" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox/LevelBadgeContainer" unique_id=637681920]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "LEVEL 1"
 
 [node name="TypeBadgeContainer" type="PanelContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681911]
 layout_mode = 2
@@ -102,8 +114,16 @@ autowrap_mode = 2
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"StatText"
-text = "⚔ Damage: 50 | ⏱ Rate: Every 0.5s"
+text = "Damage: 50 | Rate: Every 0.5s"
 autowrap_mode = 2
+
+[node name="UpgradeButton" type="Button" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681921]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "UPGRADE & SPECIALIZE"
 
 [node name="ScrollContainer" type="ScrollContainer" parent="RootVBox" unique_id=637681917]
 layout_mode = 2
@@ -124,3 +144,6 @@ size_flags_vertical = 0
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 columns = 4
+
+[node name="TowerUpgradePopup" parent="." unique_id=637681922 instance=ExtResource("4_upgrade_popup")]
+unique_name_in_owner = true

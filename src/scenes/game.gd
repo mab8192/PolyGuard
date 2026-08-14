@@ -14,6 +14,17 @@ func _ready() -> void:
 			stage_to_load = Registry.STAGES[stage_ids[0]]
 			GameManager.selected_stage = stage_to_load
 	
+	if GameManager.selected_loadout.is_empty():
+		var all_towers = Registry.get_all_towers()
+		for t in all_towers:
+			var t_id = Registry.get_tower_id(t)
+			if SaveManager.is_tower_unlocked(t_id):
+				var lvl = SaveManager.get_tower_level(t_id)
+				var choice = SaveManager.get_tower_choice(t_id)
+				GameManager.selected_loadout.append(t.get_scaled_copy(lvl, choice))
+				if GameManager.selected_loadout.size() >= 4:
+					break
+
 	if stage_to_load:
 		stage_root.load_stage(stage_to_load)
 		_update_camera()

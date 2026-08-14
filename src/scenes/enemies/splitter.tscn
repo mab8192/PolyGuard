@@ -37,7 +37,6 @@ polygon = PackedVector2Array(-9.142857, -9.142857, 9.142857, -9.142857, 9.142857
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
 simplify_path = true
-debug_enabled = true
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1784206974]
 scale = Vector2(0.5, 0.5)

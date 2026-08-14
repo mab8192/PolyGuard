@@ -7,12 +7,12 @@ var stage_data: StageData
 @onready var preview_texture: TextureRect = %PreviewTexture
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: Label = %StatsLabel
+@onready var record_label: Label = %RecordLabel
+@onready var status_badge_container: PanelContainer = %StatusBadgeContainer
+@onready var status_badge_label: Label = %StatusBadgeLabel
 @onready var start_button: Button = %StartButton
 
 func _ready() -> void:
-	mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
-	gui_input.connect(_on_gui_input)
-	
 	if stage_data:
 		_render()
 	
@@ -27,6 +27,10 @@ func setup(p_stage: StageData) -> void:
 func _render() -> void:
 	if not stage_data:
 		return
+	
+	var stage_id = Registry.get_stage_id(stage_data)
+	var is_unlocked = SaveManager.is_stage_unlocked(stage_id)
+	var record = SaveManager.get_stage_record(stage_id)
 	
 	if preview_texture and stage_data.icon:
 		preview_texture.texture = stage_data.icon
@@ -49,10 +53,33 @@ func _render() -> void:
 		
 		stats_label.text = " • ".join(stat_parts)
 
-func _on_gui_input(event: InputEvent) -> void:
-	if event is InputEventMouseButton and event.pressed and event.button_index == MOUSE_BUTTON_LEFT:
-		_on_card_pressed()
+	if is_unlocked:
+		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
+		start_button.disabled = false
+		start_button.theme_type_variation = &"PrimaryButton"
+		
+		if record.get("completed", false):
+			var stars: int = record.get("stars", 1)
+			status_badge_container.theme_type_variation = &"StatusBadge"
+			status_badge_label.text = "%d STARS" % stars
+			record_label.text = "Best Score: %d" % record.get("high_score", 0)
+			start_button.text = "REPLAY"
+		else:
+			status_badge_container.theme_type_variation = &"TypeBadge"
+			status_badge_label.text = "AVAILABLE"
+			record_label.text = "First Clear: 400 Credits"
+			start_button.text = "START"
+	else:
+		self_modulate = Color(0.7, 0.7, 0.7, 0.5)
+		status_badge_container.theme_type_variation = &"LockedBadge"
+		status_badge_label.text = "LOCKED"
+		record_label.text = "Clear previous stage to unlock"
+		start_button.disabled = true
+		start_button.text = "LOCKED"
+		start_button.theme_type_variation = &"SecondaryButton"
 
 func _on_card_pressed() -> void:
 	if stage_data:
-		stage_selected.emit(stage_data)
+		var stage_id = Registry.get_stage_id(stage_data)
+		if SaveManager.is_stage_unlocked(stage_id):
+			stage_selected.emit(stage_data)

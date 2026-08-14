@@ -44,6 +44,16 @@ func get_all_stages() -> Array[StageData]:
 		result.append(STAGES[key])
 	return result
 
+func get_stage_id(stage: StageData) -> String:
+	if not stage:
+		return ""
+	if not stage.stage_id.is_empty():
+		return stage.stage_id
+	for key in STAGES:
+		if STAGES[key] == stage:
+			return key
+	return ""
+
 # Map of tower IDs to data-driven TowerData resources
 const TOWERS: Dictionary[String, TowerData] = {
 	"archer_tower": preload("res://src/data/towers/archer_tower.tres"),
@@ -63,3 +73,13 @@ func get_all_towers() -> Array[TowerData]:
 	for key in TOWERS:
 		result.append(TOWERS[key])
 	return result
+
+func get_tower_id(tower: TowerData) -> String:
+	if not tower:
+		return ""
+	if not tower.tower_id.is_empty():
+		return tower.tower_id
+	for key in TOWERS:
+		if TOWERS[key] == tower:
+			return key
+	return ""

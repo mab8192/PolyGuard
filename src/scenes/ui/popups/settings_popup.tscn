@@ -1,0 +1,130 @@
+[gd_scene format=3 uid="uid://wry12f5iawia"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/settings_popup.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+
+[node name="SettingsPopup" type="CanvasLayer" unique_id=2190001]
+layer = 25
+script = ExtResource("1_script")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2190002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2190003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2190004]
+custom_minimum_size = Vector2(820, 950)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2190005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2190006]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190007]
+layout_mode = 2
+theme_type_variation = &"HeaderText"
+text = "SETTINGS"
+horizontal_alignment = 1
+
+[node name="AudioSettings" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190008]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="AudioSectionTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings" unique_id=2190020]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "AUDIO VOLUME"
+
+[node name="MasterBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings" unique_id=2190021]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MasterBox" unique_id=2190022]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Master Volume"
+
+[node name="MasterSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MasterBox" unique_id=2190023]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 1.0
+
+[node name="MusicBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings" unique_id=2190009]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MusicBox" unique_id=2190010]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Music Volume"
+
+[node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MusicBox" unique_id=2190011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="SFXBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings" unique_id=2190012]
+layout_mode = 2
+
+[node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2190013]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "SFX Volume"
+
+[node name="SFXSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2190014]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 48)
+layout_mode = 2
+max_value = 1.0
+step = 0.05
+value = 0.8
+
+[node name="ProfileSection" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190024]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="ProfileSectionTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ProfileSection" unique_id=2190025]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "DATA MANAGEMENT"
+
+[node name="ResetButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ProfileSection" unique_id=2190026]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DangerButton"
+text = "RESET SAVE DATA"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190027]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "CLOSE"

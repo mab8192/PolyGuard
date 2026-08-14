@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://b12k34m5n6p7q"]
 
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectiles/projectile.tscn" id="1_soe44"]
 [ext_resource type="PackedScene" uid="uid://dg12a81rft006" path="res://src/scenes/towers/archer_tower.tscn" id="2_scene"]
@@ -10,9 +11,27 @@
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("5_attack")
-damage = 60.0
+damage = 30.0
 projectile_scene = ExtResource("1_soe44")
 projectile_speed = 800.0
+
+[sub_resource type="Resource" id="Resource_choice_arcane"]
+script = ExtResource("1_choice")
+id = "arcane_infusion"
+title = "Arcane Infusion"
+description = "Converts arrows to Magic Damage with +20% bonus power."
+has_damage_type_override = true
+damage_type_override = 1
+damage_multiplier = 1.2
+
+[sub_resource type="Resource" id="Resource_choice_true"]
+script = ExtResource("1_choice")
+id = "true_piercer"
+title = "True Piercer"
+description = "Converts arrows to True Damage (bypasses all armor and resistance) with +10% attack speed."
+has_damage_type_override = true
+damage_type_override = 2
+cooldown_multiplier = 0.9
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("4_health")
@@ -23,10 +42,12 @@ script = ExtResource("6_targeting")
 
 [resource]
 script = ExtResource("1_script")
+tower_id = "archer_tower"
 display_name = "Archer Tower"
 icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Ranged single-target arrow tower. Solid structure that blocks enemy movement."
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
 health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")
 targeting = SubResource("Resource_1mbg1")

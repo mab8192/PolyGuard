@@ -1,5 +1,6 @@
 [gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://cx1klremi131m"]
 
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="PackedScene" uid="uid://bl4xxumk5fn6u" path="res://src/scenes/towers/projectiles/bomb.tscn" id="1_ju8xy"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_mg0rn"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_dk2il"]
@@ -16,6 +17,25 @@ projectile_scene = ExtResource("1_ju8xy")
 projectile_speed = 200.0
 projectile_follow_target = false
 
+[sub_resource type="Resource" id="Resource_choice_pyro"]
+script = ExtResource("1_choice")
+id = "incendiary_shells"
+title = "Incendiary Shells"
+description = "Converts bomb blast to Magic Damage dealing +30% explosive damage."
+has_damage_type_override = true
+damage_type_override = 1
+damage_multiplier = 1.3
+
+[sub_resource type="Resource" id="Resource_choice_true_bomb"]
+script = ExtResource("1_choice")
+id = "heavy_concussion"
+title = "Heavy Concussion"
+description = "Shockwave shells inflicting True Damage directly ignoring armored plating."
+has_damage_type_override = true
+damage_type_override = 2
+damage_multiplier = 0.85
+cooldown_multiplier = 0.9
+
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("3_dk2il")
 max_health = 600.0
@@ -27,10 +47,13 @@ targeting_mask = 5
 
 [resource]
 script = ExtResource("6_v285l")
+tower_id = "bomb_tower"
 display_name = "Bomb Tower"
 icon = ExtResource("4_ju8xy")
 scene = ExtResource("5_ju8xy")
 description = "Shoots bombs that can damage groups of enemies"
+unlock_cost = 700
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_pyro"), SubResource("Resource_choice_true_bomb")])
 cost = 450
 health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")

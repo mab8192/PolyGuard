@@ -25,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2170004]
-custom_minimum_size = Vector2(800, 700)
+custom_minimum_size = Vector2(860, 900)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -38,13 +38,20 @@ theme_override_constants/margin_bottom = 36
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2170006]
 layout_mode = 2
-theme_override_constants/separation = 28
+theme_override_constants/separation = 22
 alignment = 1
 
 [node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170007]
 layout_mode = 2
 theme_type_variation = &"HeaderText"
-text = "STAGE CLEAR!"
+text = "STAGE CLEAR"
+horizontal_alignment = 1
+
+[node name="StarRatingLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170014]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "3 STARS"
 horizontal_alignment = 1
 
 [node name="StatsLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170008]
@@ -52,7 +59,38 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TitleText"
 text = "Remaining Lives: 20
-Final Gold: 450"
+Final Gold: 450
+Final Score: 14500"
+horizontal_alignment = 1
+
+[node name="RewardPanel" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170015]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="RewardVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel" unique_id=2170016]
+layout_mode = 2
+theme_override_constants/separation = 6
+
+[node name="RewardTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel/RewardVBox" unique_id=2170017]
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "RESEARCH REWARDS"
+horizontal_alignment = 1
+
+[node name="RewardBreakdownLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel/RewardVBox" unique_id=2170018]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Stage Clear: +400 Credits
+Star Bonus: +150 Credits
+Total Earned: +550 Credits"
+horizontal_alignment = 1
+
+[node name="NextUnlockLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel/RewardVBox" unique_id=2170019]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "New Stage Unlocked: Stage 2"
 horizontal_alignment = 1
 
 [node name="ButtonsVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170009]

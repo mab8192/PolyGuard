@@ -72,14 +72,17 @@ func _update_ui() -> void:
 			content_box.show()
 			empty_indicator.hide()
 			remove_button.show()
-			status_badge.hide()
+			status_badge.show()
 			bg_panel.self_modulate = Color(1, 1, 1, 1.0)
 			
 			if tower_data:
+				var t_id = Registry.get_tower_id(tower_data)
+				var lvl = SaveManager.get_tower_level(t_id)
 				icon_rect.texture = tower_data.icon
 				name_label.text = tower_data.display_name
 				cost_label.text = "%dg" % tower_data.cost
 				cost_badge.show()
+				status_label.text = "LV %d" % lvl
 	else:
 		# Mode.AVAILABLE_TOWER
 		empty_indicator.hide()
@@ -87,20 +90,33 @@ func _update_ui() -> void:
 		remove_button.hide()
 		
 		if tower_data:
+			var t_id = Registry.get_tower_id(tower_data)
+			var is_unlocked = SaveManager.is_tower_unlocked(t_id)
+			var lvl = SaveManager.get_tower_level(t_id)
+			
 			icon_rect.texture = tower_data.icon
 			name_label.text = tower_data.display_name
 			cost_label.text = "%dg" % tower_data.cost
 			cost_badge.show()
-		
-		if is_equipped:
-			status_badge.show()
-			status_label.text = "EQUIPPED"
-			bg_panel.self_modulate = Color(0.45, 0.6, 0.7, 0.8)
-			icon_rect.modulate = Color(0.7, 0.7, 0.7, 0.8)
-		else:
-			status_badge.hide()
-			bg_panel.self_modulate = Color(1, 1, 1, 1.0)
-			icon_rect.modulate = Color.WHITE
+			
+			if not is_unlocked:
+				status_badge.show()
+				status_badge.theme_type_variation = &"LockedBadge"
+				status_label.text = "LOCKED"
+				bg_panel.self_modulate = Color(0.5, 0.5, 0.5, 0.6)
+				icon_rect.modulate = Color(0.6, 0.6, 0.6, 0.7)
+			elif is_equipped:
+				status_badge.show()
+				status_badge.theme_type_variation = &"StatusBadge"
+				status_label.text = "EQUIPPED (LV %d)" % lvl
+				bg_panel.self_modulate = Color(0.45, 0.6, 0.7, 0.8)
+				icon_rect.modulate = Color(0.7, 0.7, 0.7, 0.8)
+			else:
+				status_badge.show()
+				status_badge.theme_type_variation = &"StatusBadge"
+				status_label.text = "LV %d" % lvl
+				bg_panel.self_modulate = Color(1, 1, 1, 1.0)
+				icon_rect.modulate = Color.WHITE
 
 func _on_click_pressed() -> void:
 	card_clicked.emit(self)

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c6u7la2m8px1q"]
 
-[ext_resource type="Script" uid="uid://bnq4xvy6l38ka" path="res://src/scenes/ui/elements/stage_card.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dwnrh2nt7dqy6" path="res://src/scenes/ui/elements/stage_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
@@ -11,12 +11,14 @@ anchor_right = 1.0
 offset_bottom = 180.0
 grow_horizontal = 2
 size_flags_horizontal = 3
+mouse_filter = 1
 theme = ExtResource("2_theme")
 theme_type_variation = &"DetailPanel"
 script = ExtResource("1_script")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=741002]
 layout_mode = 2
+mouse_filter = 1
 theme_override_constants/separation = 24
 
 [node name="ImageFrame" type="PanelContainer" parent="HBoxContainer" unique_id=741003]
@@ -41,24 +43,47 @@ layout_mode = 2
 size_flags_horizontal = 3
 size_flags_vertical = 4
 mouse_filter = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
-[node name="TitleLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741006]
+[node name="TitleRowHBox" type="HBoxContainer" parent="HBoxContainer/InfoVBox" unique_id=741010]
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741006]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"TitleText"
-theme_override_font_sizes/font_size = 32
 text = "Stage 1"
+
+[node name="StatusBadgeContainer" type="PanelContainer" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741011]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="StatusBadgeLabel" type="Label" parent="HBoxContainer/InfoVBox/TitleRowHBox/StatusBadgeContainer" unique_id=741012]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"BadgeText"
+text = "UNLOCKED"
 
 [node name="StatsLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741007]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"BodyText"
-theme_override_font_sizes/font_size = 22
 text = "Gold: 700 • Lives: 20 • Waves: 15 • Slots: 4"
 autowrap_mode = 2
+
+[node name="RecordLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741013]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"StatText"
+text = "High Score: 0"
 
 [node name="ActionCenter" type="CenterContainer" parent="HBoxContainer" unique_id=741008]
 layout_mode = 2
@@ -70,6 +95,6 @@ mouse_filter = 2
 unique_name_in_owner = true
 custom_minimum_size = Vector2(170, 68)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"PrimaryButton"
-theme_override_font_sizes/font_size = 28
 text = "START"

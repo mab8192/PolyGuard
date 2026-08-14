@@ -5,6 +5,8 @@ const STAGE_CARD_SCENE: PackedScene = preload("res://src/scenes/ui/elements/stag
 @onready var stage_list_container: VBoxContainer = %StageListContainer
 
 func _ready() -> void:
+	SignalBus.stage_unlocked.connect(func(_s): _populate_stages())
+	visibility_changed.connect(func(): if is_visible_in_tree(): _populate_stages())
 	_populate_stages()
 
 func _populate_stages() -> void:
@@ -20,5 +22,7 @@ func _populate_stages() -> void:
 
 func _on_stage_selected(stage: StageData) -> void:
 	if stage:
-		GameManager.selected_stage = stage
-		GameManager.load_view(GameManager.View.LOADOUT)
+		var stage_id = Registry.get_stage_id(stage)
+		if SaveManager.is_stage_unlocked(stage_id):
+			GameManager.selected_stage = stage
+			GameManager.load_view(GameManager.View.LOADOUT)
