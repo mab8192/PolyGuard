@@ -14,6 +14,11 @@ func _init(effect_data: EffectData):
 
 func count_time() -> void:
 	_counting_time = true
+	_elapsed_time_counted = 0.0
+
+func stop_counting_time() -> void:
+	_counting_time = false
+	_elapsed_time_counted = 0.0
 
 func apply(target: Node2D) -> void:
 	_target = target
@@ -23,7 +28,8 @@ func tick(delta: float) -> void:
 		_elapsed_time_counted += delta
 	_elapsed_time_total += delta
 	
-	if data.duration != INF and _elapsed_time_counted >= data.duration:
+	if data and data.duration != INF and _elapsed_time_counted >= data.duration:
+		_counting_time = false
 		expired.emit()
 
 func remove() -> void:

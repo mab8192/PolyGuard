@@ -9,10 +9,11 @@
 
 [sub_resource type="Resource" id="Resource_xi70r"]
 script = ExtResource("2_onxbk")
-damage_per_second = 30.0
+damage_per_second = 50.0
 damage_type = 0
 name = "Brimstone Fire"
 duration = 5.0
+remove_on_exit = false
 metadata/_custom_type_script = "uid://dsor16spgwgow"
 
 [sub_resource type="Resource" id="Resource_x5pvt"]

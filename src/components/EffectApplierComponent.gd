@@ -155,17 +155,23 @@ func _apply_effects_to_enemy(enemy: Enemy) -> void:
 			var ac = effect_data.create_instance()
 			if ac:
 				enemy.apply_effect(ac)
+				ac.count_time()
 				applied_effect.emit(enemy)
 
 func _apply_continuous_effect(enemy: Enemy) -> void:
 	if enemy not in _applied_effects:
 		_applied_effects[enemy] = []
 		for effect in data.effects:
-			var ac = effect.create_instance()
-			if ac and not enemy.has_effect(effect.name):
-				enemy.apply_effect(ac)
-				_applied_effects[enemy].append(ac)
-				applied_effect.emit(enemy)
+			var existing_effect = enemy.get_effect(effect.name)
+			if existing_effect:
+				existing_effect.stop_counting_time()
+				_applied_effects[enemy].append(existing_effect)
+			else:
+				var ac = effect.create_instance()
+				if ac:
+					enemy.apply_effect(ac)
+					_applied_effects[enemy].append(ac)
+					applied_effect.emit(enemy)
 
 func _remove_continuous_effect(body: Node2D) -> void:
 	for enemy in _applied_effects.keys().duplicate():
@@ -174,8 +180,11 @@ func _remove_continuous_effect(body: Node2D) -> void:
 
 	if is_instance_valid(body) and body is Enemy and body in _applied_effects:
 		for effect in _applied_effects[body]:
-			body.remove_effect(effect)
-			removed_effect.emit(body)
+			if effect.data and effect.data.remove_on_exit:
+				body.remove_effect(effect)
+				removed_effect.emit(body)
+			else:
+				effect.count_time()
 			
 		_applied_effects.erase(body)
 

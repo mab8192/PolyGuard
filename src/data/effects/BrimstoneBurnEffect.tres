@@ -1,7 +1,12 @@
-[gd_resource type="Resource" script_class="PoisonEffectData" format=3 uid="uid://q64vqcamr8f4"]
+[gd_resource type="Resource" script_class="BurnEffectData" format=3 uid="uid://q64vqcamr8f4"]
 
 [ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="1_5fefu"]
 
 [resource]
 script = ExtResource("1_5fefu")
+damage_per_second = 50.0
+damage_type = 0
+name = "Brimstone Fire"
+duration = 5.0
+remove_on_exit = false
 metadata/_custom_type_script = "uid://dsor16spgwgow"

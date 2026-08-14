@@ -52,13 +52,27 @@ var _active_effects: Array[ActiveEffect] = []
 func apply_effect(effect: ActiveEffect) -> void:
 	_active_effects.append(effect)
 	effect.apply(self)
+	if not effect.expired.is_connected(_on_effect_expired.bind(effect)):
+		effect.expired.connect(_on_effect_expired.bind(effect))
 
 func has_effect(effect_name: String) -> bool:
 	return _active_effects.any(func(x: ActiveEffect): return x.data.name == effect_name)
 
+func get_effect(effect_name: String) -> ActiveEffect:
+	for effect in _active_effects:
+		if effect.data and effect.data.name == effect_name:
+			return effect
+	return null
+
 func remove_effect(effect: ActiveEffect) -> void:
-	_active_effects.erase(effect)
-	effect.remove()
+	if effect in _active_effects:
+		_active_effects.erase(effect)
+		if effect.expired.is_connected(_on_effect_expired.bind(effect)):
+			effect.expired.disconnect(_on_effect_expired.bind(effect))
+		effect.remove()
+
+func _on_effect_expired(effect: ActiveEffect) -> void:
+	remove_effect(effect)
 
 func _ready() -> void:
 	if health:
@@ -82,7 +96,7 @@ func _ready() -> void:
 		nav.set_exits(targets)
 	
 func _process(delta: float) -> void:
-	for effect in _active_effects:
+	for effect in _active_effects.duplicate():
 		effect.tick(delta)
 	
 func _physics_process(_delta: float) -> void:
