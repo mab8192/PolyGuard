@@ -1,6 +1,6 @@
 [gd_resource type="Resource" script_class="StageData" format=3 uid="uid://bpa4s6sbkj30y"]
 
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="1_fbu61"]
+[ext_resource type="Texture2D" uid="uid://ce7rkmtuoq1en" path="res://src/textures/stages/Stage2.png" id="1_fbu61"]
 [ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://pgegpgxk5wec" path="res://src/scenes/stages/Stage2.tscn" id="2_scene"]
 
@@ -9,5 +9,6 @@ script = ExtResource("1_script")
 stage_id = "stage_02"
 stage_name = "Stage 2"
 scene = ExtResource("2_scene")
+icon = ExtResource("1_fbu61")
 starting_gold = 800
 wave_data_file = "res://src/data/stages/waves/Stage2.json"

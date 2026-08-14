@@ -100,6 +100,18 @@ theme_override_font_sizes/font_size = 20
 text = "250g"
 horizontal_alignment = 1
 
+[node name="SelectionRing" type="Panel" parent="." unique_id=14614]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"CardSelectedPanel"
+
 [node name="StatusBadge" type="PanelContainer" parent="." unique_id=14612]
 unique_name_in_owner = true
 visible = false
@@ -127,18 +139,6 @@ theme_type_variation = &"BadgeText"
 theme_override_font_sizes/font_size = 16
 text = "EQUIPPED"
 horizontal_alignment = 1
-
-[node name="SelectionRing" type="Panel" parent="." unique_id=14614]
-unique_name_in_owner = true
-visible = false
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-theme_type_variation = &"CardSelectedPanel"
 
 [node name="ClickButton" type="Button" parent="." unique_id=14615]
 unique_name_in_owner = true

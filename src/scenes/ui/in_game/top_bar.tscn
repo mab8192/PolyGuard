@@ -42,7 +42,7 @@ expand_mode = 2
 [node name="LivesLabel" type="Label" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=37523814]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"TitleText"
+theme_type_variation = &"HudStatText"
 text = "20"
 
 [node name="GoldContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=333753207]
@@ -56,14 +56,14 @@ expand_mode = 2
 [node name="GoldLabel" type="Label" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=178869082]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"CostText"
+theme_type_variation = &"HudGoldText"
 text = "150"
 
 [node name="WaveLabel" type="Label" parent="MarginContainer/HBoxContainer" unique_id=528913810]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-theme_type_variation = &"TitleText"
+theme_type_variation = &"HudStatText"
 text = "1 / 10"
 horizontal_alignment = 1
 vertical_alignment = 1

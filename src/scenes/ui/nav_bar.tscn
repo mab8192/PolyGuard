@@ -50,7 +50,7 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_type_variation = &"BodyText"
+theme_type_variation = &"NavText"
 text = "Inventory"
 horizontal_alignment = 1
 
@@ -70,7 +70,7 @@ stretch_mode = 3
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_type_variation = &"BodyText"
+theme_type_variation = &"NavText"
 text = "Campaign"
 horizontal_alignment = 1
 
@@ -91,6 +91,6 @@ unique_name_in_owner = true
 visible = false
 custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
-theme_type_variation = &"BodyText"
+theme_type_variation = &"NavText"
 text = "Codex"
 horizontal_alignment = 1

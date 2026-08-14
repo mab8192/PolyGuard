@@ -155,23 +155,23 @@ func _update_details_panel() -> void:
 		var dmg_str = "%.0f" % selected_tower.attack.damage
 		var cd_str = "%.2fs" % selected_tower.attack.cooldown
 		var dps = selected_tower.attack.damage / maxf(selected_tower.attack.cooldown, 0.05)
-		stat_lines.append("⚔ Damage: %s (%s DPS)" % [dmg_str, "%.1f" % dps])
-		stat_lines.append("⏱ Rate: Every %s" % cd_str)
+		stat_lines.append("Damage: %s (%s DPS)" % [dmg_str, "%.1f" % dps])
+		stat_lines.append("Rate: Every %s" % cd_str)
 	
 	if selected_tower.targeting:
 		var strat_name = _get_strategy_name(selected_tower.targeting.strategy)
-		stat_lines.append("🎯 Target: %s (Max: %d)" % [strat_name, selected_tower.targeting.max_targets])
+		stat_lines.append("Target: %s (Max: %d)" % [strat_name, selected_tower.targeting.max_targets])
 		
 	if selected_tower.health:
-		stat_lines.append("🛡 Max HP: %.0f" % selected_tower.health.max_health)
+		stat_lines.append("Max HP: %.0f" % selected_tower.health.max_health)
 		
 	if selected_tower.effect_applier and not selected_tower.effect_applier.effects.is_empty():
-		stat_lines.append("✨ Special Effects Applied")
+		stat_lines.append("Applies Effects")
 		
 	if stat_lines.is_empty():
-		stat_lines.append("🛡 Defensive Obstacle (Blocks enemy movement)")
+		stat_lines.append("Defensive Obstacle (Blocks enemy movement)")
 		
-	detail_stats.text = "\n".join(stat_lines)
+	detail_stats.text = " | ".join(stat_lines)
 	
 	# Configure Action Button
 	var is_in_loadout = equipped_towers.has(selected_tower)
@@ -189,15 +189,13 @@ func _update_details_panel() -> void:
 			detail_action_button.disabled = false
 			detail_action_button.theme_type_variation = &"PrimaryButton"
 
-func _get_strategy_name(strategy: int) -> String:
+func _get_strategy_name(strategy: TargetingComponent.Strategy) -> String:
 	match strategy:
-		0: return "First"
-		1: return "Closest"
-		2: return "Strongest"
-		3: return "Weakest"
-		4: return "Last"
-		5: return "Random"
-		_: return "Standard"
+		TargetingComponent.Strategy.FIRST: return "First"
+		TargetingComponent.Strategy.LAST: return "Last"
+		TargetingComponent.Strategy.CLOSEST: return "Strongest"
+		TargetingComponent.Strategy.STRONGEST: return "Strongest"
+		_: return "Error"
 
 func _on_slot_card_clicked(card: LoadoutCard) -> void:
 	if card.tower_data:

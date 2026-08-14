@@ -1,38 +1,104 @@
 [gd_scene format=3 uid="uid://dugvyo11tdwdg"]
 
-[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="1_kwbdq"]
-[ext_resource type="Script" uid="uid://d1jc06mf5xu8s" path="res://src/scenes/ui/elements/card.gd" id="1_m2d4e"]
+[ext_resource type="Script" uid="uid://d1jc06mf5xu8s" path="res://src/scenes/ui/elements/card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
-[node name="Card" type="MarginContainer" unique_id=1465083894]
+[node name="Card" type="Control" unique_id=1465083894]
+custom_minimum_size = Vector2(230, 210)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 230.0
+offset_bottom = 210.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="BGPanel" type="Panel" parent="." unique_id=1465083895]
+unique_name_in_owner = true
+layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-size_flags_horizontal = 3
-theme_override_constants/margin_left = 8
-theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 8
-theme_override_constants/margin_bottom = 8
-script = ExtResource("1_m2d4e")
+mouse_filter = 2
+theme_type_variation = &"CardPanel"
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1765607811]
+[node name="ContentBox" type="VBoxContainer" parent="." unique_id=1765607811]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="IconContainer" type="CenterContainer" parent="ContentBox" unique_id=1465083896]
 layout_mode = 2
+mouse_filter = 2
 
-[node name="TextureRect" type="TextureRect" parent="VBoxContainer" unique_id=185023805]
+[node name="TextureRect" type="TextureRect" parent="ContentBox/IconContainer" unique_id=185023805]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 130)
 layout_mode = 2
-texture = ExtResource("1_kwbdq")
-stretch_mode = 3
+mouse_filter = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=1020956434]
+[node name="Label" type="Label" parent="ContentBox" unique_id=1020956434]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"BodyText"
-text = "Label"
+theme_override_font_sizes/font_size = 20
+text = "Card Name"
 horizontal_alignment = 1
+autowrap_mode = 2
+clip_text = true
 
-[node name="Button" type="Button" parent="." unique_id=440661223]
+[node name="BadgeContainer" type="CenterContainer" parent="ContentBox" unique_id=1465083897]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+
+[node name="BadgePanel" type="PanelContainer" parent="ContentBox/BadgeContainer" unique_id=1465083898]
 unique_name_in_owner = true
 layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"CostBadge"
+
+[node name="BadgeLabel" type="Label" parent="ContentBox/BadgeContainer/BadgePanel" unique_id=1465083899]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+theme_override_font_sizes/font_size = 20
+text = "250g"
+horizontal_alignment = 1
+
+[node name="SelectionRing" type="Panel" parent="." unique_id=1465083900]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"CardSelectedPanel"
+
+[node name="ClickButton" type="Button" parent="." unique_id=440661223]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
 theme_type_variation = &"FlatButton"

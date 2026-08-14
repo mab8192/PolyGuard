@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://bwcihaqa42en3" path="res://src/scenes/ui/views/codex.gd" id="1_ggl2t"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
 [node name="CodexView" type="MarginContainer" unique_id=157242470]
 anchors_preset = 15
@@ -9,31 +10,117 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
 theme = ExtResource("2_theme")
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 16
 script = ExtResource("1_ggl2t")
 
-[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1538273156]
+[node name="RootVBox" type="VBoxContainer" parent="." unique_id=1538273156]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="TitleLabel" type="Label" parent="RootVBox" unique_id=448504113]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "ENEMY CODEX"
+horizontal_alignment = 1
+
+[node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681921]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="DetailVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel" unique_id=637681922]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailTopHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681923]
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="Label" type="Label" parent="VBoxContainer" unique_id=448504113]
+[node name="IconCenter" type="CenterContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681924]
 layout_mode = 2
-theme_type_variation = &"SubHeaderText"
-text = "CODEX"
-horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="VBoxContainer" unique_id=274716796]
+[node name="DetailIcon" type="TextureRect" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681925]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
-size_flags_vertical = 3
-theme_override_constants/margin_left = 24
-theme_override_constants/margin_top = 24
-theme_override_constants/margin_right = 24
-theme_override_constants/margin_bottom = 24
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
 
-[node name="GridContainer" type="GridContainer" parent="VBoxContainer/MarginContainer" unique_id=334649760]
+[node name="HeaderInfoVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681926]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="TitleCostHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681927]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailTitle" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681928]
 unique_name_in_owner = true
 layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "Grunt"
+
+[node name="DetailReward" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681929]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "+5g"
+
+[node name="BadgeRowHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681930]
+layout_mode = 2
+
+[node name="TypeBadgeContainer" type="PanelContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681931]
+layout_mode = 2
+theme_type_variation = &"TypeBadge"
+
+[node name="DetailTypeBadge" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox/TypeBadgeContainer" unique_id=637681932]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "PHYSICAL UNIT"
+
+[node name="DetailBottomVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681934]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681935]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Standard polygon foot soldier."
+autowrap_mode = 2
+
+[node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "❤ HP: 100 | 🏃 Speed: 150 | 💔 Lives Penalty: 1"
+autowrap_mode = 2
+
+[node name="ScrollContainer" type="ScrollContainer" parent="RootVBox" unique_id=637681937]
+layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/h_separation = 24
-theme_override_constants/v_separation = 32
-columns = 3
+horizontal_scroll_mode = 0
+
+[node name="HBoxContainer" type="HBoxContainer" parent="RootVBox/ScrollContainer" unique_id=637681938]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 0
+alignment = 1
+
+[node name="GridContainer" type="GridContainer" parent="RootVBox/ScrollContainer/HBoxContainer" unique_id=334649760]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 4

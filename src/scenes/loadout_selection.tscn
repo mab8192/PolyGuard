@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://dv8lgrb4gtiic"]
 
-[ext_resource type="Script" uid="uid://c6u7xpv0x524g" path="res://src/scenes/loadout_selection.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://c63paxc6gnyjt" path="res://src/scenes/loadout_selection.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
@@ -208,14 +208,17 @@ layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
 
-[node name="AvailableCenter" type="CenterContainer" parent="MainMargin/RootVBox/AvailableScroll" unique_id=637681879]
+[node name="AvailableHBox" type="HBoxContainer" parent="MainMargin/RootVBox/AvailableScroll" unique_id=637681879]
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_vertical = 0
+alignment = 1
 
-[node name="AvailableGrid" type="GridContainer" parent="MainMargin/RootVBox/AvailableScroll/AvailableCenter" unique_id=637681880]
+[node name="AvailableGrid" type="GridContainer" parent="MainMargin/RootVBox/AvailableScroll/AvailableHBox" unique_id=637681880]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 0
 theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 columns = 4

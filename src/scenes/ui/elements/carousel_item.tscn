@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cvvukkii8pqd6" path="res://src/scenes/ui/elements/carousel_item.gd" id="1_aokbl"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="1_kcwpw"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="3_theme"]
 
 [node name="CarouselItem" type="Control" unique_id=768978057]
 layout_mode = 3
@@ -14,6 +15,7 @@ grow_horizontal = 2
 grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
+theme = ExtResource("3_theme")
 script = ExtResource("1_aokbl")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1033551840]
@@ -36,5 +38,5 @@ stretch_mode = 5
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 4
-theme_type_variation = &"BodyText"
-text = "LABEL"
+theme_type_variation = &"HeaderText"
+text = "STAGE 1"
