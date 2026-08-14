@@ -3,6 +3,8 @@ extends Node
 signal tower_placed()
 signal tower_destroyed()
 signal navmesh_updated()
+signal exits_updated()
+signal spawners_updated()
 
 
 signal placement_mode_changed(is_active: bool)

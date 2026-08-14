@@ -1,7 +1,13 @@
 class_name Tower extends StaticBody2D
 
+signal state_changed(is_active: bool)
+
 ## Gets assigned by the TowerData type
 var data: TowerData
+
+## Visual modulations for active vs inactive/recharging states
+const ACTIVE_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
+const INACTIVE_MODULATE: Color = Color(0.48, 0.48, 0.54, 0.75)
 
 ## Components that CAN be attached. Most are not required
 
@@ -38,6 +44,13 @@ var is_solid: bool = true:
 		is_solid = value
 		_update_solid_state() 
 
+var is_active: bool = true:
+	set(value):
+		var changed = (is_active != value)
+		is_active = value
+		_update_active_state(changed and is_inside_tree())
+		state_changed.emit(value)
+
 var is_preview: bool = false:
 	set(value):
 		is_preview = value
@@ -48,6 +61,15 @@ var is_selected: bool = false:
 		is_selected = value
 		_update_selected_state()
 
+func activate() -> void:
+	is_active = true
+
+func deactivate() -> void:
+	is_active = false
+
+func set_active(val: bool) -> void:
+	is_active = val
+
 func _ready() -> void:
 	if not data:
 		push_error("Missing TowerData! %s" % get_path())
@@ -57,18 +79,22 @@ func _ready() -> void:
 
 	_update_solid_state()
 	_update_preview_state()
+	_update_active_state()
 
 	if health:
 		health.died.connect(_on_died)
+
+	if effect_applier:
+		effect_applier.cooldown_started.connect(_on_applier_cooldown_started)
+		effect_applier.cooldown_finished.connect(_on_applier_cooldown_finished)
 
 func _on_died() -> void:
 	queue_free()
 	SignalBus.tower_destroyed.emit()
 
 func _process(_delta: float) -> void:
-
-	# Preview towers do not process anything
-	if is_preview:
+	# Preview or inactive towers do not process attacks
+	if is_preview or not is_active:
 		return
 	
 	if targeting and attack:
@@ -90,14 +116,47 @@ func _update_preview_state() -> void:
 	_set_controls_mouse_filter(self, is_preview)
 	
 	# Semi-transparent ghost look when previewing
-	modulate.a = 0.5 if is_preview else 1.0
+	if is_preview:
+		modulate.a = 0.5
+	else:
+		_update_active_state(false)
 	
 	# Enable/disable components where applicable
 	if effect_applier:
-		if is_preview:
+		if is_preview or not is_active:
 			effect_applier.disable()
 		else:
 			effect_applier.enable()
+
+func _update_active_state(animate: bool = false) -> void:
+	if is_preview:
+		return
+	
+	_set_visual_dimmed(!is_active, animate)
+	
+	if effect_applier:
+		if is_active:
+			effect_applier.enable()
+		else:
+			effect_applier.disable()
+
+func _on_applier_cooldown_started() -> void:
+	if not is_preview and is_active:
+		_set_visual_dimmed(true, true)
+
+func _on_applier_cooldown_finished() -> void:
+	if not is_preview and is_active:
+		_set_visual_dimmed(false, true)
+
+func _set_visual_dimmed(dimmed: bool, animate: bool = false) -> void:
+	if is_preview or not is_inside_tree():
+		return
+	var target_col = INACTIVE_MODULATE if dimmed else ACTIVE_MODULATE
+	if animate:
+		var tween = create_tween()
+		tween.tween_property(self, "modulate", target_col, 0.3)
+	else:
+		modulate = target_col
 
 func _update_selected_state() -> void:
 	pass

@@ -2,6 +2,8 @@ class_name EffectApplierComponent extends Area2D
 
 signal triggered()
 signal deactivated()
+signal cooldown_started()
+signal cooldown_finished()
 signal applied_effect(node: Node2D)
 signal removed_effect(node: Node2D)
 
@@ -16,6 +18,7 @@ var _state: State = State.IDLE
 var _delay_timer: float = 0.0
 var _active_timer: float = 0.0
 var _cooldown_timer: float = 0.0
+var _application_count: int = 0
 var _enabled: bool = true
 
 ## Continuous mode: Node2D -> Array[ActiveEffect]
@@ -23,15 +26,17 @@ var _applied_effects: Dictionary = {}
 
 func enable() -> void:
 	_enabled = true
-	if data and data.mode == EffectApplierData.Mode.CONTINUOUS:
-		for body in get_overlapping_bodies():
-			_on_body_entered(body)
-	else:
-		if _state == State.IDLE and _has_valid_overlapping_enemies():
-			_start_trigger_sequence()
+	if _state != State.COOLDOWN:
+		if data and data.mode == EffectApplierData.Mode.CONTINUOUS:
+			for body in get_overlapping_bodies():
+				_on_body_entered(body)
+		else:
+			if _state == State.IDLE and _has_valid_overlapping_enemies():
+				_start_trigger_sequence()
 
 func disable() -> void:
 	_enabled = false
+	_application_count = 0
 	if data and data.mode == EffectApplierData.Mode.CONTINUOUS:
 		for body in get_overlapping_bodies():
 			_on_body_exited(body)
@@ -56,36 +61,48 @@ func _process(delta: float) -> void:
 	if not _enabled or not data:
 		return
 
-	if data.mode == EffectApplierData.Mode.CONTINUOUS:
-		return
-
 	match _state:
 		State.ARMING:
-			_delay_timer -= delta
-			if _delay_timer <= 0.0:
-				_on_delay_finished()
+			if data.mode != EffectApplierData.Mode.CONTINUOUS:
+				_delay_timer -= delta
+				if _delay_timer <= 0.0:
+					_on_delay_finished()
 
 		State.ACTIVE:
-			_active_timer -= delta
-			if _active_timer <= 0.0:
-				_on_active_phase_finished()
+			if data.mode != EffectApplierData.Mode.CONTINUOUS:
+				_active_timer -= delta
+				if _active_timer <= 0.0:
+					_on_active_phase_finished()
 
 		State.COOLDOWN:
 			_cooldown_timer -= delta
 			if _cooldown_timer <= 0.0:
 				_state = State.IDLE
-				if _has_valid_overlapping_enemies():
-					_start_trigger_sequence()
+				_application_count = 0
+				cooldown_finished.emit()
+				
+				# Re-evaluate overlapping bodies
+				if data.mode == EffectApplierData.Mode.CONTINUOUS:
+					for body in get_overlapping_bodies():
+						_on_body_entered(body)
+				else:
+					if _has_valid_overlapping_enemies():
+						_start_trigger_sequence()
 
 func _on_body_entered(body: Node2D) -> void:
-	if not _enabled or not data: return
+	if not _enabled or not data or _state == State.COOLDOWN:
+		return
 	
 	var enemy = body as Enemy
-	if not enemy or enemy.is_queued_for_deletion(): return
+	if not enemy or enemy.is_queued_for_deletion():
+		return
 
 	match data.mode:
 		EffectApplierData.Mode.CONTINUOUS:
 			_apply_continuous_effect(enemy)
+			_application_count += 1
+			if data.max_targets > 0 and _application_count >= data.max_targets:
+				_start_continuous_cooldown()
 
 		EffectApplierData.Mode.BURST:
 			if _state == State.IDLE:
@@ -98,13 +115,27 @@ func _on_body_entered(body: Node2D) -> void:
 				_apply_effects_to_enemy(enemy)
 
 func _on_body_exited(body: Node2D) -> void:
-	if not _enabled or not data: return
+	if not _enabled or not data:
+		return
 
 	if data.mode == EffectApplierData.Mode.CONTINUOUS:
 		_remove_continuous_effect(body)
 
+func _start_continuous_cooldown() -> void:
+	for body in get_overlapping_bodies():
+		_remove_continuous_effect(body)
+	
+	if data.cooldown > 0.0:
+		_state = State.COOLDOWN
+		_cooldown_timer = data.cooldown
+		cooldown_started.emit()
+	else:
+		_state = State.IDLE
+		_application_count = 0
+
 func _start_trigger_sequence() -> void:
-	if not _enabled or not data: return
+	if not _enabled or not data:
+		return
 
 	if data.delay > 0.0:
 		_state = State.ARMING
@@ -124,6 +155,9 @@ func _trigger_burst() -> void:
 	var enemies = _get_valid_overlapping_enemies()
 	for enemy in enemies:
 		_apply_effects_to_enemy(enemy)
+		_application_count += 1
+		if data.max_targets > 0 and _application_count >= data.max_targets:
+			break
 
 	_finish_trigger()
 
@@ -144,8 +178,10 @@ func _finish_trigger() -> void:
 	if data.cooldown > 0.0:
 		_state = State.COOLDOWN
 		_cooldown_timer = data.cooldown
+		cooldown_started.emit()
 	else:
 		_state = State.IDLE
+		_application_count = 0
 		if _has_valid_overlapping_enemies():
 			_start_trigger_sequence()
 

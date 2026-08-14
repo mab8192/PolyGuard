@@ -90,10 +90,20 @@ func _ready() -> void:
 			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
 
 		# Assign targets from the stage
-		var targets: Array[Node2D] = []
-		for exit in get_tree().get_nodes_in_group("exits"):
+		SignalBus.exits_updated.connect(_on_exits_updated)
+		_on_exits_updated()
+	
+func _on_exits_updated() -> void:
+	if not nav:
+		return
+	var targets: Array[Node2D] = []
+	for exit in get_tree().get_nodes_in_group("exits"):
+		if exit is Exit:
+			if exit.is_active:
+				targets.append(exit)
+		elif exit is Node2D:
 			targets.append(exit)
-		nav.set_exits(targets)
+	nav.set_exits(targets)
 	
 func _process(delta: float) -> void:
 	for effect in _active_effects.duplicate():

@@ -1,5 +1,21 @@
 [gd_resource type="Theme" format=3 uid="uid://knh4f5ekk7vf"]
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_activating_badge"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.2, 0.16, 0.04, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(1, 0.8, 0.2, 0.95)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_btn_disabled"]
 content_margin_left = 16.0
 content_margin_top = 10.0
@@ -212,6 +228,22 @@ corner_radius_bottom_left = 20
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim_overlay"]
 bg_color = Color(0, 0, 0, 0.75)
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_exit_badge"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.04, 0.16, 0.2, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0, 0.96, 0.83, 0.8)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flat_disabled"]
 draw_center = false
 
@@ -226,6 +258,22 @@ draw_center = false
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flat_pressed"]
 draw_center = false
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_incoming_badge"]
+content_margin_left = 6.0
+content_margin_top = 2.0
+content_margin_right = 6.0
+content_margin_bottom = 2.0
+bg_color = Color(0.2, 0.05, 0.05, 0.9)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.95, 0.2, 0.2, 0.9)
+corner_radius_top_left = 6
+corner_radius_top_right = 6
+corner_radius_bottom_right = 6
+corner_radius_bottom_left = 6
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_panel"]
 content_margin_left = 36.0
@@ -428,7 +476,11 @@ font_names = PackedStringArray("Sans-Serif")
 
 [resource]
 default_font = SubResource("SystemFont_sans")
-default_font_size = 28
+ActivatingBadge/base_type = &"PanelContainer"
+ActivatingBadge/styles/panel = SubResource("StyleBoxFlat_activating_badge")
+ActivatingText/base_type = &"Label"
+ActivatingText/colors/font_color = Color(1, 0.85, 0.3, 1)
+ActivatingText/font_sizes/font_size = 14
 BadgeText/base_type = &"Label"
 BadgeText/colors/font_color = Color(1, 1, 1, 1)
 BadgeText/font_sizes/font_size = 20
@@ -485,6 +537,11 @@ DimOverlay/styles/panel = SubResource("StyleBoxFlat_dim_overlay")
 EmptySlotText/base_type = &"Label"
 EmptySlotText/colors/font_color = Color(0.5, 0.62, 0.78, 0.85)
 EmptySlotText/font_sizes/font_size = 22
+ExitBadge/base_type = &"PanelContainer"
+ExitBadge/styles/panel = SubResource("StyleBoxFlat_exit_badge")
+ExitText/base_type = &"Label"
+ExitText/colors/font_color = Color(0, 0.96, 0.83, 1)
+ExitText/font_sizes/font_size = 14
 FlatButton/base_type = &"Button"
 FlatButton/styles/disabled = SubResource("StyleBoxFlat_flat_disabled")
 FlatButton/styles/focus = SubResource("StyleBoxFlat_flat_focus")
@@ -500,6 +557,11 @@ HudGoldText/font_sizes/font_size = 44
 HudStatText/base_type = &"Label"
 HudStatText/colors/font_color = Color(1, 1, 1, 1)
 HudStatText/font_sizes/font_size = 44
+IncomingBadge/base_type = &"PanelContainer"
+IncomingBadge/styles/panel = SubResource("StyleBoxFlat_incoming_badge")
+IncomingText/base_type = &"Label"
+IncomingText/colors/font_color = Color(1, 0.35, 0.35, 1)
+IncomingText/font_sizes/font_size = 14
 ModalPanel/base_type = &"PanelContainer"
 ModalPanel/styles/panel = SubResource("StyleBoxFlat_modal_panel")
 NavBarPanel/base_type = &"Panel"

@@ -28,6 +28,10 @@ const STAGES: Dictionary[String, StageData] = {
 	"stage_02": preload("res://src/data/stages/stage_02.tres"),
 	"stage_03": preload("res://src/data/stages/stage_03.tres"),
 	"stage_04": preload("res://src/data/stages/stage_04.tres"),
+	"stage_05": preload("res://src/data/stages/stage_05.tres"),
+	"stage_06": preload("res://src/data/stages/stage_06.tres"),
+	"stage_07": preload("res://src/data/stages/stage_07.tres"),
+	"stage_08": preload("res://src/data/stages/stage_08.tres"),
 	"test_stage": preload("res://src/data/stages/TestStage.tres"),
 }
 

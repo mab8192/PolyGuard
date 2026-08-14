@@ -114,6 +114,9 @@ static func _thread_worker(snapshot: Dictionary) -> void:
 
 	var half_tile: Vector2 = tile_size / 2.0
 
+	var ref_cell: Vector2i = used_cells[0]
+	var ref_center: Vector2 = cell_local_centers[ref_cell]
+
 	var min_cell: Vector2i = used_cells[0]
 	var max_cell: Vector2i = used_cells[0]
 	for cell in used_cells:
@@ -132,8 +135,11 @@ static func _thread_worker(snapshot: Dictionary) -> void:
 	var grid_w = (max_cell.x - min_cell.x + 1) * subs_per_tile_x
 	var grid_h = (max_cell.y - min_cell.y + 1) * subs_per_tile_y
 
-	var min_cell_center: Vector2 = cell_local_centers[min_cell]
-	var grid_origin = min_cell_center - half_tile
+	# Calculate grid origin from a known reference tile so missing tiles/holes at min_cell do not crash
+	var grid_origin: Vector2 = (ref_center - half_tile) + Vector2(
+		(min_cell.x - ref_cell.x) * tile_size.x,
+		(min_cell.y - ref_cell.y) * tile_size.y
+	)
 
 	var tier_results: Array[Dictionary] = []
 

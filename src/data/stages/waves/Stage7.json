@@ -1,0 +1,31 @@
+[
+	{
+		"wave_number": 1,
+		"reward_gold": 350,
+		"spawns": [
+			{ "spawner_id": "Spawner", "enemy_type": "grunt", "count": 10, "interval": 0.8, "delay": 0.5 },
+			{ "spawner_id": "Spawner", "enemy_type": "speeder", "count": 6, "interval": 0.6, "delay": 3.0 }
+		]
+	},
+	{
+		"wave_number": 2,
+		"reward_gold": 500,
+		"spawns": [
+			{ "spawner_id": "Spawner", "enemy_type": "heavy", "count": 4, "interval": 1.5, "delay": 0.5 },
+			{ "spawner_id": "Spawner", "enemy_type": "splitter", "count": 4, "interval": 1.0, "delay": 2.5 },
+			{ "spawner_id": "Spawner", "enemy_type": "light", "count": 14, "interval": 0.5, "delay": 4.0 }
+		]
+	},
+	{
+		"wave_number": 3,
+		"reward_gold": 800,
+		"activate_spawners": ["Spawner2"],
+		"activate_exits": ["Exit2"],
+		"spawns": [
+			{ "spawner_id": "Spawner2", "enemy_type": "citadel", "count": 1, "interval": 5.0, "delay": 0.5 },
+			{ "spawner_id": "Spawner", "enemy_type": "tank", "count": 3, "interval": 2.0, "delay": 1.0 },
+			{ "spawner_id": "Spawner2", "enemy_type": "ghost", "count": 8, "interval": 0.7, "delay": 3.0 },
+			{ "spawner_id": "Spawner", "enemy_type": "speeder", "count": 12, "interval": 0.4, "delay": 5.0 }
+		]
+	}
+]

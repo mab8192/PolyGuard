@@ -21,14 +21,17 @@ exits = [NodePath("../Exit")]
 
 [node name="Spawner2" parent="NavigationRegion2D" unique_id=964929055 node_paths=PackedStringArray("exits") instance=ExtResource("4_ntjw0")]
 position = Vector2(480, 0)
+is_active = false
 exits = [NodePath("../Exit")]
 
 [node name="Spawner3" parent="NavigationRegion2D" unique_id=253526783 node_paths=PackedStringArray("exits") instance=ExtResource("4_ntjw0")]
 position = Vector2(0, 480)
+is_active = false
 exits = [NodePath("../Exit")]
 
 [node name="Spawner4" parent="NavigationRegion2D" unique_id=2074598540 node_paths=PackedStringArray("exits") instance=ExtResource("4_ntjw0")]
 position = Vector2(-480, 0)
+is_active = false
 exits = [NodePath("../Exit")]
 
 [node name="Towers" type="Node2D" parent="NavigationRegion2D" unique_id=769812410]
