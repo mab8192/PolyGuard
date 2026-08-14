@@ -19,5 +19,4 @@ func _ready() -> void:
 func _on_carousel_select(payload: Variant) -> void:
 	if payload is StageData:
 		GameManager.selected_stage = payload
-		GameManager.selected_loadout = Registry.get_all_towers()
-		GameManager.load_view(GameManager.View.GAME)
+		GameManager.load_view(GameManager.View.LOADOUT)

@@ -1,0 +1,170 @@
+[gd_scene format=3 uid="uid://cx603p1764k1y"]
+
+[ext_resource type="Script" uid="uid://cxtvqju35r4en" path="res://src/scenes/ui/elements/loadout_card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+
+[node name="LoadoutCard" type="Control" unique_id=14601]
+custom_minimum_size = Vector2(230, 210)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 230.0
+offset_bottom = 210.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="BGPanel" type="Panel" parent="." unique_id=14602]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"CardPanel"
+
+[node name="EmptyIndicator" type="VBoxContainer" parent="." unique_id=14603]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+alignment = 1
+
+[node name="EmptySlotLabel" type="Label" parent="EmptyIndicator" unique_id=14604]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"EmptySlotText"
+text = "SLOT 1
++ EMPTY"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContentBox" type="VBoxContainer" parent="." unique_id=14605]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="IconContainer" type="CenterContainer" parent="ContentBox" unique_id=14606]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="IconRect" type="TextureRect" parent="ContentBox/IconContainer" unique_id=14607]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(130, 130)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="NameLabel" type="Label" parent="ContentBox" unique_id=14608]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+theme_override_font_sizes/font_size = 20
+text = "Archer Tower"
+horizontal_alignment = 1
+autowrap_mode = 2
+clip_text = true
+
+[node name="CostContainer" type="CenterContainer" parent="ContentBox" unique_id=14609]
+layout_mode = 2
+mouse_filter = 2
+
+[node name="CostBadge" type="PanelContainer" parent="ContentBox/CostContainer" unique_id=14610]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"CostBadge"
+
+[node name="CostLabel" type="Label" parent="ContentBox/CostContainer/CostBadge" unique_id=14611]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+theme_override_font_sizes/font_size = 20
+text = "250g"
+horizontal_alignment = 1
+
+[node name="StatusBadge" type="PanelContainer" parent="." unique_id=14612]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -55.0
+offset_top = -28.0
+offset_right = 55.0
+offset_bottom = -4.0
+grow_horizontal = 2
+grow_vertical = 0
+offset_transform_enabled = true
+offset_transform_position = Vector2(0, 15)
+mouse_filter = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="StatusLabel" type="Label" parent="StatusBadge" unique_id=14613]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+theme_override_font_sizes/font_size = 16
+text = "EQUIPPED"
+horizontal_alignment = 1
+
+[node name="SelectionRing" type="Panel" parent="." unique_id=14614]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"CardSelectedPanel"
+
+[node name="ClickButton" type="Button" parent="." unique_id=14615]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_type_variation = &"FlatButton"
+
+[node name="RemoveButton" type="Button" parent="." unique_id=14616]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(38, 38)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_top = 4.0
+offset_right = -4.0
+offset_bottom = 40.0
+grow_horizontal = 0
+focus_mode = 0
+theme_type_variation = &"DangerIconButton"
+theme_override_font_sizes/font_size = 20
+text = "✕"

@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://fffq8n5du3y1" path="res://src/scenes/ui/views/campaign.gd" id="1_323lx"]
 [ext_resource type="PackedScene" uid="uid://di0i56l0ko2su" path="res://src/scenes/ui/elements/carousel.tscn" id="1_w3ugy"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="Campaign" type="MarginContainer" unique_id=16323708]
 anchors_preset = 15
@@ -9,13 +10,16 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 script = ExtResource("1_323lx")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=1512062719]
 layout_mode = 2
+theme_override_constants/separation = 16
 
 [node name="Label" type="Label" parent="VBoxContainer" unique_id=1217442947]
 layout_mode = 2
+theme_type_variation = &"SubHeaderText"
 text = "CAMPAIGN"
 horizontal_alignment = 1
 

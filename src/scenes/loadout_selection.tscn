@@ -1,35 +1,233 @@
 [gd_scene format=3 uid="uid://dv8lgrb4gtiic"]
 
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_nef1s"]
-bg_color = Color(0.035972454, 0.0359551, 0.08152015, 1)
+[ext_resource type="Script" uid="uid://c6u7xpv0x524g" path="res://src/scenes/loadout_selection.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
-[node name="Background" type="Panel" unique_id=1269461421]
+[node name="LoadoutSelectionScreen" type="Control" unique_id=1269461421]
+layout_mode = 3
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_nef1s")
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
 
-[node name="LoadoutSelection" type="MarginContainer" parent="." unique_id=1984435764]
+[node name="Background" type="Panel" parent="." unique_id=1269461422]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"ScreenBackground"
+
+[node name="MainMargin" type="MarginContainer" parent="." unique_id=1984435764]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 32
 theme_override_constants/margin_top = 160
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 48
 
-[node name="VBoxContainer" type="VBoxContainer" parent="LoadoutSelection" unique_id=637681851]
+[node name="RootVBox" type="VBoxContainer" parent="MainMargin" unique_id=637681851]
 layout_mode = 2
+theme_override_constants/separation = 14
 
-[node name="Label" type="Label" parent="LoadoutSelection/VBoxContainer" unique_id=98484438]
+[node name="TopBar" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681852]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="BackButton" type="Button" parent="MainMargin/RootVBox/TopBar" unique_id=637681853]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 68)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "← BACK"
+
+[node name="TitleBox" type="VBoxContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681854]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 2
+alignment = 1
+
+[node name="MainTitle" type="Label" parent="MainMargin/RootVBox/TopBar/TitleBox" unique_id=98484438]
 layout_mode = 2
 theme_type_variation = &"HeaderText"
 text = "LOADOUT SELECTION"
 horizontal_alignment = 1
 
-[node name="MarginContainer" type="MarginContainer" parent="LoadoutSelection/VBoxContainer" unique_id=1478937782]
+[node name="StageTitleLabel" type="Label" parent="MainMargin/RootVBox/TopBar/TitleBox" unique_id=98484439]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "STAGE 1"
+horizontal_alignment = 1
+
+[node name="StageSubtitleLabel" type="Label" parent="MainMargin/RootVBox/TopBar/TitleBox" unique_id=98484440]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SmallText"
+text = "Starting Gold: 700g • Base Lives: 20"
+horizontal_alignment = 1
+
+[node name="TopBarSpacer" type="Control" parent="MainMargin/RootVBox/TopBar" unique_id=637681855]
+custom_minimum_size = Vector2(160, 0)
+layout_mode = 2
+
+[node name="LoadoutHeaderHBox" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681856]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="LoadoutCountLabel" type="Label" parent="MainMargin/RootVBox/LoadoutHeaderHBox" unique_id=637681857]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"SubHeaderText"
+text = "CURRENT LOADOUT (0 / 4)"
+
+[node name="ClearAllButton" type="Button" parent="MainMargin/RootVBox/LoadoutHeaderHBox" unique_id=637681858]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 52)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"DangerButton"
+text = "CLEAR ALL"
+
+[node name="LoadoutGridContainer" type="CenterContainer" parent="MainMargin/RootVBox" unique_id=637681859]
+layout_mode = 2
+
+[node name="LoadoutGrid" type="GridContainer" parent="MainMargin/RootVBox/LoadoutGridContainer" unique_id=637681860]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 4
+
+[node name="DetailsPanel" type="PanelContainer" parent="MainMargin/RootVBox" unique_id=637681861]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="DetailVBox" type="VBoxContainer" parent="MainMargin/RootVBox/DetailsPanel" unique_id=637681862]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="DetailTopHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox" unique_id=637681863]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="IconCenter" type="CenterContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681864]
+layout_mode = 2
+
+[node name="DetailIcon" type="TextureRect" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681865]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(100, 100)
+layout_mode = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="HeaderInfoVBox" type="VBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681866]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/separation = 4
+alignment = 1
+
+[node name="TitleCostHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681867]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="DetailTitle" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681868]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"TitleText"
+text = "Archer Tower"
+
+[node name="DetailCost" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681869]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CostText"
+text = "250g"
+
+[node name="BadgeRowHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681870]
+layout_mode = 2
+
+[node name="TypeBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox" unique_id=637681871]
+layout_mode = 2
+theme_type_variation = &"TypeBadge"
+
+[node name="DetailTypeBadge" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/BadgeRowHBox/TypeBadgeContainer" unique_id=637681872]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "SOLID DEFENSE"
+
+[node name="DetailActionButton" type="Button" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681873]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(210, 64)
+layout_mode = 2
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "+ EQUIP"
+
+[node name="DetailBottomVBox" type="VBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox" unique_id=637681874]
+layout_mode = 2
+theme_override_constants/separation = 4
+
+[node name="DetailDesc" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681875]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Fires rapid arrows at incoming enemies."
+autowrap_mode = 2
+
+[node name="DetailStats" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681876]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "⚔ Damage: 50 | ⏱ Rate: Every 0.5s"
+autowrap_mode = 2
+
+[node name="AvailableHeader" type="Label" parent="MainMargin/RootVBox" unique_id=637681877]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "AVAILABLE ARSENAL"
+
+[node name="AvailableScroll" type="ScrollContainer" parent="MainMargin/RootVBox" unique_id=637681878]
 layout_mode = 2
 size_flags_vertical = 3
-theme_override_constants/margin_top = 30
+horizontal_scroll_mode = 0
+
+[node name="AvailableCenter" type="CenterContainer" parent="MainMargin/RootVBox/AvailableScroll" unique_id=637681879]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="AvailableGrid" type="GridContainer" parent="MainMargin/RootVBox/AvailableScroll/AvailableCenter" unique_id=637681880]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/h_separation = 16
+theme_override_constants/v_separation = 16
+columns = 4
+
+[node name="BottomActionMargin" type="MarginContainer" parent="MainMargin/RootVBox" unique_id=637681881]
+layout_mode = 2
+theme_override_constants/margin_top = 4
+
+[node name="StartBattleButton" type="Button" parent="MainMargin/RootVBox/BottomActionMargin" unique_id=637681882]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "DEPLOY LOADOUT"

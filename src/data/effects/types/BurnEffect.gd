@@ -5,6 +5,13 @@ func _init(effect_data: EffectData):
 	if not data:
 		push_error("BurnEffect must receive a BurnEffectData")
 
+func apply(target: Node2D) -> void:
+	super.apply(target)
+	if is_instance_valid(target) and target is Enemy:
+		if target.health:
+			var burn_data = data as BurnEffectData
+			target.health.damage(burn_data.initial_damage, burn_data.damage_type)
+
 func tick(delta: float) -> void:
 	super.tick(delta)
 	if is_instance_valid(_target) and _target is Enemy:

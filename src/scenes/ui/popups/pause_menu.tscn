@@ -1,21 +1,7 @@
 [gd_scene format=3 uid="uid://pausemenu001"]
 
 [ext_resource type="Script" uid="uid://dl7h7kymjid55" path="res://src/scenes/ui/popups/pause_menu.gd" id="1_pause"]
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_dim"]
-bg_color = Color(0, 0, 0, 0.7)
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_panel"]
-bg_color = Color(0.0862745, 0.129412, 0.243137, 0.95)
-border_width_left = 3
-border_width_top = 3
-border_width_right = 3
-border_width_bottom = 3
-border_color = Color(0.305882, 0.8, 0.639216, 1)
-corner_radius_top_left = 24
-corner_radius_top_right = 24
-corner_radius_bottom_right = 24
-corner_radius_bottom_left = 24
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="PauseMenu" type="CanvasLayer" unique_id=2180001]
 process_mode = 3
@@ -28,7 +14,8 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_dim")
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
 
 [node name="CenterContainer" type="CenterContainer" parent="." unique_id=2180003]
 anchors_preset = 15
@@ -36,18 +23,19 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
+theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2180004]
-custom_minimum_size = Vector2(800, 900)
+custom_minimum_size = Vector2(800, 850)
 layout_mode = 2
-theme_override_styles/panel = SubResource("StyleBoxFlat_panel")
+theme_type_variation = &"ModalPanel"
 
 [node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2180005]
 layout_mode = 2
-theme_override_constants/margin_left = 48
-theme_override_constants/margin_top = 48
-theme_override_constants/margin_right = 48
-theme_override_constants/margin_bottom = 48
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2180006]
 layout_mode = 2
@@ -56,8 +44,7 @@ alignment = 1
 
 [node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180007]
 layout_mode = 2
-theme_override_colors/font_color = Color(0.305882, 0.8, 0.639216, 1)
-theme_override_font_sizes/font_size = 56
+theme_type_variation = &"HeaderText"
 text = "GAME PAUSED"
 horizontal_alignment = 1
 
@@ -70,7 +57,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/BGMBox" unique_id=2180010]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_type_variation = &"BodyText"
 text = "Music Volume"
 
 [node name="BGMSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/BGMBox" unique_id=2180011]
@@ -86,7 +73,7 @@ layout_mode = 2
 
 [node name="Label" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2180013]
 layout_mode = 2
-theme_override_font_sizes/font_size = 22
+theme_type_variation = &"BodyText"
 text = "SFX Volume"
 
 [node name="SFXSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2180014]
@@ -103,21 +90,24 @@ theme_override_constants/separation = 16
 
 [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180016]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
 text = "RESUME"
 
 [node name="RestartButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180017]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
 text = "RESTART STAGE"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180019]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
-theme_override_font_sizes/font_size = 28
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
 text = "MAIN MENU"
