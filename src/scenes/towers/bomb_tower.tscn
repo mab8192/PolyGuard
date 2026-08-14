@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_bfwhb"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_75758"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_ax7nv"]
-[ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/archer_tower.png" id="5_8ijc8"]
+[ext_resource type="Texture2D" uid="uid://ddw2yv1n3sjhi" path="res://src/textures/bomb_tower.png" id="5_ugiga"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(64, 64)
@@ -39,4 +39,4 @@ metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
 [node name="Marker2D" type="Marker2D" parent="." unique_id=522312756]
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1795764947]
-texture = ExtResource("5_8ijc8")
+texture = ExtResource("5_ugiga")

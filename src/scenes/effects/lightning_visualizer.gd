@@ -27,7 +27,7 @@ func _draw() -> void:
 		for i in range(1, segments):
 			var t := float(i) / float(segments)
 			var base_point := start_pos.lerp(end_pos, t)
-			var jitter := randf_range(-10.0, 10.0)
+			var jitter := randf_range(-4.0, 4.0)
 			points.append(base_point + perp * jitter)
 		points.append(end_pos)
 
