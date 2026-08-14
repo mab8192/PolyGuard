@@ -11,8 +11,9 @@
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_mg0rn")
 damage = 100.0
+cooldown = 1.2
 projectile_scene = ExtResource("1_ju8xy")
-projectile_speed = 500.0
+projectile_speed = 200.0
 projectile_follow_target = false
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
@@ -22,6 +23,7 @@ armor = 25.0
 
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("7_fy0nx")
+targeting_mask = 5
 
 [resource]
 script = ExtResource("6_v285l")

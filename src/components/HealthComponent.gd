@@ -6,6 +6,7 @@ signal died()
 @export var data: HealthData
 
 const HEALTH_BAR_OFFSET: Vector2 = Vector2(0, -28)
+var _died: bool = false
 var _health: float
 var _health_bar: ProgressBar = null
 var _fill_stylebox: StyleBoxFlat = null
@@ -87,11 +88,12 @@ func damage(amount: float, type: AttackComponent.DamageType) -> void:
 	
 	health_changed.emit(_health)
 	
-	if _health <= 0:
+	if not _died and _health <= 0:
+		_died = true
 		died.emit()
 
 func heal(amount: float) -> void:
-	if _health < data.max_health:
+	if not _died and _health < data.max_health:
 		_health += amount
 		_health = min(_health, data.max_health)
 		health_changed.emit(_health)
