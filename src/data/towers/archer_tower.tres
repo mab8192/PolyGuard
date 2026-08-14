@@ -11,7 +11,8 @@
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("5_attack")
-damage = 30.0
+damage = 60.0
+cooldown = 0.7
 projectile_scene = ExtResource("1_soe44")
 projectile_speed = 800.0
 

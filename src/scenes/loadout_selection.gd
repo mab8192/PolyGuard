@@ -108,7 +108,7 @@ func _refresh_all() -> void:
 func _update_header() -> void:
 	if current_stage:
 		stage_title_label.text = current_stage.stage_name.to_upper()
-		stage_subtitle_label.text = "Starting Gold: %dg  •  Base Lives: %d" % [current_stage.starting_gold, current_stage.starting_lives]
+		stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_gold, current_stage.starting_lives]
 	else:
 		stage_title_label.text = "CUSTOM LOADOUT"
 		stage_subtitle_label.text = "Select your defensive arsenal"
@@ -172,7 +172,7 @@ func _update_details_panel() -> void:
 	
 	detail_icon.texture = selected_tower.icon
 	detail_title.text = selected_tower.display_name
-	detail_cost.text = "%dg" % selected_tower.cost
+	detail_cost.text = "%d Energy" % selected_tower.cost
 	detail_desc.text = selected_tower.description if not selected_tower.description.is_empty() else "Defensive structure ready for deployment."
 	
 	if is_unlocked:

@@ -5,11 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
 [node name="Card" type="Control" unique_id=1465083894]
-custom_minimum_size = Vector2(230, 210)
+custom_minimum_size = Vector2(215, 200)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 230.0
-offset_bottom = 210.0
+offset_right = 215.0
+offset_bottom = 200.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("2_theme")
@@ -77,7 +77,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CostText"
 theme_override_font_sizes/font_size = 20
-text = "250g"
+text = "250 Energy"
 horizontal_alignment = 1
 
 [node name="SelectionRing" type="Panel" parent="." unique_id=1465083900]

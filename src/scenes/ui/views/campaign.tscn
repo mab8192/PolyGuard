@@ -12,9 +12,9 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("2_theme")
-theme_override_constants/margin_left = 32
+theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 32
+theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_323lx")
 

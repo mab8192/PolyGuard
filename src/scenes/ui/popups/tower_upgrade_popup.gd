@@ -79,8 +79,10 @@ func _render() -> void:
 	var stat_lines: Array[String] = []
 	if current_stats["has_attack"]:
 		if is_unlocked and level < tower_data.max_level:
-			stat_lines.append("Attack Damage: %.0f -> %.0f (+20%%)" % [current_stats["damage"], next_stats["damage"]])
-			stat_lines.append("Attack Speed: Every %.2fs -> %.2fs" % [current_stats["cooldown"], next_stats["cooldown"]])
+			var dmg_pct = tower_data.damage_upgrade_per_level * 100.0
+			var cd_pct = tower_data.cooldown_reduction_per_level * 100.0
+			stat_lines.append("Attack Damage: %.0f -> %.0f (+%.0f%%)" % [current_stats["damage"], next_stats["damage"], dmg_pct])
+			stat_lines.append("Attack Speed: Every %.2fs -> %.2fs (-%.0f%% cd)" % [current_stats["cooldown"], next_stats["cooldown"], cd_pct])
 			stat_lines.append("DPS Rating: %.1f -> %.1f" % [current_stats["dps"], next_stats["dps"]])
 		else:
 			stat_lines.append("Attack Damage: %.0f" % current_stats["damage"])
@@ -89,7 +91,8 @@ func _render() -> void:
 			
 	if current_stats["has_health"]:
 		if is_unlocked and level < tower_data.max_level:
-			stat_lines.append("Structure Health: %.0f -> %.0f (+25%%)" % [current_stats["max_health"], next_stats["max_health"]])
+			var hp_pct = tower_data.health_upgrade_per_level * 100.0
+			stat_lines.append("Structure Health: %.0f -> %.0f (+%.0f%%)" % [current_stats["max_health"], next_stats["max_health"], hp_pct])
 		else:
 			stat_lines.append("Structure Health: %.0f" % current_stats["max_health"])
 			

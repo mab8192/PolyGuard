@@ -12,6 +12,12 @@ class_name TowerData extends Resource
 @export var max_level: int = 5 ## Maximum upgrade level
 @export var choices: Array[TowerChoiceUpgrade] = [] ## Branching / Choice specializations
 
+@export_category("Level Upgrade Scaling")
+@export var damage_upgrade_per_level: float = 0.1 ## Damage increase per level above Lv 1
+@export var cooldown_reduction_per_level: float = 0.05 ## Attack cooldown reduction per level
+@export var health_upgrade_per_level: float = 0.1 ## Health increase per level above Lv 1
+@export var min_cooldown_multiplier: float = 0.35 ## Lower limit clamp for attack cooldown multiplier
+
 @export_category("Stats")
 @export var is_solid: bool = true
 @export var cost: int = 250 ## How much gold this tower costs to place
@@ -40,9 +46,9 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 	var copy: TowerData = self.duplicate(true)
 	
 	var lvl = clampi(level, 1, max_level)
-	var dmg_mult = 1.0 + (lvl - 1) * 0.20
-	var cd_mult = maxf(0.35, 1.0 - (lvl - 1) * 0.08)
-	var hp_mult = 1.0 + (lvl - 1) * 0.25
+	var dmg_mult = 1.0 + (lvl - 1) * damage_upgrade_per_level
+	var cd_mult = maxf(min_cooldown_multiplier, 1.0 - (lvl - 1) * cooldown_reduction_per_level)
+	var hp_mult = 1.0 + (lvl - 1) * health_upgrade_per_level
 	
 	var choice = copy.get_choice(choice_id)
 	if choice:
@@ -53,7 +59,6 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 		hp_mult *= choice.health_multiplier
 		if copy.targeting:
 			copy.targeting.max_targets += choice.extra_targets
-		copy.cost -= choice.cost_reduction
 	
 	if copy.attack:
 		copy.attack.damage *= dmg_mult

@@ -1,13 +1,13 @@
 [gd_scene format=3 uid="uid://duii2yuv2y63u"]
 
 [ext_resource type="Script" uid="uid://utvcj85tf0tf" path="res://src/scenes/main_menu.gd" id="1_rm437"]
-[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="PackedScene" uid="uid://b1cqsdagcbdmg" path="res://src/scenes/ui/nav_bar.tscn" id="2_mob6k"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://gyp6w56objiw" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/gear.png" id="3_klrpn"]
 [ext_resource type="PackedScene" uid="uid://b7j6pm6x3hbq3" path="res://src/scenes/ui/views/campaign.tscn" id="3_yrdre"]
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
-[ext_resource type="PackedScene" uid="uid://settingspopup001" path="res://src/scenes/ui/popups/settings_popup.tscn" id="6_settings_popup"]
+[ext_resource type="PackedScene" uid="uid://wry12f5iawia" path="res://src/scenes/ui/popups/settings_popup.tscn" id="6_settings_popup"]
 
 [node name="MainMenu" type="Control" unique_id=374769933]
 layout_mode = 3
@@ -117,3 +117,4 @@ size_flags_vertical = 8
 
 [node name="SettingsPopup" parent="." unique_id=2046030939 instance=ExtResource("6_settings_popup")]
 unique_name_in_owner = true
+visible = false

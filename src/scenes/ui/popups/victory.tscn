@@ -59,7 +59,7 @@ unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"TitleText"
 text = "Remaining Lives: 20
-Final Gold: 450
+Final Energy: 450
 Final Score: 14500"
 horizontal_alignment = 1
 
@@ -73,8 +73,8 @@ theme_override_constants/separation = 6
 
 [node name="RewardTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel/RewardVBox" unique_id=2170017]
 layout_mode = 2
-theme_type_variation = &"CostText"
-text = "RESEARCH REWARDS"
+theme_type_variation = &"CreditText"
+text = "RESEARCH CREDITS"
 horizontal_alignment = 1
 
 [node name="RewardBreakdownLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/RewardPanel/RewardVBox" unique_id=2170018]

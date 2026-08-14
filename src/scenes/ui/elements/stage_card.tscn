@@ -75,7 +75,7 @@ unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"BodyText"
-text = "Gold: 700 • Lives: 20 • Waves: 15 • Slots: 4"
+text = "Energy: 700 • Lives: 20 • Waves: 15 • Slots: 4"
 autowrap_mode = 2
 
 [node name="RecordLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741013]

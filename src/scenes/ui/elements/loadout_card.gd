@@ -80,7 +80,7 @@ func _update_ui() -> void:
 				var lvl = SaveManager.get_tower_level(t_id)
 				icon_rect.texture = tower_data.icon
 				name_label.text = tower_data.display_name
-				cost_label.text = "%dg" % tower_data.cost
+				cost_label.text = "%d Energy" % tower_data.cost
 				cost_badge.show()
 				status_label.text = "LV %d" % lvl
 	else:
@@ -96,7 +96,7 @@ func _update_ui() -> void:
 			
 			icon_rect.texture = tower_data.icon
 			name_label.text = tower_data.display_name
-			cost_label.text = "%dg" % tower_data.cost
+			cost_label.text = "%d Energy" % tower_data.cost
 			cost_badge.show()
 			
 			if not is_unlocked:

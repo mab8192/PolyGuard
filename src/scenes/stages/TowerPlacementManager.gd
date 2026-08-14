@@ -225,7 +225,7 @@ func _handle_release(_pos: Vector2) -> void:
 	
 	if preview_tower:
 		var on_tower = _pos.distance_to(preview_tower.global_position) < TOWER_TOUCH_DIST_THRESH
-		if total_drag_distance_sq < 100 and on_tower and can_place_preview():
+		if total_drag_distance_sq < 25 and on_tower and can_place_preview():
 			place_preview()
 	
 func _handle_drag(delta: Vector2) -> void:

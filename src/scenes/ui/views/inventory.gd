@@ -79,7 +79,7 @@ func _update_details(tower: TowerData) -> void:
 	
 	detail_icon.texture = tower.icon
 	detail_title.text = tower.display_name
-	detail_cost.text = "%dg" % tower.cost
+	detail_cost.text = "%d Energy" % tower.cost
 	
 	if is_unlocked:
 		detail_level_badge.get_parent().theme_type_variation = &"StatusBadge"

@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://m32i65vf0cy6" path="res://src/scenes/ui/views/inventory.gd" id="1_7a65l"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://c6xupgradepopup01" path="res://src/scenes/ui/popups/tower_upgrade_popup.tscn" id="4_upgrade_popup"]
+[ext_resource type="PackedScene" uid="uid://c3pkyojs8gtfc" path="res://src/scenes/ui/popups/tower_upgrade_popup.tscn" id="4_upgrade_popup"]
 
 [node name="Inventory" type="MarginContainer" unique_id=1988686629]
 anchors_preset = 15
@@ -14,9 +14,9 @@ grow_vertical = 2
 size_flags_horizontal = 3
 size_flags_vertical = 3
 theme = ExtResource("2_theme")
-theme_override_constants/margin_left = 32
+theme_override_constants/margin_left = 0
 theme_override_constants/margin_top = 8
-theme_override_constants/margin_right = 32
+theme_override_constants/margin_right = 0
 theme_override_constants/margin_bottom = 16
 script = ExtResource("1_7a65l")
 
@@ -73,7 +73,7 @@ text = "Archer Tower"
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CostText"
-text = "250g"
+text = "250 Energy"
 
 [node name="BadgeRowHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681910]
 layout_mode = 2

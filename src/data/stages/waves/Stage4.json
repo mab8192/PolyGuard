@@ -21,7 +21,7 @@
 		"wave_number": 3,
 		"reward_gold": 1000,
 		"spawns": [
-			{ "enemy_type": "speeder", "count": 15, "interval": 0.3, "delay": 0.0 },
+			{ "enemy_type": "grunt", "count": 15, "interval": 0.3, "delay": 0.0 },
 			{ "enemy_type": "tank", "count": 8, "interval": 1.0, "delay": 3.0 },
 			{ "enemy_type": "citadel", "count": 2, "interval": 3.0, "delay": 6.0 }
 		]

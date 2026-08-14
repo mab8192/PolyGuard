@@ -76,18 +76,18 @@ horizontal_alignment = 1
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"SmallText"
-text = "Starting Gold: 700g • Base Lives: 20"
+text = "Starting Energy: 700 • Base Lives: 20"
 horizontal_alignment = 1
 
 [node name="CreditsBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681855]
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"CostBadge"
+theme_type_variation = &"CreditBadge"
 
 [node name="CreditsLabel" type="Label" parent="MainMargin/RootVBox/TopBar/CreditsBadgeContainer" unique_id=637681885]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"CostText"
+theme_type_variation = &"CreditText"
 text = "0 CREDITS"
 
 [node name="LoadoutHeaderHBox" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681856]
@@ -163,7 +163,7 @@ text = "Archer Tower"
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"CostText"
-text = "250g"
+text = "250 Energy"
 
 [node name="BadgeRowHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681870]
 layout_mode = 2

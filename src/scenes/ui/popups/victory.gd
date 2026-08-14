@@ -30,7 +30,7 @@ func _on_stage_completed() -> void:
 		
 		var stars = reward_info.get("stars", 1)
 		star_rating_label.text = "%d STARS" % stars
-		stats_label.text = "Remaining Lives: %d / %d\nFinal Gold: %d\nFinal Score: %d" % [lives, max_lives, gold, score]
+		stats_label.text = "Remaining Lives: %d / %d\nFinal Energy: %d\nFinal Score: %d" % [lives, max_lives, gold, score]
 		
 		var clear_type_str = "First Clear Bonus" if reward_info.get("is_first_clear", false) else "Clear Reward"
 		reward_breakdown_label.text = "%s: +%d Credits\nStar Bonus: +%d Credits\nTotal Earned: +%d Credits" % [
