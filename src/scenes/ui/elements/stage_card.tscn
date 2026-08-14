@@ -1,0 +1,75 @@
+[gd_scene format=3 uid="uid://c6u7la2m8px1q"]
+
+[ext_resource type="Script" uid="uid://bnq4xvy6l38ka" path="res://src/scenes/ui/elements/stage_card.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+
+[node name="StageCard" type="PanelContainer" unique_id=741001]
+custom_minimum_size = Vector2(0, 180)
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 180.0
+grow_horizontal = 2
+size_flags_horizontal = 3
+theme = ExtResource("2_theme")
+theme_type_variation = &"DetailPanel"
+script = ExtResource("1_script")
+
+[node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=741002]
+layout_mode = 2
+theme_override_constants/separation = 24
+
+[node name="ImageFrame" type="PanelContainer" parent="HBoxContainer" unique_id=741003]
+custom_minimum_size = Vector2(240, 140)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"CardPanel"
+
+[node name="PreviewTexture" type="TextureRect" parent="HBoxContainer/ImageFrame" unique_id=741004]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 140)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer" unique_id=741005]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 4
+mouse_filter = 2
+theme_override_constants/separation = 10
+
+[node name="TitleLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741006]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"TitleText"
+theme_override_font_sizes/font_size = 32
+text = "Stage 1"
+
+[node name="StatsLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741007]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"BodyText"
+theme_override_font_sizes/font_size = 22
+text = "Gold: 700 • Lives: 20 • Waves: 15 • Slots: 4"
+autowrap_mode = 2
+
+[node name="ActionCenter" type="CenterContainer" parent="HBoxContainer" unique_id=741008]
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+mouse_filter = 2
+
+[node name="StartButton" type="Button" parent="HBoxContainer/ActionCenter" unique_id=741009]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(170, 68)
+layout_mode = 2
+theme_type_variation = &"PrimaryButton"
+theme_override_font_sizes/font_size = 28
+text = "START"
