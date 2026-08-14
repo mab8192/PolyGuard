@@ -1,15 +1,15 @@
 [gd_resource type="Resource" script_class="StageData" format=3 uid="uid://c6stagesd06"]
 
+[ext_resource type="Texture2D" uid="uid://ctvcmcw451thw" path="res://src/textures/stages/Stage6.png" id="1_oehux"]
 [ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="1_script"]
 [ext_resource type="PackedScene" uid="uid://babfmm57bvpy5" path="res://src/scenes/stages/Stage6.tscn" id="2_scene"]
-[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
 [resource]
 script = ExtResource("1_script")
 stage_id = "stage_06"
 stage_name = "Stage 6"
 scene = ExtResource("2_scene")
-icon = ExtResource("3_icon")
+icon = ExtResource("1_oehux")
 starting_gold = 1400
 loadout_size = 5
 wave_data_file = "res://src/data/stages/waves/Stage6.json"
