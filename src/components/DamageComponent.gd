@@ -13,6 +13,9 @@ var targeting_mask: int = 4:
 		targeting_mask = val
 		_update_collision_mask()
 
+var piercing: bool = false
+var _hit_something: bool = false
+
 func _ready() -> void:
 	body_entered.connect(_on_body_entered)
 	_update_collision_mask()
@@ -24,8 +27,10 @@ func _update_collision_mask() -> void:
 	collision_mask = mask
 
 func _on_body_entered(body: Node2D) -> void:
-	_try_deal_damage(body)
-	hit.emit(body)
+	if piercing or not _hit_something:
+		_try_deal_damage(body)
+		hit.emit(body)
+		_hit_something = true
 
 func _try_deal_damage(target: Node2D) -> void:
 	var health = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
