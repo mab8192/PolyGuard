@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_an1m1"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_chacc"]
+[ext_resource type="Texture2D" uid="uid://b86v8st5hafq8" path="res://src/textures/enemies/splitter.png" id="2_chacc"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="3_y1npq"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_6fodi"]
 [ext_resource type="PackedScene" uid="uid://cktu8hbh4jc1q" path="res://src/scenes/enemies/splitter.tscn" id="5_an1m1"]
@@ -47,6 +47,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("6_i6dcn")
 display_name = "Splitter"
 scene = ExtResource("5_an1m1")
+icon = ExtResource("2_chacc")
 gold_reward = 15
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")

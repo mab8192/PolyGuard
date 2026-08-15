@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://bkf5saqqqw1s7"
-path="res://.godot/imported/archer_tower.png-5250500489c743f1ea7e85d4d6965f1d.ctex"
+uid="uid://c4eufxkxcpsys"
+path="res://.godot/imported/barricade.png-f2f31c9df00a041fec4983fdc941dea0.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/archer_tower.png"
-dest_files=["res://.godot/imported/archer_tower.png-5250500489c743f1ea7e85d4d6965f1d.ctex"]
+source_file="res://src/textures/towers/barricade.png"
+dest_files=["res://.godot/imported/barricade.png-f2f31c9df00a041fec4983fdc941dea0.ctex"]
 
 [params]
 

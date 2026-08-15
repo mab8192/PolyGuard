@@ -2,23 +2,14 @@
 
 [ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_kvuks"]
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_6ixyf"]
+[ext_resource type="Texture2D" uid="uid://b86v8st5hafq8" path="res://src/textures/enemies/splitter.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_6o8p4"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_cohcr"]
 [ext_resource type="Script" uid="uid://diueli1qa2811" path="res://src/components/SplitterComponent.gd" id="5_1dije"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="6_6o8p4"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="7_cohcr"]
 
-[sub_resource type="Gradient" id="Gradient_6bxcj"]
-offsets = PackedFloat32Array(0.7105263, 0.71671826)
-colors = PackedColorArray(1.6484782e-06, 0.38679954, 0, 1, 0, 0, 0, 0)
-
-[sub_resource type="GradientTexture2D" id="GradientTexture2D_qgbsg"]
-gradient = SubResource("Gradient_6bxcj")
-fill = 1
-fill_from = Vector2(0.5, 0.5)
-
 [sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
-radius = 16.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1dije"]
 size = Vector2(22, 42)
@@ -30,17 +21,12 @@ motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_kvuks")
 
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
-scale = Vector2(0.875, 0.875)
-color = Color(0.43059742, 0.7144118, 0.74067044, 1)
-polygon = PackedVector2Array(-9.142857, -9.142857, 9.142857, -9.142857, 9.142857, 9.142857, -9.142857, 9.142857)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1784206974]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_tex")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
 simplify_path = true
-
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1784206974]
-scale = Vector2(0.5, 0.5)
-texture = SubResource("GradientTexture2D_qgbsg")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 shape = SubResource("CircleShape2D_d56y3")
@@ -66,7 +52,7 @@ script = ExtResource("6_6o8p4")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=399455394]
-position = Vector2(22, 0)
+position = Vector2(18, 0)
 shape = SubResource("RectangleShape2D_1dije")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=2135017906]

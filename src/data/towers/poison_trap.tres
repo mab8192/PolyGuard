@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_7rdgg"]
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
-[ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/poison_trap.png" id="1_icon"]
+[ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/towers/poison_trap.png" id="1_icon"]
 [ext_resource type="Resource" uid="uid://cpoison12345" path="res://src/data/effects/PoisonEffect.tres" id="2_1grd6"]
 [ext_resource type="PackedScene" uid="uid://bky7ibv66m81f" path="res://src/scenes/towers/poison.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_towerdata"]

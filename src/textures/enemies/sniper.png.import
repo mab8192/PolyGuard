@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ddw2yv1n3sjhi"
-path="res://.godot/imported/bomb_tower.png-a6dacc78fff627a5158fe0583efaf3c3.ctex"
+uid="uid://tkcvfkptge7d"
+path="res://.godot/imported/sniper.png-090e7bf4ec9c519f4a894513d5dd53db.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/bomb_tower.png"
-dest_files=["res://.godot/imported/bomb_tower.png-a6dacc78fff627a5158fe0583efaf3c3.ctex"]
+source_file="res://src/textures/enemies/sniper.png"
+dest_files=["res://.godot/imported/sniper.png-090e7bf4ec9c519f4a894513d5dd53db.ctex"]
 
 [params]
 

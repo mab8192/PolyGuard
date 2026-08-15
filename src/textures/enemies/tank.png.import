@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://dybeb7xv2w4i4"
-path="res://.godot/imported/brimstone.png-9f7be57bcb33fb23bb3545fe78a24245.ctex"
+uid="uid://nn6glrl0mpap"
+path="res://.godot/imported/tank.png-fb1d63be210348e071101239f0d088eb.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/brimstone.png"
-dest_files=["res://.godot/imported/brimstone.png-9f7be57bcb33fb23bb3545fe78a24245.ctex"]
+source_file="res://src/textures/enemies/tank.png"
+dest_files=["res://.godot/imported/tank.png-fb1d63be210348e071101239f0d088eb.ctex"]
 
 [params]
 

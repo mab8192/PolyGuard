@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_onxbk"]
 [ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="2_onxbk"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_xuunk"]
-[ext_resource type="Texture2D" uid="uid://dybeb7xv2w4i4" path="res://src/textures/brimstone.png" id="4_onxbk"]
+[ext_resource type="Texture2D" uid="uid://dybeb7xv2w4i4" path="res://src/textures/towers/brimstone.png" id="4_onxbk"]
 [ext_resource type="PackedScene" uid="uid://b2k4xt3p0yf8i" path="res://src/scenes/towers/brimstone.tscn" id="5_8mal4"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_y670i"]
 

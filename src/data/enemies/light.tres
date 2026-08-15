@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_0qo1k"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_74qf7"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_e1hlv"]
+[ext_resource type="Texture2D" uid="uid://b5hhf5vxqkw8j" path="res://src/textures/enemies/light.png" id="2_e1hlv"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="3_0qo1k"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_ebr51"]
 [ext_resource type="PackedScene" uid="uid://bnvfyppxn7r2h" path="res://src/scenes/enemies/light.tscn" id="5_74qf7"]
@@ -38,6 +38,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("6_mmioh")
 display_name = "Light"
 scene = ExtResource("5_74qf7")
+icon = ExtResource("2_e1hlv")
 gold_reward = 10
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")

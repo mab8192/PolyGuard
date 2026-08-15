@@ -2,13 +2,14 @@
 
 [ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_uobtx"]
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jihhj"]
+[ext_resource type="Texture2D" uid="uid://be8gkui0iosrk" path="res://src/textures/enemies/grunt.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_u8cj6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_t5ldr"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_u8cj6"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_t5ldr"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
-size = Vector2(16, 16)
+[sub_resource type="CircleShape2D" id="CircleShape2D_mg0rn"]
+radius = 8.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(18, 32)
@@ -20,10 +21,9 @@ motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_uobtx")
 
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
-scale = Vector2(0.875, 0.875)
-color = Color(0.43059742, 0.7144118, 0.74067044, 1)
-polygon = PackedVector2Array(-9.142857, -9.142857, 9.142857, -9.142857, 9.142857, 9.142857, -9.142857, 9.142857)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494191]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_tex")
 
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634]
 script = ExtResource("2_jihhj")
@@ -41,8 +41,7 @@ metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 simplify_path = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
-visible = false
-shape = SubResource("RectangleShape2D_qgbsg")
+shape = SubResource("CircleShape2D_mg0rn")
 
 [node name="TargetingComponent" type="Area2D" parent="." unique_id=1463687455]
 script = ExtResource("5_u8cj6")

@@ -2,7 +2,7 @@
 
 [ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectiles/projectile.tscn" id="1_aacki"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_8g4oy"]
+[ext_resource type="Texture2D" uid="uid://tkcvfkptge7d" path="res://src/textures/enemies/sniper.png" id="2_8g4oy"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_dyd85"]
 [ext_resource type="PackedScene" uid="uid://bf83dxfklx1sf" path="res://src/scenes/enemies/sniper.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_begw7"]
@@ -42,6 +42,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("1_script")
 display_name = "Sniper"
 scene = ExtResource("2_scene")
+icon = ExtResource("2_8g4oy")
 lives_penalty = 2
 gold_reward = 35
 health = SubResource("SubResource_health")

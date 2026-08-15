@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_l5h0c"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="1_mkqy8"]
-[ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/tar_trap.png" id="6_x24fm"]
+[ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/towers/tar_trap.png" id="6_x24fm"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)

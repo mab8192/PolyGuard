@@ -1,7 +1,7 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://c52631vvaxwfm"]
 
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_g0mei"]
+[ext_resource type="Texture2D" uid="uid://d4ars28tkgssy" path="res://src/textures/enemies/ghost.png" id="2_g0mei"]
 [ext_resource type="PackedScene" uid="uid://iyul5yfpdq8d" path="res://src/scenes/enemies/ghost.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_ky8tn"]
@@ -27,6 +27,7 @@ metadata/_custom_type_script = "uid://bllmo3a8geds7"
 script = ExtResource("1_script")
 display_name = "Ghost"
 scene = ExtResource("2_scene")
+icon = ExtResource("2_g0mei")
 lives_penalty = 2
 gold_reward = 30
 type = 1

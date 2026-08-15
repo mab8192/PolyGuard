@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_l6xij"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_wxbx7"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_po7ym"]
+[ext_resource type="Texture2D" uid="uid://0c2rcwlobebc" path="res://src/textures/enemies/heavy.png" id="2_po7ym"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="3_wxbx7"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_jkauw"]
 [ext_resource type="PackedScene" uid="uid://be8ilpqt8yn44" path="res://src/scenes/enemies/heavy.tscn" id="5_l6xij"]
@@ -38,7 +38,8 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("6_bctmv")
 display_name = "Heavy"
 scene = ExtResource("5_l6xij")
-gold_reward = 15
+icon = ExtResource("2_po7ym")
+gold_reward = 30
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_c3qve")

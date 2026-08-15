@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_bfwhb"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_75758"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_ax7nv"]
-[ext_resource type="Texture2D" uid="uid://ddw2yv1n3sjhi" path="res://src/textures/bomb_tower.png" id="5_ugiga"]
+[ext_resource type="Texture2D" uid="uid://ddw2yv1n3sjhi" path="res://src/textures/towers/bomb_tower.png" id="5_ugiga"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(64, 64)

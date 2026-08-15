@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="3_hg6e0"]
 [ext_resource type="Resource" uid="uid://cpoison12345" path="res://src/data/effects/PoisonEffect.tres" id="4_uyobu"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="5_4x0g2"]
-[ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/poison_trap.png" id="6_sg31k"]
+[ext_resource type="Texture2D" uid="uid://dueyw4kkmui74" path="res://src/textures/towers/poison_trap.png" id="6_sg31k"]
 [ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="7_0pr3y"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]

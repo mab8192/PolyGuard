@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_8mx5k"]
 [ext_resource type="PackedScene" uid="uid://ctoyf62guxgdq" path="res://src/scenes/enemies/grunt.tscn" id="1_rahde"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_jksdh"]
+[ext_resource type="Texture2D" uid="uid://be8gkui0iosrk" path="res://src/textures/enemies/grunt.png" id="2_jksdh"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="2_rbqdr"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_rwq7f"]
@@ -37,6 +37,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("2_rbqdr")
 display_name = "Grunt"
 scene = ExtResource("1_rahde")
+icon = ExtResource("2_jksdh")
 gold_reward = 15
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")

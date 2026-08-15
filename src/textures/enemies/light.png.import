@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://coaoywfo0ilkk"
-path="res://.godot/imported/tar_trap.png-b823bb404205557f6e01c0301ef561b1.ctex"
+uid="uid://b5hhf5vxqkw8j"
+path="res://.godot/imported/light.png-5ce73a0bb6191de276efd2e84125a94f.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/tar_trap.png"
-dest_files=["res://.godot/imported/tar_trap.png-b823bb404205557f6e01c0301ef561b1.ctex"]
+source_file="res://src/textures/enemies/light.png"
+dest_files=["res://.godot/imported/light.png-5ce73a0bb6191de276efd2e84125a94f.ctex"]
 
 [params]
 

@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_jj7ur"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_m2ilo"]
+[ext_resource type="Texture2D" uid="uid://nn6glrl0mpap" path="res://src/textures/enemies/tank.png" id="2_m2ilo"]
 [ext_resource type="PackedScene" uid="uid://cqhi14urkcmc7" path="res://src/scenes/enemies/tank.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="3_ahs2r"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
@@ -42,6 +42,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 script = ExtResource("1_script")
 display_name = "Tank"
 scene = ExtResource("2_scene")
+icon = ExtResource("2_m2ilo")
 lives_penalty = 3
 gold_reward = 50
 health = SubResource("SubResource_health")

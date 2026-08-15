@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ewxlo"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_fojd5"]
-[ext_resource type="Texture2D" uid="uid://c4eufxkxcpsys" path="res://src/textures/barricade.png" id="3_rcwwe"]
+[ext_resource type="Texture2D" uid="uid://c4eufxkxcpsys" path="res://src/textures/towers/barricade.png" id="3_rcwwe"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)

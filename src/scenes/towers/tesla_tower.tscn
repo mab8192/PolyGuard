@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_a1clp"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_d2sg2"]
 [ext_resource type="Script" uid="uid://c2smt7madc0u7" path="res://src/scenes/effects/lightning_visualizer.gd" id="5_ho1i0"]
-[ext_resource type="Texture2D" uid="uid://dl76pbu2a8ce5" path="res://src/textures/tesla_tower.png" id="6_a1clp"]
+[ext_resource type="Texture2D" uid="uid://dl76pbu2a8ce5" path="res://src/textures/towers/tesla_tower.png" id="6_a1clp"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
 radius = 128.0

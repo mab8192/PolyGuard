@@ -2,13 +2,17 @@
 
 [ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_l622k"]
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jq52y"]
+[ext_resource type="Texture2D" uid="uid://nn6glrl0mpap" path="res://src/textures/enemies/tank.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_34c0h"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_wnl36"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_34c0h"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_wnl36"]
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
+size = Vector2(32, 32)
+
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e0x7p"]
-size = Vector2(18, 32)
+size = Vector2(18, 36)
 
 [node name="Tank" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -17,11 +21,9 @@ motion_mode = 1
 wall_min_slide_angle = 0.0
 script = ExtResource("1_l622k")
 
-[node name="Polygon2D" type="Polygon2D" parent="." unique_id=111494191]
-position = Vector2(-1, -1)
-scale = Vector2(0.875, 0.875)
-color = Color(0.16470589, 0.6, 0, 1)
-polygon = PackedVector2Array(-17.142857, -17.142857, 19.42857, -17.142857, 19.42857, 19.42857, -17.142857, 19.42857)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494191]
+scale = Vector2(0.65, 0.65)
+texture = ExtResource("2_tex")
 
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634]
 script = ExtResource("2_jq52y")
@@ -41,16 +43,15 @@ simplify_path = true
 avoidance_enabled = true
 max_speed = 500.0
 
-[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-visible = false
-polygon = PackedVector2Array(-16, -16, 16, -16, 16, 16, -16, 16)
+[node name="CollisionPolygon2D" type="CollisionShape2D" parent="." unique_id=1959201097]
+shape = SubResource("RectangleShape2D_qgbsg")
 
 [node name="TargetingComponent" type="Area2D" parent="." unique_id=538955999]
 script = ExtResource("5_34c0h")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=1927211917]
-position = Vector2(24, 0)
+position = Vector2(25, 0)
 shape = SubResource("RectangleShape2D_e0x7p")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=1859341713]
