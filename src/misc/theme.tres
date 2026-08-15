@@ -125,20 +125,22 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_credit_badge"]
-content_margin_left = 12.0
-content_margin_top = 4.0
-content_margin_right = 12.0
-content_margin_bottom = 4.0
-bg_color = Color(0.18, 0.08, 0.28, 0.9)
+content_margin_left = 14.0
+content_margin_top = 6.0
+content_margin_right = 14.0
+content_margin_bottom = 6.0
+bg_color = Color(0.18, 0.13, 0.03, 0.95)
 border_width_left = 2
 border_width_top = 2
 border_width_right = 2
 border_width_bottom = 2
-border_color = Color(0.78, 0.52, 1, 0.9)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
+border_color = Color(1, 0.82, 0.22, 0.95)
+corner_radius_top_left = 10
+corner_radius_top_right = 10
+corner_radius_bottom_right = 10
+corner_radius_bottom_left = 10
+shadow_color = Color(1, 0.8, 0.1, 0.25)
+shadow_size = 4
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_danger_normal"]
 content_margin_left = 18.0
@@ -360,10 +362,10 @@ corner_radius_bottom_right = 55
 corner_radius_bottom_left = 55
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_disabled"]
-content_margin_left = 24.0
-content_margin_top = 14.0
-content_margin_right = 24.0
-content_margin_bottom = 14.0
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 bg_color = Color(0.04, 0.07, 0.12, 0.6)
 border_width_left = 1
 border_width_top = 1
@@ -376,10 +378,10 @@ corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_hover"]
-content_margin_left = 24.0
-content_margin_top = 14.0
-content_margin_right = 24.0
-content_margin_bottom = 14.0
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 bg_color = Color(0.08, 0.22, 0.34, 1)
 border_width_left = 3
 border_width_top = 3
@@ -394,10 +396,10 @@ shadow_color = Color(0, 0.96, 0.83, 0.45)
 shadow_size = 14
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_normal"]
-content_margin_left = 24.0
-content_margin_top = 14.0
-content_margin_right = 24.0
-content_margin_bottom = 14.0
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 bg_color = Color(0.05, 0.15, 0.24, 0.95)
 border_width_left = 3
 border_width_top = 3
@@ -412,10 +414,10 @@ shadow_color = Color(0, 0.96, 0.83, 0.3)
 shadow_size = 10
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_pressed"]
-content_margin_left = 24.0
-content_margin_top = 14.0
-content_margin_right = 24.0
-content_margin_bottom = 14.0
+content_margin_left = 18.0
+content_margin_top = 10.0
+content_margin_right = 18.0
+content_margin_bottom = 10.0
 bg_color = Color(0, 0.96, 0.83, 0.25)
 border_width_left = 3
 border_width_top = 3
@@ -477,6 +479,30 @@ corner_radius_top_left = 14
 corner_radius_top_right = 14
 corner_radius_bottom_right = 14
 corner_radius_bottom_left = 14
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_empty"]
+bg_color = Color(0.04, 0.07, 0.12, 0.6)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.18, 0.28, 0.42, 0.6)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_slot_equipped"]
+bg_color = Color(0.07, 0.12, 0.22, 0.95)
+border_width_left = 2
+border_width_top = 2
+border_width_right = 2
+border_width_bottom = 2
+border_color = Color(0.22, 0.38, 0.58, 0.9)
+corner_radius_top_left = 16
+corner_radius_top_right = 16
+corner_radius_bottom_right = 16
+corner_radius_bottom_left = 16
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status_badge"]
 content_margin_left = 12.0
@@ -558,13 +584,13 @@ CostText/font_sizes/font_size = 30
 CreditBadge/base_type = &"PanelContainer"
 CreditBadge/styles/panel = SubResource("StyleBoxFlat_credit_badge")
 CreditText/base_type = &"Label"
-CreditText/colors/font_color = Color(0.86, 0.68, 1, 1)
-CreditText/font_sizes/font_size = 30
+CreditText/colors/font_color = Color(1, 0.84, 0.22, 1)
+CreditText/font_sizes/font_size = 32
 DangerButton/base_type = &"Button"
 DangerButton/colors/font_color = Color(1, 0.45, 0.55, 1)
 DangerButton/colors/font_hover_color = Color(1, 1, 1, 1)
 DangerButton/colors/font_pressed_color = Color(1, 0.7, 0.75, 1)
-DangerButton/font_sizes/font_size = 30
+DangerButton/font_sizes/font_size = 32
 DangerButton/styles/disabled = SubResource("StyleBoxFlat_danger_normal")
 DangerButton/styles/focus = SubResource("StyleBoxFlat_danger_hover")
 DangerButton/styles/hover = SubResource("StyleBoxFlat_danger_hover")
@@ -654,7 +680,7 @@ PrimaryButton/base_type = &"Button"
 PrimaryButton/colors/font_color = Color(0, 0.96, 0.83, 1)
 PrimaryButton/colors/font_hover_color = Color(1, 1, 1, 1)
 PrimaryButton/colors/font_pressed_color = Color(1, 1, 1, 1)
-PrimaryButton/font_sizes/font_size = 40
+PrimaryButton/font_sizes/font_size = 32
 PrimaryButton/styles/disabled = SubResource("StyleBoxFlat_primary_disabled")
 PrimaryButton/styles/focus = SubResource("StyleBoxFlat_primary_hover")
 PrimaryButton/styles/hover = SubResource("StyleBoxFlat_primary_hover")
@@ -671,6 +697,10 @@ SecondaryButton/styles/focus = SubResource("StyleBoxFlat_secondary_hover")
 SecondaryButton/styles/hover = SubResource("StyleBoxFlat_secondary_hover")
 SecondaryButton/styles/normal = SubResource("StyleBoxFlat_secondary_normal")
 SecondaryButton/styles/pressed = SubResource("StyleBoxFlat_secondary_pressed")
+SlotEmptyPanel/base_type = &"Panel"
+SlotEmptyPanel/styles/panel = SubResource("StyleBoxFlat_slot_empty")
+SlotEquippedPanel/base_type = &"Panel"
+SlotEquippedPanel/styles/panel = SubResource("StyleBoxFlat_slot_equipped")
 SmallText/base_type = &"Label"
 SmallText/colors/font_color = Color(0.58, 0.68, 0.82, 1)
 SmallText/font_sizes/font_size = 26

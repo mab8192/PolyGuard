@@ -1,0 +1,114 @@
+[gd_scene format=3 uid="uid://b5k8qm3vxaq1b"]
+
+[ext_resource type="Script" uid="uid://loadoutslotscript" path="res://src/scenes/ui/elements/loadout_slot.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+
+[node name="LoadoutSlot" type="Control" unique_id=14701]
+custom_minimum_size = Vector2(115, 115)
+layout_mode = 3
+anchors_preset = 0
+offset_right = 115.0
+offset_bottom = 115.0
+size_flags_horizontal = 4
+size_flags_vertical = 4
+theme = ExtResource("2_theme")
+script = ExtResource("1_script")
+
+[node name="BGPanel" type="Panel" parent="." unique_id=14702]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"SlotEmptyPanel"
+
+[node name="EmptyBox" type="CenterContainer" parent="." unique_id=14703]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="EmptyLabel" type="Label" parent="EmptyBox" unique_id=14704]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"EmptySlotText"
+text = "+"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="ContentBox" type="Control" parent="." unique_id=14705]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="IconCenter" type="CenterContainer" parent="ContentBox" unique_id=14706]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="IconRect" type="TextureRect" parent="ContentBox/IconCenter" unique_id=14707]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(72, 72)
+layout_mode = 2
+mouse_filter = 2
+texture = ExtResource("3_icon")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="SelectionRing" type="Panel" parent="." unique_id=14710]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+theme_type_variation = &"CardSelectedPanel"
+
+[node name="ClickButton" type="Button" parent="." unique_id=14711]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+focus_mode = 0
+theme_type_variation = &"FlatButton"
+
+[node name="RemoveButton" type="Button" parent="." unique_id=14712]
+unique_name_in_owner = true
+visible = false
+custom_minimum_size = Vector2(40, 40)
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -38.0
+offset_top = -2.0
+offset_right = 2.0
+offset_bottom = 38.0
+grow_horizontal = 0
+focus_mode = 0
+theme_type_variation = &"DangerIconButton"
+text = "✕"

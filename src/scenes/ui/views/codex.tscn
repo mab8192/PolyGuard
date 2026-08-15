@@ -30,7 +30,7 @@ text = "ENEMY CODEX"
 horizontal_alignment = 1
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681921]
-custom_minimum_size = Vector2(0, 260)
+custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -98,19 +98,21 @@ theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681935]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1, 0)
+custom_minimum_size = Vector2(0, 100)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Standard polygon foot soldier."
 autowrap_mode = 2
+clip_text = true
 
 [node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1, 0)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
 theme_type_variation = &"StatText"
 text = "HP: 100 | Speed: 150 | Lives Penalty: 1"
 autowrap_mode = 2
+clip_text = true
 
 [node name="ScrollContainer" type="ScrollContainer" parent="RootVBox" unique_id=637681937]
 layout_mode = 2

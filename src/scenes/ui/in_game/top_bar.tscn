@@ -12,7 +12,7 @@ offset_bottom = 64.0
 grow_horizontal = 2
 theme = ExtResource("4_theme")
 theme_override_constants/margin_left = 16
-theme_override_constants/margin_top = 160
+theme_override_constants/margin_top = 16
 theme_override_constants/margin_right = 16
 script = ExtResource("1_scac0")
 

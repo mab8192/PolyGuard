@@ -31,7 +31,7 @@ text = "TOWER ARSENAL"
 horizontal_alignment = 1
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
-custom_minimum_size = Vector2(0, 310)
+custom_minimum_size = Vector2(0, 430)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -110,19 +110,21 @@ theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681915]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1, 0)
+custom_minimum_size = Vector2(0, 120)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Fires rapid arrows at incoming enemies."
 autowrap_mode = 2
+clip_text = true
 
 [node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681916]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1, 0)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 theme_type_variation = &"StatText"
 text = "Damage: 50 | Rate: Every 0.5s"
 autowrap_mode = 2
+clip_text = true
 
 [node name="UpgradeButton" type="Button" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681921]
 unique_name_in_owner = true

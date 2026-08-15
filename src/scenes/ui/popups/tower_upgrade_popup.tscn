@@ -127,6 +127,7 @@ text = "ATTRIBUTES & UPGRADE PROJECTION"
 
 [node name="StatsComparisonLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/StatsPanel/StatsVBox" unique_id=9870023]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Damage: 60 -> 72 (+20%)
@@ -170,6 +171,7 @@ theme_override_constants/separation = 16
 
 [node name="ChoiceCardA" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870027]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardPanel"
@@ -205,6 +207,7 @@ text = "MAGIC DAMAGE"
 
 [node name="ChoiceDescA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870033]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"SmallText"
@@ -221,6 +224,7 @@ text = "ACTIVATE"
 
 [node name="ChoiceCardB" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870035]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardPanel"
@@ -256,6 +260,7 @@ text = "TRUE DAMAGE"
 
 [node name="ChoiceDescB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870041]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 90)
 layout_mode = 2
 size_flags_vertical = 3
 theme_type_variation = &"SmallText"

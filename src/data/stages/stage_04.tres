@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("3_pyxte")
 stage_id = "stage_04"
-stage_name = "Vienna's Stage 2"
+stage_name = "Stage 4"
 scene = ExtResource("2_hhmat")
 icon = ExtResource("1_hhmat")
 starting_gold = 1400

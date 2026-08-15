@@ -24,7 +24,7 @@ func _ready() -> void:
 				GameManager.selected_loadout.append(t.get_scaled_copy(lvl, choice))
 				if GameManager.selected_loadout.size() >= 4:
 					break
-
+ 
 	if stage_to_load:
 		stage_root.load_stage(stage_to_load)
 		_update_camera()

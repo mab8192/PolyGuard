@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
 [ext_resource type="PackedScene" uid="uid://wry12f5iawia" path="res://src/scenes/ui/popups/settings_popup.tscn" id="6_settings_popup"]
+[ext_resource type="Script" uid="uid://safeareacontainerscript" path="res://src/scenes/utility/safe_area_container.gd" id="7_safe_area"]
 
 [node name="MainMenu" type="Control" unique_id=374769933]
 layout_mode = 3
@@ -36,9 +37,10 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 32
-theme_override_constants/margin_top = 130
+theme_override_constants/margin_top = 24
 theme_override_constants/margin_right = 32
 theme_override_constants/margin_bottom = 24
+script = ExtResource("7_safe_area")
 
 [node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer" unique_id=1952931871]
 layout_mode = 2
@@ -69,12 +71,12 @@ theme_override_constants/separation = 16
 [node name="CreditsBadge" type="PanelContainer" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2046030936]
 layout_mode = 2
 size_flags_vertical = 4
-theme_type_variation = &"CostBadge"
+theme_type_variation = &"CreditBadge"
 
 [node name="MainMenuCreditsLabel" type="Label" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox/CreditsBadge" unique_id=2046030937]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"CostText"
+theme_type_variation = &"CreditText"
 text = "0 CREDITS"
 
 [node name="Spacer" type="Control" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2046030938]

@@ -1,4 +1,4 @@
-extends MarginContainer
+class_name InGameTopBar extends SafeAreaMarginContainer
 
 @onready var lives_label: Label = %LivesLabel
 @onready var gold_label: Label = %GoldLabel
@@ -7,6 +7,7 @@ extends MarginContainer
 @onready var pause_button: Button = %PauseButton
 
 func _ready() -> void:
+	super._ready()
 	SignalBus.lives_changed.connect(_on_lives_changed)
 	SignalBus.gold_changed.connect(_on_gold_changed)
 	SignalBus.wave_changed.connect(_on_wave_changed)

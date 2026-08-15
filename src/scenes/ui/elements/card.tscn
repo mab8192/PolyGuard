@@ -26,31 +26,72 @@ grow_vertical = 2
 mouse_filter = 2
 theme_type_variation = &"CardPanel"
 
-[node name="ContentBox" type="VBoxContainer" parent="." unique_id=1765607811]
+[node name="IconCenter" type="CenterContainer" parent="." unique_id=1465083896]
 layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = 10.0
+offset_bottom = -15.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
-theme_override_constants/separation = 4
-alignment = 1
 
-[node name="IconContainer" type="CenterContainer" parent="ContentBox" unique_id=1465083896]
-layout_mode = 2
-mouse_filter = 2
-
-[node name="TextureRect" type="TextureRect" parent="ContentBox/IconContainer" unique_id=185023805]
+[node name="TextureRect" type="TextureRect" parent="IconCenter" unique_id=185023805]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(100, 100)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Label" type="Label" parent="ContentBox" unique_id=1020956434]
+[node name="TopMargin" type="MarginContainer" parent="." unique_id=1465083901]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 40.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_constants/margin_left = 10
+theme_override_constants/margin_top = 8
+theme_override_constants/margin_right = 10
+
+[node name="BadgeContainer" type="MarginContainer" parent="TopMargin" unique_id=1465083897]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+mouse_filter = 2
+
+[node name="BadgePanel" type="PanelContainer" parent="TopMargin/BadgeContainer" unique_id=1465083898]
+unique_name_in_owner = true
+layout_mode = 2
+mouse_filter = 2
+theme_type_variation = &"CostBadge"
+
+[node name="BadgeLabel" type="Label" parent="TopMargin/BadgeContainer/BadgePanel" unique_id=1465083899]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "250 Energy"
+horizontal_alignment = 1
+
+[node name="BottomMargin" type="MarginContainer" parent="." unique_id=1465083902]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -42.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_constants/margin_left = 8
+theme_override_constants/margin_right = 8
+theme_override_constants/margin_bottom = 8
+
+[node name="Label" type="Label" parent="BottomMargin" unique_id=1020956434]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
@@ -58,27 +99,7 @@ size_flags_horizontal = 3
 theme_type_variation = &"SmallText"
 text = "Card Name"
 horizontal_alignment = 1
-autowrap_mode = 2
 clip_text = true
-
-[node name="BadgeContainer" type="CenterContainer" parent="ContentBox" unique_id=1465083897]
-unique_name_in_owner = true
-visible = false
-layout_mode = 2
-mouse_filter = 2
-
-[node name="BadgePanel" type="PanelContainer" parent="ContentBox/BadgeContainer" unique_id=1465083898]
-unique_name_in_owner = true
-layout_mode = 2
-mouse_filter = 2
-theme_type_variation = &"CostBadge"
-
-[node name="BadgeLabel" type="Label" parent="ContentBox/BadgeContainer/BadgePanel" unique_id=1465083899]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"BadgeText"
-text = "250 Energy"
-horizontal_alignment = 1
 
 [node name="SelectionRing" type="Panel" parent="." unique_id=1465083900]
 unique_name_in_owner = true
