@@ -1,12 +1,21 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://yohcm0taa5fv"]
 
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="1_an1m1"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
 [ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_chacc"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="3_y1npq"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_6fodi"]
 [ext_resource type="PackedScene" uid="uid://cktu8hbh4jc1q" path="res://src/scenes/enemies/splitter.tscn" id="5_an1m1"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="6_i6dcn"]
 [ext_resource type="Script" uid="uid://dbyd3fxjpaqkg" path="res://src/data/components/SplitterData.gd" id="7_f62x2"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_targeting"]
+
+[sub_resource type="Resource" id="Resource_attack"]
+script = ExtResource("1_attack")
+damage = 40.0
+attack_mode = 1
+cooldown = 2.0
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("1_an1m1")
@@ -29,6 +38,11 @@ number_of_copies = 3
 health_multiplier = 0.3
 metadata/_custom_type_script = "uid://dbyd3fxjpaqkg"
 
+[sub_resource type="Resource" id="Resource_targeting"]
+script = ExtResource("8_targeting")
+targeting_mask = 2
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("6_i6dcn")
 display_name = "Splitter"
@@ -37,4 +51,6 @@ gold_reward = 15
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_c3qve")
+attack = SubResource("Resource_attack")
+targeting = SubResource("Resource_targeting")
 splitter = SubResource("Resource_bai34")

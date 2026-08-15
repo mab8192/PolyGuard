@@ -50,6 +50,10 @@ func split() -> void:
 			health_comp.data.armor *= data.armor_multiplier
 			health_comp.data.magic_resistance *= data.magic_resistance_multiplier
 
+		var attack_comp: AttackComponent = ComponentUtil.get_component(copy, AttackComponent) as AttackComponent
+		if attack_comp and attack_comp.data:
+			attack_comp.data.damage *= data.health_multiplier
+
 		if GameManager.stage_root and GameManager.stage_root.enemies:
 			GameManager.stage_root.enemies.add_child(copy)
 		elif owner.get_parent():

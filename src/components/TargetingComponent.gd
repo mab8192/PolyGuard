@@ -13,7 +13,7 @@ func get_targets() -> Array[Node2D]:
 
 func _ready() -> void:
 	if not data:
-		push_error("Missing component data! %s" % get_path())
+		push_error("Missing TargetingData! %s" % get_path())
 		return
 
 	_update_collision_mask()
