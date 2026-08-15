@@ -10,6 +10,7 @@
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="7_cohcr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_d56y3"]
+radius = 12.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_1dije"]
 size = Vector2(22, 42)
@@ -22,7 +23,7 @@ wall_min_slide_angle = 0.0
 script = ExtResource("1_kvuks")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1784206974]
-scale = Vector2(0.5, 0.5)
+scale = Vector2(0.6875, 0.6875)
 texture = ExtResource("2_tex")
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
