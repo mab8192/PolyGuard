@@ -20,7 +20,7 @@ class_name TowerData extends Resource
 
 @export_category("Stats")
 @export var is_solid: bool = true
-@export var cost: int = 250 ## How much gold this tower costs to place
+@export var cost: int = 250 ## How much energy this tower costs to place
 
 @export_category("Components")
 @export var health: HealthData

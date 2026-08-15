@@ -61,8 +61,8 @@ func setup(item_data: Dictionary) -> void:
 	
 	var cost: int = item_data.get("cost", -1)
 	if cost >= 0 and cost_label and cost_badge:
-		cost_label.text = "%dg" % cost
-		cost_label.modulate = Color(1, 0.85, 0.35) if is_enabled else Color(1, 0.45, 0.45)
+		cost_label.text = "%d" % cost
+		cost_label.modulate = Color(0.22, 0.92, 1.0, 1.0) if is_enabled else Color(1.0, 0.45, 0.45)
 		cost_badge.show()
 	elif cost_badge:
 		cost_badge.hide()
@@ -79,7 +79,7 @@ func set_highlighted(highlight: bool) -> void:
 	if is_highlighted:
 		tween.tween_property(self, "scale", Vector2(1.2, 1.2), 0.12)
 		if bg_panel:
-			tween.tween_property(bg_panel, "self_modulate", Color(1.3, 1.3, 0.5, 1.0), 0.12)
+			tween.tween_property(bg_panel, "self_modulate", Color(0.4, 1.2, 1.4, 1.0), 0.12)
 	else:
 		tween.tween_property(self, "scale", Vector2.ONE, 0.12)
 		if bg_panel:

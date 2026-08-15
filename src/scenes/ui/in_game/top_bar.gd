@@ -1,7 +1,7 @@
 class_name InGameTopBar extends SafeAreaMarginContainer
 
 @onready var lives_label: Label = %LivesLabel
-@onready var gold_label: Label = %GoldLabel
+@onready var energy_label: Label = %EnergyLabel
 @onready var wave_label: Label = %WaveLabel
 @onready var fast_forward_button: Button = %FastForwardButton
 @onready var pause_button: Button = %PauseButton
@@ -9,7 +9,7 @@ class_name InGameTopBar extends SafeAreaMarginContainer
 func _ready() -> void:
 	super._ready()
 	SignalBus.lives_changed.connect(_on_lives_changed)
-	SignalBus.gold_changed.connect(_on_gold_changed)
+	SignalBus.energy_changed.connect(_on_energy_changed)
 	SignalBus.wave_changed.connect(_on_wave_changed)
 	SignalBus.stage_loaded.connect(_on_stage_loaded)
 	SignalBus.stage_completed.connect(_on_stage_complete)
@@ -20,8 +20,8 @@ func _ready() -> void:
 func _on_lives_changed(lives: int) -> void:
 	lives_label.text = str(lives)
 
-func _on_gold_changed(gold: int) -> void:
-	gold_label.text = str(gold)
+func _on_energy_changed(energy: int) -> void:
+	energy_label.text = str(energy)
 
 func _on_stage_loaded() -> void:
 	wave_label.text = "1 / " + str(GameManager.current_stage.data.get_waves().size())

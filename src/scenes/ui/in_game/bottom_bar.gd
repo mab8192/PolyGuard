@@ -1,13 +1,13 @@
 extends MarginContainer
 
 @onready var build_button: Button = %BuildButton
-@onready var next_wave_button: TextureButton = %NextWaveButton
-@onready var placement_buttons: Control = %PlacementButtons
+@onready var next_wave_button: Button = %NextWaveButton
+@onready var placement_buttons: CanvasItem = %PlacementButtons
 @onready var cancel_button: Button = %CancelPlacementButton
 @onready var confirm_button: Button = %ConfirmPlacementButton
 
 @export var radial_menu_scene: PackedScene = preload("res://src/scenes/ui/elements/radial_menu.tscn")
-@onready var radial_menu: RadialMenu = $DockContainer/BuildButton/RadialMenu
+@onready var radial_menu: RadialMenu = %RadialMenu
 
 func _ready() -> void:
 	build_button.focus_mode = Control.FOCUS_NONE
@@ -42,16 +42,15 @@ func open_build_radial_menu() -> void:
 	var items: Array[Dictionary] = []
 	
 	var towers: Array[TowerData] = GameManager.selected_loadout
-	var current_gold: int = GameManager.current_stage.gold if GameManager.current_stage else 999
+	var current_energy: int = GameManager.current_stage.energy if GameManager.current_stage else 999
 	
 	# Populate menu entries directly from TowerData resources (up to 6 items)
 	for tower_data in towers:
 		items.append({
-			"title": tower_data.display_name,
 			"payload": tower_data,
 			"icon": tower_data.icon,
 			"cost": tower_data.cost,
-			"enabled": (current_gold >= tower_data.cost)
+			"enabled": (current_energy >= tower_data.cost)
 		})
 	
 	var button_center = build_button.global_position + (build_button.size / 2.0)

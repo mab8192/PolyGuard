@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cq3ofdmp8sxea"]
 
 [ext_resource type="Script" uid="uid://cy04gqumfumjy" path="res://src/scenes/utility/spawner.gd" id="1_y5mdg"]
+[ext_resource type="Texture2D" uid="uid://spawnertex01" path="res://src/textures/utility/spawner.png" id="2_spawner_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
 size = Vector2(64, 64)
@@ -8,12 +9,8 @@ size = Vector2(64, 64)
 [node name="Spawner" type="Area2D" unique_id=964929055 groups=["spawners"]]
 script = ExtResource("1_y5mdg")
 
-[node name="ColorRect" type="ColorRect" parent="." unique_id=1912200016]
-offset_left = -32.0
-offset_top = -32.0
-offset_right = 32.0
-offset_bottom = 32.0
-color = Color(0.9724042, 0, 0.08693842, 1)
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1912200016]
+texture = ExtResource("2_spawner_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1839956020]
 shape = SubResource("RectangleShape2D_naouo")

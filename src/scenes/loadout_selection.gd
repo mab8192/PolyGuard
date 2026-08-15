@@ -103,7 +103,7 @@ func _refresh_all() -> void:
 func _update_header() -> void:
 	if current_stage:
 		stage_title_label.text = current_stage.stage_name.to_upper()
-		stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_gold, current_stage.starting_lives]
+		stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_energy, current_stage.starting_lives]
 	else:
 		stage_title_label.text = "CUSTOM LOADOUT"
 		stage_subtitle_label.text = "Select your defensive arsenal"

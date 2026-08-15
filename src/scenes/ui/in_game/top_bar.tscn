@@ -1,9 +1,11 @@
 [gd_scene format=3 uid="uid://dsr7pdgsmpf0j"]
 
 [ext_resource type="Script" uid="uid://dshb7u6lyrtot" path="res://src/scenes/ui/in_game/top_bar.gd" id="1_scac0"]
-[ext_resource type="Texture2D" uid="uid://c43kdbbj6ibvy" path="res://vendor/heart.png" id="2_eatui"]
-[ext_resource type="Texture2D" uid="uid://b5d8g2x4i6k8m" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/power.png" id="3_power"]
+[ext_resource type="Texture2D" uid="uid://b262q5v7ts8nw" path="res://src/textures/icons/lives.png" id="2_lives_icon"]
+[ext_resource type="Texture2D" uid="uid://cksmugwh6n5r8" path="res://src/textures/icons/energy.png" id="3_energy_icon"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="4_theme"]
+[ext_resource type="Texture2D" uid="uid://b2uyfrhpdtgnm" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/fastForward.png" id="5_vktos"]
+[ext_resource type="Texture2D" uid="uid://mjcq2h3hdb6i" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/pause.png" id="6_47daa"]
 
 [node name="TopBar" type="MarginContainer" unique_id=695341922]
 anchors_preset = 10
@@ -34,34 +36,34 @@ layout_mode = 2
 [node name="LiveContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=2006078890]
 layout_mode = 2
 
-[node name="LivesImage" type="TextureRect" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=658645099]
+[node name="LivesImage" type="TextureRect" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=595761281]
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("2_eatui")
+texture = ExtResource("2_lives_icon")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="LivesLabel" type="Label" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=37523814]
 unique_name_in_owner = true
+modulate = Color(1, 0.38795555, 0.3197254, 1)
 layout_mode = 2
 theme_type_variation = &"HudStatText"
 text = "20"
 
-[node name="GoldContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=333753207]
+[node name="EnergyContainer" type="HBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=333753207]
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="GoldImage" type="TextureRect" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=1088415156]
-modulate = Color(0.25, 0.9, 1, 1)
+[node name="EnergyImage" type="TextureRect" parent="MarginContainer/HBoxContainer/EnergyContainer" unique_id=1088415156]
 custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
-texture = ExtResource("3_power")
+texture = ExtResource("3_energy_icon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="GoldLabel" type="Label" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=178869082]
+[node name="EnergyLabel" type="Label" parent="MarginContainer/HBoxContainer/EnergyContainer" unique_id=178869082]
 unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"HudEnergyText"
@@ -86,7 +88,7 @@ custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
 toggle_mode = true
-text = "1x"
+icon = ExtResource("5_vktos")
 
 [node name="PauseButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=977434464]
 unique_name_in_owner = true
@@ -94,4 +96,4 @@ process_mode = 3
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
-text = "||"
+icon = ExtResource("6_47daa")

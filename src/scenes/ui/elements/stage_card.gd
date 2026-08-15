@@ -42,7 +42,7 @@ func _render() -> void:
 		var wave_count := stage_data.get_waves().size()
 		var stat_parts: Array[String] = []
 		
-		stat_parts.append("Energy: %d" % stage_data.starting_gold)
+		stat_parts.append("Energy: %d" % stage_data.starting_energy)
 		stat_parts.append("Lives: %d" % stage_data.starting_lives)
 		
 		if wave_count > 0:

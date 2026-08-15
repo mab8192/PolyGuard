@@ -1,0 +1,41 @@
+#!/usr/bin/env python3
+"""
+generate_all_sprites.py
+Master runner script that executes all sprite generators and regenerates assets
+into their respective res:// directories.
+
+Usage:
+    python3 src/utility/generate_all_sprites.py
+"""
+
+import sys
+import os
+
+# Add current directory to path
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from generate_icons import generate_lives_icon, generate_energy_icon, generate_build_icon
+from generate_tiles import generate_spawner_tile, generate_exit_tile
+from generate_enemies import generate_all_enemies
+
+def main():
+    print("========================================")
+    print("  Poly Guard 2D - Sprite Generator Suite")
+    print("========================================")
+    
+    print("\n[1/3] Generating HUD & UI Icons...")
+    generate_lives_icon()
+    generate_energy_icon()
+    generate_build_icon()
+    
+    print("\n[2/3] Generating Map Floor Tiles...")
+    generate_spawner_tile()
+    generate_exit_tile()
+    
+    print("\n[3/3] Generating Enemy Sprites...")
+    generate_all_enemies()
+    
+    print("\nAll sprites regenerated successfully!")
+
+if __name__ == "__main__":
+    main()

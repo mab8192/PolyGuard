@@ -10,5 +10,5 @@ stage_id = "test_stage"
 stage_name = "Test Stage"
 scene = ExtResource("1_0wwm5")
 icon = ExtResource("1_k4d32")
-starting_gold = 99999
+starting_energy = 99999
 wave_data_file = "res://src/data/stages/waves/TestStageData.json"

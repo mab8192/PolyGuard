@@ -1,296 +1,96 @@
 [gd_scene format=3 uid="uid://bokydd4nvejt2"]
 
 [ext_resource type="Script" uid="uid://celcwx2brueh7" path="res://src/scenes/ui/in_game/bottom_bar.gd" id="1_sf614"]
-[ext_resource type="Texture2D" uid="uid://bltwwq08ody7v" path="res://vendor/HAMMA.png" id="2_ojqie"]
-[ext_resource type="Texture2D" uid="uid://5a1a1b6f6q1i" path="res://vendor/arrow_sheet.png" id="3_chvpt"]
+[ext_resource type="Texture2D" uid="uid://c2tu0jk8ratm2" path="res://src/textures/icons/build.png" id="2_ojqie"]
 [ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/elements/radial_menu.tscn" id="3_oibdf"]
-[ext_resource type="Script" uid="uid://i0rnk2gh17ei" path="res://src/scenes/ui/elements/radial_menu.gd" id="4_3lhge"]
+[ext_resource type="Texture2D" uid="uid://eoxnj6vvp3mj" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/arrowRight.png" id="5_3lhge"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="5_theme"]
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_oibdf"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(0, 0, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_6hjsn"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(28, 0, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_8kyac"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(56, 0, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_3houk"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(84, 0, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ho5i4"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(0, 21, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_m54rs"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(28, 21, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_s4q6u"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(56, 21, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_qiain"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(84, 21, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_t6dlb"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(0, 42, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1ava0"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(28, 42, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_mqhxp"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(56, 42, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_v8l60"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(84, 42, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_1eakx"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(0, 63, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_5o823"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(28, 63, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_brkht"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(56, 63, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_16hk4"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(84, 63, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xbytf"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(0, 84, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_ooqaf"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(28, 84, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_xvtla"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(56, 84, 28, 21)
-
-[sub_resource type="AtlasTexture" id="AtlasTexture_56v1a"]
-atlas = ExtResource("3_chvpt")
-region = Rect2(84, 84, 28, 21)
-
-[sub_resource type="SpriteFrames" id="SpriteFrames_fkkip"]
-animations = [{
-"frames": [{
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_oibdf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_6hjsn")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_8kyac")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_3houk")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ho5i4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_m54rs")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_s4q6u")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_qiain")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_t6dlb")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1ava0")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_mqhxp")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_v8l60")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_1eakx")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_5o823")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_brkht")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_16hk4")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xbytf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_ooqaf")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_xvtla")
-}, {
-"duration": 1.0,
-"texture": SubResource("AtlasTexture_56v1a")
-}],
-"loop": 1,
-"name": &"default",
-"speed": 15.0
-}]
-
-[sub_resource type="LabelSettings" id="LabelSettings_ihu3t"]
-font_size = 38
-font_color = Color(0, 0, 0, 1)
 
 [node name="BottomBar" type="MarginContainer" unique_id=192044941]
 anchors_preset = 12
 anchor_top = 1.0
 anchor_right = 1.0
 anchor_bottom = 1.0
+offset_top = -240.0
 grow_horizontal = 2
 grow_vertical = 0
 theme = ExtResource("5_theme")
-theme_override_constants/margin_left = 16
-theme_override_constants/margin_right = 16
-theme_override_constants/margin_bottom = 156
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 100
 script = ExtResource("1_sf614")
 
-[node name="DockContainer" type="Control" parent="." unique_id=35361616]
-custom_minimum_size = Vector2(0, 180)
+[node name="VBoxContainer" type="VBoxContainer" parent="." unique_id=35361615]
 layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 2
 
-[node name="PlacementButtons" type="Control" parent="DockContainer" unique_id=104857601]
+[node name="PlacementButtons" type="HBoxContainer" parent="VBoxContainer" unique_id=104857601]
 unique_name_in_owner = true
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
+visible = false
+layout_mode = 2
+theme_override_constants/separation = 40
+alignment = 1
 
-[node name="CancelPlacementButton" type="Button" parent="DockContainer/PlacementButtons" unique_id=104857602]
+[node name="CancelPlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857602]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 110)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -230.0
-offset_top = -190.0
-offset_right = -120.0
-offset_bottom = -80.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"PlacementCancelButton"
 text = "✕"
 
-[node name="ConfirmPlacementButton" type="Button" parent="DockContainer/PlacementButtons" unique_id=104857603]
+[node name="ConfirmPlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857603]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(110, 110)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = 120.0
-offset_top = -190.0
-offset_right = 230.0
-offset_bottom = -80.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"PlacementConfirmButton"
 text = "✓"
 
-[node name="BuildButton" type="Button" parent="DockContainer" unique_id=108226355]
+[node name="DockContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=35361616]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="LeftSpacer" type="Control" parent="VBoxContainer/DockContainer" unique_id=35361617]
+layout_mode = 2
+size_flags_horizontal = 3
+mouse_filter = 2
+
+[node name="CenterSection" type="CenterContainer" parent="VBoxContainer/DockContainer" unique_id=35361618]
+layout_mode = 2
+
+[node name="BuildButton" type="Button" parent="VBoxContainer/DockContainer/CenterSection" unique_id=108226355]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(200, 200)
-layout_mode = 1
-anchors_preset = 8
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-offset_left = -64.0
-offset_top = -64.0
-offset_right = 64.0
-offset_bottom = 64.0
-grow_horizontal = 2
-grow_vertical = 2
+custom_minimum_size = Vector2(180, 180)
+layout_mode = 2
 size_flags_horizontal = 4
+size_flags_vertical = 4
+theme_type_variation = &"PrimaryButton"
 icon = ExtResource("2_ojqie")
 icon_alignment = 1
+expand_icon = true
 
-[node name="RadialMenu" type="Control" parent="DockContainer/BuildButton" unique_id=2017172846 instance=ExtResource("3_oibdf")]
-layout_mode = 1
-anchors_preset = 15
-anchor_right = 1.0
-anchor_bottom = 1.0
-grow_horizontal = 2
-grow_vertical = 2
-mouse_filter = 2
-script = ExtResource("4_3lhge")
-
-[node name="NextWaveButton" type="TextureButton" parent="DockContainer" unique_id=1722688413]
+[node name="RadialMenu" parent="VBoxContainer/DockContainer/CenterSection/BuildButton" unique_id=2017172846 instance=ExtResource("3_oibdf")]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(220, 180)
 layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -312.0
-offset_top = -92.0
-offset_right = -10.0
-offset_bottom = 88.0
-grow_horizontal = 0
-grow_vertical = 2
 
-[node name="AnimatedSprite2D" type="AnimatedSprite2D" parent="DockContainer/NextWaveButton" unique_id=2015720743]
-process_mode = 3
-position = Vector2(163.00002, 93.00003)
-scale = Vector2(8.1071415, 8.261902)
-sprite_frames = SubResource("SpriteFrames_fkkip")
-autoplay = "default"
-frame_progress = 0.58475226
+[node name="RightSection" type="MarginContainer" parent="VBoxContainer/DockContainer" unique_id=35361619]
+layout_mode = 2
+size_flags_horizontal = 3
 
-[node name="Label" type="Label" parent="DockContainer/NextWaveButton" unique_id=673198725]
-layout_mode = 1
-anchors_preset = 6
-anchor_left = 1.0
-anchor_top = 0.5
-anchor_right = 1.0
-anchor_bottom = 0.5
-offset_left = -302.0
-offset_top = -36.0
-offset_right = -13.0
-offset_bottom = 40.0
-grow_horizontal = 0
-grow_vertical = 2
-text = "Next Wave"
-label_settings = SubResource("LabelSettings_ihu3t")
-horizontal_alignment = 1
-vertical_alignment = 1
+[node name="NextWaveButton" type="Button" parent="VBoxContainer/DockContainer/RightSection" unique_id=1039993642]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 8
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+icon = ExtResource("5_3lhge")
+icon_alignment = 1

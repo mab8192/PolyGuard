@@ -2,7 +2,10 @@ class_name WaveData
 extends RefCounted
 
 var wave_number: int = 1
-var reward_gold: int = 0
+var reward_energy: int = 0
+var reward_gold: int:
+	get: return reward_energy
+	set(v): reward_energy = v
 var spawns: Array[SpawnGroup] = []
 
 ## Dynamic stage activations on wave start
@@ -13,7 +16,7 @@ var activate_exits: Array[String] = []
 static func from_dict(dict: Dictionary) -> WaveData:
 	var wave := WaveData.new()
 	wave.wave_number = int(dict.get("wave_number", 1))
-	wave.reward_gold = int(dict.get("reward_gold", 0))
+	wave.reward_energy = int(dict.get("reward_energy", dict.get("reward_gold", 0)))
 
 	var raw_spawns: Array = dict.get("spawns", [])
 	for spawn_dict in raw_spawns:

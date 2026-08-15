@@ -12,8 +12,12 @@ var effect_manager: EffectManager
 
 # Stage economy and life tracking state
 var lives: int
-var gold: int
+var energy: int
+var gold: int:
+	get: return energy
+	set(v): energy = v
 var score: int = 0
+var selected_tower: Tower = null
 
 # Accessors delegated to WaveManager for external callers
 var wave: int:
@@ -39,10 +43,10 @@ var spawners: Array[Spawner]:
 func _ready() -> void:
 	if data:
 		lives = data.starting_lives
-		gold = data.starting_gold
+		energy = data.starting_energy
 	
 	SignalBus.lives_changed.emit(lives)
-	SignalBus.gold_changed.emit(gold)
+	SignalBus.energy_changed.emit(energy)
 	SignalBus.score_changed.emit(score)
 	
 	wave_manager = WaveManager.new()
@@ -68,21 +72,104 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 		
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+		var click_pos = get_global_mouse_position()
+		var clicked_tower = _find_tower_at(click_pos)
+		if clicked_tower:
+			select_tower(clicked_tower)
+			get_viewport().set_input_as_handled()
+			return
+		elif selected_tower:
+			deselect_tower()
+			get_viewport().set_input_as_handled()
+			return
+		
 	if event.is_action_pressed("ui_cancel"):
+		if selected_tower:
+			deselect_tower()
+			get_viewport().set_input_as_handled()
+			return
 		var hud = get_tree().current_scene.find_child("HUD", true, false)
 		if hud and hud.has_method("open_pause_menu"):
 			hud.open_pause_menu()
 			get_viewport().set_input_as_handled()
 
+func _find_tower_at(pos: Vector2) -> Tower:
+	if not towers:
+		return null
+	
+	var candidates: Array[Tower] = []
+	for child in towers.get_children():
+		if child is Tower and is_instance_valid(child) and not child.is_preview and not child.is_queued_for_deletion():
+			var rect = _get_tower_global_rect(child).grow(8.0)
+			if rect.has_point(pos):
+				candidates.append(child)
+	
+	if candidates.is_empty():
+		return null
+	
+	candidates.sort_custom(func(a: Tower, b: Tower) -> bool:
+		return a.global_position.distance_squared_to(pos) < b.global_position.distance_squared_to(pos)
+	)
+	return candidates[0]
+
+func _get_tower_global_rect(node: Node2D) -> Rect2:
+	if placement_manager:
+		return placement_manager._get_tower_global_rect(node)
+	return Rect2(node.global_position - Vector2(32, 32), Vector2(64, 64))
+
 ### PUBLIC API & ECONOMY HELPERS
 
+func select_tower(tower: Tower) -> void:
+	if selected_tower == tower:
+		return
+	
+	if selected_tower and is_instance_valid(selected_tower):
+		selected_tower.is_selected = false
+	
+	selected_tower = tower
+	if selected_tower and is_instance_valid(selected_tower):
+		selected_tower.is_selected = true
+		SignalBus.tower_selected.emit(selected_tower)
+	else:
+		SignalBus.tower_deselected.emit()
+
+func deselect_tower() -> void:
+	if selected_tower and is_instance_valid(selected_tower):
+		selected_tower.is_selected = false
+	selected_tower = null
+	SignalBus.tower_deselected.emit()
+
+func get_selected_tower() -> Tower:
+	if selected_tower and is_instance_valid(selected_tower):
+		return selected_tower
+	return null
+
+func sell_selected_tower() -> void:
+	if not selected_tower or not is_instance_valid(selected_tower):
+		return
+	
+	var tower_to_sell = selected_tower
+	var sell_value = tower_to_sell.get_sell_value()
+	
+	deselect_tower()
+	add_energy(sell_value)
+	SignalBus.tower_sold.emit(tower_to_sell, sell_value)
+	tower_to_sell._on_died()
+
+func deduct_energy(amount: int) -> void:
+	energy -= amount
+	SignalBus.energy_changed.emit(energy)
+
+func add_energy(amount: int) -> void:
+	energy += amount
+	SignalBus.energy_changed.emit(energy)
+
 func deduct_gold(amount: int) -> void:
-	gold -= amount
-	SignalBus.gold_changed.emit(gold)
+	deduct_energy(amount)
 
 func add_gold(amount: int) -> void:
-	gold += amount
-	SignalBus.gold_changed.emit(gold)
+	add_energy(amount)
 
 func add_score(amount: int) -> void:
 	score += amount
@@ -124,6 +211,7 @@ func start_next_wave() -> void:
 		wave_manager.start_next_wave()
 
 func enter_placement_mode(tower_input: TowerData) -> void:
+	deselect_tower()
 	if placement_manager:
 		placement_manager.enter_placement_mode(tower_input)
 
@@ -146,3 +234,4 @@ func place_preview() -> void:
 
 func generate_navmesh() -> void:
 	NavMeshGenerator.generate_navmesh(self)
+

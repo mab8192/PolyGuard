@@ -4,7 +4,9 @@
 [ext_resource type="Texture2D" uid="uid://bnwqhwxpcd1sq" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/home.png" id="2_home"]
 [ext_resource type="Texture2D" uid="uid://c67o2jy50ne73" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/wrench.png" id="3_wrench"]
 [ext_resource type="Texture2D" uid="uid://iqfqn64bbvaj" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/information.png" id="4_info"]
-[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="5_theme"]
+[ext_resource type="Texture2D" uid="uid://d3yq8j0x60i1g" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/backward.png" id="5_backward"]
+[ext_resource type="Texture2D" uid="uid://b453e0l2ywnx2" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/forward.png" id="6_forward"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="7_theme"]
 
 [node name="NavBar" type="Panel" unique_id=645505814]
 custom_minimum_size = Vector2(0, 240)
@@ -14,7 +16,7 @@ anchor_right = 1.0
 anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 0
-theme = ExtResource("5_theme")
+theme = ExtResource("7_theme")
 theme_type_variation = &"NavBarPanel"
 script = ExtResource("1_3fg15")
 
@@ -34,85 +36,196 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 size_flags_horizontal = 3
 
-[node name="InventoryContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=535336335]
+[node name="InventoryItem" type="Control" parent="MarginContainer/HBoxContainer" unique_id=535336335]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 1
-
-[node name="InventoryCenter" type="CenterContainer" parent="MarginContainer/HBoxContainer/InventoryContainer" unique_id=535336336]
-layout_mode = 2
 size_flags_vertical = 3
 
-[node name="InventoryButton" type="TextureButton" parent="MarginContainer/HBoxContainer/InventoryContainer/InventoryCenter" unique_id=1536413143]
+[node name="InventoryButton" type="TextureButton" parent="MarginContainer/HBoxContainer/InventoryItem" unique_id=1536413143]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 44.0
+offset_right = 60.0
+offset_bottom = 164.0
+grow_horizontal = 2
+pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("3_wrench")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="InventoryLabel" type="Label" parent="MarginContainer/HBoxContainer/InventoryContainer" unique_id=893403867]
+[node name="InventoryArrowRight" type="TextureRect" parent="MarginContainer/HBoxContainer/InventoryItem" unique_id=535336339]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 68)
-layout_mode = 2
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 72.0
+offset_top = -24.0
+offset_right = 120.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_forward")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="InventoryLabel" type="Label" parent="MarginContainer/HBoxContainer/InventoryItem" unique_id=893403867]
+unique_name_in_owner = true
+visible = false
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_type_variation = &"NavText"
 text = "Inventory"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CampaignContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=1406891057]
+[node name="CampaignItem" type="Control" parent="MarginContainer/HBoxContainer" unique_id=1406891057]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 1
-
-[node name="CampaignCenter" type="CenterContainer" parent="MarginContainer/HBoxContainer/CampaignContainer" unique_id=1406891058]
-layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CampaignButton" type="TextureButton" parent="MarginContainer/HBoxContainer/CampaignContainer/CampaignCenter" unique_id=1342006020]
+[node name="CampaignArrowLeft" type="TextureRect" parent="MarginContainer/HBoxContainer/CampaignItem" unique_id=1406891060]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 4
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -24.0
+offset_right = -72.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_backward")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CampaignButton" type="TextureButton" parent="MarginContainer/HBoxContainer/CampaignItem" unique_id=1342006020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 14.0
+offset_right = 60.0
+offset_bottom = 134.0
+grow_horizontal = 2
+pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("2_home")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="CampaignLabel" type="Label" parent="MarginContainer/HBoxContainer/CampaignContainer" unique_id=1745587942]
+[node name="CampaignArrowRight" type="TextureRect" parent="MarginContainer/HBoxContainer/CampaignItem" unique_id=1406891061]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
-layout_mode = 2
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 6
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = 72.0
+offset_top = -24.0
+offset_right = 120.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("6_forward")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CampaignLabel" type="Label" parent="MarginContainer/HBoxContainer/CampaignItem" unique_id=1745587942]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_type_variation = &"NavText"
 text = "Campaign"
 horizontal_alignment = 1
+vertical_alignment = 1
 
-[node name="CodexContainer" type="VBoxContainer" parent="MarginContainer/HBoxContainer" unique_id=441874441]
+[node name="CodexItem" type="Control" parent="MarginContainer/HBoxContainer" unique_id=441874441]
 layout_mode = 2
 size_flags_horizontal = 3
-alignment = 1
-
-[node name="CodexCenter" type="CenterContainer" parent="MarginContainer/HBoxContainer/CodexContainer" unique_id=441874442]
-layout_mode = 2
 size_flags_vertical = 3
 
-[node name="CodexButton" type="TextureButton" parent="MarginContainer/HBoxContainer/CodexContainer/CodexCenter" unique_id=1974351273]
+[node name="CodexArrowLeft" type="TextureRect" parent="MarginContainer/HBoxContainer/CodexItem" unique_id=441874444]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(150, 150)
-layout_mode = 2
-size_flags_horizontal = 4
-size_flags_vertical = 4
+visible = false
+custom_minimum_size = Vector2(48, 48)
+layout_mode = 1
+anchors_preset = 4
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -120.0
+offset_top = -24.0
+offset_right = -72.0
+offset_bottom = 24.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("5_backward")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="CodexButton" type="TextureButton" parent="MarginContainer/HBoxContainer/CodexItem" unique_id=1974351273]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 1
+anchors_preset = 5
+anchor_left = 0.5
+anchor_right = 0.5
+offset_left = -60.0
+offset_top = 44.0
+offset_right = 60.0
+offset_bottom = 164.0
+grow_horizontal = 2
+pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("4_info")
 ignore_texture_size = true
 stretch_mode = 5
 
-[node name="CodexLabel" type="Label" parent="MarginContainer/HBoxContainer/CodexContainer" unique_id=1676110591]
+[node name="CodexLabel" type="Label" parent="MarginContainer/HBoxContainer/CodexItem" unique_id=1676110591]
 unique_name_in_owner = true
 visible = false
-custom_minimum_size = Vector2(0, 68)
-layout_mode = 2
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -54.0
+offset_bottom = -6.0
+grow_horizontal = 2
+grow_vertical = 0
 theme_type_variation = &"NavText"
 text = "Codex"
 horizontal_alignment = 1
+vertical_alignment = 1

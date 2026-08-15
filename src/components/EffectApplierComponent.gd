@@ -12,6 +12,16 @@ signal removed_effect(node: Node2D)
 		data = value
 		_update_collision_mask()
 
+const RANGE_BORDER_COLOR: Color = Color(0.0, 0.96, 0.83, 0.95)
+const RANGE_FILL_COLOR: Color = Color(0.0, 0.96, 0.83, 0.12)
+const RANGE_BORDER_WIDTH: float = 2.5
+
+var is_range_visible: bool = false:
+	set(value):
+		if is_range_visible != value:
+			is_range_visible = value
+			queue_redraw()
+
 enum State {IDLE, ARMING, ACTIVE, COOLDOWN}
 var _state: State = State.IDLE
 
@@ -236,3 +246,70 @@ func _has_valid_overlapping_enemies() -> bool:
 		if is_instance_valid(body) and body is Enemy and not body.is_queued_for_deletion():
 			return true
 	return false
+
+func _draw() -> void:
+	if not is_range_visible:
+		return
+
+	for child in get_children():
+		if child is CollisionShape2D:
+			var col_shape := child as CollisionShape2D
+			if col_shape.disabled or not col_shape.shape:
+				continue
+			draw_set_transform(col_shape.position, col_shape.rotation, col_shape.scale)
+			_draw_shape(col_shape.shape)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+		elif child is CollisionPolygon2D:
+			var col_poly := child as CollisionPolygon2D
+			if col_poly.disabled or col_poly.polygon.is_empty():
+				continue
+			draw_set_transform(col_poly.position, col_poly.rotation, col_poly.scale)
+			_draw_polygon(col_poly.polygon)
+			draw_set_transform(Vector2.ZERO, 0.0, Vector2.ONE)
+
+func _draw_shape(shape: Shape2D) -> void:
+	if shape is CircleShape2D:
+		var circle := shape as CircleShape2D
+		var r := circle.radius
+		draw_circle(Vector2.ZERO, r, RANGE_FILL_COLOR)
+		draw_arc(Vector2.ZERO, r, 0.0, TAU, 96, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
+	elif shape is RectangleShape2D:
+		var rect_shape := shape as RectangleShape2D
+		var sz := rect_shape.size
+		var rect := Rect2(-sz / 2.0, sz)
+		draw_rect(rect, RANGE_FILL_COLOR, true)
+		draw_rect(rect, RANGE_BORDER_COLOR, false, RANGE_BORDER_WIDTH)
+	elif shape is CapsuleShape2D:
+		var cap := shape as CapsuleShape2D
+		var r := cap.radius
+		var h := cap.height
+		var half_h := maxf(0.0, (h / 2.0) - r)
+		var pts: PackedVector2Array = []
+		var segments := 16
+		for i in range(segments + 1):
+			var angle := PI + (PI * i / float(segments))
+			pts.append(Vector2(cos(angle) * r, -half_h + sin(angle) * r))
+		for i in range(segments + 1):
+			var angle := (PI * i / float(segments))
+			pts.append(Vector2(cos(angle) * r, half_h + sin(angle) * r))
+		draw_colored_polygon(pts, RANGE_FILL_COLOR)
+		var pts_closed := pts.duplicate()
+		pts_closed.append(pts[0])
+		draw_polyline(pts_closed, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
+	elif shape is ConvexPolygonShape2D:
+		var convex := shape as ConvexPolygonShape2D
+		_draw_polygon(convex.points)
+	elif shape is ConcavePolygonShape2D:
+		var concave := shape as ConcavePolygonShape2D
+		var segments := concave.segments
+		for i in range(0, segments.size() - 1, 2):
+			draw_line(segments[i], segments[i + 1], RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
+
+func _draw_polygon(poly: PackedVector2Array) -> void:
+	if poly.size() < 3:
+		return
+	draw_colored_polygon(poly, RANGE_FILL_COLOR)
+	var closed := poly.duplicate()
+	closed.append(poly[0])
+	draw_polyline(closed, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
+

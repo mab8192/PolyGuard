@@ -101,6 +101,9 @@ func heal(amount: float) -> void:
 func get_health() -> float:
 	return _health
 
+func get_max_health() -> float:
+	return data.max_health if data else 0.0
+
 func _on_health_changed(health: float) -> void:
 	if _health_bar:
 		_health_bar.visible = health < data.max_health

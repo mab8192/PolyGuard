@@ -25,7 +25,7 @@ func _populate_enemies() -> void:
 	for enemy in all_enemies:
 		var card = CARD_SCENE.instantiate() as Card
 		grid_container.add_child(card)
-		card.setup(enemy.icon, enemy.display_name, "+%dg" % enemy.gold_reward, enemy)
+		card.setup(enemy.icon, enemy.display_name, "", enemy)
 		card.card_clicked.connect(_on_card_clicked)
 		_cards.append(card)
 		
@@ -50,7 +50,7 @@ func _update_details(enemy: EnemyData) -> void:
 		
 	detail_icon.texture = enemy.icon
 	detail_title.text = enemy.display_name
-	detail_reward.text = "+%dg" % enemy.gold_reward
+	detail_reward.text = "+%d Energy" % enemy.energy_reward
 	detail_type_badge.text = "GHOST UNIT" if enemy.type == Enemy.EnemyType.GHOST else "PHYSICAL UNIT"
 	detail_desc.text = "Identified hostile geometric combat unit."
 	

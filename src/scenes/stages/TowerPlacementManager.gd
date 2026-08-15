@@ -83,7 +83,7 @@ func can_place_preview() -> bool:
 	if not preview_tower or not is_instance_valid(preview_tower):
 		return false
 
-	if stage and preview_tower.data and preview_tower.data.cost > stage.gold:
+	if stage and preview_tower.data and preview_tower.data.cost > stage.energy:
 		return false
 
 	var preview_rect: Rect2 = _get_tower_global_rect(preview_tower)
@@ -151,9 +151,9 @@ func place_preview() -> void:
 	var tower_data: TowerData = preview_tower.data
 	var last_pos: Vector2 = preview_tower.global_position
 
-	# Deduct gold and place tower
+	# Deduct energy and place tower
 	if stage:
-		stage.deduct_gold(preview_tower.data.cost)
+		stage.deduct_energy(preview_tower.data.cost)
 	
 	preview_tower.is_preview = false
 	preview_tower.modulate = Color.WHITE
@@ -163,7 +163,7 @@ func place_preview() -> void:
 	preview_tower = null
 	is_dragging = false
 	
-	if tower_data and stage and stage.gold >= tower_data.cost:
+	if tower_data and stage and stage.energy >= tower_data.cost:
 		var adjacent_offsets: Array[Vector2] = [
 			Vector2(GRID_SIZE * 2, 0),
 			Vector2(0, GRID_SIZE * 2),

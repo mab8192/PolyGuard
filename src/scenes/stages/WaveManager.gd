@@ -184,7 +184,7 @@ func _check_wave_completion() -> void:
 		SignalBus.wave_completed.emit()
 		
 		if stage:
-			stage.add_gold(current_wave.reward_gold)
+			stage.add_energy(current_wave.reward_energy)
 			var wave_bonus = wave * 250
 			stage.add_score(wave_bonus)
 		
@@ -200,8 +200,8 @@ func _check_wave_completion() -> void:
 
 func _on_enemy_died(enemy: Enemy) -> void:
 	if stage:
-		stage.add_gold(enemy.data.gold_reward)
-		stage.add_score(enemy.data.gold_reward * 10)
+		stage.add_energy(enemy.data.energy_reward)
+		stage.add_score(enemy.data.energy_reward * 10)
 	
 	_check_wave_completion()
 

@@ -2,6 +2,9 @@ extends Node
 
 signal tower_placed()
 signal tower_destroyed()
+signal tower_selected(tower: Tower)
+signal tower_deselected()
+signal tower_sold(tower: Tower, refund: int)
 signal navmesh_updated()
 signal exits_updated()
 signal spawners_updated()
@@ -14,7 +17,7 @@ signal enemy_died(enemy: Enemy)
 signal enemy_exit(enemy: Enemy)
 
 signal lives_changed(lives: int)
-signal gold_changed(gold: int)
+signal energy_changed(energy: int)
 
 signal wave_changed(wave: int)
 signal wave_started()

@@ -7,7 +7,10 @@ class_name EnemyData extends Resource
 
 @export_category("Stats")
 @export var lives_penalty: int = 1
-@export var gold_reward: int = 1
+@export var energy_reward: int = 1
+var gold_reward: int:
+	get: return energy_reward
+	set(v): energy_reward = v
 @export var type: Enemy.EnemyType = Enemy.EnemyType.PHYSICAL
 @export var nav_strategy: NavigationComponent.NavStrategy = NavigationComponent.NavStrategy.CLOSEST
 

@@ -10,6 +10,6 @@ stage_id = "stage_04"
 stage_name = "Stage 4"
 scene = ExtResource("2_hhmat")
 icon = ExtResource("1_hhmat")
-starting_gold = 1400
+starting_energy = 1400
 loadout_size = 6
 wave_data_file = "res://src/data/stages/waves/Stage3.json"

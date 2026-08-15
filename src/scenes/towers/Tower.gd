@@ -8,6 +8,7 @@ var data: TowerData
 ## Visual modulations for active vs inactive/recharging states
 const ACTIVE_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
 const INACTIVE_MODULATE: Color = Color(0.48, 0.48, 0.54, 0.75)
+const SELL_REFUND_RATIO: float = 0.5
 
 ## Components that CAN be attached. Most are not required
 
@@ -39,6 +40,14 @@ var effect_applier: EffectApplierComponent:
 		_effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
 		return _effect_applier
 
+var is_range_visible: bool = false:
+	set(value):
+		is_range_visible = value
+		if targeting:
+			targeting.is_range_visible = value
+		if effect_applier:
+			effect_applier.is_range_visible = value
+
 var is_solid: bool = true:
 	set(value):
 		is_solid = value
@@ -60,6 +69,11 @@ var is_selected: bool = false:
 	set(value):
 		is_selected = value
 		_update_selected_state()
+
+func get_sell_value() -> int:
+	if data:
+		return maxi(1, int(data.cost * SELL_REFUND_RATIO))
+	return 0
 
 func activate() -> void:
 	is_active = true
@@ -118,8 +132,10 @@ func _update_preview_state() -> void:
 	# Semi-transparent ghost look when previewing
 	if is_preview:
 		modulate.a = 0.5
+		is_range_visible = true
 	else:
 		_update_active_state(false)
+		is_range_visible = is_selected
 	
 	# Enable/disable components where applicable
 	if effect_applier:
@@ -159,7 +175,8 @@ func _set_visual_dimmed(dimmed: bool, animate: bool = false) -> void:
 		modulate = target_col
 
 func _update_selected_state() -> void:
-	pass
+	if not is_preview:
+		is_range_visible = is_selected
 
 func _set_controls_mouse_filter(node: Node, ignore: bool) -> void:
 	var filter := Control.MOUSE_FILTER_IGNORE if ignore else Control.MOUSE_FILTER_STOP

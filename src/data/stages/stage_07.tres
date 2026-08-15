@@ -10,6 +10,6 @@ stage_id = "stage_07"
 stage_name = "Stage 7"
 scene = ExtResource("2_scene")
 icon = ExtResource("1_q1ny0")
-starting_gold = 1600
+starting_energy = 1600
 loadout_size = 6
 wave_data_file = "res://src/data/stages/waves/Stage7.json"

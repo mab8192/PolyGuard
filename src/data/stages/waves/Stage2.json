@@ -1,14 +1,14 @@
 [
 	{
 		"wave_number": 1,
-		"reward_gold": 300,
+		"reward_energy": 300,
 		"spawns": [
 			{ "enemy_type": "grunt", "count": 15, "interval": 0.7, "delay": 0.5 }
 		]
 	},
 	{
 		"wave_number": 2,
-		"reward_gold": 400,
+		"reward_energy": 400,
 		"spawns": [
 			{ "enemy_type": "heavy", "count": 4, "interval": 1.5, "delay": 0.5 },
 			{ "enemy_type": "grunt", "count": 12, "interval": 0.5, "delay": 3.0 },
@@ -17,7 +17,7 @@
 	},
 	{
 		"wave_number": 3,
-		"reward_gold": 500,
+		"reward_energy": 500,
 		"spawns": [
 			{ "enemy_type": "heavy", "count": 6, "interval": 1.2, "delay": 0.5 },
 			{ "enemy_type": "grunt", "count": 15, "interval": 0.4, "delay": 2.0 },
@@ -27,7 +27,7 @@
 	},
 	{
 		"wave_number": 4,
-		"reward_gold": 800,
+		"reward_energy": 800,
 		"spawns": [
 			{ "enemy_type": "tank", "count": 12, "interval": 1.0, "delay": 0.5 },
 			{ "enemy_type": "speeder", "count": 15, "interval": 0.3, "delay": 5.0 },

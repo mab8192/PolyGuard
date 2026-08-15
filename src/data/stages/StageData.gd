@@ -8,7 +8,10 @@ extends Resource
 @export var icon: Texture2D = preload("res://vendor/HAMMA.png")
 
 @export_group("Economy & Rules")
-@export var starting_gold: int = 600
+@export var starting_energy: int = 600
+var starting_gold: int:
+	get: return starting_energy
+	set(v): starting_energy = v
 @export var starting_lives: int = 20
 @export var loadout_size: int = 4
 

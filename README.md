@@ -6,7 +6,7 @@ on-screen joysticks, with special abilities, etc.
 
 This version is a simple sandbox-like tower defense game, with highly simplified graphics and a
 very basic premise. There are no abilities and there is no player character. The game is oriented
-in portrait with a simple UI bar at the top to view health, waves, gold, etc. and some buttons at
+in portrait with a simple UI bar at the top to view health, waves, energy, etc. and some buttons at
 the bottom for building towers and advancing to the next wave.
 
 ## Stages

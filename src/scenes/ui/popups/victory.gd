@@ -23,14 +23,14 @@ func _on_stage_completed() -> void:
 		var stage_id = Registry.get_stage_id(stage_data)
 		var lives = stage.lives
 		var max_lives = stage_data.starting_lives
-		var gold = stage.gold
+		var energy = stage.energy
 		var score = stage.score
 		
 		var reward_info = SaveManager.record_stage_clear(stage_id, score, lives, max_lives)
 		
 		var stars = reward_info.get("stars", 1)
 		star_rating_label.text = "%d STARS" % stars
-		stats_label.text = "Remaining Lives: %d / %d\nFinal Energy: %d\nFinal Score: %d" % [lives, max_lives, gold, score]
+		stats_label.text = "Remaining Lives: %d / %d\nFinal Energy: %d\nFinal Score: %d" % [lives, max_lives, energy, score]
 		
 		var clear_type_str = "First Clear Bonus" if reward_info.get("is_first_clear", false) else "Clear Reward"
 		reward_breakdown_label.text = "%s: +%d Credits\nStar Bonus: +%d Credits\nTotal Earned: +%d Credits" % [
