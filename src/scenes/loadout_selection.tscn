@@ -40,22 +40,12 @@ theme_override_constants/margin_bottom = 48
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="TopBar" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681852]
+[node name="TopBar" type="MarginContainer" parent="MainMargin/RootVBox" unique_id=1731082822]
 layout_mode = 2
-theme_override_constants/separation = 12
-
-[node name="BackButton" type="Button" parent="MainMargin/RootVBox/TopBar" unique_id=637681853]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 68)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme_type_variation = &"SecondaryButton"
-text = "< BACK"
 
 [node name="TitleBox" type="VBoxContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681854]
 layout_mode = 2
-size_flags_horizontal = 3
+size_flags_horizontal = 6
 theme_override_constants/separation = 2
 alignment = 1
 
@@ -79,17 +69,6 @@ theme_type_variation = &"SmallText"
 text = "Starting Energy: 700 • Base Lives: 20"
 horizontal_alignment = 1
 
-[node name="CreditsBadgeContainer" type="PanelContainer" parent="MainMargin/RootVBox/TopBar" unique_id=637681855]
-layout_mode = 2
-size_flags_vertical = 4
-theme_type_variation = &"CreditBadge"
-
-[node name="CreditsLabel" type="Label" parent="MainMargin/RootVBox/TopBar/CreditsBadgeContainer" unique_id=637681885]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"CreditText"
-text = "0 CREDITS"
-
 [node name="LoadoutHeaderHBox" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681856]
 layout_mode = 2
 theme_override_constants/separation = 12
@@ -103,7 +82,7 @@ text = "CURRENT LOADOUT (0 / 4)"
 
 [node name="ClearAllButton" type="Button" parent="MainMargin/RootVBox/LoadoutHeaderHBox" unique_id=637681858]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(160, 52)
+custom_minimum_size = Vector2(180, 68)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
@@ -137,7 +116,7 @@ layout_mode = 2
 
 [node name="DetailIcon" type="TextureRect" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681865]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
@@ -191,7 +170,7 @@ text = "SOLID DEFENSE"
 
 [node name="DetailActionButton" type="Button" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681873]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 64)
+custom_minimum_size = Vector2(260, 80)
 layout_mode = 2
 size_flags_vertical = 4
 focus_mode = 0
@@ -241,14 +220,24 @@ theme_override_constants/h_separation = 16
 theme_override_constants/v_separation = 16
 columns = 4
 
-[node name="BottomActionMargin" type="MarginContainer" parent="MainMargin/RootVBox" unique_id=637681881]
+[node name="BottomActionMargin" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=1601623175]
 layout_mode = 2
-theme_override_constants/margin_top = 4
+
+[node name="BackButton" type="Button" parent="MainMargin/RootVBox/BottomActionMargin" unique_id=637681853]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(240, 110)
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "< BACK"
 
 [node name="StartBattleButton" type="Button" parent="MainMargin/RootVBox/BottomActionMargin" unique_id=637681882]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(240, 110)
 layout_mode = 2
+size_flags_horizontal = 10
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
-text = "DEPLOY LOADOUT"
+text = "START >"

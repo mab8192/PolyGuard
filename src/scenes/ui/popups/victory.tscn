@@ -25,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2170004]
-custom_minimum_size = Vector2(860, 900)
+custom_minimum_size = Vector2(920, 1020)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -99,7 +99,7 @@ theme_override_constants/separation = 16
 
 [node name="NextStageButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170010]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
@@ -107,7 +107,7 @@ text = "NEXT STAGE"
 
 [node name="RetryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170011]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
@@ -115,7 +115,7 @@ text = "REPLAY STAGE"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170012]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"

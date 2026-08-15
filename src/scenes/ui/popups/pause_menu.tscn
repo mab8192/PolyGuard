@@ -26,7 +26,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2180004]
-custom_minimum_size = Vector2(800, 850)
+custom_minimum_size = Vector2(920, 1020)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -62,7 +62,7 @@ text = "Music Volume"
 
 [node name="BGMSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/BGMBox" unique_id=2180011]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -78,7 +78,7 @@ text = "SFX Volume"
 
 [node name="SFXSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2180014]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -90,7 +90,7 @@ theme_override_constants/separation = 16
 
 [node name="ResumeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180016]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 76)
+custom_minimum_size = Vector2(0, 92)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
@@ -98,7 +98,7 @@ text = "RESUME"
 
 [node name="RestartButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180017]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
@@ -106,7 +106,7 @@ text = "RESTART STAGE"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180019]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 84)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"

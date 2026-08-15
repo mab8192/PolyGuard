@@ -7,17 +7,17 @@ signal item_clicked(item: RadialMenuItem)
 		graphic_offset = val
 		_update_positions()
 
-@export var label_offset: Vector2 = Vector2(0, 75):
+@export var label_offset: Vector2 = Vector2(0, 90):
 	set(val):
 		label_offset = val
 		_update_positions()
 
-@export var cost_offset: Vector2 = Vector2(0, 52):
+@export var cost_offset: Vector2 = Vector2(0, 60):
 	set(val):
 		cost_offset = val
 		_update_positions()
 
-@export var icon_size: Vector2 = Vector2(80, 80):
+@export var icon_size: Vector2 = Vector2(100, 100):
 	set(val):
 		icon_size = val
 		_update_positions()
@@ -105,8 +105,8 @@ func _update_positions() -> void:
 		title_label.offset_bottom = label_offset.y + half_lbl_h
 	
 	if cost_badge:
-		var badge_width := 56.0
-		var badge_height := 24.0
+		var badge_width := 80.0
+		var badge_height := 34.0
 		cost_badge.offset_left = cost_offset.x - (badge_width / 2.0)
 		cost_badge.offset_right = cost_offset.x + (badge_width / 2.0)
 		cost_badge.offset_top = cost_offset.y - (badge_height / 2.0)

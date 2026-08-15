@@ -25,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2190004]
-custom_minimum_size = Vector2(820, 950)
+custom_minimum_size = Vector2(920, 1050)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -66,7 +66,7 @@ text = "Master Volume"
 
 [node name="MasterSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MasterBox" unique_id=2190023]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -82,7 +82,7 @@ text = "Music Volume"
 
 [node name="MusicSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/MusicBox" unique_id=2190011]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -98,7 +98,7 @@ text = "SFX Volume"
 
 [node name="SFXSlider" type="HSlider" parent="CenterContainer/PanelContainer/MarginContainer/VBox/AudioSettings/SFXBox" unique_id=2190014]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 48)
+custom_minimum_size = Vector2(0, 64)
 layout_mode = 2
 max_value = 1.0
 step = 0.05
@@ -115,7 +115,7 @@ text = "DATA MANAGEMENT"
 
 [node name="ResetButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ProfileSection" unique_id=2190026]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 68)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"DangerButton"
@@ -123,7 +123,7 @@ text = "RESET SAVE DATA"
 
 [node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190027]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"

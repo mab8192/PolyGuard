@@ -9,17 +9,17 @@ border_width_top = 4
 border_width_right = 4
 border_width_bottom = 4
 border_color = Color(0.305882, 0.8, 0.639216, 1)
-corner_radius_top_left = 60
-corner_radius_top_right = 60
-corner_radius_bottom_right = 60
-corner_radius_bottom_left = 60
+corner_radius_top_left = 75
+corner_radius_top_right = 75
+corner_radius_bottom_right = 75
+corner_radius_bottom_left = 75
 shadow_color = Color(0, 0, 0, 0.4)
 shadow_size = 8
 
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_cost"]
-content_margin_left = 8.0
+content_margin_left = 10.0
 content_margin_top = 2.0
-content_margin_right = 8.0
+content_margin_right = 10.0
 content_margin_bottom = 2.0
 bg_color = Color(0, 0, 0, 0.85)
 corner_radius_top_left = 8
@@ -28,22 +28,22 @@ corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
 [sub_resource type="LabelSettings" id="LabelSettings_cost"]
-font_size = 18
+font_size = 26
 outline_size = 2
 outline_color = Color(0, 0, 0, 1)
 
 [sub_resource type="LabelSettings" id="LabelSettings_title"]
-font_size = 28
+font_size = 34
 outline_size = 4
 outline_color = Color(0, 0, 0, 1)
 
 [node name="RadialMenuItem" type="Control" unique_id=1280246680]
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(150, 150)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 120.0
-offset_bottom = 120.0
-pivot_offset = Vector2(60, 60)
+offset_right = 150.0
+offset_bottom = 150.0
+pivot_offset = Vector2(75, 75)
 script = ExtResource("1_item_script")
 
 [node name="BGPanel" type="Panel" parent="." unique_id=1701038251]
@@ -63,10 +63,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -40.0
-offset_top = -40.0
-offset_right = 40.0
-offset_bottom = 40.0
+offset_left = -50.0
+offset_top = -50.0
+offset_right = 50.0
+offset_bottom = 50.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -80,10 +80,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -28.0
-offset_top = 40.0
-offset_right = 28.0
-offset_bottom = 64.0
+offset_left = -40.0
+offset_top = 48.0
+offset_right = 40.0
+offset_bottom = 80.0
 grow_horizontal = 2
 grow_vertical = 2
 mouse_filter = 2
@@ -108,10 +108,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -60.0
-offset_top = 64.0
-offset_right = 60.0
-offset_bottom = 90.0
+offset_left = -80.0
+offset_top = 82.0
+offset_right = 80.0
+offset_bottom = 118.0
 grow_horizontal = 2
 grow_vertical = 2
 text = "Item"

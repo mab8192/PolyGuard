@@ -6,7 +6,7 @@
 [node name="SubTopBar" type="MarginContainer" unique_id=987654321]
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 48.0
+offset_bottom = 64.0
 grow_horizontal = 2
 theme = ExtResource("2_theme")
 theme_override_constants/margin_left = 24

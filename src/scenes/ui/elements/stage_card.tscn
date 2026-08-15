@@ -5,10 +5,10 @@
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
 [node name="StageCard" type="PanelContainer" unique_id=741001]
-custom_minimum_size = Vector2(0, 180)
+custom_minimum_size = Vector2(0, 230)
 anchors_preset = 10
 anchor_right = 1.0
-offset_bottom = 180.0
+offset_bottom = 230.0
 grow_horizontal = 2
 size_flags_horizontal = 3
 mouse_filter = 1
@@ -22,7 +22,7 @@ mouse_filter = 1
 theme_override_constants/separation = 24
 
 [node name="ImageFrame" type="PanelContainer" parent="HBoxContainer" unique_id=741003]
-custom_minimum_size = Vector2(240, 140)
+custom_minimum_size = Vector2(280, 170)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -31,7 +31,7 @@ theme_type_variation = &"CardPanel"
 
 [node name="PreviewTexture" type="TextureRect" parent="HBoxContainer/ImageFrame" unique_id=741004]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 140)
+custom_minimum_size = Vector2(280, 170)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("3_icon")
@@ -93,7 +93,7 @@ mouse_filter = 2
 
 [node name="StartButton" type="Button" parent="HBoxContainer/ActionCenter" unique_id=741009]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 68)
+custom_minimum_size = Vector2(190, 84)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"

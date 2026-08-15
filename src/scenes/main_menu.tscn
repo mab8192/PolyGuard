@@ -51,7 +51,7 @@ text = "POLY GUARD"
 horizontal_alignment = 1
 
 [node name="SubBarContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=2046030933]
-custom_minimum_size = Vector2(0, 72)
+custom_minimum_size = Vector2(0, 88)
 layout_mode = 2
 theme_type_variation = &"SubTopBarPanel"
 
@@ -83,7 +83,7 @@ size_flags_horizontal = 3
 
 [node name="SettingsButton" type="TextureButton" parent="MarginContainer/VBoxContainer/SubBarContainer/SubBarMargin/SubBarHBox" unique_id=2038286645]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(48, 48)
+custom_minimum_size = Vector2(68, 68)
 layout_mode = 2
 size_flags_vertical = 4
 texture_normal = ExtResource("3_klrpn")

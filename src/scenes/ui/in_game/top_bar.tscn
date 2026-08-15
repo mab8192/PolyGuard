@@ -35,9 +35,12 @@ layout_mode = 2
 layout_mode = 2
 
 [node name="LivesImage" type="TextureRect" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=658645099]
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
+size_flags_vertical = 4
 texture = ExtResource("2_eatui")
-expand_mode = 2
+expand_mode = 1
+stretch_mode = 5
 
 [node name="LivesLabel" type="Label" parent="MarginContainer/HBoxContainer/LiveContainer" unique_id=37523814]
 unique_name_in_owner = true
@@ -51,7 +54,7 @@ theme_override_constants/separation = 8
 
 [node name="GoldImage" type="TextureRect" parent="MarginContainer/HBoxContainer/GoldContainer" unique_id=1088415156]
 modulate = Color(0.25, 0.9, 1, 1)
-custom_minimum_size = Vector2(40, 40)
+custom_minimum_size = Vector2(56, 56)
 layout_mode = 2
 size_flags_vertical = 4
 texture = ExtResource("3_power")
@@ -79,7 +82,7 @@ theme_override_constants/separation = 16
 
 [node name="FastForwardButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=101367240]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
 toggle_mode = true
@@ -88,7 +91,7 @@ text = "1x"
 [node name="PauseButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=977434464]
 unique_name_in_owner = true
 process_mode = 3
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 theme_type_variation = &"SecondaryButton"
 text = "||"

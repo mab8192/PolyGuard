@@ -46,7 +46,7 @@ layout_mode = 2
 
 [node name="DetailIcon" type="TextureRect" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681925]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1

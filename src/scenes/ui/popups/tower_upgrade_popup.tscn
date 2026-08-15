@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c3pkyojs8gtfc"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/popups/tower_upgrade_popup.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://dbxttbiavc1f0" path="res://src/scenes/ui/popups/tower_upgrade_popup.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
@@ -26,7 +26,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="ModalPanel" type="PanelContainer" parent="CenterContainer" unique_id=9870004]
-custom_minimum_size = Vector2(960, 1400)
+custom_minimum_size = Vector2(980, 1480)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -49,12 +49,12 @@ alignment = 1
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"SubHeaderText"
-text = "TOWER UPGRADE & LAB"
+text = "TOWER UPGRADES"
 vertical_alignment = 1
 
 [node name="CloseButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/HeaderHBox" unique_id=9870009]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(64, 64)
+custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
@@ -70,7 +70,7 @@ theme_override_constants/separation = 20
 
 [node name="TowerIcon" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/BannerPanel/BannerHBox" unique_id=9870012]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(130, 130)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
@@ -139,7 +139,7 @@ theme_override_constants/separation = 8
 
 [node name="UpgradeActionButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/UpgradeSectionVBox" unique_id=9870044]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 80)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
@@ -213,7 +213,7 @@ autowrap_mode = 2
 
 [node name="ChoiceSelectBtnA" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870034]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
@@ -264,7 +264,7 @@ autowrap_mode = 2
 
 [node name="ChoiceSelectBtnB" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870042]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 56)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"

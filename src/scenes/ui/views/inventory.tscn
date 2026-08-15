@@ -47,7 +47,7 @@ layout_mode = 2
 
 [node name="DetailIcon" type="TextureRect" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681905]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(100, 100)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
@@ -119,7 +119,7 @@ autowrap_mode = 2
 
 [node name="UpgradeButton" type="Button" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681921]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 64)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"

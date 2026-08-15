@@ -53,8 +53,7 @@ stretch_mode = 5
 [node name="Label" type="Label" parent="ContentBox" unique_id=1020956434]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"BodyText"
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"SmallText"
 text = "Card Name"
 horizontal_alignment = 1
 autowrap_mode = 2
@@ -75,8 +74,7 @@ theme_type_variation = &"CostBadge"
 [node name="BadgeLabel" type="Label" parent="ContentBox/BadgeContainer/BadgePanel" unique_id=1465083899]
 unique_name_in_owner = true
 layout_mode = 2
-theme_type_variation = &"CostText"
-theme_override_font_sizes/font_size = 20
+theme_type_variation = &"BadgeText"
 text = "250 Energy"
 horizontal_alignment = 1
 
