@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://d3okyyaxqd41w"]
 
 [ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_8myxk"]
-[ext_resource type="Texture2D" path="res://src/textures/enemies/speeder.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_jxlv3"]
+[ext_resource type="Texture2D" uid="uid://dtctxk3p8ndeo" path="res://src/textures/enemies/speeder.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_6ah70"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_w1xt2"]
 
@@ -14,7 +14,8 @@ wall_min_slide_angle = 0.0
 script = ExtResource("1_8myxk")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494191]
-scale = Vector2(0.5, 0.5)
+position = Vector2(-2.3841858e-07, -2.9802322e-07)
+scale = Vector2(0.24999999, 0.24999999)
 texture = ExtResource("2_tex")
 
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634]
@@ -33,4 +34,4 @@ metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 simplify_path = true
 
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
-polygon = PackedVector2Array(-8, -8, 12, 0, -8, 8)
+polygon = PackedVector2Array(-4, -4, 6, 0, -4, 4)

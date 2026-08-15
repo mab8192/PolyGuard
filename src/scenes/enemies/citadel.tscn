@@ -1,15 +1,15 @@
 [gd_scene format=3 uid="uid://dkokxv5so7fsg"]
 
 [ext_resource type="Script" uid="uid://bb77gv27216bh" path="res://src/scenes/enemies/enemy.gd" id="1_kd6ek"]
-[ext_resource type="Texture2D" path="res://src/textures/enemies/citadel.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="2_synga"]
+[ext_resource type="Texture2D" uid="uid://cb4obm8ju41cp" path="res://src/textures/enemies/citadel.png" id="2_tex"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="3_4rgg6"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="4_ay2dt"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="5_4rgg6"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_ay2dt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
-radius = 24.0
+radius = 20.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_fiwra"]
 size = Vector2(24, 48)

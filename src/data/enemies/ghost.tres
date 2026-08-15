@@ -14,7 +14,7 @@ armor = 20.0
 
 [sub_resource type="Resource" id="SubResource_movement"]
 script = ExtResource("4_movement")
-max_speed = 85.0
+max_speed = 65.0
 acceleration = 240.0
 
 [sub_resource type="Resource" id="Resource_m2ilo"]
