@@ -22,6 +22,10 @@ class_name TowerData extends Resource
 @export var is_solid: bool = true
 @export var cost: int = 250 ## How much energy this tower costs to place
 
+@export_category("Placement")
+@export var can_rotate: bool = true ## Whether this tower/trap can be rotated during placement
+@export var rotation_step_degrees: float = 90.0 ## Rotation increment angle in degrees (e.g., 90 for square/rect, 45 for cone/directional)
+
 @export_category("Components")
 @export var health: HealthData
 @export var attack: AttackData

@@ -12,6 +12,7 @@ var total_drag_distance_sq: float = 0.0
 var is_dragging: bool = false
 var last_input_pos: Vector2 = Vector2.ZERO
 var drag_speed_modifier: float = 1.0
+var current_rotation_degrees: float = 0.0
 
 var _is_placement_active: bool = false
 
@@ -27,6 +28,7 @@ func _process(_delta: float) -> void:
 
 func enter_placement_mode(tower_input: TowerData) -> void:
 	exit_placement_mode()
+	current_rotation_degrees = 0.0
 	
 	# Center on screen in world coordinates (snapped to the placement grid)
 	var center_pos = Vector2.ZERO
@@ -57,10 +59,25 @@ func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
 		stage.towers.add_child(preview_tower)
 	
 	preview_tower.is_preview = true
+	preview_tower.rotation_degrees = current_rotation_degrees
 	
 	var snapped_pos = _snap_to_grid(pos)
 	preview_tower.global_position = snapped_pos
 	preview_pos = snapped_pos
+
+func rotate_preview(clockwise: bool = true) -> void:
+	if not is_in_placement_mode() or not preview_tower.data:
+		return
+	if not preview_tower.data.can_rotate or preview_tower.data.rotation_step_degrees <= 0.0:
+		return
+	
+	var step: float = preview_tower.data.rotation_step_degrees
+	var dir: float = 1.0 if clockwise else -1.0
+	current_rotation_degrees = fposmod(current_rotation_degrees + (step * dir), 360.0)
+	preview_tower.rotation_degrees = current_rotation_degrees
+
+func can_preview_rotate() -> bool:
+	return is_in_placement_mode() and preview_tower.data != null and preview_tower.data.can_rotate and preview_tower.data.rotation_step_degrees > 0.0
 
 func exit_placement_mode() -> void:
 	if preview_tower and is_instance_valid(preview_tower):
@@ -191,15 +208,38 @@ func handle_unhandled_input(event: InputEvent) -> bool:
 	if preview_tower == null:
 		return false
 
+	# Keyboard rotation shortcuts
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.keycode == KEY_R:
+			if event.shift_pressed:
+				rotate_preview(false)
+			else:
+				rotate_preview(true)
+			return true
+		elif event.keycode == KEY_Q:
+			rotate_preview(false)
+			return true
+		elif event.keycode == KEY_E:
+			rotate_preview(true)
+			return true
+
 	var pos = stage.get_global_mouse_position() if stage else Vector2.ZERO
 	
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT:
-		if event.is_pressed():
-			_handle_press(pos)
-			return true
-		else:
-			if is_dragging:
-				_handle_release(pos)
+	if event is InputEventMouseButton:
+		if event.button_index == MOUSE_BUTTON_LEFT:
+			if event.is_pressed():
+				_handle_press(pos)
+				return true
+			else:
+				if is_dragging:
+					_handle_release(pos)
+					return true
+		elif event.is_pressed():
+			if event.button_index == MOUSE_BUTTON_WHEEL_UP:
+				rotate_preview(true)
+				return true
+			elif event.button_index == MOUSE_BUTTON_WHEEL_DOWN:
+				rotate_preview(false)
 				return true
 	elif event is InputEventMouseMotion:
 		if is_dragging:
@@ -242,7 +282,7 @@ func _handle_drag(delta: Vector2) -> void:
 func _snap_to_grid(glob_pos: Vector2) -> Vector2:
 	return glob_pos.snapped(Vector2(GRID_SIZE, GRID_SIZE))
 
-func _get_tower_local_rect(node: Node2D) -> Rect2:
+func _get_tower_global_rect(node: Node2D) -> Rect2:
 	if not is_instance_valid(node):
 		return Rect2(-Vector2(16, 16), Vector2(32, 32))
 
@@ -250,32 +290,64 @@ func _get_tower_local_rect(node: Node2D) -> Rect2:
 		if child is CollisionShape2D and child.shape:
 			var shape = child.shape
 			if shape is RectangleShape2D:
-				var size = shape.size
-				return Rect2(child.position - size / 2.0, size)
+				var half_size: Vector2 = shape.size / 2.0
+				var corners = [
+					Vector2(-half_size.x, -half_size.y),
+					Vector2(half_size.x, -half_size.y),
+					Vector2(half_size.x, half_size.y),
+					Vector2(-half_size.x, half_size.y)
+				]
+				var g_min: Vector2 = child.to_global(corners[0])
+				var g_max: Vector2 = g_min
+				for i in range(1, 4):
+					var g_pt: Vector2 = child.to_global(corners[i])
+					g_min.x = minf(g_min.x, g_pt.x)
+					g_min.y = minf(g_min.y, g_pt.y)
+					g_max.x = maxf(g_max.x, g_pt.x)
+					g_max.y = maxf(g_max.y, g_pt.y)
+				return Rect2(g_min, g_max - g_min)
 			elif shape is CircleShape2D:
 				var r = shape.radius
-				return Rect2(child.position - Vector2(r, r), Vector2(r * 2, r * 2))
+				var center = child.to_global(Vector2.ZERO)
+				return Rect2(center - Vector2(r, r), Vector2(r * 2, r * 2))
 			elif shape is CapsuleShape2D:
 				var r = shape.radius
 				var h = shape.height
-				var size = Vector2(r * 2, h)
-				return Rect2(child.position - size / 2.0, size)
+				var half_h = maxf(0.0, (h / 2.0) - r)
+				var top_center = child.to_global(Vector2(0, -half_h))
+				var bot_center = child.to_global(Vector2(0, half_h))
+				var g_min = Vector2(minf(top_center.x, bot_center.x) - r, minf(top_center.y, bot_center.y) - r)
+				var g_max = Vector2(maxf(top_center.x, bot_center.x) + r, maxf(top_center.y, bot_center.y) + r)
+				return Rect2(g_min, g_max - g_min)
 		elif child is CollisionPolygon2D and child.polygon.size() > 0:
-			var min_pt = child.polygon[0]
-			var max_pt = child.polygon[0]
+			var g_min = child.to_global(child.polygon[0])
+			var g_max = g_min
 			for pt in child.polygon:
-				min_pt.x = minf(min_pt.x, pt.x)
-				min_pt.y = minf(min_pt.y, pt.y)
-				max_pt.x = maxf(max_pt.x, pt.x)
-				max_pt.y = maxf(max_pt.y, pt.y)
-			return Rect2(child.position + min_pt, max_pt - min_pt)
+				var g_pt = child.to_global(pt)
+				g_min.x = minf(g_min.x, g_pt.x)
+				g_min.y = minf(g_min.y, g_pt.y)
+				g_max.x = maxf(g_max.x, g_pt.x)
+				g_max.y = maxf(g_max.y, g_pt.y)
+			return Rect2(g_min, g_max - g_min)
 
 	var color_rect = node.find_child("ColorRect", false, false) as ColorRect
 	if color_rect:
-		return color_rect.get_rect()
+		var rect = color_rect.get_rect()
+		var corners = [
+			rect.position,
+			rect.position + Vector2(rect.size.x, 0),
+			rect.position + rect.size,
+			rect.position + Vector2(0, rect.size.y)
+		]
+		var g_min = color_rect.to_global(corners[0])
+		var g_max = g_min
+		for i in range(1, 4):
+			var g_pt = color_rect.to_global(corners[i])
+			g_min.x = minf(g_min.x, g_pt.x)
+			g_min.y = minf(g_min.y, g_pt.y)
+			g_max.x = maxf(g_max.x, g_pt.x)
+			g_max.y = maxf(g_max.y, g_pt.y)
+		return Rect2(g_min, g_max - g_min)
 
-	return Rect2(-Vector2(GRID_SIZE, GRID_SIZE), Vector2(GRID_SIZE * 2, GRID_SIZE * 2))
-
-func _get_tower_global_rect(node: Node2D) -> Rect2:
-	var local_rect: Rect2 = _get_tower_local_rect(node)
-	return Rect2(node.global_position + local_rect.position, local_rect.size)
+	var default_half = Vector2(GRID_SIZE, GRID_SIZE)
+	return Rect2(node.global_position - default_half, default_half * 2.0)

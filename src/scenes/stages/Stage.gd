@@ -228,10 +228,18 @@ func get_preview_tower_position() -> Vector2:
 func can_place_preview() -> bool:
 	return placement_manager.can_place_preview() if placement_manager else false
 
+func can_preview_rotate() -> bool:
+	return placement_manager.can_preview_rotate() if placement_manager else false
+
+func rotate_preview(clockwise: bool = true) -> void:
+	if placement_manager:
+		placement_manager.rotate_preview(clockwise)
+
 func place_preview() -> void:
 	if placement_manager:
 		placement_manager.place_preview()
 
 func generate_navmesh() -> void:
 	NavMeshGenerator.generate_navmesh(self)
+
 

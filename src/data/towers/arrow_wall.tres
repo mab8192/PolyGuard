@@ -1,0 +1,56 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://ygi04g3rwrea"]
+
+[ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectiles/projectile.tscn" id="1_megk3"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_ik266"]
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="3_77e18"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_nkuh4"]
+[ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/towers/archer_tower.png" id="5_uu8f1"]
+[ext_resource type="PackedScene" uid="uid://cvnxnh3reoedw" path="res://src/scenes/towers/arrow_wall.tscn" id="6_megk3"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_rakto"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_im5y4"]
+
+[sub_resource type="Resource" id="Resource_soe44"]
+script = ExtResource("2_ik266")
+damage = 20.0
+cooldown = 0.3
+projectile_scene = ExtResource("1_megk3")
+projectile_speed = 800.0
+
+[sub_resource type="Resource" id="Resource_choice_arcane"]
+script = ExtResource("3_77e18")
+id = "arcane_infusion"
+title = "Arcane Infusion"
+description = "Converts arrows to Magic Damage with +20% bonus power."
+has_damage_type_override = true
+damage_type_override = 1
+damage_multiplier = 1.2
+
+[sub_resource type="Resource" id="Resource_choice_true"]
+script = ExtResource("3_77e18")
+id = "true_piercer"
+title = "True Piercer"
+description = "Converts arrows to True Damage (bypasses all armor and resistance) with +10% attack speed."
+has_damage_type_override = true
+damage_type_override = 2
+cooldown_multiplier = 0.9
+
+[sub_resource type="Resource" id="Resource_k6tlf"]
+script = ExtResource("4_nkuh4")
+armor = 20.0
+
+[sub_resource type="Resource" id="Resource_1mbg1"]
+script = ExtResource("8_im5y4")
+max_targets = 3
+
+[resource]
+script = ExtResource("7_rakto")
+tower_id = "arrow_wall"
+display_name = "Arrow Wall"
+icon = ExtResource("5_uu8f1")
+scene = ExtResource("6_megk3")
+description = "Ranged multi-target arrow wall. Solid structure that blocks enemy movement."
+choices = Array[ExtResource("3_77e18")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
+cost = 300
+health = SubResource("Resource_k6tlf")
+attack = SubResource("Resource_soe44")
+targeting = SubResource("Resource_1mbg1")

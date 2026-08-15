@@ -42,6 +42,16 @@ focus_mode = 0
 theme_type_variation = &"PlacementCancelButton"
 text = "✕"
 
+[node name="RotatePlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857604]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 120)
+layout_mode = 2
+size_flags_horizontal = 4
+size_flags_vertical = 4
+focus_mode = 0
+theme_type_variation = &"PlacementRotateButton"
+text = "⟳"
+
 [node name="ConfirmPlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857603]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(120, 120)

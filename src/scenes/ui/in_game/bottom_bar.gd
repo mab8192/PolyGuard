@@ -4,6 +4,7 @@ extends MarginContainer
 @onready var next_wave_button: Button = %NextWaveButton
 @onready var placement_buttons: CanvasItem = %PlacementButtons
 @onready var cancel_button: Button = %CancelPlacementButton
+@onready var rotate_button: Button = %RotatePlacementButton
 @onready var confirm_button: Button = %ConfirmPlacementButton
 
 @export var radial_menu_scene: PackedScene = preload("res://src/scenes/ui/elements/radial_menu.tscn")
@@ -13,6 +14,7 @@ func _ready() -> void:
 	build_button.focus_mode = Control.FOCUS_NONE
 	next_wave_button.focus_mode = Control.FOCUS_NONE
 	cancel_button.focus_mode = Control.FOCUS_NONE
+	rotate_button.focus_mode = Control.FOCUS_NONE
 	confirm_button.focus_mode = Control.FOCUS_NONE
 
 	placement_buttons.hide()
@@ -24,6 +26,7 @@ func _ready() -> void:
 	build_button.gui_input.connect(_on_build_button_gui_input)
 	next_wave_button.pressed.connect(_on_next_wave_pressed)
 	cancel_button.pressed.connect(_on_cancel_placement_pressed)
+	rotate_button.pressed.connect(_on_rotate_placement_pressed)
 	confirm_button.pressed.connect(_on_confirm_placement_pressed)
 	SignalBus.placement_mode_changed.connect(_on_placement_mode_changed)
 	
@@ -37,6 +40,7 @@ func _process(_delta: float) -> void:
 	var stage := GameManager.current_stage
 	if stage and stage.is_in_placement_mode():
 		confirm_button.disabled = not stage.can_place_preview()
+		rotate_button.visible = stage.can_preview_rotate()
 
 func open_build_radial_menu() -> void:
 	var items: Array[Dictionary] = []
@@ -79,6 +83,10 @@ func _on_placement_mode_changed(is_active: bool) -> void:
 func _on_cancel_placement_pressed() -> void:
 	if GameManager.current_stage:
 		GameManager.current_stage.exit_placement_mode()
+
+func _on_rotate_placement_pressed() -> void:
+	if GameManager.current_stage:
+		GameManager.current_stage.rotate_preview()
 
 func _on_confirm_placement_pressed() -> void:
 	if GameManager.current_stage:

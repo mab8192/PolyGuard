@@ -57,6 +57,7 @@ func get_stage_id(stage: StageData) -> String:
 # Map of tower IDs to data-driven TowerData resources
 const TOWERS: Dictionary[String, TowerData] = {
 	"archer_tower": preload("res://src/data/towers/archer_tower.tres"),
+	"arrow_wall": preload("res://src/data/towers/arrow_wall.tres"),
 	"barricade": preload("res://src/data/towers/barricade.tres"),
 	"poison_trap": preload("res://src/data/towers/poison_trap.tres"),
 	"tesla_tower": preload("res://src/data/towers/tesla_tower.tres"),

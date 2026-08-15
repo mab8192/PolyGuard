@@ -389,7 +389,7 @@ static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion
 
 					var poly = PackedVector2Array()
 					for pt in local_corners:
-						var g_pt = tower.to_global(child.position + pt)
+						var g_pt = child.to_global(pt)
 						poly.append(nav_region.to_local(g_pt))
 
 					result.append(_ensure_ccw(poly))
@@ -398,7 +398,7 @@ static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion
 				elif child is CollisionPolygon2D:
 					var poly = PackedVector2Array()
 					for pt in child.polygon:
-						var g_pt = tower.to_global(child.position + pt)
+						var g_pt = child.to_global(pt)
 						poly.append(nav_region.to_local(g_pt))
 					result.append(_ensure_ccw(poly))
 					found_shape = true

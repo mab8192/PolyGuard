@@ -363,6 +363,20 @@ corner_radius_top_right = 55
 corner_radius_bottom_right = 55
 corner_radius_bottom_left = 55
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_placement_rotate_disabled"]
+bg_color = Color(0.18, 0.55, 0.95, 0.35)
+corner_radius_top_left = 55
+corner_radius_top_right = 55
+corner_radius_bottom_right = 55
+corner_radius_bottom_left = 55
+
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_placement_rotate"]
+bg_color = Color(0.18, 0.55, 0.95, 1)
+corner_radius_top_left = 55
+corner_radius_top_right = 55
+corner_radius_bottom_right = 55
+corner_radius_bottom_left = 55
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_primary_disabled"]
 content_margin_left = 18.0
 content_margin_top = 10.0
@@ -675,6 +689,14 @@ PlacementConfirmButton/styles/focus = SubResource("StyleBoxFlat_placement_confir
 PlacementConfirmButton/styles/hover = SubResource("StyleBoxFlat_placement_confirm")
 PlacementConfirmButton/styles/normal = SubResource("StyleBoxFlat_placement_confirm")
 PlacementConfirmButton/styles/pressed = SubResource("StyleBoxFlat_placement_confirm")
+PlacementRotateButton/base_type = &"Button"
+PlacementRotateButton/colors/font_color = Color(1, 1, 1, 1)
+PlacementRotateButton/font_sizes/font_size = 48
+PlacementRotateButton/styles/disabled = SubResource("StyleBoxFlat_placement_rotate_disabled")
+PlacementRotateButton/styles/focus = SubResource("StyleBoxFlat_placement_rotate")
+PlacementRotateButton/styles/hover = SubResource("StyleBoxFlat_placement_rotate")
+PlacementRotateButton/styles/normal = SubResource("StyleBoxFlat_placement_rotate")
+PlacementRotateButton/styles/pressed = SubResource("StyleBoxFlat_placement_rotate")
 PrimaryButton/base_type = &"Button"
 PrimaryButton/colors/font_color = Color(0, 0.96, 0.83, 1)
 PrimaryButton/colors/font_hover_color = Color(1, 1, 1, 1)
