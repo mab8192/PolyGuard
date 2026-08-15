@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_wnl36"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
-size = Vector2(28, 28)
+size = Vector2(32, 28)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_e0x7p"]
 size = Vector2(18, 36)
