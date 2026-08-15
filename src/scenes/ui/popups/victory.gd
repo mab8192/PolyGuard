@@ -1,6 +1,12 @@
 extends CanvasLayer
 
-@onready var star_rating_label: Label = %StarRatingLabel
+const STAR_EARNED_COLOR := Color(1.0, 0.82, 0.22, 1.0)
+const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
+
+
+@onready var star_1: TextureRect = %Star1
+@onready var star_2: TextureRect = %Star2
+@onready var star_3: TextureRect = %Star3
 @onready var stats_label: Label = %StatsLabel
 @onready var reward_breakdown_label: Label = %RewardBreakdownLabel
 @onready var next_unlock_label: Label = %NextUnlockLabel
@@ -28,8 +34,11 @@ func _on_stage_completed() -> void:
 		
 		var reward_info = SaveManager.record_stage_clear(stage_id, score, lives, max_lives)
 		
-		var stars = reward_info.get("stars", 1)
-		star_rating_label.text = "%d STARS" % stars
+		var stars: int = reward_info.get("stars", 1)
+		star_1.modulate = STAR_EARNED_COLOR if stars >= 1 else STAR_UNEARNED_COLOR
+		star_2.modulate = STAR_EARNED_COLOR if stars >= 2 else STAR_UNEARNED_COLOR
+		star_3.modulate = STAR_EARNED_COLOR if stars >= 3 else STAR_UNEARNED_COLOR
+		
 		stats_label.text = "Remaining Lives: %d / %d\nFinal Energy: %d\nFinal Score: %d" % [lives, max_lives, energy, score]
 		
 		var clear_type_str = "First Clear Bonus" if reward_info.get("is_first_clear", false) else "Clear Reward"

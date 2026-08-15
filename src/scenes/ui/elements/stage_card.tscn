@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dwnrh2nt7dqy6" path="res://src/scenes/ui/elements/stage_card.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+[ext_resource type="Texture2D" uid="uid://dvmb3twmcy7x8" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/star.png" id="4_star"]
 
 [node name="StageCard" type="PanelContainer" unique_id=741001]
 custom_minimum_size = Vector2(0, 210)
@@ -60,6 +61,44 @@ mouse_filter = 2
 theme_type_variation = &"TitleText"
 text = "Stage 1"
 clip_text = true
+
+[node name="StarsContainer" type="HBoxContainer" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741014]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+mouse_filter = 2
+theme_override_constants/separation = 4
+alignment = 2
+
+[node name="Star1" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741015]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star2" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741016]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_star")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="Star3" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741017]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(30, 30)
+layout_mode = 2
+size_flags_vertical = 4
+mouse_filter = 2
+texture = ExtResource("4_star")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="StatusBadgeContainer" type="PanelContainer" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741011]
 unique_name_in_owner = true

@@ -17,23 +17,27 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 from generate_icons import generate_lives_icon, generate_energy_icon, generate_build_icon
 from generate_tiles import generate_spawner_tile, generate_exit_tile
 from generate_enemies import generate_all_enemies
+from generate_towers import generate_all_towers
 
 def main():
     print("========================================")
     print("  Poly Guard 2D - Sprite Generator Suite")
     print("========================================")
     
-    print("\n[1/3] Generating HUD & UI Icons...")
+    print("\n[1/4] Generating HUD & UI Icons...")
     generate_lives_icon()
     generate_energy_icon()
     generate_build_icon()
     
-    print("\n[2/3] Generating Map Floor Tiles...")
+    print("\n[2/4] Generating Map Floor Tiles...")
     generate_spawner_tile()
     generate_exit_tile()
     
-    print("\n[3/3] Generating Enemy Sprites...")
+    print("\n[3/4] Generating Enemy Sprites...")
     generate_all_enemies()
+
+    print("\n[4/4] Generating Tower Sprites...")
+    generate_all_towers()
     
     print("\nAll sprites regenerated successfully!")
 

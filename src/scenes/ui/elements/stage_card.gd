@@ -2,10 +2,17 @@ class_name StageCard extends PanelContainer
 
 signal stage_selected(stage: StageData)
 
+const STAR_EARNED_COLOR := Color(1.0, 0.82, 0.22, 1.0)
+const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
+
 var stage_data: StageData
 
 @onready var preview_texture: TextureRect = %PreviewTexture
 @onready var title_label: Label = %TitleLabel
+@onready var stars_container: HBoxContainer = %StarsContainer
+@onready var star_1: TextureRect = %Star1
+@onready var star_2: TextureRect = %Star2
+@onready var star_3: TextureRect = %Star3
 @onready var stats_label: Label = %StatsLabel
 @onready var record_label: Label = %RecordLabel
 @onready var status_badge_container: PanelContainer = %StatusBadgeContainer
@@ -60,19 +67,32 @@ func _render() -> void:
 		
 		if record.get("completed", false):
 			var stars: int = record.get("stars", 1)
-			status_badge_container.theme_type_variation = &"StatusBadge"
-			status_badge_label.text = "%d STARS" % stars
+			if stars_container:
+				stars_container.show()
+				star_1.modulate = STAR_EARNED_COLOR if stars >= 1 else STAR_UNEARNED_COLOR
+				star_2.modulate = STAR_EARNED_COLOR if stars >= 2 else STAR_UNEARNED_COLOR
+				star_3.modulate = STAR_EARNED_COLOR if stars >= 3 else STAR_UNEARNED_COLOR
+			if status_badge_container:
+				status_badge_container.hide()
 			record_label.text = "Best Score: %d" % record.get("high_score", 0)
 			start_button.text = "REPLAY"
 		else:
-			status_badge_container.theme_type_variation = &"TypeBadge"
-			status_badge_label.text = "AVAILABLE"
+			if stars_container:
+				stars_container.hide()
+			if status_badge_container:
+				status_badge_container.show()
+				status_badge_container.theme_type_variation = &"TypeBadge"
+				status_badge_label.text = "AVAILABLE"
 			record_label.text = "First Clear: 400 Credits"
 			start_button.text = "START"
 	else:
 		self_modulate = Color(0.7, 0.7, 0.7, 0.5)
-		status_badge_container.theme_type_variation = &"LockedBadge"
-		status_badge_label.text = "LOCKED"
+		if stars_container:
+			stars_container.hide()
+		if status_badge_container:
+			status_badge_container.show()
+			status_badge_container.theme_type_variation = &"LockedBadge"
+			status_badge_label.text = "LOCKED"
 		record_label.text = "Clear previous stage to unlock"
 		start_button.disabled = true
 		start_button.text = "LOCKED"
@@ -83,3 +103,4 @@ func _on_card_pressed() -> void:
 		var stage_id = Registry.get_stage_id(stage_data)
 		if SaveManager.is_stage_unlocked(stage_id):
 			stage_selected.emit(stage_data)
+

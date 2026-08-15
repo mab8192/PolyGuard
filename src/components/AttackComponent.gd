@@ -7,7 +7,14 @@ enum AttackMode { PROJECTILE, MELEE, CONTINUOUS }
 
 @export var data: AttackData
 
-var attack_point: Marker2D
+var attack_points: Array[Marker2D] = []
+
+var attack_point: Marker2D:
+	get:
+		return attack_points[0] if not attack_points.is_empty() else null
+	set(value):
+		if value and not attack_points.has(value):
+			attack_points.append(value)
 
 var targeting: TargetingComponent ## Automatically discovered in _ready
 var last_attack_time: float = - INF
@@ -20,8 +27,36 @@ func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"AttackComponent", self)
 		targeting = ComponentUtil.get_component(get_parent(), TargetingComponent) as TargetingComponent
-		if not attack_point:
-			attack_point = get_parent().find_child("Marker2D", false, false) as Marker2D
+		_find_attack_points()
+
+func _find_attack_points() -> void:
+	attack_points.clear()
+	if not get_parent():
+		return
+	for child in get_parent().get_children():
+		if child is Marker2D:
+			attack_points.append(child)
+
+func get_attack_point(target: Node2D = null) -> Marker2D:
+	if attack_points.is_empty():
+		return null
+	if attack_points.size() == 1:
+		return attack_points[0]
+	
+	if is_instance_valid(target):
+		var target_pos: Vector2 = target.global_position
+		var best_pt: Marker2D = attack_points[0]
+		var best_dist_sq: float = best_pt.global_position.distance_squared_to(target_pos)
+		for i in range(1, attack_points.size()):
+			var pt = attack_points[i]
+			if is_instance_valid(pt):
+				var dist_sq = pt.global_position.distance_squared_to(target_pos)
+				if dist_sq < best_dist_sq:
+					best_dist_sq = dist_sq
+					best_pt = pt
+		return best_pt
+	
+	return attack_points.pick_random()
 
 func _process(delta: float) -> void:
 	_time += delta
@@ -75,8 +110,9 @@ func _spawn_projectile(target: Node2D) -> void:
 		parent_node = GameManager.stage_root.effects
 	parent_node.add_child(proj)
 
-	if attack_point:
-		proj.global_position = attack_point.global_position
+	var spawn_pt: Marker2D = get_attack_point(target)
+	if spawn_pt and is_instance_valid(spawn_pt):
+		proj.global_position = spawn_pt.global_position
 	elif get_parent() is Node2D:
 		proj.global_position = (get_parent() as Node2D).global_position
 
