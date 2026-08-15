@@ -5,11 +5,11 @@
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 
 [node name="LoadoutCard" type="Control" unique_id=14601]
-custom_minimum_size = Vector2(230, 220)
+custom_minimum_size = Vector2(226, 210)
 layout_mode = 3
 anchors_preset = 0
-offset_right = 230.0
-offset_bottom = 220.0
+offset_right = 226.0
+offset_bottom = 210.0
 size_flags_horizontal = 4
 size_flags_vertical = 4
 theme = ExtResource("2_theme")
@@ -40,12 +40,14 @@ alignment = 1
 
 [node name="EmptySlotLabel" type="Label" parent="EmptyIndicator" unique_id=14604]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"EmptySlotText"
 text = "SLOT 1
 + EMPTY"
 horizontal_alignment = 1
 vertical_alignment = 1
+autowrap_mode = 2
 
 [node name="ContentBox" type="VBoxContainer" parent="." unique_id=14605]
 unique_name_in_owner = true
@@ -65,7 +67,7 @@ mouse_filter = 2
 
 [node name="IconRect" type="TextureRect" parent="ContentBox/IconContainer" unique_id=14607]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(130, 130)
+custom_minimum_size = Vector2(120, 120)
 layout_mode = 2
 mouse_filter = 2
 texture = ExtResource("3_icon")
@@ -74,7 +76,9 @@ stretch_mode = 5
 
 [node name="NameLabel" type="Label" parent="ContentBox" unique_id=14608]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"SmallText"
 text = "Archer Tower"
 horizontal_alignment = 1

@@ -38,7 +38,7 @@ theme_override_constants/margin_bottom = 48
 
 [node name="RootVBox" type="VBoxContainer" parent="MainMargin" unique_id=637681851]
 layout_mode = 2
-theme_override_constants/separation = 14
+theme_override_constants/separation = 12
 
 [node name="TopBar" type="MarginContainer" parent="MainMargin/RootVBox" unique_id=1731082822]
 layout_mode = 2
@@ -64,6 +64,7 @@ horizontal_alignment = 1
 
 [node name="StageSubtitleLabel" type="Label" parent="MainMargin/RootVBox/TopBar/TitleBox" unique_id=98484440]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"SmallText"
 text = "Starting Energy: 700 • Base Lives: 20"
@@ -100,6 +101,7 @@ theme_override_constants/v_separation = 16
 columns = 4
 
 [node name="DetailsPanel" type="PanelContainer" parent="MainMargin/RootVBox" unique_id=637681861]
+custom_minimum_size = Vector2(0, 310)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -116,13 +118,14 @@ layout_mode = 2
 
 [node name="DetailIcon" type="TextureRect" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681865]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="HeaderInfoVBox" type="VBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681866]
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
@@ -130,13 +133,16 @@ alignment = 1
 
 [node name="TitleCostHBox" type="HBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681867]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="DetailTitle" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681868]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "Archer Tower"
+clip_text = true
 
 [node name="DetailCost" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleCostHBox" unique_id=637681869]
 unique_name_in_owner = true
@@ -168,21 +174,13 @@ layout_mode = 2
 theme_type_variation = &"BadgeText"
 text = "SOLID DEFENSE"
 
-[node name="DetailActionButton" type="Button" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681873]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(260, 80)
-layout_mode = 2
-size_flags_vertical = 4
-focus_mode = 0
-theme_type_variation = &"PrimaryButton"
-text = "+ EQUIP"
-
 [node name="DetailBottomVBox" type="VBoxContainer" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox" unique_id=637681874]
 layout_mode = 2
 theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681875]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Fires rapid arrows at incoming enemies."
@@ -190,10 +188,19 @@ autowrap_mode = 2
 
 [node name="DetailStats" type="Label" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681876]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"StatText"
 text = "Damage: 50 | Rate: Every 0.5s"
 autowrap_mode = 2
+
+[node name="DetailActionButton" type="Button" parent="MainMargin/RootVBox/DetailsPanel/DetailVBox" unique_id=637681873]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "+ EQUIP TO LOADOUT"
 
 [node name="AvailableHeader" type="Label" parent="MainMargin/RootVBox" unique_id=637681877]
 layout_mode = 2
@@ -225,7 +232,7 @@ layout_mode = 2
 
 [node name="BackButton" type="Button" parent="MainMargin/RootVBox/BottomActionMargin" unique_id=637681853]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 110)
+custom_minimum_size = Vector2(240, 96)
 layout_mode = 2
 size_flags_horizontal = 0
 size_flags_vertical = 4
@@ -235,7 +242,7 @@ text = "< BACK"
 
 [node name="StartBattleButton" type="Button" parent="MainMargin/RootVBox/BottomActionMargin" unique_id=637681882]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(240, 110)
+custom_minimum_size = Vector2(240, 96)
 layout_mode = 2
 size_flags_horizontal = 10
 focus_mode = 0

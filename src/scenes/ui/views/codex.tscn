@@ -30,6 +30,7 @@ text = "ENEMY CODEX"
 horizontal_alignment = 1
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681921]
+custom_minimum_size = Vector2(0, 260)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -46,13 +47,14 @@ layout_mode = 2
 
 [node name="DetailIcon" type="TextureRect" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/IconCenter" unique_id=637681925]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(120, 120)
+custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
 texture = ExtResource("3_icon")
 expand_mode = 1
 stretch_mode = 5
 
 [node name="HeaderInfoVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox" unique_id=637681926]
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_override_constants/separation = 4
@@ -60,13 +62,16 @@ alignment = 1
 
 [node name="TitleRewardHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox" unique_id=637681927]
 layout_mode = 2
+size_flags_horizontal = 3
 theme_override_constants/separation = 10
 
 [node name="DetailTitle" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleRewardHBox" unique_id=637681928]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "Grunt"
+clip_text = true
 
 [node name="DetailReward" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailTopHBox/HeaderInfoVBox/TitleRewardHBox" unique_id=637681929]
 unique_name_in_owner = true
@@ -93,6 +98,7 @@ theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681935]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Standard polygon foot soldier."
@@ -100,6 +106,7 @@ autowrap_mode = 2
 
 [node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 theme_type_variation = &"StatText"
 text = "HP: 100 | Speed: 150 | Lives Penalty: 1"
