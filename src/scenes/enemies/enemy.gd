@@ -86,10 +86,10 @@ func _ready() -> void:
 		
 		if data.type == EnemyData.EnemyType.GHOST:
 			collision_layer = 8 # Layer 4: Ghost Enemies
-			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
+			collision_mask = 25  # Collides with Layer 1 Walls (1), Layer 4 Ghost Enemies (8), and Layer 5 Spectral Towers (16)
 		else:
 			collision_layer = 4 # Layer 3: Physical Enemies
-			collision_mask = 7  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 3 Physical Enemies (4)
+			collision_mask = 23  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), Layer 3 Physical Enemies (4), and Layer 5 Spectral Towers (16)
 
 		# Assign targets from the stage
 		SignalBus.exits_updated.connect(_on_exits_updated)

@@ -7,9 +7,9 @@ class_name NavMeshGenerator
 const DEFAULT_SUB_STEP: float = 4.0 ## Sub-pixel resolution in pixels (< 16px precision)
 
 const AGENT_TIERS: Array[Dictionary] = [
-	{"radius": 10, "layer": 1, "ignore_towers": false}, # Small enemies (< 16px, fits in 16x16 gaps)
-	{"radius": 16, "layer": 2, "ignore_towers": false}, # Large enemies (>= 16px, requires wider clearance)
-	{"radius": 10, "layer": 4, "ignore_towers": true}, # Ghost enemies (ignores towers, respects stage walls)
+	{"radius": 10, "layer": 1, "tower_mode": "all"}, # Small enemies (< 16px, fits in 16x16 gaps)
+	{"radius": 16, "layer": 2, "tower_mode": "all"}, # Large enemies (>= 16px, requires wider clearance)
+	{"radius": 10, "layer": 4, "tower_mode": "spectral"}, # Ghost enemies (avoids walls + spectral towers, ignores physical towers)
 ]
 
 static var _thread: Thread = null
@@ -80,14 +80,15 @@ static func generate_navmesh(
 	if walkable_cells_set.is_empty():
 		return
 
-	var tower_polys: Array[PackedVector2Array] = _extract_tower_polygons(towers, navigation_region_2d)
+	var tower_polys_dict: Dictionary = _extract_tower_polygons(towers, navigation_region_2d)
 
 	var snapshot = {
 		"stage": stage,
 		"used_cells": used_cells,
 		"walkable_cells_set": walkable_cells_set,
 		"wall_polys": wall_polys,
-		"tower_polys": tower_polys,
+		"tower_polys": tower_polys_dict["all"],
+		"spectral_tower_polys": tower_polys_dict["spectral"],
 		"tile_size": tile_size,
 		"cell_local_centers": cell_local_centers,
 		"agent_tiers": AGENT_TIERS,
@@ -107,6 +108,7 @@ static func _thread_worker(snapshot: Dictionary) -> void:
 	var walkable_cells_set: Dictionary = snapshot.walkable_cells_set
 	var wall_polys: Array[PackedVector2Array] = snapshot.wall_polys
 	var tower_polys: Array[PackedVector2Array] = snapshot.tower_polys
+	var spectral_tower_polys: Array[PackedVector2Array] = snapshot.get("spectral_tower_polys", [])
 	var tile_size: Vector2 = snapshot.tile_size
 	var cell_local_centers: Dictionary = snapshot.cell_local_centers
 	var agent_tiers: Array = snapshot.agent_tiers
@@ -145,14 +147,16 @@ static func _thread_worker(snapshot: Dictionary) -> void:
 
 	for tier in agent_tiers:
 		var tier_radius: float = tier.radius
-		var ignore_towers: bool = tier.get("ignore_towers", false)
+		var tower_mode: String = tier.get("tower_mode", "spectral" if tier.get("ignore_towers", false) else "all")
 		var layer: int = tier.layer
 
 		var effective_dilation: float = tier_radius + sub_half.x
 
 		var raw_obstacles: Array[PackedVector2Array] = wall_polys.duplicate()
-		if not ignore_towers:
+		if tower_mode == "all":
 			raw_obstacles.append_array(tower_polys)
+		elif tower_mode == "spectral":
+			raw_obstacles.append_array(spectral_tower_polys)
 
 		var dilated_obstacles: Array[PackedVector2Array] = []
 		var dilated_rects: Array[Rect2] = []
@@ -365,13 +369,19 @@ static func _ensure_ccw(poly: PackedVector2Array) -> PackedVector2Array:
 		return res
 	return poly
 
-static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion2D) -> Array[PackedVector2Array]:
-	var result: Array[PackedVector2Array] = []
+static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion2D) -> Dictionary:
+	var all_polys: Array[PackedVector2Array] = []
+	var spectral_polys: Array[PackedVector2Array] = []
 	if not towers:
-		return result
+		return {"all": all_polys, "spectral": spectral_polys}
 
 	for tower in towers.get_children():
-		if tower is Tower and not tower.is_queued_for_deletion() and not tower.is_preview and (tower.collision_layer > 0 or (tower.data and tower.data.collision_layer > 0)):
+		if tower is Tower and not tower.is_queued_for_deletion() and not tower.is_preview:
+			var col_layer = tower.collision_layer if tower.collision_layer > 0 else (tower.data.collision_layer if tower.data else 0)
+			if col_layer <= 0:
+				continue
+
+			var poly := PackedVector2Array()
 			var found_shape = false
 
 			for child in tower.get_children():
@@ -387,20 +397,16 @@ static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion
 						Vector2(half_size.x, -half_size.y)
 					]
 
-					var poly = PackedVector2Array()
 					for pt in local_corners:
 						var g_pt = child.to_global(pt)
 						poly.append(nav_region.to_local(g_pt))
 
-					result.append(_ensure_ccw(poly))
 					found_shape = true
 					break
 				elif child is CollisionPolygon2D:
-					var poly = PackedVector2Array()
 					for pt in child.polygon:
 						var g_pt = child.to_global(pt)
 						poly.append(nav_region.to_local(g_pt))
-					result.append(_ensure_ccw(poly))
 					found_shape = true
 					break
 
@@ -412,10 +418,14 @@ static func _extract_tower_polygons(towers: Node2D, nav_region: NavigationRegion
 					Vector2(half_size.x, half_size.y),
 					Vector2(half_size.x, -half_size.y)
 				]
-				var poly = PackedVector2Array()
 				for pt in local_corners:
 					var g_pt = tower.to_global(pt)
 					poly.append(nav_region.to_local(g_pt))
-				result.append(_ensure_ccw(poly))
 
-	return result
+			if not poly.is_empty():
+				var ccw_poly = _ensure_ccw(poly)
+				all_polys.append(ccw_poly)
+				if (col_layer & 16) != 0: # Layer 5: Spectral Towers
+					spectral_polys.append(ccw_poly)
+
+	return {"all": all_polys, "spectral": spectral_polys}

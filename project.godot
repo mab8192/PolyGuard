@@ -83,6 +83,7 @@ pointing/emulate_touch_from_mouse=true
 2d_physics/layer_3="Physical Enemies"
 2d_navigation/layer_3="Walls, no towers"
 2d_physics/layer_4="Ghost Enemies"
+2d_physics/layer_5="Spectral Towers"
 
 [navigation]
 

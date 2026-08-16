@@ -190,7 +190,7 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 		var p_start: Vector2 = path[i]
 		var p_end: Vector2 = path[i + 1]
 
-		var query := PhysicsRayQueryParameters2D.create(p_start, p_end, 2) # Layer 2: Towers
+		var query := PhysicsRayQueryParameters2D.create(p_start, p_end, 2 | 16) # Layer 2: Solid Towers + Layer 5: Spectral Towers
 		query.collide_with_bodies = true
 		query.collide_with_areas = false
 		var exclude_rids: Array[RID] = []

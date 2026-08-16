@@ -26,7 +26,7 @@ class_name TowerData extends Resource
 @export var rotation_step_degrees: float = 90.0 ## Rotation increment angle in degrees (e.g., 90 for square/rect, 45 for cone/directional)
 
 @export_category("Physics Collision")
-@export_flags_2d_physics var collision_layer: int = 2 ## Physics layer this tower occupies (0 = non-solid trap, 2 = physical tower, 10 = blocks ghosts too)
+@export_flags_2d_physics var collision_layer: int = 2 ## Physics layer this tower occupies (0 = non-solid trap, 2 = physical tower, 18 = blocks ghosts too)
 @export_flags_2d_physics var collision_mask: int = 0 ## Physics mask for tower collision
 
 @export_category("Components")
@@ -128,7 +128,7 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 	else:
 		result["targets_ghosts"] = false
 
-	result["blocks_ghosts"] = (scaled.collision_layer > 0) and ((scaled.collision_layer & 8) != 0)
+	result["blocks_ghosts"] = (scaled.collision_layer > 0) and ((scaled.collision_layer & 16) != 0)
 		
 	return result
 

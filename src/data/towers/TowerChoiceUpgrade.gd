@@ -25,6 +25,6 @@ class_name TowerChoiceUpgrade extends Resource
 @export var has_targeting_mask_override: bool = false
 @export_flags_2d_physics var targeting_mask_override: int = 12 ## e.g. 12 = Layer 3 Physical (4) + Layer 4 Ghost (8)
 @export var has_collision_layer_override: bool = false
-@export_flags_2d_physics var collision_layer_override: int = 10 ## e.g. 10 = Layer 2 Tower (2) + Layer 4 Ghost Blocker (8)
+@export_flags_2d_physics var collision_layer_override: int = 18 ## e.g. 18 = Layer 2 Solid Tower (2) + Layer 5 Spectral Tower (16)
 @export var has_collision_mask_override: bool = false
 @export_flags_2d_physics var collision_mask_override: int = 0
