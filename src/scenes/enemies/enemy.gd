@@ -46,6 +46,9 @@ var targeting: TargetingComponent:
 		return _targeting
 
 var _active_effects: Array[ActiveEffect] = []
+var position_history: Array[Vector2] = []
+const HISTORY_SAMPLE_DIST_SQ: float = 64.0 ## Sample point every 8px moved
+const MAX_HISTORY_POINTS: int = 500
 
 func apply_effect(effect: ActiveEffect) -> void:
 	_active_effects.append(effect)
@@ -73,6 +76,7 @@ func _on_effect_expired(effect: ActiveEffect) -> void:
 	remove_effect(effect)
 
 func _ready() -> void:
+	position_history.append(global_position)
 	if health:
 		health.died.connect(_on_died)
 	
@@ -108,6 +112,13 @@ func _process(delta: float) -> void:
 		effect.tick(delta)
 	
 func _physics_process(_delta: float) -> void:
+	if position_history.is_empty():
+		position_history.append(global_position)
+	elif global_position.distance_squared_to(position_history.back()) >= HISTORY_SAMPLE_DIST_SQ:
+		position_history.append(global_position)
+		if position_history.size() > MAX_HISTORY_POINTS:
+			position_history.pop_front()
+
 	if not nav.can_reach_exit() and targeting and attack and targeting.get_targets().size() > 0:
 		if movement:
 			movement.stop()

@@ -12,6 +12,9 @@ var _exits: Array[Node2D] = []
 
 var _actor: CharacterBody2D
 var _no_path: bool = false
+var _last_path_calc: float = 0
+var _path_calc_timer: float = 0
+const PATH_RECALC_TIMER: float = 1
 
 func _ready() -> void:
 	if get_parent():
@@ -74,9 +77,14 @@ func distance_to_goal() -> float:
 
 	return total_distance
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if agent.is_navigation_finished():
 		return
+	
+	_path_calc_timer += delta
+	if _path_calc_timer - _last_path_calc >= PATH_RECALC_TIMER:
+		_last_path_calc = _path_calc_timer
+		agent.target_position = agent.target_position
 	
 	if !agent.is_target_reachable():
 		if !_no_path:

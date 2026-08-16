@@ -34,6 +34,5 @@ scene = ExtResource("2_scene")
 description = "Solid blockade to reroute or slow enemy progression."
 unlock_cost = 250
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_spiked"), SubResource("Resource_choice_aegis")])
-is_solid = false
 cost = 100
 health = SubResource("SubResource_health")

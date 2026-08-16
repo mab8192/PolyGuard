@@ -35,6 +35,7 @@ metadata/_custom_type_script = "uid://dsor16spgwgow"
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("3_applier_data")
 effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_burn")])
+targeting_mask = 12
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [sub_resource type="Resource" id="Resource_health"]

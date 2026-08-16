@@ -230,7 +230,7 @@ def generate_arrow_wall_texture(output_path: str = None) -> str:
     return save_cropped_sprite(img, (width, height), output_path, "arrow_wall")
 
 def generate_crossbow_texture(output_path: str = None) -> str:
-    """Cyber Crossbow defensive turret with swivel rail and energy bow pylons."""
+    """Cyber Crossbow turret with circular/octagonal swivel base filling the full 64x64 area for 45-deg rotation."""
     if output_path is None:
         output_path = os.path.join(get_project_root(), "src", "textures", "towers", "crossbow.png")
 
@@ -238,47 +238,83 @@ def generate_crossbow_texture(output_path: str = None) -> str:
     cx, cy = sw / 2.0, sh / 2.0
 
     c_base_dark = (14, 18, 24, 255)
-    c_base_mid = (26, 34, 46, 255)
+    c_base_mid = (26, 36, 48, 255)
     c_turret_dark = (18, 26, 36, 255)
-    c_turret_mid = (38, 54, 72, 255)
-    c_turret_light = (65, 90, 118, 255)
+    c_turret_mid = (40, 58, 78, 255)
+    c_turret_light = (70, 98, 128, 255)
 
     c_neon_cyan = (0, 245, 212, 255)
     c_neon_bright = (190, 255, 250, 255)
 
-    r_base = 20 * f
+    # 1. Circular/Octagonal base extended to the border (r=30*f, diameter 60px)
+    r_base = 30 * f
     draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_base_dark, outline=(10, 14, 20, 255), width=int(2.5 * f))
-    draw.regular_polygon((cx, cy, r_base - 3 * f), 8, rotation=22.5, fill=c_base_mid)
-    draw.ellipse([cx - 13 * f, cy - 13 * f, cx + 13 * f, cy + 13 * f], fill=c_base_dark, outline=c_neon_cyan, width=int(1.8 * f))
+    draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_base_mid)
+    
+    # Outer Octagon Neon Accents
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5 * f)
+        py = cy + math.sin(ang) * (r_base - 5 * f)
+        draw.regular_polygon((px, py, 2.5 * f), 4, rotation=45, fill=c_base_dark, outline=c_neon_cyan, width=int(1.0 * f))
 
+    # 2. Central 360-degree Swivel Ring Platform
+    draw.ellipse([cx - 18 * f, cy - 18 * f, cx + 18 * f, cy + 18 * f], fill=c_base_dark, outline=c_neon_cyan, width=int(2 * f))
+    draw.ellipse([cx - 13 * f, cy - 13 * f, cx + 13 * f, cy + 13 * f], fill=c_turret_dark)
+
+    # 3. Heavy Crossbow Barrel / Center Rail Body (Length from x=-18 to x=+26)
     body_pts = [
-        (cx - 12 * f, cy - 5 * f),
-        (cx - 2 * f, cy - 5 * f),
-        (cx + 7 * f, cy - 3.5 * f),
-        (cx + 16 * f, cy - 2.5 * f),
-        (cx + 16 * f, cy + 2.5 * f),
-        (cx + 7 * f, cy + 3.5 * f),
-        (cx - 2 * f, cy + 5 * f),
-        (cx - 12 * f, cy + 5 * f),
+        (cx - 18 * f, cy - 6 * f),
+        (cx + 10 * f, cy - 6 * f),
+        (cx + 26 * f, cy - 3.5 * f),
+        (cx + 26 * f, cy + 3.5 * f),
+        (cx + 10 * f, cy + 6 * f),
+        (cx - 18 * f, cy + 6 * f),
     ]
-    draw.polygon(body_pts, fill=c_turret_mid, outline=c_turret_dark, width=int(1.5 * f))
-    draw.polygon([(cx - 11 * f, cy - 4.5 * f), (cx - 2 * f, cy - 4.5 * f), (cx + 7 * f, cy - 3 * f), (cx + 15 * f, cy), (cx - 11 * f, cy)], fill=c_turret_light)
-    draw.polygon([(cx - 11 * f, cy), (cx + 15 * f, cy), (cx + 7 * f, cy + 3 * f), (cx - 2 * f, cy + 4.5 * f), (cx - 11 * f, cy + 4.5 * f)], fill=c_turret_dark)
+    draw.polygon(body_pts, fill=c_turret_mid, outline=c_turret_dark, width=int(1.8 * f))
+    draw.polygon([(cx - 17 * f, cy - 5 * f), (cx + 10 * f, cy - 5 * f), (cx + 25 * f, cy), (cx - 17 * f, cy)], fill=c_turret_light)
+    draw.polygon([(cx - 17 * f, cy), (cx + 25 * f, cy), (cx + 10 * f, cy + 5 * f), (cx - 17 * f, cy + 5 * f)], fill=c_turret_dark)
 
-    mx = cx + 2 * f
-    draw.polygon([(mx - 3 * f, cy - 4 * f), (mx + 4 * f, cy - 16 * f), (mx + 9 * f, cy - 16 * f), (mx + 3 * f, cy - 4 * f)], fill=c_turret_mid, outline=c_neon_cyan, width=int(2 * f))
-    draw.polygon([(mx - 3 * f, cy + 4 * f), (mx + 4 * f, cy + 16 * f), (mx + 9 * f, cy + 16 * f), (mx + 3 * f, cy + 4 * f)], fill=c_turret_dark, outline=c_neon_cyan, width=int(2 * f))
+    # 4. Wide Reinforced Kinetic Crossbow Limbs (Sweeping forward from center to edges)
+    limb_upper = [
+        (cx - 3 * f, cy - 5 * f),
+        (cx + 10 * f, cy - 25 * f),
+        (cx + 17 * f, cy - 25 * f),
+        (cx + 7 * f, cy - 5 * f),
+    ]
+    draw.polygon(limb_upper, fill=c_turret_mid, outline=c_neon_cyan, width=int(2 * f))
+    limb_lower = [
+        (cx - 3 * f, cy + 5 * f),
+        (cx + 10 * f, cy + 25 * f),
+        (cx + 17 * f, cy + 25 * f),
+        (cx + 7 * f, cy + 5 * f),
+    ]
+    draw.polygon(limb_lower, fill=c_turret_dark, outline=c_neon_cyan, width=int(2 * f))
 
-    draw.line([(mx + 6 * f, cy - 15 * f), (cx - 4 * f, cy)], fill=c_neon_bright, width=int(2 * f))
-    draw.line([(mx + 6 * f, cy + 15 * f), (cx - 4 * f, cy)], fill=c_neon_bright, width=int(2 * f))
+    draw.regular_polygon((cx + 13.5 * f, cy - 25 * f, 3 * f), 4, rotation=45, fill=c_neon_bright, outline=c_neon_cyan, width=int(1.2 * f))
+    draw.regular_polygon((cx + 13.5 * f, cy + 25 * f, 3 * f), 4, rotation=45, fill=c_neon_bright, outline=c_neon_cyan, width=int(1.2 * f))
 
-    draw.polygon([(cx + 13 * f, cy - 4.5 * f), (cx + 21 * f, cy), (cx + 13 * f, cy + 4.5 * f), (cx + 15 * f, cy)], fill=c_neon_bright, outline=c_neon_cyan, width=int(1.5 * f))
-    draw.ellipse([cx - 6 * f, cy - 3 * f, cx, cy + 3 * f], fill=c_neon_cyan)
+    # 5. Neon Energy Bowstring (connecting limb tips back to central nock at x=-6)
+    draw.line([(cx + 13.5 * f, cy - 24 * f), (cx - 6 * f, cy)], fill=c_neon_bright, width=int(2.5 * f))
+    draw.line([(cx + 13.5 * f, cy + 24 * f), (cx - 6 * f, cy)], fill=c_neon_bright, width=int(2.5 * f))
+
+    # 6. Primed Hyper-Kinetic Bolt in Rail
+    bolt_pts = [
+        (cx - 5 * f, cy - 2.5 * f),
+        (cx + 21 * f, cy - 2.5 * f),
+        (cx + 29 * f, cy),
+        (cx + 21 * f, cy + 2.5 * f),
+        (cx - 5 * f, cy + 2.5 * f),
+    ]
+    draw.polygon(bolt_pts, fill=c_neon_bright, outline=c_neon_cyan, width=int(1.5 * f))
+
+    draw.ellipse([cx - 10 * f, cy - 4.5 * f, cx - 1 * f, cy + 4.5 * f], fill=c_base_dark, outline=c_neon_cyan, width=int(1.5 * f))
+    draw.ellipse([cx - 8 * f, cy - 2.5 * f, cx - 3 * f, cy + 2.5 * f], fill=c_neon_bright)
 
     return save_cropped_sprite(img, (64, 64), output_path, "crossbow")
 
 def generate_flamethrower_texture(output_path: str = None) -> str:
-    """Cyber Flamethrower turret with fuel cylinders and ignition pilot glow."""
+    """Cyber Flamethrower turret with circular/octagonal swivel base filling the full 64x64 area for 45-deg rotation."""
     if output_path is None:
         output_path = os.path.join(get_project_root(), "src", "textures", "towers", "flamethrower.png")
 
@@ -286,39 +322,62 @@ def generate_flamethrower_texture(output_path: str = None) -> str:
     cx, cy = sw / 2.0, sh / 2.0
 
     c_dark_hull = (16, 18, 24, 255)
-    c_mid_hull = (28, 34, 44, 255)
-    c_metal_light = (65, 80, 100, 255)
-    c_neon_orange = (255, 105, 15, 255)
-    c_neon_crimson = (255, 45, 30, 255)
-    c_neon_yellow = (255, 220, 50, 255)
+    c_mid_hull = (28, 38, 50, 255)
+    c_metal_light = (70, 90, 115, 255)
+    c_neon_orange = (255, 120, 20, 255)
+    c_neon_crimson = (235, 40, 30, 255)
+    c_neon_yellow = (255, 230, 60, 255)
 
-    r_base = 20 * f
+    # 1. Circular/Octagonal base extended to the border (r=30*f, diameter 60px)
+    r_base = 30 * f
     draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.regular_polygon((cx, cy, r_base - 3 * f), 8, rotation=22.5, fill=c_mid_hull)
-    draw.ellipse([cx - 13 * f, cy - 13 * f, cx + 13 * f, cy + 13 * f], fill=c_dark_hull, outline=c_neon_orange, width=int(1.8 * f))
+    draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_mid_hull)
 
-    draw.rounded_rectangle([cx - 14 * f, cy - 13 * f, cx - 3 * f, cy - 6 * f], radius=2 * f, fill=c_neon_crimson, outline=c_dark_hull, width=int(1.2 * f))
-    draw.line([cx - 12 * f, cy - 9.5 * f, cx - 5 * f, cy - 9.5 * f], fill=c_neon_yellow, width=int(1.2 * f))
-    draw.rounded_rectangle([cx - 14 * f, cy + 6 * f, cx - 3 * f, cy + 13 * f], radius=2 * f, fill=c_neon_crimson, outline=c_dark_hull, width=int(1.2 * f))
-    draw.line([cx - 12 * f, cy + 9.5 * f, cx - 5 * f, cy + 9.5 * f], fill=c_neon_yellow, width=int(1.2 * f))
+    # Outer Octagon Hazard Trims
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5 * f)
+        py = cy + math.sin(ang) * (r_base - 5 * f)
+        draw.regular_polygon((px, py, 2.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_neon_orange, width=int(1.0 * f))
 
+    # 2. Central 360-degree Swivel Turret Ring
+    draw.ellipse([cx - 18 * f, cy - 18 * f, cx + 18 * f, cy + 18 * f], fill=c_dark_hull, outline=c_neon_orange, width=int(2 * f))
+    draw.ellipse([cx - 13 * f, cy - 13 * f, cx + 13 * f, cy + 13 * f], fill=c_mid_hull)
+
+    # 3. Dual High-Pressure Fuel/Plasma Tanks (Upper and Lower flanks)
+    draw.rounded_rectangle([cx - 21 * f, cy - 21 * f, cx - 2 * f, cy - 9 * f], radius=3 * f, fill=c_neon_crimson, outline=c_dark_hull, width=int(1.8 * f))
+    draw.line([cx - 19 * f, cy - 15 * f, cx - 4 * f, cy - 15 * f], fill=c_neon_yellow, width=int(1.8 * f))
+    draw.regular_polygon((cx - 21 * f, cy - 15 * f, 2.5 * f), 4, rotation=45, fill=c_metal_light)
+
+    draw.rounded_rectangle([cx - 21 * f, cy + 9 * f, cx - 2 * f, cy + 21 * f], radius=3 * f, fill=c_neon_crimson, outline=c_dark_hull, width=int(1.8 * f))
+    draw.line([cx - 19 * f, cy + 15 * f, cx - 4 * f, cy + 15 * f], fill=c_neon_yellow, width=int(1.8 * f))
+    draw.regular_polygon((cx - 21 * f, cy + 15 * f, 2.5 * f), 4, rotation=45, fill=c_metal_light)
+
+    # 4. Central Heavy Flame Projector Cannon & Heat Cowl (x=-14 to x=+27)
     cowl_pts = [
-        (cx - 12 * f, cy - 5.5 * f),
-        (cx + 8 * f, cy - 5.5 * f),
-        (cx + 17 * f, cy - 8 * f),
-        (cx + 19 * f, cy - 8 * f),
-        (cx + 19 * f, cy + 8 * f),
-        (cx + 17 * f, cy + 8 * f),
-        (cx + 8 * f, cy + 5.5 * f),
-        (cx - 12 * f, cy + 5.5 * f),
+        (cx - 14 * f, cy - 7.5 * f),
+        (cx + 8 * f, cy - 7.5 * f),
+        (cx + 22 * f, cy - 12 * f),
+        (cx + 27 * f, cy - 12 * f),
+        (cx + 27 * f, cy + 12 * f),
+        (cx + 22 * f, cy + 12 * f),
+        (cx + 8 * f, cy + 7.5 * f),
+        (cx - 14 * f, cy + 7.5 * f),
     ]
-    draw.polygon(cowl_pts, fill=c_mid_hull, outline=c_dark_hull, width=int(1.8 * f))
-    draw.polygon([(cx - 11 * f, cy - 4.5 * f), (cx + 8 * f, cy - 4.5 * f), (cx + 17 * f, cy - 7 * f), (cx + 18 * f, cy), (cx - 11 * f, cy)], fill=c_metal_light)
-    draw.polygon([(cx - 11 * f, cy), (cx + 18 * f, cy), (cx + 17 * f, cy + 7 * f), (cx + 8 * f, cy + 4.5 * f), (cx - 11 * f, cy + 4.5 * f)], fill=c_dark_hull)
+    draw.polygon(cowl_pts, fill=c_mid_hull, outline=c_dark_hull, width=int(2 * f))
+    draw.polygon([(cx - 13 * f, cy - 6.5 * f), (cx + 8 * f, cy - 6.5 * f), (cx + 22 * f, cy - 10.5 * f), (cx + 26 * f, cy), (cx - 13 * f, cy)], fill=c_metal_light)
+    draw.polygon([(cx - 13 * f, cy), (cx + 26 * f, cy), (cx + 22 * f, cy + 10.5 * f), (cx + 8 * f, cy + 6.5 * f), (cx - 13 * f, cy + 6.5 * f)], fill=c_dark_hull)
 
-    draw.polygon([(cx + 17 * f, cy - 7 * f), (cx + 21 * f, cy - 6 * f), (cx + 21 * f, cy + 6 * f), (cx + 17 * f, cy + 7 * f)], fill=c_neon_orange, outline=c_neon_crimson, width=int(1.2 * f))
-    draw.ellipse([cx + 17 * f, cy - 3 * f, cx + 22 * f, cy + 3 * f], fill=c_neon_yellow)
-    draw.ellipse([cx - 5 * f, cy - 3 * f, cx + 1 * f, cy + 3 * f], fill=c_neon_orange)
+    for vx in [cx - 6 * f, cx, cx + 6 * f]:
+        draw.line([vx, cy - 5 * f, vx, cy + 5 * f], fill=c_neon_orange, width=int(1.5 * f))
+
+    # 5. Flared Plasma Projector Nozzle Core & Pilot Ignition Flame
+    draw.polygon([(cx + 22 * f, cy - 10 * f), (cx + 29 * f, cy - 8 * f), (cx + 29 * f, cy + 8 * f), (cx + 22 * f, cy + 10 * f)], fill=c_neon_orange, outline=c_neon_crimson, width=int(1.5 * f))
+    draw.ellipse([cx + 22 * f, cy - 5 * f, cx + 30 * f, cy + 5 * f], fill=c_neon_yellow)
+    draw.ellipse([cx + 24 * f, cy - 2.5 * f, cx + 29.5 * f, cy + 2.5 * f], fill=(255, 255, 255, 255))
+
+    draw.ellipse([cx - 5 * f, cy - 4 * f, cx + 3 * f, cy + 4 * f], fill=c_dark_hull, outline=c_neon_orange, width=int(1.5 * f))
+    draw.ellipse([cx - 3 * f, cy - 2 * f, cx + 1 * f, cy + 2 * f], fill=c_neon_yellow)
 
     return save_cropped_sprite(img, (64, 64), output_path, "flamethrower")
 

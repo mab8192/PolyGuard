@@ -312,4 +312,3 @@ func _draw_polygon(poly: PackedVector2Array) -> void:
 	var closed := poly.duplicate()
 	closed.append(poly[0])
 	draw_polyline(closed, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
-

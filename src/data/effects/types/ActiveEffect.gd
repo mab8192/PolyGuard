@@ -4,6 +4,7 @@ signal expired()
 
 var data: EffectData
 var _target: Node2D
+var _visual_node: Node2D = null
 
 var _counting_time: bool = false
 var _elapsed_time_counted: float = 0 ## Elapsed time since _counting_time was set
@@ -33,4 +34,6 @@ func tick(delta: float) -> void:
 		expired.emit()
 
 func remove() -> void:
-	pass
+	if is_instance_valid(_visual_node):
+		_visual_node.queue_free()
+		_visual_node = null
