@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://c8stagesd15"]
+
+[ext_resource type="Texture2D" uid="uid://b5eoi2fmb3fu4" path="res://src/textures/stages/Stage15.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://cyjqskk6pyq2s" path="res://src/scenes/stages/Stage15.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_15"
+stage_name = "Stage 15"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+starting_energy = 3500
+starting_lives = 30
+loadout_size = 7
+wave_data_file = "res://src/data/stages/waves/Stage15.json"

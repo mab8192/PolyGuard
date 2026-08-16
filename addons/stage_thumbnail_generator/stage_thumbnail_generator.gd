@@ -51,9 +51,14 @@ func generate_all_thumbnails() -> void:
 	print("[StageThumbnailGenerator] Rendered %d stage image files." % generated_maps.size())
 
 	# Step 2: Trigger editor filesystem scan so Godot imports the PNGs as Texture2D resources
-	var editor_interface = get_editor_interface() if Engine.is_editor_hint() else null
-	if editor_interface and editor_interface.get_resource_filesystem():
-		var fs = editor_interface.get_resource_filesystem()
+	var fs: EditorFileSystem = null
+	if Engine.is_editor_hint():
+		if ClassDB.class_exists("EditorInterface"):
+			fs = EditorInterface.get_resource_filesystem()
+		elif has_method("get_editor_interface") and get_editor_interface():
+			fs = get_editor_interface().get_resource_filesystem()
+
+	if fs:
 		fs.scan()
 		while fs.is_scanning():
 			var tree = Engine.get_main_loop() as SceneTree
@@ -110,25 +115,26 @@ func _render_stage_to_png(stage_data: StageData, res_path: String) -> String:
 
 	viewport.add_child(stage_node)
 
-	# Calculate bounding box of stage
-	var tilemap = _find_tilemap(stage_node)
+	# Calculate bounding box across all tilemaps and placed elements
 	var min_pos = Vector2(INF, INF)
 	var max_pos = Vector2(-INF, -INF)
 
-	if tilemap and not tilemap.get_used_cells().is_empty():
-		var used_cells = tilemap.get_used_cells()
-		var tile_size = Vector2(tilemap.tile_set.tile_size) * tilemap.scale if tilemap.tile_set else Vector2(64, 64)
-		var half_size = tile_size / 2.0
-		
-		for cell in used_cells:
-			var g_pos = tilemap.to_global(tilemap.map_to_local(cell))
-			min_pos.x = minf(min_pos.x, g_pos.x - half_size.x)
-			min_pos.y = minf(min_pos.y, g_pos.y - half_size.y)
-			max_pos.x = maxf(max_pos.x, g_pos.x + half_size.x)
-			max_pos.y = maxf(max_pos.y, g_pos.y + half_size.y)
+	var tilemaps = stage_node.find_children("*", "TileMapLayer", true, false)
+	for tm in tilemaps:
+		if tm is TileMapLayer and not tm.get_used_cells().is_empty():
+			var used_cells = tm.get_used_cells()
+			var tile_size = Vector2(tm.tile_set.tile_size) * tm.scale if tm.tile_set else Vector2(64, 64)
+			var half_size = tile_size / 2.0
+			
+			for cell in used_cells:
+				var g_pos = tm.to_global(tm.map_to_local(cell))
+				min_pos.x = minf(min_pos.x, g_pos.x - half_size.x)
+				min_pos.y = minf(min_pos.y, g_pos.y - half_size.y)
+				max_pos.x = maxf(max_pos.x, g_pos.x + half_size.x)
+				max_pos.y = maxf(max_pos.y, g_pos.y + half_size.y)
 
-	for child in stage_node.find_children("*", "Area2D", true, false):
-		if child is Node2D:
+	for child in stage_node.find_children("*", "Node2D", true, false):
+		if child is Area2D or child is Marker2D or child.is_in_group("spawners") or child.is_in_group("exits"):
 			var g_pos = child.global_position
 			min_pos.x = minf(min_pos.x, g_pos.x - 48)
 			min_pos.y = minf(min_pos.y, g_pos.y - 48)
@@ -187,14 +193,3 @@ func _render_stage_to_png(stage_data: StageData, res_path: String) -> String:
 
 	print("[StageThumbnailGenerator] Saved PNG -> %s" % out_png_path)
 	return out_png_path
-
-func _find_tilemap(node: Node) -> TileMapLayer:
-	if node is TileMapLayer:
-		return node
-	if "tiles" in node and node.tiles is TileMapLayer:
-		return node.tiles
-	for child in node.get_children():
-		var found = _find_tilemap(child)
-		if found:
-			return found
-	return null

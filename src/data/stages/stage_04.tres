@@ -1,15 +1,14 @@
-[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://13fas0oko8cq"]
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://c8stagesd04"]
 
-[ext_resource type="Texture2D" uid="uid://b3m1wanvgeya0" path="res://src/textures/stages/Stage4.png" id="1_hhmat"]
-[ext_resource type="PackedScene" uid="uid://pn6cpp0rcf1y" path="res://src/scenes/stages/Stage4.tscn" id="2_hhmat"]
-[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="3_pyxte"]
+[ext_resource type="Texture2D" uid="uid://b3m1wanvgeya0" path="res://src/textures/stages/Stage4.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://pn6cpp0rcf1y" path="res://src/scenes/stages/Stage4.tscn" id="3_scene"]
 
 [resource]
-script = ExtResource("3_pyxte")
+script = ExtResource("2_script")
 stage_id = "stage_04"
 stage_name = "Stage 4"
-scene = ExtResource("2_hhmat")
-icon = ExtResource("1_hhmat")
-starting_energy = 1400
-loadout_size = 6
-wave_data_file = "res://src/data/stages/waves/Stage3.json"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+starting_energy = 1200
+wave_data_file = "res://src/data/stages/waves/Stage4.json"

@@ -81,6 +81,18 @@ func _load_registry() -> void:
 		"stage_06": load("res://src/data/stages/stage_06.tres"),
 		"stage_07": load("res://src/data/stages/stage_07.tres"),
 		"stage_08": load("res://src/data/stages/stage_08.tres"),
+		"stage_09": load("res://src/data/stages/stage_09.tres"),
+		"stage_10": load("res://src/data/stages/stage_10.tres"),
+		"stage_11": load("res://src/data/stages/stage_11.tres"),
+		"stage_12": load("res://src/data/stages/stage_12.tres"),
+		"stage_13": load("res://src/data/stages/stage_13.tres"),
+		"stage_14": load("res://src/data/stages/stage_14.tres"),
+		"stage_15": load("res://src/data/stages/stage_15.tres"),
+		"stage_16": load("res://src/data/stages/stage_16.tres"),
+		"stage_17": load("res://src/data/stages/stage_17.tres"),
+		"stage_18": load("res://src/data/stages/stage_18.tres"),
+		"stage_19": load("res://src/data/stages/stage_19.tres"),
+		"stage_20": load("res://src/data/stages/stage_20.tres"),
 		"test_stage": load("res://src/data/stages/TestStage.tres"),
 	}
 	
@@ -99,4 +111,5 @@ func _load_registry() -> void:
 		"ice_trap": load("res://src/data/towers/ice_trap.tres"),
 		"corrosive_vapor": load("res://src/data/towers/corrosive_vapor.tres"),
 		"artillery": load("res://src/data/towers/artillery.tres"),
+		"carpet_bomb_artillery": load("res://src/data/towers/artillery.tres"),
 	}

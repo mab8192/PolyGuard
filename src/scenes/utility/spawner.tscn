@@ -1,7 +1,7 @@
 [gd_scene format=3 uid="uid://cq3ofdmp8sxea"]
 
 [ext_resource type="Script" uid="uid://cy04gqumfumjy" path="res://src/scenes/utility/spawner.gd" id="1_y5mdg"]
-[ext_resource type="Texture2D" path="res://src/textures/utility/spawner.png" id="2_spawner_tex"]
+[ext_resource type="Texture2D" uid="uid://cbvygrw6iwl3j" path="res://src/textures/utility/spawner.png" id="2_spawner_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
 size = Vector2(64, 64)
@@ -13,4 +13,5 @@ script = ExtResource("1_y5mdg")
 texture = ExtResource("2_spawner_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1839956020]
+visible = false
 shape = SubResource("RectangleShape2D_naouo")
