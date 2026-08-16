@@ -83,6 +83,16 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 	if copy.health:
 		copy.health.max_health *= hp_mult
 	
+	if copy.effect_applier:
+		copy.effect_applier.cooldown *= cd_mult
+		for eff in copy.effect_applier.effects:
+			if "damage" in eff:
+				eff.damage *= dmg_mult
+			if "initial_damage" in eff:
+				eff.initial_damage *= dmg_mult
+			if "damage_per_second" in eff:
+				eff.damage_per_second *= dmg_mult
+	
 	return copy
 
 func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
@@ -115,6 +125,28 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
 			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
 			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
+	elif scaled.effect_applier:
+		result["has_attack"] = true
+		result["cooldown"] = scaled.effect_applier.cooldown
+		result["max_targets"] = scaled.effect_applier.max_targets
+		result["targets_ghosts"] = (scaled.effect_applier.targeting_mask & 8) != 0
+		var total_dmg = 0.0
+		for eff in scaled.effect_applier.effects:
+			if "damage" in eff:
+				total_dmg += eff.damage
+				result["damage_type"] = eff.damage_type
+			elif "initial_damage" in eff:
+				total_dmg += eff.initial_damage
+				result["damage_type"] = eff.damage_type
+			elif "damage_per_second" in eff:
+				total_dmg += eff.damage_per_second * eff.duration
+				result["damage_type"] = eff.damage_type
+		result["damage"] = total_dmg
+		result["dps"] = total_dmg / maxf(scaled.effect_applier.cooldown, 0.05) if scaled.effect_applier.cooldown > 0 else total_dmg
+		match result["damage_type"]:
+			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
+			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
+			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
 			
 	if scaled.health:
 		result["has_health"] = true
@@ -125,6 +157,8 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		result["targets_ghosts"] = (scaled.targeting.targeting_mask & 8) != 0
 	elif scaled.attack:
 		result["targets_ghosts"] = (scaled.attack.damage_type == AttackData.DamageType.MAGIC or scaled.attack.damage_type == AttackData.DamageType.TRUE)
+	elif scaled.effect_applier:
+		result["targets_ghosts"] = (scaled.effect_applier.targeting_mask & 8) != 0
 	else:
 		result["targets_ghosts"] = false
 

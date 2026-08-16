@@ -15,13 +15,10 @@ func _process(_delta: float) -> void:
 		if gas_effect and gas_effect.emitting:
 			gas_effect.emitting = false
 		return
-	if gas_effect and not gas_effect.emitting:
-		gas_effect.emitting = true
 
 func _on_triggered() -> void:
-	if gas_effect:
-		gas_effect.emitting = true
+	print("TRIGGERED")
+	gas_effect.emitting = true
 
 func _on_deactivated() -> void:
-	if gas_effect and not is_preview:
-		gas_effect.emitting = true
+	gas_effect.emitting = false

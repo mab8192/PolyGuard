@@ -4,6 +4,7 @@
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
 [ext_resource type="Texture2D" uid="uid://bkqje2mkufpnu" path="res://src/textures/towers/corrosive_vapor.png" id="3_icon"]
+[ext_resource type="Script" uid="uid://1377k7q587j4" path="res://src/data/effects/types/ArmorReductionEffectData.gd" id="3_tcoeq"]
 [ext_resource type="PackedScene" uid="uid://b6x336krcls3r" path="res://src/scenes/towers/corrosive_vapor.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
 
@@ -21,8 +22,16 @@ title = "Volatile Dispersion"
 description = "Rapid pressure injectors reducing mist release cooldowns."
 cooldown_multiplier = 0.8
 
+[sub_resource type="Resource" id="Resource_18qce"]
+script = ExtResource("3_tcoeq")
+name = "corrosive_vapor"
+duration = 10.0
+remove_on_exit = false
+metadata/_custom_type_script = "uid://1377k7q587j4"
+
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")
+effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_18qce")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [resource]

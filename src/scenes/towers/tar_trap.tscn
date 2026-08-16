@@ -3,32 +3,12 @@
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_l5h0c"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="1_mkqy8"]
 [ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/towers/tar_trap.png" id="6_x24fm"]
-[ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="7_particle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_hkjoh"]
 size = Vector2(64, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
 size = Vector2(64, 64)
-
-[sub_resource type="Gradient" id="Gradient_tar"]
-offsets = PackedFloat32Array(0, 0.6, 1)
-colors = PackedColorArray(0.25, 0.18, 0.35, 0.8, 0.12, 0.08, 0.18, 0.4, 0.05, 0.03, 0.08, 0)
-
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_tar"]
-gradient = SubResource("Gradient_tar")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_tar"]
-particle_flag_disable_z = true
-emission_shape = 3
-emission_box_extents = Vector3(18, 18, 1)
-spread = 180.0
-initial_velocity_min = 4.0
-initial_velocity_max = 14.0
-gravity = Vector3(0, -6, 0)
-scale_min = 1.2
-scale_max = 2.8
-color_ramp = SubResource("GradientTexture1D_tar")
 
 [node name="Tar Trap" type="StaticBody2D" unique_id=1776429960]
 collision_layer = 0
@@ -47,11 +27,3 @@ shape = SubResource("RectangleShape2D_qgbsg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764189137]
 texture = ExtResource("6_x24fm")
-
-[node name="Tar Effect" type="GPUParticles2D" parent="." unique_id=1731327894]
-z_index = 1
-emitting = true
-amount = 12
-texture = ExtResource("7_particle")
-lifetime = 1.6
-process_material = SubResource("ParticleProcessMaterial_tar")
