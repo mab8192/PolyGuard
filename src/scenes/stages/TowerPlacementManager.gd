@@ -133,7 +133,7 @@ func can_place_preview() -> bool:
 						return false
 
 	# 4. Check for overlap with active enemies
-	if preview_tower.is_solid:
+	if preview_tower.collision_layer > 0:
 		var enemy_nodes: Array = []
 		if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
 			enemy_nodes = GameManager.stage_root.enemies.get_children()

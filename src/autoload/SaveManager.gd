@@ -12,9 +12,17 @@ var _unlocked_towers: Array[String] = []
 var _tower_levels: Dictionary = {} # tower_id -> int (1 to 5)
 var _tower_choices: Dictionary = {} # tower_id -> choice_id (String)
 var _unlocked_specializations: Dictionary = {} # tower_id -> Array[String]
+var _selected_loadout: Array[String] = []
 
 func _ready() -> void:
 	load_save()
+
+func get_selected_loadout() -> Array[String]:
+	return _selected_loadout.duplicate()
+
+func set_selected_loadout(tower_ids: Array[String]) -> void:
+	_selected_loadout = tower_ids.duplicate()
+	save_to_disk()
 
 func get_credits() -> int:
 	return _credits
@@ -197,7 +205,8 @@ func save_to_disk() -> void:
 		"unlocked_towers": _unlocked_towers,
 		"tower_levels": _tower_levels,
 		"tower_choices": _tower_choices,
-		"unlocked_specializations": _unlocked_specializations
+		"unlocked_specializations": _unlocked_specializations,
+		"selected_loadout": _selected_loadout
 	}
 	
 	var json_str = JSON.stringify(data, "\t")
@@ -269,6 +278,12 @@ func load_save() -> void:
 					arr.append(str(item))
 			_unlocked_specializations[str(k)] = arr
 
+	var saved_loadout = data.get("selected_loadout", [])
+	if saved_loadout is Array:
+		_selected_loadout.clear()
+		for item in saved_loadout:
+			_selected_loadout.append(str(item))
+
 func _init_defaults() -> void:
 	_credits = 0
 	_unlocked_stages = DEFAULT_UNLOCKED_STAGES.duplicate()
@@ -279,6 +294,7 @@ func _init_defaults() -> void:
 		_tower_levels[t] = 1
 	_tower_choices = {}
 	_unlocked_specializations = {}
+	_selected_loadout = DEFAULT_UNLOCKED_TOWERS.duplicate()
 
 # =========================================================================
 # DEVELOPER CHEATS API

@@ -99,6 +99,11 @@ func _render() -> void:
 	if current_stats["max_targets"] > 1:
 		stat_lines.append("Target Capacity: %d Enemies" % current_stats["max_targets"])
 		
+	if current_stats["targets_ghosts"]:
+		stat_lines.append("Ghost Detection: ENABLED")
+	if current_stats["blocks_ghosts"]:
+		stat_lines.append("Ghost Barrier: ACTIVE (Blocks Ghosts)")
+		
 	if stat_lines.is_empty():
 		stat_lines.append("Defensive Tactical Installation")
 		
@@ -202,6 +207,10 @@ func _render_choice_card(
 			select_btn.theme_type_variation = &"SecondaryButton"
 
 func _get_damage_type_label(choice: TowerChoiceUpgrade) -> String:
+	if choice.has_collision_layer_override and (choice.collision_layer_override & 8) != 0:
+		return "GHOST BLOCKER"
+	if choice.has_targeting_mask_override and (choice.targeting_mask_override & 8) != 0:
+		return "TARGETS GHOSTS"
 	if choice.has_damage_type_override:
 		match choice.damage_type_override:
 			AttackData.DamageType.PHYSICAL: return "PHYSICAL DAMAGE"

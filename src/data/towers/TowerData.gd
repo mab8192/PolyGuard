@@ -19,12 +19,15 @@ class_name TowerData extends Resource
 @export var min_cooldown_multiplier: float = 0.35 ## Lower limit clamp for attack cooldown multiplier
 
 @export_category("Stats")
-@export var is_solid: bool = true
 @export var cost: int = 250 ## How much energy this tower costs to place
 
 @export_category("Placement")
 @export var can_rotate: bool = true ## Whether this tower/trap can be rotated during placement
 @export var rotation_step_degrees: float = 90.0 ## Rotation increment angle in degrees (e.g., 90 for square/rect, 45 for cone/directional)
+
+@export_category("Physics Collision")
+@export_flags_2d_physics var collision_layer: int = 2 ## Physics layer this tower occupies (0 = non-solid trap, 2 = physical tower, 10 = blocks ghosts too)
+@export_flags_2d_physics var collision_mask: int = 0 ## Physics mask for tower collision
 
 @export_category("Components")
 @export var health: HealthData
@@ -58,6 +61,15 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 	if choice:
 		if choice.has_damage_type_override and copy.attack:
 			copy.attack.damage_type = choice.damage_type_override
+		if choice.has_targeting_mask_override:
+			if copy.targeting:
+				copy.targeting.targeting_mask = choice.targeting_mask_override
+			if copy.effect_applier:
+				copy.effect_applier.targeting_mask = choice.targeting_mask_override
+		if choice.has_collision_layer_override:
+			copy.collision_layer = choice.collision_layer_override
+		if choice.has_collision_mask_override:
+			copy.collision_mask = choice.collision_mask_override
 		dmg_mult *= choice.damage_multiplier
 		cd_mult *= choice.cooldown_multiplier
 		hp_mult *= choice.health_multiplier
@@ -78,7 +90,8 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 	var result = {
 		"level": level,
 		"cost": cost,
-		"is_solid": is_solid,
+		"is_solid": scaled.collision_layer > 0,
+		"collision_layer": scaled.collision_layer,
 		"damage": 0.0,
 		"cooldown": 0.0,
 		"dps": 0.0,
@@ -86,6 +99,8 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		"damage_type_str": "Physical",
 		"max_health": 0.0,
 		"max_targets": 1,
+		"targets_ghosts": false,
+		"blocks_ghosts": false,
 		"has_attack": false,
 		"has_health": false
 	}
@@ -107,6 +122,13 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		
 	if scaled.targeting:
 		result["max_targets"] = scaled.targeting.max_targets
+		result["targets_ghosts"] = (scaled.targeting.targeting_mask & 8) != 0
+	elif scaled.attack:
+		result["targets_ghosts"] = (scaled.attack.damage_type == AttackData.DamageType.MAGIC or scaled.attack.damage_type == AttackData.DamageType.TRUE)
+	else:
+		result["targets_ghosts"] = false
+
+	result["blocks_ghosts"] = (scaled.collision_layer > 0) and ((scaled.collision_layer & 8) != 0)
 		
 	return result
 
@@ -126,7 +148,8 @@ func apply_to(tower: Tower) -> void:
 	if not is_instance_valid(tower):
 		return
 		
-	tower.is_solid = is_solid
+	tower.collision_layer = collision_layer
+	tower.collision_mask = collision_mask
 
 	if health:
 		ComponentUtil.update_component(tower, HealthComponent, tower.data.health)

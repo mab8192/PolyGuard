@@ -48,11 +48,6 @@ var is_range_visible: bool = false:
 		if effect_applier:
 			effect_applier.is_range_visible = value
 
-var is_solid: bool = true:
-	set(value):
-		is_solid = value
-		_update_solid_state() 
-
 var is_active: bool = true:
 	set(value):
 		var changed = (is_active != value)
@@ -115,10 +110,11 @@ func _process(_delta: float) -> void:
 		attack.attack_targets(targeting.get_targets())
 
 func _update_solid_state() -> void:
-	if is_solid:
+	if data:
+		collision_layer = data.collision_layer
+		collision_mask = data.collision_mask
+	elif collision_layer == 0:
 		collision_layer = 2
-	else:
-		collision_layer = 0
 
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing

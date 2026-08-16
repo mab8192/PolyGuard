@@ -203,7 +203,7 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 			var body = result.get("collider")
 			if is_instance_valid(body) and body is Tower:
 				var tower = body as Tower
-				if tower.is_solid and not tower.is_queued_for_deletion() and not tower.is_preview:
+				if tower.collision_layer > 0 and not tower.is_queued_for_deletion() and not tower.is_preview:
 					return tower
 				else:
 					if result.has("rid"):
@@ -223,7 +223,7 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 	var towers_container = _actor.get_tree().get_nodes_in_group("towers")
 	for node in towers_container:
 		var tower = node as Tower
-		if is_instance_valid(tower) and tower.is_solid and not tower.is_queued_for_deletion() and not tower.is_preview:
+		if is_instance_valid(tower) and tower.collision_layer > 0 and not tower.is_queued_for_deletion() and not tower.is_preview:
 			for i in range(path.size() - 1):
 				var dist_sq = _dist_to_segment_squared(tower.global_position, path[i], path[i + 1])
 				if dist_sq < 36.0 * 36.0:

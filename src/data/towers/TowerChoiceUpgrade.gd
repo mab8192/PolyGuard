@@ -20,3 +20,11 @@ class_name TowerChoiceUpgrade extends Resource
 @export_group("Defensive & Targets")
 @export var health_multiplier: float = 1.0
 @export var extra_targets: int = 0
+
+@export_group("Targeting & Collision Masks")
+@export var has_targeting_mask_override: bool = false
+@export_flags_2d_physics var targeting_mask_override: int = 12 ## e.g. 12 = Layer 3 Physical (4) + Layer 4 Ghost (8)
+@export var has_collision_layer_override: bool = false
+@export_flags_2d_physics var collision_layer_override: int = 10 ## e.g. 10 = Layer 2 Tower (2) + Layer 4 Ghost Blocker (8)
+@export var has_collision_mask_override: bool = false
+@export_flags_2d_physics var collision_mask_override: int = 0

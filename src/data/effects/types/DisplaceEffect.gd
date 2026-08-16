@@ -76,6 +76,7 @@ func _spawn_warp_visual(enemy: Enemy, pos: Vector2) -> void:
 	p.emission_shape = CPUParticles2D.EMISSION_SHAPE_SPHERE
 	p.emission_sphere_radius = 8.0
 	p.direction = Vector2(0, -1)
+	p.gravity = Vector2.ZERO
 	p.spread = 180.0
 	p.initial_velocity_min = 25.0
 	p.initial_velocity_max = 60.0

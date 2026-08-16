@@ -78,7 +78,7 @@ func _update_ui() -> void:
 			stat_lines.append("HEALTH: %d / %d" % [int(current_hp), int(max_hp)])
 		elif data.health:
 			stat_lines.append("HEALTH: %d / %d" % [int(data.health.max_health), int(data.health.max_health)])
-		elif data.is_solid:
+		elif data.collision_layer > 0:
 			stat_lines.append("TYPE: SOLID DEFENSE")
 		
 		stats_label.text = "\n".join(stat_lines)

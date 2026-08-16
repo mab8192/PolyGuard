@@ -67,7 +67,20 @@ func _init_loadout() -> void:
 		if SaveManager.is_tower_unlocked(t_id):
 			unlocked_towers.append(t)
 	
-	if not GameManager.selected_loadout.is_empty():
+	var saved_ids = SaveManager.get_selected_loadout()
+	if not saved_ids.is_empty():
+		for t_id in saved_ids:
+			if SaveManager.is_tower_unlocked(t_id):
+				var matching_tower: TowerData = null
+				for t in all_towers:
+					if Registry.get_tower_id(t) == t_id:
+						matching_tower = t
+						break
+				if matching_tower and unlocked_towers.has(matching_tower) and not equipped_towers.has(matching_tower):
+					if equipped_towers.size() < max_loadout_size:
+						equipped_towers.append(matching_tower)
+	
+	if equipped_towers.is_empty() and not GameManager.selected_loadout.is_empty():
 		for tower in GameManager.selected_loadout:
 			var matching_tower = _find_matching_tower(tower)
 			if matching_tower and unlocked_towers.has(matching_tower) and not equipped_towers.has(matching_tower):
@@ -175,7 +188,7 @@ func _update_details_panel() -> void:
 	else:
 		detail_level_badge.text = "LOCKED"
 		
-	if selected_tower.is_solid:
+	if selected_tower.collision_layer > 0:
 		detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper()
 	else:
 		detail_type_badge.text = "GROUND TRAP"
@@ -228,6 +241,14 @@ func _on_slot_clicked(slot: LoadoutSlot) -> void:
 		selected_tower = slot.tower_data
 		_refresh_all()
 
+func _save_current_loadout() -> void:
+	var ids: Array[String] = []
+	for tower in equipped_towers:
+		var t_id = Registry.get_tower_id(tower)
+		if not t_id.is_empty():
+			ids.append(t_id)
+	SaveManager.set_selected_loadout(ids)
+
 func _on_slot_remove_clicked(slot: LoadoutSlot) -> void:
 	if slot.tower_data:
 		_remove_tower_from_loadout(slot.tower_data)
@@ -239,6 +260,7 @@ func _on_available_card_clicked(card: LoadoutCard) -> void:
 		if not equipped_towers.has(card.tower_data):
 			if equipped_towers.size() < max_loadout_size:
 				equipped_towers.append(card.tower_data)
+				_save_current_loadout()
 	_refresh_all()
 
 func _on_detail_action_pressed() -> void:
@@ -252,6 +274,7 @@ func _on_detail_action_pressed() -> void:
 		if unlocked:
 			if equipped_towers.size() < max_loadout_size:
 				equipped_towers.append(selected_tower)
+				_save_current_loadout()
 			_refresh_all()
 	else:
 		if equipped_towers.has(selected_tower):
@@ -259,23 +282,28 @@ func _on_detail_action_pressed() -> void:
 		else:
 			if equipped_towers.size() < max_loadout_size:
 				equipped_towers.append(selected_tower)
+				_save_current_loadout()
 				_refresh_all()
 
 func _remove_tower_from_loadout(tower: TowerData) -> void:
 	equipped_towers.erase(tower)
+	_save_current_loadout()
 	_refresh_all()
 
 func _on_clear_all_pressed() -> void:
 	equipped_towers.clear()
+	_save_current_loadout()
 	_refresh_all()
 
 func _on_back_pressed() -> void:
+	_save_current_loadout()
 	GameManager.load_view(GameManager.View.MAIN_MENU)
 
 func _on_start_battle_pressed() -> void:
 	if equipped_towers.is_empty():
 		return
 		
+	_save_current_loadout()
 	var battle_loadout: Array[TowerData] = []
 	for tower in equipped_towers:
 		var t_id = Registry.get_tower_id(tower)

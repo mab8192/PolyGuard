@@ -1,6 +1,10 @@
 class_name TargetingComponent extends Area2D
 
-@export var data: TargetingData
+@export var data: TargetingData:
+	set(val):
+		data = val
+		if data:
+			collision_mask = data.targeting_mask
 
 const RANGE_BORDER_COLOR: Color = Color(0.0, 0.96, 0.83, 0.95)
 const RANGE_FILL_COLOR: Color = Color(0.0, 0.96, 0.83, 0.12)

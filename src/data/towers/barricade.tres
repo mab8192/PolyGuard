@@ -15,10 +15,12 @@ health_multiplier = 1.3
 
 [sub_resource type="Resource" id="Resource_choice_aegis"]
 script = ExtResource("1_choice")
-id = "aegis_fortress"
-title = "Aegis Fortress"
-description = "Heavy reinforced plating providing massive +100% maximum structure health."
-health_multiplier = 2.0
+id = "spectral_barrier"
+title = "Spectral Barrier"
+description = "Projects an arcane anti-spectral field that blocks Ghost-type enemies while granting +50% structure health."
+health_multiplier = 1.5
+has_collision_layer_override = true
+collision_layer_override = 10
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("4_health")

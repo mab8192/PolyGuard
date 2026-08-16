@@ -94,7 +94,7 @@ func _update_details(tower: TowerData) -> void:
 		upgrade_button.text = "UNLOCK (%d CREDITS)" % tower.unlock_cost
 		upgrade_button.theme_type_variation = &"PrimaryButton" if SaveManager.get_credits() >= tower.unlock_cost else &"SecondaryButton"
 		
-	detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper() if tower.is_solid else "GROUND TRAP"
+	detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper() if tower.collision_layer > 0 else "GROUND TRAP"
 	detail_desc.text = tower.description if not tower.description.is_empty() else "Standard defensive installation."
 	
 	var stat_parts: Array[String] = []
