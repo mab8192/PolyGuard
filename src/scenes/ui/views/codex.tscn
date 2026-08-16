@@ -119,6 +119,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 script = ExtResource("4_drag_scroll")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RootVBox/ScrollContainer" unique_id=637681938]

@@ -12,6 +12,8 @@ const ICON_TRASH = preload("res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/tr
 const ICON_ARCHER = preload("res://src/textures/towers/archer_tower.png")
 const ICON_TAR = preload("res://src/textures/towers/tar_trap.png")
 const ICON_SPIKE = preload("res://src/textures/towers/spike_trap.png")
+const ICON_SPAWNER = preload("res://src/textures/utility/spawner.png")
+const ICON_EXIT = preload("res://src/textures/utility/exit.png")
 
 @onready var overlay_panel: Panel = %OverlayBackground
 @onready var modal_container: PanelContainer = %ModalContainer
@@ -46,6 +48,23 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 		"tip": "Tip: Killing enemies gives you additional energy. Plan ahead!"
 	},
 	{
+		"category": "BATTLEFIELD",
+		"title": "SPAWNERS & EXITS",
+		"items": [
+			{
+				"icon": ICON_SPAWNER,
+				"headline": "ENEMY SPAWNERS",
+				"body": "Red portal zones on the perimeter where enemy waves appear. Active spawners pulse with an 'INCOMING' badge showing where attacks originate. Enemies chart their paths from here."
+			},
+			{
+				"icon": ICON_EXIT,
+				"headline": "DEFENSE EXITS",
+				"body": "Cyan glowing portal zones that enemies march toward. If an enemy reaches an active exit, they escape and deplete your Lives. Defend all active exits to survive!"
+			}
+		],
+		"tip": "Tip: Solid towers redirect enemy routes from spawners to exits. Build winding mazes to give your towers more time to attack!"
+	},
+	{
 		"category": "ARMORY",
 		"title": "STARTING DEFENSES",
 		"items": [
@@ -69,7 +88,7 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 	},
 	{
 		"category": "STAR RATING",
-		"title": "THE STAR SYSTEM & CREDITS",
+		"title": "STARS & CREDITS",
 		"items": [
 			{
 				"icon": ICON_STAR,

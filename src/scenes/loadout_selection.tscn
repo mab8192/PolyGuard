@@ -211,6 +211,7 @@ text = "AVAILABLE ARSENAL"
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 script = ExtResource("5_drag_scroll")
 
 [node name="AvailableHBox" type="HBoxContainer" parent="MainMargin/RootVBox/AvailableScroll" unique_id=637681879]

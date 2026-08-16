@@ -16,6 +16,10 @@ static var is_globally_dragging: bool = false
 
 func _ready() -> void:
 	mouse_filter = Control.MOUSE_FILTER_PASS
+	if vertical_scroll_mode != ScrollMode.SCROLL_MODE_DISABLED:
+		vertical_scroll_mode = ScrollMode.SCROLL_MODE_SHOW_NEVER
+	if horizontal_scroll_mode != ScrollMode.SCROLL_MODE_DISABLED:
+		horizontal_scroll_mode = ScrollMode.SCROLL_MODE_SHOW_NEVER
 
 func _process(delta: float) -> void:
 	if not _is_pointer_down and (absf(_velocity_y) > MIN_VELOCITY or absf(_velocity_x) > MIN_VELOCITY):

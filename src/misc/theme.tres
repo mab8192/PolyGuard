@@ -279,6 +279,8 @@ draw_center = false
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_flat_pressed"]
 draw_center = false
 
+[sub_resource type="StyleBoxEmpty" id="StyleBoxEmpty_scroll"]
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_incoming_badge"]
 content_margin_left = 12.0
 content_margin_top = 4.0
@@ -301,22 +303,6 @@ content_margin_top = 4.0
 content_margin_right = 12.0
 content_margin_bottom = 4.0
 bg_color = Color(0.75, 0.18, 0.25, 1)
-corner_radius_top_left = 8
-corner_radius_top_right = 8
-corner_radius_bottom_right = 8
-corner_radius_bottom_left = 8
-
-[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unavailable_badge"]
-content_margin_left = 12.0
-content_margin_top = 4.0
-content_margin_right = 12.0
-content_margin_bottom = 4.0
-bg_color = Color(0.12, 0.14, 0.2, 0.95)
-border_width_left = 1
-border_width_top = 1
-border_width_right = 1
-border_width_bottom = 1
-border_color = Color(0.45, 0.5, 0.62, 0.75)
 corner_radius_top_left = 8
 corner_radius_top_right = 8
 corner_radius_bottom_right = 8
@@ -577,6 +563,22 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unavailable_badge"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.14, 0.2, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.5, 0.62, 0.75)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [resource]
 default_font = ExtResource("1_qkwnq")
 ActivatingBadge/base_type = &"PanelContainer"
@@ -659,6 +661,11 @@ FlatButton/styles/focus = SubResource("StyleBoxFlat_flat_focus")
 FlatButton/styles/hover = SubResource("StyleBoxFlat_flat_hover")
 FlatButton/styles/normal = SubResource("StyleBoxFlat_flat_normal")
 FlatButton/styles/pressed = SubResource("StyleBoxFlat_flat_pressed")
+HScrollBar/styles/grabber = SubResource("StyleBoxEmpty_scroll")
+HScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_scroll")
+HScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_scroll")
+HScrollBar/styles/scroll = SubResource("StyleBoxEmpty_scroll")
+HScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_scroll")
 HeaderText/base_type = &"Label"
 HeaderText/colors/font_color = Color(0, 0.96, 0.83, 1)
 HeaderText/font_sizes/font_size = 60
@@ -763,4 +770,8 @@ UnavailableBadge/styles/panel = SubResource("StyleBoxFlat_unavailable_badge")
 UnavailableText/base_type = &"Label"
 UnavailableText/colors/font_color = Color(0.6, 0.68, 0.8, 1)
 UnavailableText/font_sizes/font_size = 26
-
+VScrollBar/styles/grabber = SubResource("StyleBoxEmpty_scroll")
+VScrollBar/styles/grabber_highlight = SubResource("StyleBoxEmpty_scroll")
+VScrollBar/styles/grabber_pressed = SubResource("StyleBoxEmpty_scroll")
+VScrollBar/styles/scroll = SubResource("StyleBoxEmpty_scroll")
+VScrollBar/styles/scroll_focus = SubResource("StyleBoxEmpty_scroll")

@@ -80,6 +80,7 @@ horizontal_alignment = 1
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
 script = ExtResource("3_drag_scroll")
 
 [node name="ScrollVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer" unique_id=7700014]

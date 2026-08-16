@@ -27,7 +27,10 @@ var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Vict
 
 # Music Streams
 @export_group("Music Tracks")
-@export var music_menu: AudioStream = preload("res://vendor/mrpoly/awesomeness.wav")
+@export var music_menu: Array[AudioStream] = [
+	preload("res://vendor/mrpoly/awesomeness.wav"),
+	preload("res://vendor/DeusLower/deuslower-medieval-ambient-236809.mp3")
+]
 @export var music_build: AudioStream = preload("res://vendor/Zefz/TheLoomingBattle.ogg")
 @export var music_combat: Array[AudioStream] = [
 	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 1.mp3"),
