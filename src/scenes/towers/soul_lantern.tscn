@@ -4,18 +4,18 @@
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_target"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_attack"]
-[ext_resource type="Script" path="res://src/scenes/effects/spectral_beam_visualizer.gd" id="5_beam"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/soul_lantern.png" id="6_tex"]
+[ext_resource type="Script" uid="uid://dpwstgfy1jgtw" path="res://src/scenes/effects/spectral_beam_visualizer.gd" id="5_beam"]
+[ext_resource type="Texture2D" uid="uid://cw1gqarw71oql" path="res://src/textures/towers/soul_lantern.png" id="6_tex"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_range"]
 radius = 220.0
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
-size = Vector2(64, 64)
-
 [sub_resource type="Gradient" id="Gradient_wisps"]
 offsets = PackedFloat32Array(0, 0.4, 1)
 colors = PackedColorArray(0.9, 0.95, 1, 0.9, 0, 0.9, 1, 0.7, 0.6, 0.2, 0.9, 0)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(64, 64)
 
 [node name="SoulLantern" type="StaticBody2D" unique_id=887214699]
 collision_layer = 2
@@ -43,7 +43,6 @@ script = ExtResource("5_beam")
 
 [node name="SoulParticles" type="CPUParticles2D" parent="." unique_id=194820199]
 position = Vector2(0, -2)
-amount = 8
 lifetime = 0.8
 emission_shape = 1
 emission_sphere_radius = 6.0
