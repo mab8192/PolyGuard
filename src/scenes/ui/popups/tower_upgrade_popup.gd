@@ -63,9 +63,14 @@ func _render() -> void:
 	tower_name_label.text = tower_data.display_name.to_upper()
 	credits_balance_label.text = "AVAILABLE: %d CREDITS" % credits
 	
+	var is_avail = tower_data.is_available()
+	
 	if is_unlocked:
 		level_badge_label.get_parent().theme_type_variation = &"StatusBadge"
 		level_badge_label.text = "LEVEL %d / %d" % [level, tower_data.max_level]
+	elif not is_avail:
+		level_badge_label.get_parent().theme_type_variation = &"UnavailableBadge"
+		level_badge_label.text = "UNAVAILABLE"
 	else:
 		level_badge_label.get_parent().theme_type_variation = &"LockedBadge"
 		level_badge_label.text = "LOCKED"
@@ -128,15 +133,24 @@ func _render() -> void:
 		
 	# Action button for Base Tower Level
 	if not is_unlocked:
-		var cost = tower_data.unlock_cost
-		if credits >= cost:
-			upgrade_action_button.text = "UNLOCK TOWER (%d CREDITS)" % cost
-			upgrade_action_button.disabled = false
-			upgrade_action_button.theme_type_variation = &"PrimaryButton"
-		else:
-			upgrade_action_button.text = "INSUFFICIENT CREDITS (%d NEEDED)" % cost
+		if not is_avail:
+			var req_desc = tower_data.get_requirement_description()
+			if not req_desc.is_empty():
+				upgrade_action_button.text = "LOCKED (%s)" % req_desc.to_upper()
+			else:
+				upgrade_action_button.text = "UNAVAILABLE (STAGE LOCKED)"
 			upgrade_action_button.disabled = true
 			upgrade_action_button.theme_type_variation = &"SecondaryButton"
+		else:
+			var cost = tower_data.unlock_cost
+			if credits >= cost:
+				upgrade_action_button.text = "UNLOCK TOWER (%d CREDITS)" % cost
+				upgrade_action_button.disabled = false
+				upgrade_action_button.theme_type_variation = &"PrimaryButton"
+			else:
+				upgrade_action_button.text = "INSUFFICIENT CREDITS (%d NEEDED)" % cost
+				upgrade_action_button.disabled = true
+				upgrade_action_button.theme_type_variation = &"SecondaryButton"
 	elif level >= tower_data.max_level:
 		upgrade_action_button.text = "MAX LEVEL REACHED"
 		upgrade_action_button.disabled = true
@@ -252,6 +266,8 @@ func _on_action_button_pressed() -> void:
 	var is_unlocked = SaveManager.is_tower_unlocked(tower_id)
 	
 	if not is_unlocked:
+		if not tower_data.is_available():
+			return
 		var unlock_success = SaveManager.unlock_tower(tower_id, tower_data.unlock_cost)
 		if unlock_success:
 			_render()

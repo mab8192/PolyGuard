@@ -15,6 +15,8 @@ var is_unlocked: bool = true
 @onready var status_badge: PanelContainer = %StatusBadge
 @onready var status_label: Label = %StatusLabel
 @onready var locked_overlay: Control = %LockedOverlay
+@onready var locked_badge: PanelContainer = %LockedBadge
+@onready var locked_label: Label = %LockedLabel
 @onready var selection_ring: Panel = %SelectionRing
 @onready var click_button: Button = %ClickButton
 
@@ -60,12 +62,25 @@ func _update_ui() -> void:
 		selection_ring.visible = is_card_selected
 		
 	if not is_unlocked:
+		var is_available = tower_data.is_available()
 		locked_overlay.show()
 		cost_badge.show()
 		status_badge.hide()
 		name_label.show()
-		bg_panel.self_modulate = Color(0.6, 0.6, 0.6, 0.7)
-		icon_rect.modulate = Color(0.5, 0.5, 0.5, 0.6)
+		if not is_available:
+			if locked_badge:
+				locked_badge.theme_type_variation = &"UnavailableBadge"
+			if locked_label:
+				locked_label.text = "UNAVAILABLE"
+			bg_panel.self_modulate = Color(0.42, 0.45, 0.52, 0.6)
+			icon_rect.modulate = Color(0.35, 0.38, 0.45, 0.45)
+		else:
+			if locked_badge:
+				locked_badge.theme_type_variation = &"LockedBadge"
+			if locked_label:
+				locked_label.text = "LOCKED"
+			bg_panel.self_modulate = Color(0.6, 0.6, 0.6, 0.7)
+			icon_rect.modulate = Color(0.5, 0.5, 0.5, 0.6)
 	elif is_equipped:
 		locked_overlay.hide()
 		cost_badge.show()

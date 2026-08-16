@@ -48,6 +48,7 @@ icon = ExtResource("5_5xhdn")
 scene = ExtResource("6_x7w20")
 description = "Long-range artillery tower that bombards corridors through walls, raining carpet bombs that ignite the ground in physical flames."
 unlock_cost = 800
+required_stage_id = "stage_09"
 choices = Array[ExtResource("3_30gcb")]([SubResource("Resource_choice_thermite"), SubResource("Resource_choice_salvo")])
 cost = 500
 health = SubResource("Resource_health")

@@ -9,6 +9,7 @@ class_name TowerData extends Resource
 
 @export_category("Meta Progression")
 @export var unlock_cost: int = 0 ## 0 = starter tower, >0 = Credit cost to unlock
+@export var required_stage_id: String = "" ## Stage ID (e.g. stage_01) required to be cleared before this tower becomes available to unlock
 @export var max_level: int = 5 ## Maximum upgrade level
 @export var choices: Array[TowerChoiceUpgrade] = [] ## Branching / Choice specializations
 
@@ -34,6 +35,19 @@ class_name TowerData extends Resource
 @export var attack: AttackData
 @export var targeting: TargetingData
 @export var effect_applier: EffectApplierData
+
+func is_available() -> bool:
+	if required_stage_id.is_empty():
+		return true
+	return SaveManager.is_stage_completed(required_stage_id)
+
+func get_requirement_description() -> String:
+	if required_stage_id.is_empty():
+		return ""
+	var stage = Registry.get_stage_data(required_stage_id)
+	if stage and not stage.stage_name.is_empty():
+		return "Requires %s Clear" % stage.stage_name
+	return "Requires Stage Clear"
 
 func get_upgrade_cost(target_level: int) -> int:
 	match target_level:

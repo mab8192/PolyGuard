@@ -42,6 +42,7 @@ icon = ExtResource("3_icon")
 scene = ExtResource("4_scene")
 description = "Non-solid hazard vent releasing acidic vapor that strips away enemy armor."
 unlock_cost = 700
+required_stage_id = "stage_10"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_acid"), SubResource("Resource_choice_volatile")])
 cost = 300
 can_rotate = false

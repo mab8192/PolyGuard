@@ -43,9 +43,16 @@ func _populate_towers() -> void:
 		
 		var t_id = Registry.get_tower_id(tower)
 		var is_unlocked = SaveManager.is_tower_unlocked(t_id)
-		var badge = ("LV %d" % SaveManager.get_tower_level(t_id)) if is_unlocked else "LOCKED"
+		var is_avail = tower.is_available()
+		var badge = ""
+		if is_unlocked:
+			badge = "LV %d" % SaveManager.get_tower_level(t_id)
+		elif not is_avail:
+			badge = "UNAVAILABLE"
+		else:
+			badge = "LOCKED"
 		
-		card.setup(tower.icon, tower.display_name, badge, tower, not is_unlocked)
+		card.setup(tower.icon, tower.display_name, badge, tower, not is_unlocked, not is_unlocked and not is_avail)
 		card.card_clicked.connect(_on_card_clicked)
 		_cards.append(card)
 		
@@ -73,6 +80,7 @@ func _update_details(tower: TowerData) -> void:
 		
 	var t_id = Registry.get_tower_id(tower)
 	var is_unlocked = SaveManager.is_tower_unlocked(t_id)
+	var is_avail = tower.is_available()
 	var level = SaveManager.get_tower_level(t_id) if is_unlocked else 1
 	var active_choice = SaveManager.get_tower_choice(t_id)
 	var stats = tower.get_stat_summary(level, active_choice)
@@ -86,16 +94,40 @@ func _update_details(tower: TowerData) -> void:
 		detail_level_badge.get_parent().theme_type_variation = &"StatusBadge"
 		detail_level_badge.text = "LEVEL %d / %d" % [level, tower.max_level]
 		upgrade_button.text = "UPGRADE & SPECIALIZE"
+		upgrade_button.disabled = false
 		upgrade_button.theme_type_variation = &"PrimaryButton"
+	elif not is_avail:
+		detail_icon.modulate = Color(0.35, 0.38, 0.45, 0.50)
+		detail_level_badge.get_parent().theme_type_variation = &"UnavailableBadge"
+		detail_level_badge.text = "UNAVAILABLE"
+		var req_desc = tower.get_requirement_description()
+		if not req_desc.is_empty():
+			upgrade_button.text = "LOCKED (%s)" % req_desc.to_upper()
+		else:
+			upgrade_button.text = "UNAVAILABLE (STAGE LOCKED)"
+		upgrade_button.disabled = true
+		upgrade_button.theme_type_variation = &"SecondaryButton"
 	else:
 		detail_icon.modulate = Color(0.45, 0.48, 0.55, 0.70)
 		detail_level_badge.get_parent().theme_type_variation = &"LockedBadge"
 		detail_level_badge.text = "LOCKED"
+		var credits = SaveManager.get_credits()
 		upgrade_button.text = "UNLOCK (%d CREDITS)" % tower.unlock_cost
-		upgrade_button.theme_type_variation = &"PrimaryButton" if SaveManager.get_credits() >= tower.unlock_cost else &"SecondaryButton"
+		if credits >= tower.unlock_cost:
+			upgrade_button.disabled = false
+			upgrade_button.theme_type_variation = &"PrimaryButton"
+		else:
+			upgrade_button.disabled = true
+			upgrade_button.theme_type_variation = &"SecondaryButton"
 		
 	detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper() if tower.collision_layer > 0 else "GROUND TRAP"
-	detail_desc.text = tower.description if not tower.description.is_empty() else "Standard defensive installation."
+	
+	var base_desc = tower.description if not tower.description.is_empty() else "Standard defensive installation."
+	if not is_unlocked and not is_avail:
+		var req_desc = tower.get_requirement_description()
+		detail_desc.text = "%s  [%s]" % [base_desc, req_desc] if not req_desc.is_empty() else base_desc
+	else:
+		detail_desc.text = base_desc
 	
 	var stat_parts: Array[String] = []
 	if stats["has_attack"]:
@@ -114,6 +146,10 @@ func _update_details(tower: TowerData) -> void:
 
 func _on_upgrade_button_pressed() -> void:
 	if not _selected_tower:
+		return
+	var t_id = Registry.get_tower_id(_selected_tower)
+	var is_unlocked = SaveManager.is_tower_unlocked(t_id)
+	if not is_unlocked and not _selected_tower.is_available():
 		return
 	if tower_upgrade_popup:
 		tower_upgrade_popup.open(_selected_tower)

@@ -51,6 +51,7 @@ icon = ExtResource("5_megk3")
 scene = ExtResource("6_megk3")
 description = "Ranged multi-target arrow wall. Solid structure that blocks enemy movement."
 unlock_cost = 250
+required_stage_id = "stage_01"
 choices = Array[ExtResource("3_77e18")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
 cost = 300
 health = SubResource("Resource_k6tlf")

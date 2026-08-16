@@ -33,6 +33,11 @@ signal card_clicked(card: Card)
 		is_locked = val
 		_update_locked_state()
 
+@export var is_unavailable: bool = false:
+	set(val):
+		is_unavailable = val
+		_update_locked_state()
+
 var data: Variant = null
 
 @onready var bg_panel: Panel = %BGPanel
@@ -62,12 +67,13 @@ func _ready() -> void:
 	click_button.pressed.connect(_on_pressed)
 	gui_input.connect(_on_gui_input)
 
-func setup(p_image: Texture2D, p_text: String, p_badge: String = "", p_data: Variant = null, p_locked: bool = false) -> void:
+func setup(p_image: Texture2D, p_text: String, p_badge: String = "", p_data: Variant = null, p_locked: bool = false, p_unavailable: bool = false) -> void:
 	image = p_image
 	text = p_text
 	badge_text = p_badge
 	data = p_data
 	is_locked = p_locked
+	is_unavailable = p_unavailable
 	if is_inside_tree():
 		if texture_rect:
 			texture_rect.texture = image
@@ -86,10 +92,22 @@ func set_card_selected(selected: bool) -> void:
 func set_card_locked(locked: bool) -> void:
 	is_locked = locked
 
+func set_card_unavailable(unavailable: bool) -> void:
+	is_unavailable = unavailable
+
 func _update_locked_state() -> void:
 	if not is_inside_tree():
 		return
-	if is_locked:
+	if is_unavailable:
+		if texture_rect:
+			texture_rect.modulate = Color(0.35, 0.38, 0.45, 0.45)
+		if label:
+			label.modulate = Color(0.45, 0.5, 0.6, 0.65)
+		if bg_panel:
+			bg_panel.self_modulate = Color(0.42, 0.45, 0.52, 0.6)
+		if badge_panel:
+			badge_panel.theme_type_variation = &"UnavailableBadge"
+	elif is_locked:
 		if texture_rect:
 			texture_rect.modulate = Color(0.4, 0.45, 0.52, 0.55)
 		if label:

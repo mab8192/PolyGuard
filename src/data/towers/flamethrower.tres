@@ -52,6 +52,7 @@ icon = ExtResource("4_icon")
 scene = ExtResource("5_scene")
 description = "Solid turret that projects a searing cone of magic flame, burning targets over time."
 unlock_cost = 600
+required_stage_id = "stage_05"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_napalm"), SubResource("Resource_choice_pressure")])
 cost = 325
 rotation_step_degrees = 45.0

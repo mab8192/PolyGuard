@@ -179,14 +179,35 @@ func _update_details_panel() -> void:
 	var active_choice = SaveManager.get_tower_choice(t_id)
 	var stats = selected_tower.get_stat_summary(level, active_choice)
 	
+	var is_avail = selected_tower.is_available()
+	
 	detail_icon.texture = selected_tower.icon
 	detail_title.text = selected_tower.display_name
 	detail_cost.text = "%d Energy" % selected_tower.cost
-	detail_desc.text = selected_tower.description if not selected_tower.description.is_empty() else "Defensive structure ready for deployment."
+	
+	var base_desc = selected_tower.description if not selected_tower.description.is_empty() else "Defensive structure ready for deployment."
+	if not is_unlocked and not is_avail:
+		var req_desc = selected_tower.get_requirement_description()
+		detail_desc.text = "%s  [%s]" % [base_desc, req_desc] if not req_desc.is_empty() else base_desc
+		detail_icon.modulate = Color(0.35, 0.38, 0.45, 0.5)
+	elif not is_unlocked:
+		detail_desc.text = base_desc
+		detail_icon.modulate = Color(0.5, 0.55, 0.65, 0.7)
+	else:
+		detail_desc.text = base_desc
+		detail_icon.modulate = Color.WHITE
 	
 	if is_unlocked:
+		if detail_level_badge.get_parent():
+			detail_level_badge.get_parent().theme_type_variation = &"StatusBadge"
 		detail_level_badge.text = "LEVEL %d" % level
+	elif not is_avail:
+		if detail_level_badge.get_parent():
+			detail_level_badge.get_parent().theme_type_variation = &"UnavailableBadge"
+		detail_level_badge.text = "UNAVAILABLE"
 	else:
+		if detail_level_badge.get_parent():
+			detail_level_badge.get_parent().theme_type_variation = &"LockedBadge"
 		detail_level_badge.text = "LOCKED"
 		
 	if selected_tower.collision_layer > 0:
@@ -211,16 +232,25 @@ func _update_details_panel() -> void:
 	
 	# Action Button
 	if not is_unlocked:
-		var cost = selected_tower.unlock_cost
-		var credits = SaveManager.get_credits()
-		if credits >= cost:
-			detail_action_button.text = "UNLOCK (%d CREDITS)" % cost
-			detail_action_button.disabled = false
-			detail_action_button.theme_type_variation = &"PrimaryButton"
-		else:
-			detail_action_button.text = "UNLOCK (%d CREDITS)" % cost
+		if not is_avail:
+			var req_desc = selected_tower.get_requirement_description()
+			if not req_desc.is_empty():
+				detail_action_button.text = "LOCKED (%s)" % req_desc.to_upper()
+			else:
+				detail_action_button.text = "UNAVAILABLE (STAGE LOCKED)"
 			detail_action_button.disabled = true
 			detail_action_button.theme_type_variation = &"SecondaryButton"
+		else:
+			var cost = selected_tower.unlock_cost
+			var credits = SaveManager.get_credits()
+			if credits >= cost:
+				detail_action_button.text = "UNLOCK (%d CREDITS)" % cost
+				detail_action_button.disabled = false
+				detail_action_button.theme_type_variation = &"PrimaryButton"
+			else:
+				detail_action_button.text = "UNLOCK (%d CREDITS)" % cost
+				detail_action_button.disabled = true
+				detail_action_button.theme_type_variation = &"SecondaryButton"
 	else:
 		var is_in_loadout = equipped_towers.has(selected_tower)
 		if is_in_loadout:
@@ -271,6 +301,8 @@ func _on_detail_action_pressed() -> void:
 	var is_unlocked = SaveManager.is_tower_unlocked(t_id)
 	
 	if not is_unlocked:
+		if not selected_tower.is_available():
+			return
 		var unlocked = SaveManager.unlock_tower(t_id, selected_tower.unlock_cost)
 		if unlocked:
 			if equipped_towers.size() < max_loadout_size:

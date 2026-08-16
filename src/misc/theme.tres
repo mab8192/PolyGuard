@@ -306,6 +306,22 @@ corner_radius_top_right = 8
 corner_radius_bottom_right = 8
 corner_radius_bottom_left = 8
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_unavailable_badge"]
+content_margin_left = 12.0
+content_margin_top = 4.0
+content_margin_right = 12.0
+content_margin_bottom = 4.0
+bg_color = Color(0.12, 0.14, 0.2, 0.95)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.45, 0.5, 0.62, 0.75)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_modal_panel"]
 content_margin_left = 36.0
 content_margin_top = 36.0
@@ -742,3 +758,9 @@ TopBarPanel/base_type = &"Panel"
 TopBarPanel/styles/panel = SubResource("StyleBoxFlat_top_bar")
 TypeBadge/base_type = &"PanelContainer"
 TypeBadge/styles/panel = SubResource("StyleBoxFlat_type_badge")
+UnavailableBadge/base_type = &"PanelContainer"
+UnavailableBadge/styles/panel = SubResource("StyleBoxFlat_unavailable_badge")
+UnavailableText/base_type = &"Label"
+UnavailableText/colors/font_color = Color(0.6, 0.68, 0.8, 1)
+UnavailableText/font_sizes/font_size = 26
+

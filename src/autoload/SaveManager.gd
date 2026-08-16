@@ -64,16 +64,32 @@ func get_stage_record(stage_id: String) -> Dictionary:
 		"cleared_once": false
 	})
 
+func is_stage_completed(stage_id: String) -> bool:
+	if stage_id.is_empty():
+		return true
+	var record = get_stage_record(stage_id)
+	return record.get("completed", false) or record.get("cleared_once", false)
+
+func is_tower_available(tower_id: String) -> bool:
+	if tower_id.is_empty():
+		return true
+	var tower = Registry.get_tower_data(tower_id)
+	if not tower:
+		return true
+	return tower.is_available()
+
 func is_tower_unlocked(tower_id: String) -> bool:
 	if tower_id.is_empty():
 		return true
 	return _unlocked_towers.has(tower_id)
 
-func unlock_tower(tower_id: String, cost: int = 0) -> bool:
+func unlock_tower(tower_id: String, cost: int = 0, force: bool = false) -> bool:
 	if tower_id.is_empty():
 		return false
 	if _unlocked_towers.has(tower_id):
 		return true
+	if not force and not is_tower_available(tower_id):
+		return false
 	if cost > 0:
 		if not deduct_credits(cost):
 			return false

@@ -38,6 +38,7 @@ icon = ExtResource("1_icon")
 scene = ExtResource("2_scene")
 description = "Non-solid trap that triggers after a short delay to poison all enemies in range"
 unlock_cost = 350
+required_stage_id = "stage_02"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_quick"), SubResource("Resource_choice_cloud")])
 cost = 200
 can_rotate = false

@@ -55,6 +55,10 @@ func get_all_towers_sorted() -> Array[TowerData]:
 		var b_unlocked = SaveManager.is_tower_unlocked(b_id)
 		if a_unlocked != b_unlocked:
 			return a_unlocked
+		var a_avail = a.is_available()
+		var b_avail = b.is_available()
+		if a_avail != b_avail:
+			return a_avail
 		if a.cost != b.cost:
 			return a.cost < b.cost
 		return a.display_name < b.display_name
