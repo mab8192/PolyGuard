@@ -41,13 +41,23 @@ func _on_stage_completed() -> void:
 		
 		stats_label.text = "Remaining Lives: %d / %d\nFinal Energy: %d\nFinal Score: %d" % [lives, max_lives, energy, score]
 		
-		var clear_type_str = "First Clear Bonus" if reward_info.get("is_first_clear", false) else "Clear Reward"
-		reward_breakdown_label.text = "%s: +%d Credits\nStar Bonus: +%d Credits\nTotal Earned: +%d Credits" % [
-			clear_type_str,
-			reward_info.get("base_reward", 0),
-			reward_info.get("star_bonus", 0),
-			reward_info.get("total_reward", 0)
-		]
+		var is_first = reward_info.get("is_first_clear", false)
+		var base_rew = reward_info.get("base_reward", 0)
+		var star_rew = reward_info.get("star_bonus", 0)
+		var total_rew = reward_info.get("total_reward", 0)
+		
+		if is_first:
+			reward_breakdown_label.text = "First Clear: +%d Credits\nStar Bonus (%d★): +%d Credits\nTotal Earned: +%d Credits" % [
+				base_rew, stars, star_rew, total_rew
+			]
+		elif star_rew > 0:
+			reward_breakdown_label.text = "Repeat Clear: +%d Credits\nNew Star Bonus: +%d Credits\nTotal Earned: +%d Credits" % [
+				base_rew, star_rew, total_rew
+			]
+		else:
+			reward_breakdown_label.text = "Repeat Clear: +%d Credits\nTotal Earned: +%d Credits" % [
+				base_rew, total_rew
+			]
 		
 		var next_id = reward_info.get("next_stage_id", "")
 		if not next_id.is_empty():

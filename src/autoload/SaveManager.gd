@@ -155,12 +155,15 @@ func record_stage_clear(stage_id: String, score: int, lives_left: int, max_lives
 	
 	var prev_stars: int = record.get("stars", 0)
 	var new_stars: int = maxi(prev_stars, stars)
+	var newly_earned_stars: int = new_stars - prev_stars
 	var prev_high_score: int = record.get("high_score", 0)
 	var new_high_score: int = maxi(prev_high_score, score)
 	
-	# Reward calculation
-	var base_reward: int = 400 if is_first_clear else 100
-	var star_bonus: int = stars * 50
+	# Reward calculation:
+	# - First clear: 300 base credits + 100 per star earned (100 to 300)
+	# - Repeat clear: 50 base credits + 100 per newly achieved star (0 if already earned)
+	var base_reward: int = 300 if is_first_clear else 50
+	var star_bonus: int = newly_earned_stars * 100
 	var total_reward: int = base_reward + star_bonus
 	
 	add_credits(total_reward)
@@ -180,6 +183,7 @@ func record_stage_clear(stage_id: String, score: int, lives_left: int, max_lives
 	
 	return {
 		"stars": stars,
+		"new_stars": newly_earned_stars,
 		"base_reward": base_reward,
 		"star_bonus": star_bonus,
 		"total_reward": total_reward,

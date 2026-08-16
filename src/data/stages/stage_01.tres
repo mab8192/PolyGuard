@@ -9,5 +9,5 @@ script = ExtResource("2_script")
 stage_name = "Stage 1"
 scene = ExtResource("3_scene")
 icon = ExtResource("1_icon")
-starting_energy = 700
+starting_energy = 500
 wave_data_file = "res://src/data/stages/waves/Stage1.json"

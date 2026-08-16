@@ -1,7 +1,7 @@
 [
   {
     "wave_number": 1,
-    "reward_energy": 430,
+    "reward_energy": 120,
     "spawns": [
       {
         "spawner_id": "Spawner",
@@ -21,7 +21,7 @@
   },
   {
     "wave_number": 2,
-    "reward_energy": 550,
+    "reward_energy": 140,
     "spawns": [
       {
         "spawner_id": "Spawner",
@@ -41,7 +41,7 @@
   },
   {
     "wave_number": 3,
-    "reward_energy": 670,
+    "reward_energy": 160,
     "spawns": [
       {
         "spawner_id": "Spawner",
@@ -82,7 +82,7 @@
   },
   {
     "wave_number": 4,
-    "reward_energy": 790,
+    "reward_energy": 180,
     "spawns": [
       {
         "spawner_id": "Spawner",
