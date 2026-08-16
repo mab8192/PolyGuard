@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 [ext_resource type="Script" uid="uid://bqwvmvgwff1un" path="res://src/scenes/utility/safe_area_container.gd" id="4_safe_area"]
+[ext_resource type="Script" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="5_drag_scroll"]
 
 [node name="LoadoutSelectionScreen" type="Control" unique_id=1269461421]
 layout_mode = 3
@@ -210,6 +211,7 @@ text = "AVAILABLE ARSENAL"
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+script = ExtResource("5_drag_scroll")
 
 [node name="AvailableHBox" type="HBoxContainer" parent="MainMargin/RootVBox/AvailableScroll" unique_id=637681879]
 layout_mode = 2

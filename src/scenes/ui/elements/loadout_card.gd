@@ -19,8 +19,20 @@ var is_unlocked: bool = true
 @onready var click_button: Button = %ClickButton
 
 func _ready() -> void:
-	click_button.pressed.connect(func(): card_clicked.emit(self))
+	click_button.pressed.connect(_on_button_pressed)
+	gui_input.connect(_on_gui_input)
 	_update_ui()
+
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
+			_on_button_pressed()
+
+func _on_button_pressed() -> void:
+	if DragScrollContainer.is_globally_dragging:
+		return
+	card_clicked.emit(self)
 
 func setup_as_available(data: TowerData, equipped: bool = false) -> void:
 	tower_data = data

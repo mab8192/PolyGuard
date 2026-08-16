@@ -18,8 +18,8 @@ var is_empty: bool = true
 @onready var click_button: Button = %ClickButton
 
 func _ready() -> void:
-	click_button.pressed.connect(func(): slot_clicked.emit(self))
-	remove_button.pressed.connect(func(): remove_clicked.emit(self))
+	click_button.pressed.connect(func(): if not DragScrollContainer.is_globally_dragging: slot_clicked.emit(self))
+	remove_button.pressed.connect(func(): if not DragScrollContainer.is_globally_dragging: remove_clicked.emit(self))
 	_update_display()
 
 func setup(index: int, data: TowerData = null) -> void:

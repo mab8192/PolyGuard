@@ -23,6 +23,7 @@ func _ready() -> void:
 	if stage_data:
 		_render()
 	
+	gui_input.connect(_on_gui_input)
 	if start_button:
 		start_button.pressed.connect(_on_card_pressed)
 
@@ -98,7 +99,15 @@ func _render() -> void:
 		start_button.text = "LOCKED"
 		start_button.theme_type_variation = &"SecondaryButton"
 
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
+			_on_card_pressed()
+
 func _on_card_pressed() -> void:
+	if DragScrollContainer.is_globally_dragging:
+		return
 	if stage_data:
 		var stage_id = Registry.get_stage_id(stage_data)
 		if SaveManager.is_stage_unlocked(stage_id):

@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://bwcihaqa42en3" path="res://src/scenes/ui/views/codex.gd" id="1_ggl2t"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+[ext_resource type="Script" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="4_drag_scroll"]
 
 [node name="CodexView" type="MarginContainer" unique_id=157242470]
 anchors_preset = 15
@@ -118,6 +119,7 @@ clip_text = true
 layout_mode = 2
 size_flags_vertical = 3
 horizontal_scroll_mode = 0
+script = ExtResource("4_drag_scroll")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="RootVBox/ScrollContainer" unique_id=637681938]
 layout_mode = 2

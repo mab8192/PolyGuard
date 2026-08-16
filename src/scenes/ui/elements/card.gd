@@ -60,6 +60,7 @@ func _ready() -> void:
 		
 	_update_locked_state()
 	click_button.pressed.connect(_on_pressed)
+	gui_input.connect(_on_gui_input)
 
 func setup(p_image: Texture2D, p_text: String, p_badge: String = "", p_data: Variant = null, p_locked: bool = false) -> void:
 	image = p_image
@@ -107,6 +108,14 @@ func _update_locked_state() -> void:
 		if badge_panel:
 			badge_panel.theme_type_variation = &"CostBadge"
 
+func _on_gui_input(event: InputEvent) -> void:
+	if event is InputEventMouseButton:
+		var mb := event as InputEventMouseButton
+		if mb.button_index == MOUSE_BUTTON_LEFT and not mb.pressed:
+			_on_pressed()
+
 func _on_pressed() -> void:
+	if DragScrollContainer.is_globally_dragging:
+		return
 	pressed.emit()
 	card_clicked.emit(self)
