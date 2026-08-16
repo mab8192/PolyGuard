@@ -1,0 +1,128 @@
+[gd_scene format=3 uid="uid://cx8tutorialoverlay01"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/in_game/tutorial_overlay.gd" id="1_tut"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+
+[node name="TutorialOverlay" type="CanvasLayer" unique_id=2190001]
+process_mode = 3
+layer = 25
+script = ExtResource("1_tut")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2190002]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2190003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="ModalContainer" type="PanelContainer" parent="CenterContainer" unique_id=2190004]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(920, 1180)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/ModalContainer" unique_id=2190005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/ModalContainer/MarginContainer" unique_id=2190006]
+layout_mode = 2
+theme_override_constants/separation = 22
+alignment = 1
+
+[node name="HeaderHBox" type="HBoxContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190007]
+layout_mode = 2
+alignment = 0
+
+[node name="CategoryBadgePanel" type="PanelContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox/HeaderHBox" unique_id=2190008]
+layout_mode = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="CategoryBadge" type="Label" parent="CenterContainer/ModalContainer/MarginContainer/VBox/HeaderHBox/CategoryBadgePanel" unique_id=2190009]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "COMMAND HUD"
+
+[node name="Spacer" type="Control" parent="CenterContainer/ModalContainer/MarginContainer/VBox/HeaderHBox" unique_id=2190010]
+layout_mode = 2
+size_flags_horizontal = 3
+
+[node name="SkipButton" type="Button" parent="CenterContainer/ModalContainer/MarginContainer/VBox/HeaderHBox" unique_id=2190011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(140, 52)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "SKIP"
+
+[node name="TitleLabel" type="Label" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190012]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_type_variation = &"HeaderText"
+text = "LIVES & ENERGY ECONOMY"
+autowrap_mode = 3
+
+[node name="HSeparator" type="HSeparator" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190013]
+layout_mode = 2
+
+[node name="ItemsContainer" type="VBoxContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190014]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 18
+
+[node name="TipPanel" type="PanelContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190016]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="TipMargin" type="MarginContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox/TipPanel" unique_id=2190017]
+layout_mode = 2
+theme_override_constants/margin_left = 18
+theme_override_constants/margin_top = 14
+theme_override_constants/margin_right = 18
+theme_override_constants/margin_bottom = 14
+
+[node name="TipLabel" type="Label" parent="CenterContainer/ModalContainer/MarginContainer/VBox/TipPanel/TipMargin" unique_id=2190018]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(800, 0)
+layout_mode = 2
+theme_type_variation = &"SmallText"
+text = "Tip: Keep an eye on energy reserves."
+autowrap_mode = 3
+
+[node name="ButtonsHBox" type="HBoxContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190019]
+layout_mode = 2
+theme_override_constants/separation = 18
+alignment = 2
+
+[node name="PrevButton" type="Button" parent="CenterContainer/ModalContainer/MarginContainer/VBox/ButtonsHBox" unique_id=2190020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 72)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "← BACK"
+
+[node name="NextButton" type="Button" parent="CenterContainer/ModalContainer/MarginContainer/VBox/ButtonsHBox" unique_id=2190021]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 72)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "NEXT →"

@@ -1,6 +1,6 @@
 [gd_scene format=4 uid="uid://bmknahk6ih8oq"]
 
-[ext_resource type="Script" uid="uid://djqjbhfaeaqt2" path="res://src/scenes/stages/Stage.gd" id="1_dboc5"]
+[ext_resource type="Script" uid="uid://dyysmo8hbgs4p" path="res://src/scenes/stages/Stage0.gd" id="1_stage0"]
 [ext_resource type="PackedScene" uid="uid://c3o5j8cdgdxmc" path="res://src/scenes/tiles/tiles.tscn" id="2_8yrkf"]
 [ext_resource type="PackedScene" uid="uid://xyww0xmxe1ss" path="res://src/scenes/utility/exit.tscn" id="3_bne8r"]
 [ext_resource type="PackedScene" uid="uid://cq3ofdmp8sxea" path="res://src/scenes/utility/spawner.tscn" id="4_r0er1"]
@@ -9,7 +9,7 @@
 agent_radius = 12.0
 
 [node name="Stage0" type="Node2D" unique_id=1225741288]
-script = ExtResource("1_dboc5")
+script = ExtResource("1_stage0")
 
 [node name="NavigationRegion2D" type="NavigationRegion2D" parent="." unique_id=1825745868]
 navigation_polygon = SubResource("NavigationPolygon_a1mjj")
