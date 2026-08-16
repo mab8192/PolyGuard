@@ -10,7 +10,7 @@
 size = Vector2(60, 60)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_corridor"]
-size = Vector2(336, 40)
+size = Vector2(352, 64)
 
 [node name="CarpetBombArtillery" type="StaticBody2D" unique_id=502528]
 collision_layer = 2
@@ -29,7 +29,7 @@ script = ExtResource("3_hq3yo")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=221653091]
-position = Vector2(264, 0)
+position = Vector2(272, 0)
 shape = SubResource("RectangleShape2D_corridor")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=1774107551]

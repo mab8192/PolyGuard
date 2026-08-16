@@ -17,7 +17,6 @@ func _process(_delta: float) -> void:
 		return
 
 func _on_triggered() -> void:
-	print("TRIGGERED")
 	gas_effect.emitting = true
 
 func _on_deactivated() -> void:

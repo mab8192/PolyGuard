@@ -31,7 +31,7 @@ var selected_tower: TowerData = null
 @onready var detail_action_button: Button = %DetailActionButton
 
 func _ready() -> void:
-	all_towers = Registry.get_all_towers()
+	all_towers = Registry.get_all_towers_sorted()
 	_init_stage_data()
 	_init_loadout()
 	
@@ -108,6 +108,7 @@ func _find_matching_tower(tower: TowerData) -> TowerData:
 	return null
 
 func _refresh_all() -> void:
+	all_towers = Registry.get_all_towers_sorted()
 	_update_header()
 	_render_loadout_slots()
 	_render_available_grid()

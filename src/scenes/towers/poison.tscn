@@ -56,6 +56,7 @@ collision_mask = 0
 script = ExtResource("1_0pr3y")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151446449]
+visible = false
 shape = SubResource("RectangleShape2D_hkjoh")
 
 [node name="EffectApplierComponent" type="Area2D" parent="." unique_id=389284890]
@@ -64,6 +65,7 @@ data = SubResource("Resource_jdcq5")
 metadata/_custom_type_script = "uid://bi5cw4m6km75g"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=97465353]
+visible = false
 shape = SubResource("RectangleShape2D_qgbsg")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764189137]

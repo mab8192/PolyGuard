@@ -1,0 +1,16 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://nqtx7vfvc0sd"]
+
+[ext_resource type="Texture2D" uid="uid://1g5icq1kw32e" path="res://src/textures/stages/Stage0.png" id="1_0qk35"]
+[ext_resource type="PackedScene" uid="uid://bmknahk6ih8oq" path="res://src/scenes/stages/Stage0.tscn" id="2_hxbv7"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="3_jmcjt"]
+
+[resource]
+script = ExtResource("3_jmcjt")
+stage_id = "stage_00"
+stage_name = "Tutorial"
+scene = ExtResource("2_hxbv7")
+icon = ExtResource("1_0qk35")
+starting_energy = 500
+starting_lives = 50
+loadout_size = 3
+wave_data_file = "res://src/data/stages/waves/Stage0.json"

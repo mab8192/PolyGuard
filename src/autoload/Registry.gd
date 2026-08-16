@@ -46,6 +46,21 @@ func get_all_towers() -> Array[TowerData]:
 		result.append(TOWERS[key])
 	return result
 
+func get_all_towers_sorted() -> Array[TowerData]:
+	var result: Array[TowerData] = get_all_towers()
+	result.sort_custom(func(a: TowerData, b: TowerData) -> bool:
+		var a_id = get_tower_id(a)
+		var b_id = get_tower_id(b)
+		var a_unlocked = SaveManager.is_tower_unlocked(a_id)
+		var b_unlocked = SaveManager.is_tower_unlocked(b_id)
+		if a_unlocked != b_unlocked:
+			return a_unlocked
+		if a.cost != b.cost:
+			return a.cost < b.cost
+		return a.display_name < b.display_name
+	)
+	return result
+
 func get_tower_id(tower: TowerData) -> String:
 	if not tower:
 		return ""
@@ -73,6 +88,7 @@ func _load_registry() -> void:
 	}
 	
 	STAGES = {
+		"stage_00": load("res://src/data/stages/stage_00.tres"),
 		"stage_01": load("res://src/data/stages/stage_01.tres"),
 		"stage_02": load("res://src/data/stages/stage_02.tres"),
 		"stage_03": load("res://src/data/stages/stage_03.tres"),
@@ -112,4 +128,5 @@ func _load_registry() -> void:
 		"corrosive_vapor": load("res://src/data/towers/corrosive_vapor.tres"),
 		"artillery": load("res://src/data/towers/artillery.tres"),
 		"spike_trap": load("res://src/data/towers/spike_trap.tres"),
+		"soul_lantern": load("res://src/data/towers/soul_lantern.tres"),
 	}

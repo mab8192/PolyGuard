@@ -761,6 +761,59 @@ def generate_spike_trap_texture(output_path: str = None) -> str:
 
     return save_cropped_sprite(img, (64, 64), output_path, "spike_trap")
 
+def generate_soul_lantern_texture(output_path: str = None) -> str:
+    """Full 64x64 solid arcane Soul Lantern tower with ornate brass frame and glowing ethereal soul core."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "soul_lantern.png")
+
+    img, draw, f, sw, sh = create_canvas(64, 64, 4)
+    cx, cy = sw / 2.0, sh / 2.0
+
+    c_stone_dark = (18, 20, 28, 255)
+    c_stone_mid = (34, 38, 52, 255)
+    c_metal_frame = (50, 58, 72, 255)
+    c_gold = (245, 190, 50, 255)
+    c_gold_bright = (255, 225, 120, 255)
+    c_violet_aura = (90, 45, 140, 255)
+    c_violet_deep = (45, 20, 75, 255)
+    c_soul_cyan = (0, 235, 255, 255)
+    c_soul_bright = (190, 255, 250, 255)
+
+    # 1. Octagonal stone pedestal foundation base
+    r_base = 30 * f
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(12, 14, 20, 255), width=int(2.5 * f))
+    draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_stone_mid)
+
+    # 4 Corner Ornate Gold Filigree Brackets
+    for ox, oy in [(-20 * f, -20 * f), (20 * f, -20 * f), (-20 * f, 20 * f), (20 * f, 20 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_dark, outline=c_gold, width=int(1.2 * f))
+        draw.ellipse([cx + ox - 1.5 * f, cy + oy - 1.5 * f, cx + ox + 1.5 * f, cy + oy + 1.5 * f], fill=c_gold_bright)
+
+    # 2. Central Mystic Well / Chamber
+    draw.ellipse([cx - 18 * f, cy - 18 * f, cx + 18 * f, cy + 18 * f], fill=c_stone_dark, outline=c_gold, width=int(2 * f))
+    draw.ellipse([cx - 14 * f, cy - 14 * f, cx + 14 * f, cy + 14 * f], fill=c_violet_deep, outline=c_violet_aura, width=int(1.5 * f))
+
+    # 4 Arched Lantern Struts / Prongs
+    for i in range(4):
+        ang = i * (math.pi / 2.0)
+        px1 = cx + math.cos(ang) * 17 * f
+        py1 = cy + math.sin(ang) * 17 * f
+        px2 = cx + math.cos(ang) * 9 * f
+        py2 = cy + math.sin(ang) * 9 * f
+        draw.line([px1, py1, px2, py2], fill=c_metal_frame, width=int(3.0 * f))
+        draw.line([px1, py1, px2, py2], fill=c_gold, width=int(1.2 * f))
+
+    # 3. Concentric Arcane Halo Rings
+    draw.ellipse([cx - 10 * f, cy - 10 * f, cx + 10 * f, cy + 10 * f], outline=c_soul_cyan, width=int(1.2 * f))
+    draw.regular_polygon((cx, cy, 8 * f), 4, rotation=45, fill=c_violet_aura, outline=c_soul_cyan, width=int(1.0 * f))
+
+    # 4. Floating Incandescent Soul Core (Diamond/Sphere Spirit Flame)
+    draw.regular_polygon((cx, cy, 6 * f), 4, rotation=0, fill=c_soul_cyan, outline=(255, 255, 255, 255), width=int(1.0 * f))
+    draw.regular_polygon((cx, cy, 3.5 * f), 4, rotation=45, fill=c_soul_bright)
+    draw.ellipse([cx - 2 * f, cy - 2 * f, cx + 2 * f, cy + 2 * f], fill=(255, 255, 255, 255))
+
+    return save_cropped_sprite(img, (64, 64), output_path, "soul_lantern")
+
 # =========================================================================
 # ALL TOWERS ENTRYPOINT
 # =========================================================================
@@ -781,6 +834,7 @@ def generate_all_towers():
     generate_ice_trap_texture()
     generate_corrosive_vapor_texture()
     generate_spike_trap_texture()
+    generate_soul_lantern_texture()
 
 if __name__ == "__main__":
     generate_all_towers()

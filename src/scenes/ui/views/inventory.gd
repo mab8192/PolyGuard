@@ -36,7 +36,7 @@ func _populate_towers() -> void:
 		child.queue_free()
 	_cards.clear()
 
-	var all_towers = Registry.get_all_towers()
+	var all_towers = Registry.get_all_towers_sorted()
 	for tower in all_towers:
 		var card = CARD_SCENE.instantiate() as Card
 		grid_container.add_child(card)

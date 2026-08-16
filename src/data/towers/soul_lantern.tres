@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://cfpd8qjt5dg7g"]
+
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="2_choice"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Texture2D" uid="uid://cw1gqarw71oql" path="res://src/textures/towers/soul_lantern.png" id="4_icon"]
+[ext_resource type="PackedScene" uid="uid://mpjhedk6kvu" path="res://src/scenes/towers/soul_lantern.tscn" id="5_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_tower"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_target"]
+
+[sub_resource type="Resource" id="Resource_attack"]
+script = ExtResource("1_attack")
+damage = 20.0
+damage_type = 1
+attack_mode = 1
+cooldown = 0.25
+
+[sub_resource type="Resource" id="Resource_choice_split"]
+script = ExtResource("2_choice")
+id = "soul_split"
+title = "Soul Split"
+description = "Refracts the spectral beam into multiple prongs, targeting +2 additional enemies simultaneously."
+damage_multiplier = 1.1
+extra_targets = 2
+
+[sub_resource type="Resource" id="Resource_choice_focus"]
+script = ExtResource("2_choice")
+id = "ethereal_focus"
+title = "Ethereal Focus"
+description = "Intensifies beam wattage by 35% and reduces attack interval by 20% to melt ghost escorts."
+damage_multiplier = 1.35
+cooldown_multiplier = 0.8
+
+[sub_resource type="Resource" id="Resource_health"]
+script = ExtResource("3_health")
+
+[sub_resource type="Resource" id="Resource_target"]
+script = ExtResource("7_target")
+targeting_mask = 12
+can_target_through_walls = true
+
+[resource]
+script = ExtResource("6_tower")
+tower_id = "soul_lantern"
+display_name = "Soul Lantern"
+icon = ExtResource("4_icon")
+scene = ExtResource("5_scene")
+description = "Ancient arcane lantern that channels a sustained spectral beam into physical and ghost enemies, inflicting rapid magic damage."
+unlock_cost = 800
+choices = Array[ExtResource("2_choice")]([SubResource("Resource_choice_split"), SubResource("Resource_choice_focus")])
+cost = 375
+can_rotate = false
+health = SubResource("Resource_health")
+attack = SubResource("Resource_attack")
+targeting = SubResource("Resource_target")

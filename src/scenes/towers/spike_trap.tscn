@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b2am6x5reya4e"]
 
-[ext_resource type="Script" path="res://src/scenes/towers/spike_trap.gd" id="1_spike"]
+[ext_resource type="Script" uid="uid://bkm7g7agqsfv0" path="res://src/scenes/towers/spike_trap.gd" id="1_spike"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_applier"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/spike_trap.png" id="3_tex"]
+[ext_resource type="Texture2D" uid="uid://ot83c6rr6hnf" path="res://src/textures/towers/spike_trap.png" id="3_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_spike_body"]
 size = Vector2(64, 64)
@@ -20,6 +20,7 @@ collision_mask = 0
 script = ExtResource("1_spike")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151499298]
+visible = false
 shape = SubResource("RectangleShape2D_spike_body")
 
 [node name="EffectApplierComponent" type="Area2D" parent="." unique_id=389284899]
@@ -27,6 +28,7 @@ script = ExtResource("2_applier")
 metadata/_custom_type_script = "uid://bi5cw4m6km75g"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=97465399]
+visible = false
 shape = SubResource("RectangleShape2D_spike_area")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764189199]
@@ -41,7 +43,6 @@ explosiveness = 0.95
 emission_shape = 3
 emission_rect_extents = Vector2(24, 24)
 direction = Vector2(0, -1)
-spread = 45.0
 gravity = Vector2(0, 200)
 initial_velocity_min = 60.0
 initial_velocity_max = 120.0

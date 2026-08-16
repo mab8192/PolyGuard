@@ -1,0 +1,63 @@
+[gd_scene format=3 uid="uid://mpjhedk6kvu"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_tower"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_target"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_attack"]
+[ext_resource type="Script" path="res://src/scenes/effects/spectral_beam_visualizer.gd" id="5_beam"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/soul_lantern.png" id="6_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_range"]
+radius = 220.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(64, 64)
+
+[sub_resource type="Gradient" id="Gradient_wisps"]
+offsets = PackedFloat32Array(0, 0.4, 1)
+colors = PackedColorArray(0.9, 0.95, 1, 0.9, 0, 0.9, 1, 0.7, 0.6, 0.2, 0.9, 0)
+
+[node name="SoulLantern" type="StaticBody2D" unique_id=887214699]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_tower")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=75994499]
+script = ExtResource("2_health")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=854869499]
+script = ExtResource("3_target")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966399]
+shape = SubResource("CircleShape2D_range")
+debug_color = Color(0.6, 0.2, 0.9, 0.08)
+
+[node name="AttackComponent" type="Node" parent="." unique_id=635266699]
+script = ExtResource("4_attack")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
+
+[node name="SpectralBeamVisualizer" type="Node2D" parent="." unique_id=905728399]
+script = ExtResource("5_beam")
+
+[node name="SoulParticles" type="CPUParticles2D" parent="." unique_id=194820199]
+position = Vector2(0, -2)
+amount = 8
+lifetime = 0.8
+emission_shape = 1
+emission_sphere_radius = 6.0
+direction = Vector2(0, -1)
+spread = 30.0
+gravity = Vector2(0, -20)
+initial_velocity_min = 10.0
+initial_velocity_max = 25.0
+scale_amount_min = 2.0
+scale_amount_max = 3.5
+color_ramp = SubResource("Gradient_wisps")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1845019399]
+texture = ExtResource("6_tex")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195477899]
+shape = SubResource("RectangleShape2D_body")

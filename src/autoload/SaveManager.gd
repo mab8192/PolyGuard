@@ -2,7 +2,7 @@ extends Node
 
 const SAVE_PATH = "user://savegame.json"
 
-const DEFAULT_UNLOCKED_STAGES: Array[String] = ["stage_01", "test_stage"]
+const DEFAULT_UNLOCKED_STAGES: Array[String] = ["stage_00", "test_stage"]
 const DEFAULT_UNLOCKED_TOWERS: Array[String] = ["archer_tower", "tar_trap", "spike_trap"]
 
 var _credits: int = 0
