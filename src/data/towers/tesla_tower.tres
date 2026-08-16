@@ -55,6 +55,7 @@ description = "Short-ranged multi-target lightning tower. Solid structure that b
 unlock_cost = 500
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_super"), SubResource("Resource_choice_overcharge")])
 cost = 450
+can_rotate = false
 health = SubResource("Resource_yrpxl")
 attack = SubResource("Resource_tafxk")
 targeting = SubResource("Resource_nxvto")

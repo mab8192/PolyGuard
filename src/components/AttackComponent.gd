@@ -2,20 +2,9 @@ class_name AttackComponent extends Node
 
 signal attacked(target: Node2D)
 
-enum DamageType { PHYSICAL, MAGIC, TRUE }
-enum AttackMode { PROJECTILE, MELEE, CONTINUOUS }
-
 @export var data: AttackData
 
 var attack_points: Array[Marker2D] = []
-
-var attack_point: Marker2D:
-	get:
-		return attack_points[0] if not attack_points.is_empty() else null
-	set(value):
-		if value and not attack_points.has(value):
-			attack_points.append(value)
-
 var targeting: TargetingComponent ## Automatically discovered in _ready
 var last_attack_time: float = - INF
 var _time: float = 0
@@ -62,9 +51,9 @@ func _process(delta: float) -> void:
 	_time += delta
 
 func can_attack() -> bool:
-	if data.attack_mode == AttackMode.CONTINUOUS: return true
+	if data and data.attack_mode == AttackData.AttackMode.CONTINUOUS: return true
 
-	return _time - last_attack_time >= data.cooldown
+	return _time - last_attack_time >= (data.cooldown if data else 0.5)
 
 func attack_target(target: Node2D) -> void:
 	if not can_attack() or not is_instance_valid(target):
@@ -73,9 +62,9 @@ func attack_target(target: Node2D) -> void:
 	last_attack_time = _time
 	
 	match data.attack_mode:
-		AttackMode.PROJECTILE:
+		AttackData.AttackMode.PROJECTILE:
 			_spawn_projectile(target)
-		AttackMode.MELEE, AttackMode.CONTINUOUS:
+		AttackData.AttackMode.MELEE, AttackData.AttackMode.CONTINUOUS:
 			_deal_direct_damage(target)
 	
 	attacked.emit(target)
@@ -89,9 +78,9 @@ func attack_targets(targets: Array) -> void:
 	for t in targets:
 		if is_instance_valid(t):
 			match data.attack_mode:
-				AttackMode.PROJECTILE:
+				AttackData.AttackMode.PROJECTILE:
 					_spawn_projectile(t)
-				AttackMode.MELEE, AttackMode.CONTINUOUS:
+				AttackData.AttackMode.MELEE, AttackData.AttackMode.CONTINUOUS:
 					_deal_direct_damage(t)
 			attacked.emit(t)
 
@@ -133,7 +122,7 @@ func _deal_direct_damage(target: Node2D) -> void:
 	var health = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
 	if health:
 		var raw_damage = data.damage
-		if data.attack_mode == AttackMode.CONTINUOUS:
+		if data.attack_mode == AttackData.AttackMode.CONTINUOUS:
 			raw_damage *= get_process_delta_time()
 		
 		health.damage(raw_damage, data.damage_type)

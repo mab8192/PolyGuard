@@ -4,12 +4,6 @@ extends Node
 signal velocity_computed(vel: Vector2)
 signal no_path_available()
 
-enum NavStrategy {
-	CLOSEST, # Closest by path length
-	FARTHEST, # Farthest away by path length
-	FIRST, # First in the _exits array
-}
-
 @export var data: NavigationData
 
 var movement: MovementComponent
@@ -111,7 +105,7 @@ func _pick_target() -> void:
 	if _exits.is_empty():
 		return
 
-	if data and data.strategy == NavStrategy.FIRST:
+	if data and data.strategy == NavigationData.NavStrategy.FIRST:
 		agent.target_position = _exits[0].global_position
 		return
 	
@@ -128,14 +122,14 @@ func _pick_target() -> void:
 	if distances.is_empty():
 		return
 
-	match data.strategy if data else NavStrategy.CLOSEST:
-		NavStrategy.CLOSEST:
+	match data.strategy if data else NavigationData.NavStrategy.CLOSEST:
+		NavigationData.NavStrategy.CLOSEST:
 			var min_dist: float = distances.min()
 			var target_index: int = distances.find(min_dist)
 			if target_index >= 0 and target_index < _exits.size():
 				agent.target_position = _exits[target_index].global_position
 			
-		NavStrategy.FARTHEST:
+		NavigationData.NavStrategy.FARTHEST:
 			var max_dist: float = distances.max()
 			var target_index: int = distances.find(max_dist)
 			if target_index >= 0 and target_index < _exits.size():

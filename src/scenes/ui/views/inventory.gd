@@ -45,7 +45,7 @@ func _populate_towers() -> void:
 		var is_unlocked = SaveManager.is_tower_unlocked(t_id)
 		var badge = ("LV %d" % SaveManager.get_tower_level(t_id)) if is_unlocked else "LOCKED"
 		
-		card.setup(tower.icon, tower.display_name, badge, tower)
+		card.setup(tower.icon, tower.display_name, badge, tower, not is_unlocked)
 		card.card_clicked.connect(_on_card_clicked)
 		_cards.append(card)
 		
@@ -82,11 +82,13 @@ func _update_details(tower: TowerData) -> void:
 	detail_cost.text = "%d Energy" % tower.cost
 	
 	if is_unlocked:
+		detail_icon.modulate = Color.WHITE
 		detail_level_badge.get_parent().theme_type_variation = &"StatusBadge"
 		detail_level_badge.text = "LEVEL %d / %d" % [level, tower.max_level]
 		upgrade_button.text = "UPGRADE & SPECIALIZE"
 		upgrade_button.theme_type_variation = &"PrimaryButton"
 	else:
+		detail_icon.modulate = Color(0.45, 0.48, 0.55, 0.70)
 		detail_level_badge.get_parent().theme_type_variation = &"LockedBadge"
 		detail_level_badge.text = "LOCKED"
 		upgrade_button.text = "UNLOCK (%d CREDITS)" % tower.unlock_cost

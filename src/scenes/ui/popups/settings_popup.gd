@@ -4,13 +4,25 @@ class_name SettingsPopup extends CanvasLayer
 @onready var music_slider: HSlider = %MusicSlider
 @onready var sfx_slider: HSlider = %SFXSlider
 @onready var reset_button: Button = %ResetButton
+@onready var dev_cheats_button: Button = %DevCheatsButton
 @onready var close_button: Button = %CloseButton
 
 func _ready() -> void:
 	hide()
 	close_button.pressed.connect(close)
 	reset_button.pressed.connect(_on_reset_pressed)
+	if dev_cheats_button:
+		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
 	_setup_sliders()
+
+const DEV_CHEAT_MENU_SCENE = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
+var _cheat_menu: DevCheatMenu = null
+
+func _on_dev_cheats_pressed() -> void:
+	if not _cheat_menu:
+		_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
+		add_child(_cheat_menu)
+	_cheat_menu.open()
 
 func open() -> void:
 	_setup_sliders()

@@ -1,0 +1,43 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://dolc6wgyai37b"]
+
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
+[ext_resource type="Texture2D" uid="uid://ciyhiruwg6oux" path="res://src/textures/towers/displacer.png" id="3_icon"]
+[ext_resource type="PackedScene" path="res://src/scenes/towers/displacer.tscn" id="4_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
+
+[sub_resource type="Resource" id="Resource_choice_warp"]
+script = ExtResource("1_choice")
+id = "warp_amplifier"
+title = "Warp Amplifier"
+description = "High-energy resonant coils reducing trigger cooldown by 25%."
+cooldown_multiplier = 0.75
+
+[sub_resource type="Resource" id="Resource_choice_mass"]
+script = ExtResource("1_choice")
+id = "mass_displacement"
+title = "Mass Displacement"
+description = "Expanded quantum manifold capturing +2 additional targets per burst."
+extra_targets = 2
+
+[sub_resource type="Resource" id="Resource_applier"]
+script = ExtResource("2_applier_data")
+mode = 1
+cooldown = 4.5
+max_targets = 3
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[resource]
+script = ExtResource("5_tower")
+tower_id = "displacer"
+display_name = "Displacer Trap"
+icon = ExtResource("3_icon")
+scene = ExtResource("4_scene")
+description = "Non-solid trap that teleports passing enemies backwards along their path."
+unlock_cost = 800
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_warp"), SubResource("Resource_choice_mass")])
+is_solid = false
+cost = 350
+can_rotate = false
+effect_applier = SubResource("Resource_applier")

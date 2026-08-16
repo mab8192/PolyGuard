@@ -26,6 +26,7 @@ metadata/_custom_type_script = "uid://bllmo3a8geds7"
 [resource]
 script = ExtResource("1_script")
 display_name = "Ghost"
+description = "Phasing ethereal entity immune to physical collision and projectile barriers. Must be eliminated using energy, lightning, or magic-based defenses."
 scene = ExtResource("2_scene")
 icon = ExtResource("2_g0mei")
 lives_penalty = 2

@@ -51,8 +51,8 @@ func _update_details(enemy: EnemyData) -> void:
 	detail_icon.texture = enemy.icon
 	detail_title.text = enemy.display_name
 	detail_reward.text = "+%d Energy" % enemy.energy_reward
-	detail_type_badge.text = "GHOST UNIT" if enemy.type == Enemy.EnemyType.GHOST else "PHYSICAL UNIT"
-	detail_desc.text = "Identified hostile geometric combat unit."
+	detail_type_badge.text = "GHOST UNIT" if enemy.type == EnemyData.EnemyType.GHOST else "PHYSICAL UNIT"
+	detail_desc.text = enemy.description if not enemy.description.is_empty() else "Identified hostile geometric combat unit."
 	
 	var stat_parts: Array[String] = []
 	if enemy.health:
@@ -75,11 +75,11 @@ func _update_details(enemy: EnemyData) -> void:
 
 func _get_nav_name(strategy: int) -> String:
 	match strategy:
-		NavigationComponent.NavStrategy.CLOSEST:
+		NavigationData.NavStrategy.CLOSEST:
 			return "Closest"
-		NavigationComponent.NavStrategy.FARTHEST:
+		NavigationData.NavStrategy.FARTHEST:
 			return "Farthest"
-		NavigationComponent.NavStrategy.FIRST:
+		NavigationData.NavStrategy.FIRST:
 			return "First"
 		_:
 			return "Error"

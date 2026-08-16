@@ -1,17 +1,7 @@
 extends Node
 
 # Map of enemy IDs to data-driven EnemyData resources
-const ENEMIES: Dictionary[String, EnemyData] = {
-	"speeder": preload("res://src/data/enemies/speeder.tres"),
-	"tank": preload("res://src/data/enemies/tank.tres"),
-	"ghost": preload("res://src/data/enemies/ghost.tres"),
-	"sniper": preload("res://src/data/enemies/sniper.tres"),
-	"light": preload("res://src/data/enemies/light.tres"),
-	"grunt": preload("res://src/data/enemies/grunt.tres"),
-	"heavy": preload("res://src/data/enemies/heavy.tres"),
-	"citadel": preload("res://src/data/enemies/citadel.tres"),
-	"splitter": preload("res://src/data/enemies/splitter.tres")
-}
+var ENEMIES: Dictionary[String, EnemyData] = {}
 
 func get_enemy_data(id: String) -> EnemyData:
 	return ENEMIES.get(id, null)
@@ -23,17 +13,7 @@ func get_all_enemies() -> Array[EnemyData]:
 	return result
 
 # Map of stage IDs to data-driven StageData resources
-const STAGES: Dictionary[String, StageData] = {
-	"stage_01": preload("res://src/data/stages/stage_01.tres"),
-	"stage_02": preload("res://src/data/stages/stage_02.tres"),
-	"stage_03": preload("res://src/data/stages/stage_03.tres"),
-	"stage_04": preload("res://src/data/stages/stage_04.tres"),
-	"stage_05": preload("res://src/data/stages/stage_05.tres"),
-	"stage_06": preload("res://src/data/stages/stage_06.tres"),
-	"stage_07": preload("res://src/data/stages/stage_07.tres"),
-	"stage_08": preload("res://src/data/stages/stage_08.tres"),
-	"test_stage": preload("res://src/data/stages/TestStage.tres"),
-}
+var STAGES: Dictionary[String, StageData] = {}
 
 func get_stage_data(id: String) -> StageData:
 	return STAGES.get(id, null)
@@ -55,16 +35,7 @@ func get_stage_id(stage: StageData) -> String:
 	return ""
 
 # Map of tower IDs to data-driven TowerData resources
-const TOWERS: Dictionary[String, TowerData] = {
-	"archer_tower": preload("res://src/data/towers/archer_tower.tres"),
-	"arrow_wall": preload("res://src/data/towers/arrow_wall.tres"),
-	"barricade": preload("res://src/data/towers/barricade.tres"),
-	"poison_trap": preload("res://src/data/towers/poison_trap.tres"),
-	"tesla_tower": preload("res://src/data/towers/tesla_tower.tres"),
-	"bomb_tower": preload("res://src/data/towers/bomb_tower.tres"),
-	"brimstone": preload("res://src/data/towers/brimstone.tres"),
-	"tar_trap": preload("res://src/data/towers/tar_trap.tres"),
-}
+var TOWERS: Dictionary[String, TowerData] = {}
 
 func get_tower_data(id: String) -> TowerData:
 	return TOWERS.get(id, null)
@@ -84,3 +55,47 @@ func get_tower_id(tower: TowerData) -> String:
 		if TOWERS[key] == tower:
 			return key
 	return ""
+
+func _init() -> void:
+	_load_registry()
+
+func _load_registry() -> void:
+	ENEMIES = {
+		"speeder": load("res://src/data/enemies/speeder.tres"),
+		"tank": load("res://src/data/enemies/tank.tres"),
+		"ghost": load("res://src/data/enemies/ghost.tres"),
+		"sniper": load("res://src/data/enemies/sniper.tres"),
+		"light": load("res://src/data/enemies/light.tres"),
+		"grunt": load("res://src/data/enemies/grunt.tres"),
+		"heavy": load("res://src/data/enemies/heavy.tres"),
+		"citadel": load("res://src/data/enemies/citadel.tres"),
+		"splitter": load("res://src/data/enemies/splitter.tres")
+	}
+	
+	STAGES = {
+		"stage_01": load("res://src/data/stages/stage_01.tres"),
+		"stage_02": load("res://src/data/stages/stage_02.tres"),
+		"stage_03": load("res://src/data/stages/stage_03.tres"),
+		"stage_04": load("res://src/data/stages/stage_04.tres"),
+		"stage_05": load("res://src/data/stages/stage_05.tres"),
+		"stage_06": load("res://src/data/stages/stage_06.tres"),
+		"stage_07": load("res://src/data/stages/stage_07.tres"),
+		"stage_08": load("res://src/data/stages/stage_08.tres"),
+		"test_stage": load("res://src/data/stages/TestStage.tres"),
+	}
+	
+	TOWERS = {
+		"archer_tower": load("res://src/data/towers/archer_tower.tres"),
+		"arrow_wall": load("res://src/data/towers/arrow_wall.tres"),
+		"crossbow": load("res://src/data/towers/crossbow.tres"),
+		"flamethrower": load("res://src/data/towers/flamethrower.tres"),
+		"barricade": load("res://src/data/towers/barricade.tres"),
+		"poison_trap": load("res://src/data/towers/poison_trap.tres"),
+		"tesla_tower": load("res://src/data/towers/tesla_tower.tres"),
+		"bomb_tower": load("res://src/data/towers/bomb_tower.tres"),
+		"brimstone": load("res://src/data/towers/brimstone.tres"),
+		"tar_trap": load("res://src/data/towers/tar_trap.tres"),
+		"displacer": load("res://src/data/towers/displacer.tres"),
+		"ice_trap": load("res://src/data/towers/ice_trap.tres"),
+		"corrosive_vapor": load("res://src/data/towers/corrosive_vapor.tres"),
+	}

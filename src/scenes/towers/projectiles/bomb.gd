@@ -15,7 +15,7 @@ func explode(primary_target: Node2D = null) -> void:
 
 	var mask: int = damage_component.collision_mask if damage_component else 4
 	var base_damage: float = damage_component.damage if damage_component else 10.0
-	var damage_type = damage_component.damage_type if damage_component else AttackComponent.DamageType.PHYSICAL
+	var damage_type = damage_component.damage_type if damage_component else AttackData.DamageType.PHYSICAL
 
 	var shape := CircleShape2D.new()
 	shape.radius = explosion_radius

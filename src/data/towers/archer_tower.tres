@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
 
-[sub_resource type="Resource" id="Resource_soe44"]
+[sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("5_attack")
 damage = 60.0
 cooldown = 0.7
@@ -34,7 +34,7 @@ has_damage_type_override = true
 damage_type_override = 2
 cooldown_multiplier = 0.9
 
-[sub_resource type="Resource" id="Resource_k6tlf"]
+[sub_resource type="Resource" id="Resource_rcoxi"]
 script = ExtResource("4_health")
 armor = 20.0
 
@@ -49,6 +49,7 @@ icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Ranged single-target arrow tower. Solid structure that blocks enemy movement."
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
-health = SubResource("Resource_k6tlf")
-attack = SubResource("Resource_soe44")
+can_rotate = false
+health = SubResource("Resource_rcoxi")
+attack = SubResource("Resource_k6tlf")
 targeting = SubResource("Resource_1mbg1")

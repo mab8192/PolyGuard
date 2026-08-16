@@ -1,0 +1,31 @@
+[gd_scene format=3 uid="uid://waaogoooau1j"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_flame"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="3_applier"]
+[ext_resource type="Texture2D" uid="uid://biqxhd1hpm74p" path="res://src/textures/towers/flamethrower.png" id="4_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_flame"]
+radius = 19.5
+
+[node name="Flamethrower" type="StaticBody2D" unique_id=887219901]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_flame")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683209902]
+shape = SubResource("CircleShape2D_flame")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=759949903]
+script = ExtResource("2_health")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="EffectApplierComponent" type="Area2D" parent="." unique_id=389289904]
+script = ExtResource("3_applier")
+metadata/_custom_type_script = "uid://bi5cw4m6km75g"
+
+[node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="EffectApplierComponent" unique_id=212099905]
+polygon = PackedVector2Array(0, 0, 160, -90, 220, -50, 240, 0, 220, 50, 160, 90)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=179579906]
+texture = ExtResource("4_tex")

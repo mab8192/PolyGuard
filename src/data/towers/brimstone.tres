@@ -49,4 +49,5 @@ unlock_cost = 900
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_quick_fire"), SubResource("Resource_choice_wide_flame")])
 is_solid = false
 cost = 400
+can_rotate = false
 effect_applier = SubResource("Resource_x5pvt")

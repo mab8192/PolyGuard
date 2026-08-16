@@ -24,6 +24,7 @@ metadata/_custom_type_script = "uid://bllmo3a8geds7"
 [resource]
 script = ExtResource("1_script")
 display_name = "Speeder"
+description = "Aerodynamic hyper-velocity raider. Sacrifices armor for extreme acceleration, quickly bypassing single-target defense batteries."
 scene = ExtResource("2_scene")
 icon = ExtResource("2_jmxdv")
 energy_reward = 15

@@ -41,4 +41,5 @@ unlock_cost = 350
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_quick"), SubResource("Resource_choice_cloud")])
 is_solid = false
 cost = 200
+can_rotate = false
 effect_applier = SubResource("Resource_gconv")

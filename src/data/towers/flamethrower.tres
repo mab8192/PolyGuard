@@ -1,0 +1,58 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://c0kn6yk0aibs2"]
+
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
+[ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="2_burn_data"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_applier_data"]
+[ext_resource type="Texture2D" uid="uid://biqxhd1hpm74p" path="res://src/textures/towers/flamethrower.png" id="4_icon"]
+[ext_resource type="PackedScene" uid="uid://waaogoooau1j" path="res://src/scenes/towers/flamethrower.tscn" id="5_scene"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="6_health"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_tower"]
+
+[sub_resource type="Resource" id="Resource_choice_napalm"]
+script = ExtResource("1_choice")
+id = "napalm_catalyst"
+title = "Napalm Catalyst"
+description = "High-temperature chemical booster increasing burn DPS by 30%."
+damage_multiplier = 1.3
+
+[sub_resource type="Resource" id="Resource_choice_pressure"]
+script = ExtResource("1_choice")
+id = "turbo_compressor"
+title = "Turbo Compressor"
+description = "Reinforced turbine housing providing 25% increased structural health."
+health_multiplier = 1.25
+
+[sub_resource type="Resource" id="Resource_burn"]
+script = ExtResource("2_burn_data")
+initial_damage = 0.0
+damage_per_second = 40.0
+name = "Flamethrower Burn"
+duration = 3.0
+remove_on_exit = false
+metadata/_custom_type_script = "uid://dsor16spgwgow"
+
+[sub_resource type="Resource" id="Resource_applier"]
+script = ExtResource("3_applier_data")
+effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_burn")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[sub_resource type="Resource" id="Resource_health"]
+script = ExtResource("6_health")
+max_health = 400.0
+armor = 5.0
+magic_resistance = 10.0
+
+[resource]
+script = ExtResource("7_tower")
+tower_id = "flamethrower"
+display_name = "Flamethrower"
+icon = ExtResource("4_icon")
+scene = ExtResource("5_scene")
+description = "Solid turret that projects a searing cone of magic flame, burning targets over time."
+unlock_cost = 600
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_napalm"), SubResource("Resource_choice_pressure")])
+cost = 325
+rotation_step_degrees = 45.0
+health = SubResource("Resource_health")
+effect_applier = SubResource("Resource_applier")

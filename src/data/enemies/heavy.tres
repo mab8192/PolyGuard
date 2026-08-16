@@ -37,6 +37,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("6_bctmv")
 display_name = "Heavy"
+description = "Heavily reinforced assault chassis. Absorbs heavy physical bombardment with dense kinetic plating, requiring focused fire or armor-piercing traps to dismantle."
 scene = ExtResource("5_l6xij")
 icon = ExtResource("2_po7ym")
 energy_reward = 30

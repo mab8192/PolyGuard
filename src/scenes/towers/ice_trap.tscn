@@ -1,0 +1,29 @@
+[gd_scene format=3 uid="uid://ice_trap_scene_uid"]
+
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ice"]
+[ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_applier"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/ice_trap.png" id="3_tex"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ice_body"]
+size = Vector2(64, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_ice_area"]
+size = Vector2(64, 64)
+
+[node name="Ice Trap" type="StaticBody2D" unique_id=1776499201]
+collision_layer = 0
+collision_mask = 0
+script = ExtResource("1_ice")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151499202]
+shape = SubResource("RectangleShape2D_ice_body")
+
+[node name="EffectApplierComponent" type="Area2D" parent="." unique_id=3892899203]
+script = ExtResource("2_applier")
+metadata/_custom_type_script = "uid://bi5cw4m6km75g"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=9746599204]
+shape = SubResource("RectangleShape2D_ice_area")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764199205]
+texture = ExtResource("3_tex")

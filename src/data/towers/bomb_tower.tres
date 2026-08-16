@@ -54,6 +54,7 @@ description = "Shoots bombs that can damage groups of enemies"
 unlock_cost = 700
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_pyro"), SubResource("Resource_choice_true_bomb")])
 cost = 450
+can_rotate = false
 health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")
 targeting = SubResource("Resource_1mbg1")

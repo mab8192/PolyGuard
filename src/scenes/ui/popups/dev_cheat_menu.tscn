@@ -1,0 +1,290 @@
+[gd_scene format=3 uid="uid://b5m3k1cheatu"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/dev_cheat_menu.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+
+[node name="DevCheatMenu" type="CanvasLayer" unique_id=7700001]
+process_mode = 3
+layer = 100
+script = ExtResource("1_script")
+
+[node name="DimOverlay" type="Panel" parent="." unique_id=7700002]
+unique_name_in_owner = true
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=7700003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="ModalPanel" type="PanelContainer" parent="CenterContainer" unique_id=7700004]
+custom_minimum_size = Vector2(960, 1300)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/ModalPanel" unique_id=7700005]
+layout_mode = 2
+theme_override_constants/margin_left = 32
+theme_override_constants/margin_top = 32
+theme_override_constants/margin_right = 32
+theme_override_constants/margin_bottom = 32
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer" unique_id=7700006]
+layout_mode = 2
+theme_override_constants/separation = 16
+
+[node name="TopBar" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=7700007]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/TopBar" unique_id=7700008]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_type_variation = &"HeaderText"
+text = "DEVELOPER CHEATS"
+
+[node name="CloseButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/TopBar" unique_id=7700009]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(160, 56)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "CLOSE (F1)"
+
+[node name="Subtitle" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=7700010]
+layout_mode = 2
+theme_type_variation = &"SmallText"
+text = "Press F1 or ` (tilde) anywhere to toggle this menu."
+
+[node name="StatusContainer" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=7700011]
+layout_mode = 2
+theme_type_variation = &"StatusBadge"
+
+[node name="StatusLabel" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/StatusContainer" unique_id=7700012]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "Developer Cheats Ready"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=7700013]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+
+[node name="ScrollVBox" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer" unique_id=7700014]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 20
+
+[node name="EconomySection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700015]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection" unique_id=7700016]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "💳 ECONOMY & CREDITS"
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection" unique_id=7700017]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Add10kCreditsButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection/Grid" unique_id=7700018]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "+10,000 Credits"
+
+[node name="Add100kCreditsButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection/Grid" unique_id=7700019]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "+100,000 Credits"
+
+[node name="MaxCreditsButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection/Grid" unique_id=7700020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Max Credits (999k)"
+
+[node name="ZeroCreditsButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/EconomySection/Grid" unique_id=7700021]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Zero Credits"
+
+[node name="TowersSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700022]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/TowersSection" unique_id=7700023]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "🏰 TOWERS & SPECIALIZATIONS"
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/TowersSection" unique_id=7700024]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="UnlockAllTowersButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/TowersSection/Grid" unique_id=7700025]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Unlock All Towers"
+
+[node name="MaxAllTowersButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/TowersSection/Grid" unique_id=7700026]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Max Lv 5 + All Specs"
+
+[node name="CampaignSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700027]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection" unique_id=7700028]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "🗺️ CAMPAIGN & STAGES"
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection" unique_id=7700029]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="UnlockAllStagesButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection/Grid" unique_id=7700030]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Unlock All Stages"
+
+[node name="CompleteAllStagesButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection/Grid" unique_id=7700031]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Complete All (3-Star)"
+
+[node name="BattleSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700032]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection" unique_id=7700033]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "⚔️ IN-GAME BATTLE CHEATS"
+
+[node name="Grid" type="GridContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection" unique_id=7700034]
+layout_mode = 2
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 10
+columns = 2
+
+[node name="Add1kEnergyButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700035]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "+1,000 Energy"
+
+[node name="Add10kEnergyButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700036]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "+10,000 Energy"
+
+[node name="Add50LivesButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700037]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "+50 Lives"
+
+[node name="KillEnemiesButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700038]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Kill All Enemies"
+
+[node name="WinStageButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700039]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Instant Win Stage"
+
+[node name="GodmodeButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700040]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Toggle Godmode"
+
+[node name="ResetSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700041]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/ResetSection" unique_id=7700042]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "🔄 DANGER ZONE"
+
+[node name="ResetSaveButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/ResetSection" unique_id=7700043]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 72)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DangerButton"
+text = "RESET SAVE PROGRESS"

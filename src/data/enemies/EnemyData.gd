@@ -1,7 +1,10 @@
 class_name EnemyData extends Resource
 
+enum EnemyType { PHYSICAL, GHOST }
+
 @export_category("Info")
 @export var display_name: String = ""
+@export_multiline var description: String = ""
 @export var scene: PackedScene
 @export var icon: Texture2D = preload("res://vendor/HAMMA.png")
 
@@ -11,8 +14,8 @@ class_name EnemyData extends Resource
 var gold_reward: int:
 	get: return energy_reward
 	set(v): energy_reward = v
-@export var type: Enemy.EnemyType = Enemy.EnemyType.PHYSICAL
-@export var nav_strategy: NavigationComponent.NavStrategy = NavigationComponent.NavStrategy.CLOSEST
+@export var type: EnemyType = EnemyType.PHYSICAL
+@export var nav_strategy: NavigationData.NavStrategy = NavigationData.NavStrategy.CLOSEST
 
 @export_category("Components")
 @export var health: HealthData

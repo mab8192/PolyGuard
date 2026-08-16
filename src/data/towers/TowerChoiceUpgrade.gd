@@ -13,7 +13,7 @@ class_name TowerChoiceUpgrade extends Resource
 
 @export_group("Damage Type & Attack")
 @export var has_damage_type_override: bool = false
-@export var damage_type_override: AttackComponent.DamageType = AttackComponent.DamageType.PHYSICAL
+@export var damage_type_override: AttackData.DamageType = AttackData.DamageType.PHYSICAL
 @export var damage_multiplier: float = 1.0
 @export var cooldown_multiplier: float = 1.0
 

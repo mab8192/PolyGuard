@@ -36,6 +36,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("2_rbqdr")
 display_name = "Grunt"
+description = "Standard frontline combat drone. Moderate health and steady movement pace, designed to swarm defenses in coordinated strike waves."
 scene = ExtResource("1_rahde")
 icon = ExtResource("2_jksdh")
 energy_reward = 15

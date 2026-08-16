@@ -37,6 +37,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("6_mmioh")
 display_name = "Light"
+description = "High-speed reconnaissance unit. Fragile structural integrity but capable of rapidly slipping past perimeter defense turrets."
 scene = ExtResource("5_74qf7")
 icon = ExtResource("2_e1hlv")
 energy_reward = 10

@@ -40,6 +40,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("5_4d7iv")
 display_name = "Citadel"
+description = "Colossal command dreadnought. Packed with multi-layered hull shielding, devastating siege weaponry, and massive lives penalty on breach."
 scene = ExtResource("4_scene")
 icon = ExtResource("3_13e37")
 lives_penalty = 5

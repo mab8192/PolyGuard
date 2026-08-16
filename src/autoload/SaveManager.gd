@@ -279,3 +279,69 @@ func _init_defaults() -> void:
 		_tower_levels[t] = 1
 	_tower_choices = {}
 	_unlocked_specializations = {}
+
+# =========================================================================
+# DEVELOPER CHEATS API
+# =========================================================================
+
+func cheat_add_credits(amount: int = 50000) -> void:
+	_credits += amount
+	SignalBus.credits_changed.emit(_credits)
+	save_to_disk()
+
+func cheat_set_credits(amount: int = 999999) -> void:
+	_credits = amount
+	SignalBus.credits_changed.emit(_credits)
+	save_to_disk()
+
+func cheat_unlock_all_stages() -> void:
+	for stage_id in Registry.STAGES:
+		if not _unlocked_stages.has(stage_id):
+			_unlocked_stages.append(stage_id)
+			SignalBus.stage_unlocked.emit(stage_id)
+	save_to_disk()
+
+func cheat_complete_all_stages(stars: int = 3) -> void:
+	cheat_unlock_all_stages()
+	for stage_id in Registry.STAGES:
+		_stage_records[stage_id] = {
+			"completed": true,
+			"stars": stars,
+			"high_score": 99999,
+			"cleared_once": true
+		}
+	save_to_disk()
+
+func cheat_unlock_all_towers() -> void:
+	for tower_id in Registry.TOWERS:
+		if not _unlocked_towers.has(tower_id):
+			_unlocked_towers.append(tower_id)
+		if not _tower_levels.has(tower_id):
+			_tower_levels[tower_id] = 1
+		SignalBus.tower_unlocked.emit(tower_id)
+	save_to_disk()
+
+func cheat_max_all_towers() -> void:
+	cheat_unlock_all_towers()
+	for tower_id in Registry.TOWERS:
+		_tower_levels[tower_id] = 5
+		var t_data = Registry.get_tower_data(tower_id)
+		if t_data and not t_data.choices.is_empty():
+			var specs: Array[String] = []
+			for choice in t_data.choices:
+				if choice and not choice.id.is_empty():
+					specs.append(choice.id)
+			_unlocked_specializations[tower_id] = specs
+			if not specs.is_empty():
+				_tower_choices[tower_id] = specs[0]
+		SignalBus.tower_upgraded.emit(tower_id, 5)
+	save_to_disk()
+
+func cheat_reset_save() -> void:
+	_init_defaults()
+	save_to_disk()
+	SignalBus.credits_changed.emit(0)
+	for stage in DEFAULT_UNLOCKED_STAGES:
+		SignalBus.stage_unlocked.emit(stage)
+	for tower in DEFAULT_UNLOCKED_TOWERS:
+		SignalBus.tower_unlocked.emit(tower)

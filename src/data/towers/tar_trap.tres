@@ -37,4 +37,5 @@ description = "Non-solid trap that slows enemies who walk over it"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_adhesive"), SubResource("Resource_choice_expand")])
 is_solid = false
 cost = 150
+can_rotate = false
 effect_applier = SubResource("Resource_x5pvt")

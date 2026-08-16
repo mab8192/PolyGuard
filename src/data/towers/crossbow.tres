@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://b8fpoi13ofpwq"]
+
+[ext_resource type="PackedScene" uid="uid://dy1rermy28mff" path="res://src/scenes/towers/projectiles/heavy_bolt.tscn" id="1_dcd4g"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_attack"]
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="3_choice"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
+[ext_resource type="Texture2D" uid="uid://1yg1wsly8m4" path="res://src/textures/towers/crossbow.png" id="5_icon"]
+[ext_resource type="PackedScene" uid="uid://bprvikvhw11t1" path="res://src/scenes/towers/crossbow.tscn" id="6_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_script"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_target"]
+
+[sub_resource type="Resource" id="Resource_cb_attack"]
+script = ExtResource("2_attack")
+damage = 180.0
+cooldown = 1.8
+projectile_scene = ExtResource("1_dcd4g")
+projectile_speed = 950.0
+projectile_follow_target = false
+
+[sub_resource type="Resource" id="Resource_choice_heavy_bolt"]
+script = ExtResource("3_choice")
+id = "heavy_broadhead"
+title = "Heavy Broadhead"
+description = "Massive reinforced steel bolt dealing +35% damage."
+damage_multiplier = 1.35
+
+[sub_resource type="Resource" id="Resource_choice_windlass"]
+script = ExtResource("3_choice")
+id = "quick_windlass"
+title = "Quick Windlass"
+description = "High-tension spanning mechanism providing +30% attack speed."
+cooldown_multiplier = 0.7
+
+[sub_resource type="Resource" id="Resource_cb_health"]
+script = ExtResource("4_health")
+max_health = 400.0
+armor = 15.0
+
+[sub_resource type="Resource" id="Resource_cb_target"]
+script = ExtResource("8_target")
+
+[resource]
+script = ExtResource("7_script")
+tower_id = "crossbow"
+display_name = "Crossbow"
+icon = ExtResource("5_icon")
+scene = ExtResource("6_scene")
+description = "Long-range ballista tower. Fires high-damage straight bolts with low attack rate."
+unlock_cost = 250
+choices = Array[ExtResource("3_choice")]([SubResource("Resource_choice_heavy_bolt"), SubResource("Resource_choice_windlass")])
+cost = 300
+rotation_step_degrees = 45.0
+health = SubResource("Resource_cb_health")
+attack = SubResource("Resource_cb_attack")
+targeting = SubResource("Resource_cb_target")

@@ -41,6 +41,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("1_script")
 display_name = "Tank"
+description = "Massive fortified siege vehicle. Possesses immense health reserves and high damage reduction, leading major offensive waves."
 scene = ExtResource("2_scene")
 icon = ExtResource("2_m2ilo")
 lives_penalty = 3

@@ -41,6 +41,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("1_script")
 display_name = "Sniper"
+description = "Precision artillery platform. Engages defense structures from long range, inflicting heavy structural damage from outside standard turret zones."
 scene = ExtResource("2_scene")
 icon = ExtResource("2_8g4oy")
 lives_penalty = 2

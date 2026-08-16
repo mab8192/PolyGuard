@@ -1,7 +1,5 @@
 class_name Enemy extends CharacterBody2D
 
-enum EnemyType {PHYSICAL, GHOST}
-
 ## Gets assigned by the EnemyData type
 var data: EnemyData
 
@@ -82,7 +80,7 @@ func _ready() -> void:
 		nav.velocity_computed.connect(_on_velocity_computed)
 		nav.no_path_available.connect(_on_no_path_available)
 		
-		if data.type == EnemyType.GHOST:
+		if data.type == EnemyData.EnemyType.GHOST:
 			collision_layer = 8 # Layer 4: Ghost Enemies
 			collision_mask = 9  # Collides with Layer 1 Walls (1) and Layer 4 Ghost Enemies (8)
 		else:

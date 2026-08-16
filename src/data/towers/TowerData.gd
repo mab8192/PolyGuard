@@ -82,7 +82,7 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		"damage": 0.0,
 		"cooldown": 0.0,
 		"dps": 0.0,
-		"damage_type": AttackComponent.DamageType.PHYSICAL,
+		"damage_type": AttackData.DamageType.PHYSICAL,
 		"damage_type_str": "Physical",
 		"max_health": 0.0,
 		"max_targets": 1,
@@ -97,9 +97,9 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		result["dps"] = scaled.attack.damage / maxf(scaled.attack.cooldown, 0.05)
 		result["damage_type"] = scaled.attack.damage_type
 		match scaled.attack.damage_type:
-			AttackComponent.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
-			AttackComponent.DamageType.MAGIC: result["damage_type_str"] = "Magic"
-			AttackComponent.DamageType.TRUE: result["damage_type_str"] = "True"
+			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
+			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
+			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
 			
 	if scaled.health:
 		result["has_health"] = true

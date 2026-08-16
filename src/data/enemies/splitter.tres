@@ -46,6 +46,7 @@ metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 [resource]
 script = ExtResource("6_i6dcn")
 display_name = "Splitter"
+description = "Volatile cluster construct. Fractures into multiple swift sub-units upon catastrophic structural defeat, overwhelming unprepared choke points."
 scene = ExtResource("5_an1m1")
 icon = ExtResource("2_chacc")
 energy_reward = 20

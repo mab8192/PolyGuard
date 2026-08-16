@@ -1,0 +1,40 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://j5o01h5mkdu0"]
+
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
+[ext_resource type="Texture2D" uid="uid://bkqje2mkufpnu" path="res://src/textures/towers/corrosive_vapor.png" id="3_icon"]
+[ext_resource type="PackedScene" uid="uid://b6x336krcls3r" path="res://src/scenes/towers/corrosive_vapor.tscn" id="4_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
+
+[sub_resource type="Resource" id="Resource_choice_acid"]
+script = ExtResource("1_choice")
+id = "concentrated_acid"
+title = "Concentrated Acid"
+description = "High-acidity mist providing 25% enhanced armor degradation potency."
+damage_multiplier = 1.25
+
+[sub_resource type="Resource" id="Resource_choice_volatile"]
+script = ExtResource("1_choice")
+id = "volatile_dispersion"
+title = "Volatile Dispersion"
+description = "Rapid pressure injectors reducing mist release cooldowns."
+cooldown_multiplier = 0.8
+
+[sub_resource type="Resource" id="Resource_applier"]
+script = ExtResource("2_applier_data")
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[resource]
+script = ExtResource("5_tower")
+tower_id = "corrosive_vapor"
+display_name = "Corrosive Vapor"
+icon = ExtResource("3_icon")
+scene = ExtResource("4_scene")
+description = "Non-solid hazard vent releasing acidic vapor that strips away enemy armor."
+unlock_cost = 700
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_acid"), SubResource("Resource_choice_volatile")])
+is_solid = false
+cost = 300
+can_rotate = false
+effect_applier = SubResource("Resource_applier")

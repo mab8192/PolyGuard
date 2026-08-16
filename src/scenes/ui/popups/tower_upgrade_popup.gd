@@ -204,9 +204,9 @@ func _render_choice_card(
 func _get_damage_type_label(choice: TowerChoiceUpgrade) -> String:
 	if choice.has_damage_type_override:
 		match choice.damage_type_override:
-			AttackComponent.DamageType.PHYSICAL: return "PHYSICAL DAMAGE"
-			AttackComponent.DamageType.MAGIC: return "MAGIC DAMAGE"
-			AttackComponent.DamageType.TRUE: return "TRUE DAMAGE"
+			AttackData.DamageType.PHYSICAL: return "PHYSICAL DAMAGE"
+			AttackData.DamageType.MAGIC: return "MAGIC DAMAGE"
+			AttackData.DamageType.TRUE: return "TRUE DAMAGE"
 	return "SPECIALIZATION"
 
 func _on_choice_selected(index: int) -> void:
