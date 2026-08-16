@@ -1,0 +1,41 @@
+[gd_scene format=3 uid="uid://ckafnol35eo2t"]
+
+[ext_resource type="Script" uid="uid://crg6rcoomgi34" path="res://src/scenes/effects/burning_ground.gd" id="1_burn_ground"]
+[ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_applier"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_applier_data"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_effect_data"]
+[ext_resource type="Resource" path="res://src/data/effects/CarpetBombBurnEffect.tres" id="5_burn_effect"]
+
+[sub_resource type="Resource" id="Resource_applier_data"]
+script = ExtResource("3_applier_data")
+effects = Array[ExtResource("4_effect_data")]([ExtResource("5_burn_effect")])
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_hazard"]
+radius = 40.0
+
+[node name="BurningGround" type="Node2D" unique_id=1287456022]
+script = ExtResource("1_burn_ground")
+
+[node name="FireParticles" type="CPUParticles2D" parent="." unique_id=804923657]
+amount = 24
+lifetime = 0.6
+emission_shape = 1
+emission_sphere_radius = 30.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 20.0
+initial_velocity_max = 45.0
+scale_amount_min = 2.5
+scale_amount_max = 5.5
+color = Color(1, 0.45, 0.1, 0.85)
+
+[node name="EffectApplierComponent" type="Area2D" parent="." unique_id=2128619299]
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("2_applier")
+data = SubResource("Resource_applier_data")
+metadata/_custom_type_script = "uid://bi5cw4m6km75g"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=229803953]
+shape = SubResource("CircleShape2D_hazard")

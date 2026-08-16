@@ -1,0 +1,55 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://d31l57pyhcdn8"]
+
+[ext_resource type="PackedScene" path="res://src/scenes/towers/projectiles/carpet_bomb.tscn" id="1_qcp5f"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_o4woo"]
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="3_30gcb"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_q30ju"]
+[ext_resource type="Texture2D" uid="uid://b8us1luf3bxn7" path="res://src/textures/towers/carpet_bomb_artillery.png" id="5_5xhdn"]
+[ext_resource type="PackedScene" uid="uid://cquo2k6xddh2x" path="res://src/scenes/towers/artillery.tscn" id="6_x7w20"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_covhh"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_m7jpq"]
+
+[sub_resource type="Resource" id="Resource_attack"]
+script = ExtResource("2_o4woo")
+damage = 75.0
+cooldown = 1.8
+projectile_scene = ExtResource("1_qcp5f")
+projectile_speed = 450.0
+projectile_follow_target = false
+
+[sub_resource type="Resource" id="Resource_choice_thermite"]
+script = ExtResource("3_30gcb")
+id = "thermite_carpet"
+title = "Thermite Carpet"
+description = "Intensified thermite mixture dealing +25% explosive damage and creating hotter ground fires."
+damage_multiplier = 1.25
+
+[sub_resource type="Resource" id="Resource_choice_salvo"]
+script = ExtResource("3_30gcb")
+id = "heavy_salvo"
+title = "Heavy Salvo"
+description = "Accelerates artillery cycling providing 25% faster attack cooldown and +1 extra target bombardment."
+cooldown_multiplier = 0.75
+extra_targets = 1
+
+[sub_resource type="Resource" id="Resource_health"]
+script = ExtResource("4_q30ju")
+armor = 20.0
+
+[sub_resource type="Resource" id="Resource_targeting"]
+script = ExtResource("8_m7jpq")
+can_target_through_walls = true
+
+[resource]
+script = ExtResource("7_covhh")
+tower_id = "artillery"
+display_name = "Artillery"
+icon = ExtResource("5_5xhdn")
+scene = ExtResource("6_x7w20")
+description = "Long-range artillery tower that bombards corridors through walls, raining carpet bombs that ignite the ground in physical flames."
+unlock_cost = 800
+choices = Array[ExtResource("3_30gcb")]([SubResource("Resource_choice_thermite"), SubResource("Resource_choice_salvo")])
+cost = 500
+health = SubResource("Resource_health")
+attack = SubResource("Resource_attack")
+targeting = SubResource("Resource_targeting")

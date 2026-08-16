@@ -24,7 +24,6 @@ title = "Spectral Bolt"
 description = "Phased kinetic bolts that can detect and target Ghost-type enemies with +25% bonus damage."
 damage_multiplier = 1.25
 has_targeting_mask_override = true
-targeting_mask_override = 12
 
 [sub_resource type="Resource" id="Resource_choice_windlass"]
 script = ExtResource("3_choice")

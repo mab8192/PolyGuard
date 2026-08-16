@@ -381,6 +381,80 @@ def generate_flamethrower_texture(output_path: str = None) -> str:
 
     return save_cropped_sprite(img, (64, 64), output_path, "flamethrower")
 
+def generate_carpet_bomb_artillery_texture(output_path: str = None) -> str:
+    """Cyber Carpet Bomb Artillery turret with twin long-range heavy cannons and hazard trims (90-deg rotation)."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "carpet_bomb_artillery.png")
+
+    img, draw, f, sw, sh = create_canvas(64, 64, 4)
+    cx, cy = sw / 2.0, sh / 2.0
+
+    c_dark_hull = (16, 18, 24, 255)
+    c_mid_hull = (28, 36, 48, 255)
+    c_metal_light = (65, 85, 110, 255)
+    c_metal_highlight = (95, 120, 150, 255)
+    c_neon_orange = (255, 130, 20, 255)
+    c_neon_amber = (255, 185, 30, 255)
+    c_neon_crimson = (235, 45, 35, 255)
+    c_hazard_yellow = (255, 215, 0, 255)
+    c_hazard_black = (20, 22, 28, 255)
+
+    # 1. 64x64 Solid Base with beveled armor corners
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_mid_hull)
+
+    # 4 Corner Fortification Anchor Lugs
+    for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_neon_orange, width=int(1.2 * f))
+
+    # 2. Central 360-degree Heavy Swivel Ring
+    draw.ellipse([cx - 19 * f, cy - 19 * f, cx + 19 * f, cy + 19 * f], fill=c_dark_hull, outline=c_neon_orange, width=int(2 * f))
+    draw.ellipse([cx - 14 * f, cy - 14 * f, cx + 14 * f, cy + 14 * f], fill=c_mid_hull)
+
+    # 3. Rear Heavy Counter-weight / Ammo Breech Housing (x=-23 to x=-4)
+    draw.rounded_rectangle([cx - 23 * f, cy - 15 * f, cx - 4 * f, cy + 15 * f], radius=3 * f, fill=c_dark_hull, outline=c_neon_crimson, width=int(1.8 * f))
+    draw.rounded_rectangle([cx - 21 * f, cy - 13 * f, cx - 6 * f, cy + 13 * f], radius=2 * f, fill=c_mid_hull)
+
+    # Rear Hazard Chevrons (Yellow / Black stripes)
+    for hy in [-10 * f, -5 * f, 0, 5 * f, 10 * f]:
+        draw.line([cx - 20 * f, cy + hy, cx - 7 * f, cy + hy], fill=c_hazard_yellow, width=int(1.6 * f))
+
+    # 4. Heavy Twin Artillery Barrels (Upper and Lower) pointing forward to +X (x=-4 to x=+28)
+    for barrel_y in [-7 * f, 7 * f]:
+        # Recoil Hydraulic Sleeve (x=-5 to x=+8)
+        draw.rounded_rectangle([cx - 5 * f, cy + barrel_y - 4 * f, cx + 9 * f, cy + barrel_y + 4 * f], radius=2 * f, fill=c_metal_light, outline=c_dark_hull, width=int(1.5 * f))
+        draw.line([cx - 4 * f, cy + barrel_y - 2 * f, cx + 8 * f, cy + barrel_y - 2 * f], fill=c_metal_highlight, width=int(1.2 * f))
+
+        # Main Heavy Barrel Tube (x=+8 to x=+25)
+        draw.rectangle([cx + 8 * f, cy + barrel_y - 2.8 * f, cx + 25 * f, cy + barrel_y + 2.8 * f], fill=c_mid_hull, outline=c_dark_hull, width=int(1.2 * f))
+        draw.line([cx + 9 * f, cy + barrel_y, cx + 24 * f, cy + barrel_y], fill=c_neon_orange, width=int(1.2 * f))
+
+        # Flared Muzzle Brake with Gas Vents (x=+25 to x=+29)
+        muzzle_pts = [
+            (cx + 25 * f, cy + barrel_y - 4.5 * f),
+            (cx + 29 * f, cy + barrel_y - 3.5 * f),
+            (cx + 29 * f, cy + barrel_y + 3.5 * f),
+            (cx + 25 * f, cy + barrel_y + 4.5 * f),
+        ]
+        draw.polygon(muzzle_pts, fill=c_metal_light, outline=c_neon_orange, width=int(1.5 * f))
+        draw.line([cx + 27 * f, cy + barrel_y - 4 * f, cx + 27 * f, cy + barrel_y + 4 * f], fill=c_neon_amber, width=int(1.5 * f))
+
+    # 5. Center Breech Turret Mantlet & Targeting Optical Pod
+    draw.polygon([
+        (cx - 10 * f, cy - 10 * f),
+        (cx + 7 * f, cy - 8 * f),
+        (cx + 12 * f, cy),
+        (cx + 7 * f, cy + 8 * f),
+        (cx - 10 * f, cy + 10 * f),
+    ], fill=c_dark_hull, outline=c_neon_orange, width=int(1.8 * f))
+
+    # Central Glowing Targeting Lens / Sensor Eye
+    draw.ellipse([cx + 1 * f, cy - 4 * f, cx + 9 * f, cy + 4 * f], fill=c_dark_hull, outline=c_neon_crimson, width=int(1.2 * f))
+    draw.ellipse([cx + 3 * f, cy - 2.2 * f, cx + 7.5 * f, cy + 2.2 * f], fill=c_neon_amber)
+    draw.ellipse([cx + 4.5 * f, cy - 1 * f, cx + 6.5 * f, cy + 1 * f], fill=(255, 255, 255, 255))
+
+    return save_cropped_sprite(img, (64, 64), output_path, "carpet_bomb_artillery")
+
 # =========================================================================
 # 3. FLOOR TRAPS (NON-SOLID, FULL 64x64 FOOTPRINT)
 # =========================================================================
@@ -567,6 +641,7 @@ def generate_all_towers():
     generate_arrow_wall_texture()
     generate_crossbow_texture()
     generate_flamethrower_texture()
+    generate_carpet_bomb_artillery_texture()
     generate_bomb_tower_texture()
     generate_tesla_tower_texture()
     generate_barricade_texture()

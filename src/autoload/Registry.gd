@@ -98,4 +98,5 @@ func _load_registry() -> void:
 		"displacer": load("res://src/data/towers/displacer.tres"),
 		"ice_trap": load("res://src/data/towers/ice_trap.tres"),
 		"corrosive_vapor": load("res://src/data/towers/corrosive_vapor.tres"),
+		"artillery": load("res://src/data/towers/artillery.tres"),
 	}
