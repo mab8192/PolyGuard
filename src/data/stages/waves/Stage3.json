@@ -1,7 +1,7 @@
 [
   {
 	"wave_number": 1,
-	"reward_energy": 140,
+	"reward_energy": 200,
 	"spawns": [
 	  {
 		"spawner_id": "Spawner",
@@ -28,7 +28,7 @@
   },
   {
 	"wave_number": 2,
-	"reward_energy": 160,
+	"reward_energy": 200,
 	"spawns": [
 	  {
 		"spawner_id": "Spawner",
@@ -54,7 +54,7 @@
 	  {
 		"spawner_id": "Spawner",
 		"enemy_type": "splitter",
-		"count": 8,
+		"count": 1,
 		"interval": 1.2,
 		"delay": 5.0
 	  }
@@ -62,7 +62,7 @@
   },
   {
 	"wave_number": 3,
-	"reward_energy": 190,
+	"reward_energy": 200,
 	"spawns": [
 	  {
 		"spawner_id": "Spawner",
@@ -88,7 +88,7 @@
 	  {
 		"spawner_id": "Spawner",
 		"enemy_type": "splitter",
-		"count": 10,
+		"count": 2,
 		"interval": 1.2,
 		"delay": 5.0
 	  },
@@ -103,7 +103,7 @@
   },
   {
 	"wave_number": 4,
-	"reward_energy": 220,
+	"reward_energy": 0,
 	"spawns": [
 	  {
 		"spawner_id": "Spawner",
@@ -122,7 +122,7 @@
 	  {
 		"spawner_id": "Spawner",
 		"enemy_type": "splitter",
-		"count": 18,
+		"count": 3,
 		"interval": 1.0,
 		"delay": 3.0
 	  },

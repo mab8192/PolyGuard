@@ -11,7 +11,7 @@ class_name MainMenu extends Control
 
 func _ready() -> void:
 	nav_bar.tab_select.connect(_on_tab_select)
-	AudioManager.play_music(AudioManager.music_menu.pick_random())
+	AudioManager.play_music(AudioManager.music_menu)
 	settings_button.pressed.connect(_on_settings_select)
 	
 	SignalBus.credits_changed.connect(_on_credits_changed)

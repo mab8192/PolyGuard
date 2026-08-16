@@ -48,8 +48,12 @@ var _active_music_player: AudioStreamPlayer
 var _sfx_pool: Array[AudioStreamPlayer] = []
 
 var _crossfade_tween: Tween
+var _current_playlist: Array[AudioStream] = []
+var _current_track_index: int = 0
+var _is_music_playing: bool = false
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
 	_setup_music_players()
 	_setup_sfx_pool()
 	_connect_signal_bus()
@@ -65,6 +69,9 @@ func _setup_music_players() -> void:
 	# Set audio bus (ensure you have a "Music" bus configured in Godot)
 	_music_player_a.bus = &"Music"
 	_music_player_b.bus = &"Music"
+	
+	_music_player_a.finished.connect(_on_music_player_finished.bind(_music_player_a))
+	_music_player_b.finished.connect(_on_music_player_finished.bind(_music_player_b))
 	
 	add_child(_music_player_a)
 	add_child(_music_player_b)
@@ -88,19 +95,69 @@ func _connect_signal_bus() -> void:
 	SignalBus.tower_placed.connect(_on_tower_placed)
 
 # ==============================================================================
-# MUSIC CROSSFADING
+# MUSIC CROSSFADING & PLAYLIST LOOPING
 # ==============================================================================
 
-## Smoothly fades from the current active track to a new track.
-func play_music(stream: AudioStream, duration: float = -1.0) -> void:
-	if stream == null:
+## Plays a track or playlist of tracks, smoothly crossfading from the current active track.
+## If a playlist is provided, it cycles through all tracks and loops when reaching the end.
+func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -> void:
+	if music == null:
 		return
 		
-	if _active_music_player.stream == stream and _active_music_player.playing:
-		return # Already playing this track
+	var target_playlist: Array[AudioStream] = []
+	var target_index: int = 0
 	
+	if music is Array:
+		for item in music:
+			if item is AudioStream:
+				target_playlist.append(item)
+		if target_playlist.is_empty():
+			return
+		if start_index >= 0 and start_index < target_playlist.size():
+			target_index = start_index
+		else:
+			target_index = randi() % target_playlist.size()
+	elif music is AudioStream:
+		var stream: AudioStream = music
+		# Preserve full list looping if a single stream belongs to one of the predefined playlists
+		if music_combat.has(stream):
+			target_playlist = music_combat.duplicate()
+			target_index = music_combat.find(stream)
+		elif music_menu.has(stream):
+			target_playlist = music_menu.duplicate()
+			target_index = music_menu.find(stream)
+		else:
+			target_playlist = [stream]
+			target_index = 0
+	else:
+		return
+
+	var target_stream: AudioStream = target_playlist[target_index]
+	
+	# If already playing this playlist and the active track matches, do not interrupt
+	if _is_music_playing and _active_music_player.playing and _active_music_player.stream == target_stream and _are_playlists_equal(_current_playlist, target_playlist):
+		_current_playlist = target_playlist
+		_current_track_index = target_index
+		return
+	
+	_current_playlist = target_playlist
+	_current_track_index = target_index
+	_is_music_playing = true
+	
+	_crossfade_to_stream(target_stream, duration)
+
+func _are_playlists_equal(list_a: Array[AudioStream], list_b: Array[AudioStream]) -> bool:
+	if list_a.size() != list_b.size():
+		return false
+	for i in range(list_a.size()):
+		if list_a[i] != list_b[i]:
+			return false
+	return true
+
+func _crossfade_to_stream(stream: AudioStream, duration: float = -1.0) -> void:
 	var fade_time = crossfade_duration if duration < 0 else duration
 	var incoming_player = _music_player_b if _active_music_player == _music_player_a else _music_player_a
+	var outgoing_player = _active_music_player
 	
 	# Setup incoming player
 	incoming_player.stream = stream
@@ -114,7 +171,7 @@ func play_music(stream: AudioStream, duration: float = -1.0) -> void:
 	_crossfade_tween = create_tween().set_parallel(true)
 	
 	# Fade out current active player
-	_crossfade_tween.tween_property(_active_music_player, "volume_db", -80.0, fade_time)\
+	_crossfade_tween.tween_property(outgoing_player, "volume_db", -80.0, fade_time)\
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
 		
 	# Fade in incoming player
@@ -122,10 +179,53 @@ func play_music(stream: AudioStream, duration: float = -1.0) -> void:
 		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_OUT)
 		
 	# Stop outgoing player when fade finishes
-	_crossfade_tween.chain().tween_callback(_active_music_player.stop)
+	_crossfade_tween.chain().tween_callback(outgoing_player.stop)
 	
 	# Swap active reference
 	_active_music_player = incoming_player
+
+func _on_music_player_finished(player: AudioStreamPlayer) -> void:
+	# Only the active player reaching its end triggers the next track in the playlist
+	if player != _active_music_player:
+		return
+		
+	if not _is_music_playing or _current_playlist.is_empty():
+		return
+		
+	# Advance to next track in the playlist, wrapping around to the beginning
+	_current_track_index = (_current_track_index + 1) % _current_playlist.size()
+	var next_stream: AudioStream = _current_playlist[_current_track_index]
+	if next_stream == null:
+		return
+		
+	if _crossfade_tween and _crossfade_tween.is_running():
+		_crossfade_tween.kill()
+		
+	_active_music_player.stream = next_stream
+	_active_music_player.volume_db = 0.0
+	_active_music_player.play()
+
+## Smoothly stops current music playback.
+func stop_music(duration: float = -1.0) -> void:
+	_is_music_playing = false
+	_current_playlist.clear()
+	_current_track_index = 0
+	
+	if not _active_music_player or not _active_music_player.playing:
+		return
+		
+	var fade_time = crossfade_duration if duration < 0 else duration
+	if fade_time <= 0:
+		_active_music_player.stop()
+		return
+		
+	if _crossfade_tween and _crossfade_tween.is_running():
+		_crossfade_tween.kill()
+		
+	_crossfade_tween = create_tween()
+	_crossfade_tween.tween_property(_active_music_player, "volume_db", -80.0, fade_time)\
+		.set_trans(Tween.TRANS_QUAD).set_ease(Tween.EASE_IN)
+	_crossfade_tween.tween_callback(_active_music_player.stop)
 
 # ==============================================================================
 # SOUND EFFECTS POOLING & RANDOMIZATION
@@ -163,7 +263,7 @@ func _get_available_sfx_player() -> AudioStreamPlayer:
 # ==============================================================================
 
 func _on_wave_started() -> void:
-	play_music(music_combat.pick_random())
+	play_music(music_combat)
 
 func _on_wave_completed() -> void:
 	play_music(music_build)
