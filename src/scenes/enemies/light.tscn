@@ -9,10 +9,10 @@
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_00vtb"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_cohcr"]
-radius = 6.0
+radius = 4.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_134bt"]
-size = Vector2(18, 32)
+size = Vector2(8, 16)
 
 [node name="Light" type="CharacterBody2D" unique_id=1825300398 groups=["enemies"]]
 collision_layer = 4
@@ -22,7 +22,8 @@ wall_min_slide_angle = 0.0
 script = ExtResource("1_h4slw")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494191]
-scale = Vector2(0.5, 0.5)
+position = Vector2(-1.1920929e-07, -1.1920929e-07)
+scale = Vector2(0.36363637, 0.36363637)
 texture = ExtResource("2_tex")
 
 [node name="MovementComponent" type="Node" parent="." unique_id=588237634]
@@ -38,7 +39,6 @@ script = ExtResource("4_00vtb")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
 [node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
-debug_enabled = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 shape = SubResource("CircleShape2D_cohcr")
@@ -48,7 +48,7 @@ script = ExtResource("5_p0s4g")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=100346168]
-position = Vector2(15, 0)
+position = Vector2(8, 0)
 shape = SubResource("RectangleShape2D_134bt")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=270935051]

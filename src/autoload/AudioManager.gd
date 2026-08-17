@@ -22,6 +22,11 @@ extends Node
 @export var sfx_tower_placed: Array[AudioStream] = [
 	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Pickup/Wav/Pickup__003.wav")
 ]
+var sfx_tower_hit: Array[AudioStream] = [
+	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Punch2/Wav/Punch2__001.wav"),
+	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Punch2/Wav/Punch2__003.wav"),
+	preload("res://vendor/phoenix1291/SFX- The Ultimate 2017 16 bit Mini pack/Punch2/Wav/Punch2__007.wav")
+]
 
 var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Victory.mp3")
 

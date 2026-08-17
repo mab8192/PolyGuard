@@ -149,6 +149,7 @@ func _ready() -> void:
 
 	if health:
 		health.died.connect(_on_died)
+		health.took_damage.connect(_on_hit)
 
 	if effect_applier:
 		effect_applier.cooldown_started.connect(_on_applier_cooldown_started)
@@ -157,6 +158,12 @@ func _ready() -> void:
 func _on_died() -> void:
 	queue_free()
 	SignalBus.tower_destroyed.emit()
+	AudioManager.play_random_sfx(AudioManager.sfx_enemy_died)
+	if GameManager and GameManager.current_stage and GameManager.current_stage.effect_manager:
+		GameManager.current_stage.effect_manager.explosion(global_position)
+
+func _on_hit(_dmg: float) -> void:
+	AudioManager.play_random_sfx(AudioManager.sfx_tower_hit)
 
 func _process(_delta: float) -> void:
 	# Preview or inactive towers do not process attacks

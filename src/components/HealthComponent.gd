@@ -1,6 +1,8 @@
 class_name HealthComponent extends Node
 
 signal health_changed(health: float)
+signal took_damage(dmg: float)
+signal healed(amount: float)
 signal died()
 
 @export var data: HealthData
@@ -104,7 +106,7 @@ func damage(amount: float, type: AttackData.DamageType) -> void:
 	
 	var final_damage: float = amount * damage_multiplier
 	_health -= final_damage
-	
+	took_damage.emit(final_damage)
 	health_changed.emit(_health)
 	
 	if not _died and _health <= 0:
@@ -114,6 +116,7 @@ func damage(amount: float, type: AttackData.DamageType) -> void:
 func heal(amount: float) -> void:
 	if not _died and _health < data.max_health:
 		_health += amount
+		healed.emit(amount)
 		_health = min(_health, data.max_health)
 		health_changed.emit(_health)
 
