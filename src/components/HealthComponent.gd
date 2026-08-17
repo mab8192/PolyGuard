@@ -72,14 +72,31 @@ func _update_health_bar_color(health: float) -> void:
 ## Affects how fast armor scales
 const ARMOR_CONSTANT = 50
 
+var _effect_receiver: EffectReceiverComponent
+var effect_receiver: EffectReceiverComponent:
+	get:
+		if _effect_receiver: return _effect_receiver
+		var target_node = owner if owner else get_parent()
+		if target_node:
+			_effect_receiver = ComponentUtil.get_component(target_node, EffectReceiverComponent) as EffectReceiverComponent
+		return _effect_receiver
+
 var armor_reduction: float = 0.0
+
+func get_effective_armor() -> float:
+	if not data:
+		return 0.0
+	var reduction: float = armor_reduction
+	if effect_receiver:
+		reduction += effect_receiver.get_armor_reduction()
+	return maxf(0.0, data.armor - reduction)
 
 func damage(amount: float, type: AttackData.DamageType) -> void:
 	# Ensures armor doesn't divide by zero or turn negative into health gain
 	var damage_multiplier: float = 1.0
 
 	if type == AttackData.DamageType.PHYSICAL:
-		var effective_armor: float = max(0.0, data.armor - armor_reduction)
+		var effective_armor: float = get_effective_armor()
 		damage_multiplier = ARMOR_CONSTANT / (ARMOR_CONSTANT + effective_armor)
 	elif type == AttackData.DamageType.MAGIC:
 		var effective_resistance: float = max(0.0, data.magic_resistance)

@@ -1,0 +1,73 @@
+class_name EffectReceiverComponent extends Node
+
+signal effect_applied(effect: ActiveEffect)
+signal effect_removed(effect: ActiveEffect)
+signal effects_changed()
+
+var _active_effects: Array[ActiveEffect] = []
+
+func _ready() -> void:
+	if get_parent():
+		get_parent().set_meta(&"EffectReceiverComponent", self)
+
+func _process(delta: float) -> void:
+	for effect in _active_effects.duplicate():
+		effect.tick(delta)
+
+func apply_effect(effect: ActiveEffect) -> void:
+	if not effect:
+		return
+	_active_effects.append(effect)
+	var parent_node = get_parent() as Node2D
+	effect.apply(parent_node)
+	if not effect.expired.is_connected(_on_effect_expired.bind(effect)):
+		effect.expired.connect(_on_effect_expired.bind(effect))
+	effect_applied.emit(effect)
+	effects_changed.emit()
+
+func remove_effect(effect: ActiveEffect) -> void:
+	if effect in _active_effects:
+		_active_effects.erase(effect)
+		if effect.expired.is_connected(_on_effect_expired.bind(effect)):
+			effect.expired.disconnect(_on_effect_expired.bind(effect))
+		effect.remove()
+		effect_removed.emit(effect)
+		effects_changed.emit()
+
+func _on_effect_expired(effect: ActiveEffect) -> void:
+	remove_effect(effect)
+
+func has_effect(effect_name: String) -> bool:
+	return _active_effects.any(func(x: ActiveEffect): return x.data and x.data.name == effect_name)
+
+func get_effect(effect_name: String) -> ActiveEffect:
+	for effect in _active_effects:
+		if effect.data and effect.data.name == effect_name:
+			return effect
+	return null
+
+func get_active_effects() -> Array[ActiveEffect]:
+	return _active_effects
+
+## Stat Queries for other components
+
+func get_speed_multiplier() -> float:
+	var mult: float = 1.0
+	for effect in _active_effects:
+		if effect is SlowEffect and effect.data:
+			mult = minf(mult, (effect.data as SlowEffectData).speed_multiplier)
+	return mult
+
+func get_acceleration_multiplier() -> float:
+	var mult: float = 1.0
+	for effect in _active_effects:
+		if effect is IceEffect and effect.data:
+			mult = minf(mult, (effect.data as IceEffectData).acceleration_multiplier)
+	return mult
+
+func get_armor_reduction() -> float:
+	var reduction: float = 0.0
+	for effect in _active_effects:
+		if effect is ArmorReductionEffect and effect.data:
+			reduction = maxf(reduction, (effect.data as ArmorReductionEffectData).armor_reduction)
+	return reduction

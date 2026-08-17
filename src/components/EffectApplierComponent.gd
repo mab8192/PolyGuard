@@ -41,7 +41,7 @@ func enable() -> void:
 			for body in get_overlapping_bodies():
 				_on_body_entered(body)
 		else:
-			if _state == State.IDLE and _has_valid_overlapping_enemies():
+			if _state == State.IDLE and _has_valid_overlapping_receivers():
 				_start_trigger_sequence()
 
 func disable() -> void:
@@ -49,12 +49,17 @@ func disable() -> void:
 	_application_count = 0
 	if data and data.mode == EffectApplierData.Mode.CONTINUOUS:
 		for body in get_overlapping_bodies():
-			_on_body_exited(body)
+			_remove_continuous_effect(body)
 	else:
 		_state = State.IDLE
 		_delay_timer = 0.0
 		_active_timer = 0.0
 		_cooldown_timer = 0.0
+
+func _exit_tree() -> void:
+	for body in _applied_effects.keys().duplicate():
+		_remove_continuous_effect(body)
+	_applied_effects.clear()
 
 func _ready() -> void:
 	if get_parent():
@@ -96,20 +101,23 @@ func _process(delta: float) -> void:
 					for body in get_overlapping_bodies():
 						_on_body_entered(body)
 				else:
-					if _has_valid_overlapping_enemies():
+					if _has_valid_overlapping_receivers():
 						_start_trigger_sequence()
 
 func _on_body_entered(body: Node2D) -> void:
 	if not _enabled or not data or _state == State.COOLDOWN:
 		return
 	
-	var enemy = body as Enemy
-	if not enemy or enemy.is_queued_for_deletion():
+	if not is_instance_valid(body) or body.is_queued_for_deletion():
+		return
+
+	var receiver = ComponentUtil.get_component(body, EffectReceiverComponent) as EffectReceiverComponent
+	if not receiver:
 		return
 
 	match data.mode:
 		EffectApplierData.Mode.CONTINUOUS:
-			_apply_continuous_effect(enemy)
+			_apply_continuous_effect(receiver, body)
 			_application_count += 1
 			if data.max_targets > 0 and _application_count >= data.max_targets:
 				_start_continuous_cooldown()
@@ -122,7 +130,7 @@ func _on_body_entered(body: Node2D) -> void:
 			if _state == State.IDLE:
 				_start_trigger_sequence()
 			elif _state == State.ACTIVE:
-				_apply_effects_to_enemy(enemy)
+				_apply_effects_to_target(receiver, body)
 
 func _on_body_exited(body: Node2D) -> void:
 	if not _enabled or not data:
@@ -162,9 +170,9 @@ func _on_delay_finished() -> void:
 func _trigger_burst() -> void:
 	triggered.emit()
 
-	var enemies = _get_valid_overlapping_enemies()
-	for enemy in enemies:
-		_apply_effects_to_enemy(enemy)
+	var targets = _get_valid_overlapping_targets()
+	for target in targets:
+		_apply_effects_to_target(target.receiver, target.body)
 		_application_count += 1
 		if data.max_targets > 0 and _application_count >= data.max_targets:
 			break
@@ -176,9 +184,9 @@ func _start_active_phase() -> void:
 	_state = State.ACTIVE
 	_active_timer = data.active_duration if data.active_duration > 0.0 else 0.1
 
-	var enemies = _get_valid_overlapping_enemies()
-	for enemy in enemies:
-		_apply_effects_to_enemy(enemy)
+	var targets = _get_valid_overlapping_targets()
+	for target in targets:
+		_apply_effects_to_target(target.receiver, target.body)
 
 func _on_active_phase_finished() -> void:
 	deactivated.emit()
@@ -192,59 +200,76 @@ func _finish_trigger() -> void:
 	else:
 		_state = State.IDLE
 		_application_count = 0
-		if _has_valid_overlapping_enemies():
+		if _has_valid_overlapping_receivers():
 			_start_trigger_sequence()
 
-func _apply_effects_to_enemy(enemy: Enemy) -> void:
+func _apply_effects_to_target(receiver: EffectReceiverComponent, body: Node2D) -> void:
 	for effect_data in data.effects:
-		if not enemy.has_effect(effect_data.name):
+		var existing = receiver.get_effect(effect_data.name)
+		if existing:
+			existing.count_time()
+		else:
 			var ac = effect_data.create_instance()
 			if ac:
-				enemy.apply_effect(ac)
+				receiver.apply_effect(ac)
 				ac.count_time()
-				applied_effect.emit(enemy)
+				applied_effect.emit(body)
 
-func _apply_continuous_effect(enemy: Enemy) -> void:
-	if enemy not in _applied_effects:
-		_applied_effects[enemy] = []
-		for effect in data.effects:
-			var existing_effect = enemy.get_effect(effect.name)
-			if existing_effect:
-				existing_effect.stop_counting_time()
-				_applied_effects[enemy].append(existing_effect)
-			else:
-				var ac = effect.create_instance()
-				if ac:
-					enemy.apply_effect(ac)
-					_applied_effects[enemy].append(ac)
-					applied_effect.emit(enemy)
+func _apply_continuous_effect(receiver: EffectReceiverComponent, body: Node2D) -> void:
+	if body not in _applied_effects:
+		_applied_effects[body] = []
+	
+	for effect_data in data.effects:
+		var existing_effect = receiver.get_effect(effect_data.name)
+		if existing_effect:
+			existing_effect.add_source(self)
+			existing_effect.stop_counting_time()
+			if existing_effect not in _applied_effects[body]:
+				_applied_effects[body].append(existing_effect)
+		else:
+			var ac = effect_data.create_instance()
+			if ac:
+				ac.add_source(self)
+				receiver.apply_effect(ac)
+				if ac not in _applied_effects[body]:
+					_applied_effects[body].append(ac)
+				applied_effect.emit(body)
 
 func _remove_continuous_effect(body: Node2D) -> void:
-	for enemy in _applied_effects.keys().duplicate():
-		if not is_instance_valid(enemy):
-			_applied_effects.erase(enemy)
+	for b in _applied_effects.keys().duplicate():
+		if not is_instance_valid(b):
+			_applied_effects.erase(b)
 
-	if is_instance_valid(body) and body is Enemy and body in _applied_effects:
+	if is_instance_valid(body) and body in _applied_effects:
+		var receiver = ComponentUtil.get_component(body, EffectReceiverComponent) as EffectReceiverComponent
 		for effect in _applied_effects[body]:
-			if effect.data and effect.data.remove_on_exit:
-				body.remove_effect(effect)
-				removed_effect.emit(body)
+			effect.remove_source(self)
+			if not effect.has_active_sources():
+				if effect.data and effect.data.remove_on_exit:
+					if receiver:
+						receiver.remove_effect(effect)
+					removed_effect.emit(body)
+				else:
+					effect.count_time()
 			else:
-				effect.count_time()
+				effect.stop_counting_time()
 			
 		_applied_effects.erase(body)
 
-func _get_valid_overlapping_enemies() -> Array[Enemy]:
-	var enemies: Array[Enemy] = []
+func _get_valid_overlapping_targets() -> Array[Dictionary]:
+	var targets: Array[Dictionary] = []
 	for body in get_overlapping_bodies():
-		if is_instance_valid(body) and body is Enemy and not body.is_queued_for_deletion():
-			enemies.append(body as Enemy)
-	return enemies
+		if is_instance_valid(body) and not body.is_queued_for_deletion():
+			var receiver = ComponentUtil.get_component(body, EffectReceiverComponent) as EffectReceiverComponent
+			if receiver:
+				targets.append({"body": body, "receiver": receiver})
+	return targets
 
-func _has_valid_overlapping_enemies() -> bool:
+func _has_valid_overlapping_receivers() -> bool:
 	for body in get_overlapping_bodies():
-		if is_instance_valid(body) and body is Enemy and not body.is_queued_for_deletion():
-			return true
+		if is_instance_valid(body) and not body.is_queued_for_deletion():
+			if ComponentUtil.get_component(body, EffectReceiverComponent):
+				return true
 	return false
 
 func _draw() -> void:

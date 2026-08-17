@@ -1,17 +1,13 @@
 class_name IceEffect extends ActiveEffect
 
-func _init(effect_data: EffectData):
+func _init(effect_data: EffectData = null):
 	super._init(effect_data)
-	data = effect_data as IceEffectData
-	if not data:
-		push_error("IceEffect must receive an IceEffectData")
+	if effect_data:
+		data = effect_data as IceEffectData
 
 func apply(target: Node2D) -> void:
 	super.apply(target)
 	if is_instance_valid(target):
-		if target is Enemy and target.movement:
-			target.movement.acceleration_multiplier *= (data as IceEffectData).acceleration_multiplier
-		
 		var p = CPUParticles2D.new()
 		p.name = "IceParticles"
 		p.amount = 6
@@ -28,10 +24,3 @@ func apply(target: Node2D) -> void:
 		p.color = Color(0.6, 0.95, 1.0, 0.9)
 		target.add_child(p)
 		_visual_node = p
-
-func remove() -> void:
-	if is_instance_valid(_target) and _target is Enemy and _target.movement:
-		var mult = (data as IceEffectData).acceleration_multiplier
-		if mult > 0.0:
-			_target.movement.acceleration_multiplier /= mult
-	super.remove()

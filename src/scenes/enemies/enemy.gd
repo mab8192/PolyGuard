@@ -45,37 +45,40 @@ var targeting: TargetingComponent:
 		_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
 		return _targeting
 
-var _active_effects: Array[ActiveEffect] = []
+var _effect_receiver: EffectReceiverComponent
+var effect_receiver: EffectReceiverComponent:
+	get:
+		if _effect_receiver: return _effect_receiver
+		_effect_receiver = ComponentUtil.get_component(self, EffectReceiverComponent) as EffectReceiverComponent
+		if not _effect_receiver:
+			_effect_receiver = EffectReceiverComponent.new()
+			_effect_receiver.name = "EffectReceiverComponent"
+			add_child(_effect_receiver)
+		return _effect_receiver
+
 var position_history: Array[Vector2] = []
 const HISTORY_SAMPLE_DIST_SQ: float = 64.0 ## Sample point every 8px moved
 const MAX_HISTORY_POINTS: int = 500
 
 func apply_effect(effect: ActiveEffect) -> void:
-	_active_effects.append(effect)
-	effect.apply(self)
-	if not effect.expired.is_connected(_on_effect_expired.bind(effect)):
-		effect.expired.connect(_on_effect_expired.bind(effect))
+	if effect_receiver:
+		effect_receiver.apply_effect(effect)
 
 func has_effect(effect_name: String) -> bool:
-	return _active_effects.any(func(x: ActiveEffect): return x.data.name == effect_name)
+	return effect_receiver.has_effect(effect_name) if effect_receiver else false
 
 func get_effect(effect_name: String) -> ActiveEffect:
-	for effect in _active_effects:
-		if effect.data and effect.data.name == effect_name:
-			return effect
-	return null
+	return effect_receiver.get_effect(effect_name) if effect_receiver else null
+
+func get_active_effects() -> Array[ActiveEffect]:
+	return effect_receiver.get_active_effects() if effect_receiver else []
 
 func remove_effect(effect: ActiveEffect) -> void:
-	if effect in _active_effects:
-		_active_effects.erase(effect)
-		if effect.expired.is_connected(_on_effect_expired.bind(effect)):
-			effect.expired.disconnect(_on_effect_expired.bind(effect))
-		effect.remove()
-
-func _on_effect_expired(effect: ActiveEffect) -> void:
-	remove_effect(effect)
+	if effect_receiver:
+		effect_receiver.remove_effect(effect)
 
 func _ready() -> void:
+	var _er = effect_receiver
 	position_history.append(global_position)
 	if health:
 		health.died.connect(_on_died)
@@ -106,10 +109,6 @@ func _on_exits_updated() -> void:
 		elif exit is Node2D:
 			targets.append(exit)
 	nav.set_exits(targets)
-	
-func _process(delta: float) -> void:
-	for effect in _active_effects.duplicate():
-		effect.tick(delta)
 	
 func _physics_process(_delta: float) -> void:
 	if position_history.is_empty():

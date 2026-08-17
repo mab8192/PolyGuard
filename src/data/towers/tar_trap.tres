@@ -4,9 +4,9 @@
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_il3ue"]
 [ext_resource type="Texture2D" uid="uid://coaoywfo0ilkk" path="res://src/textures/towers/tar_trap.png" id="1_wdlj1"]
 [ext_resource type="PackedScene" uid="uid://dsd0rgrdxnjps" path="res://src/scenes/towers/tar_trap.tscn" id="2_wdlj1"]
-[ext_resource type="Resource" uid="uid://spad8ltoni7h" path="res://src/data/effects/TarSlowEffect.tres" id="2_xqd7v"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_di8xt"]
+[ext_resource type="Script" uid="uid://br4nwkh0b8psj" path="res://src/data/effects/types/SlowEffectData.gd" id="3_il3ue"]
 
 [sub_resource type="Resource" id="Resource_choice_adhesive"]
 script = ExtResource("1_choice")
@@ -22,9 +22,15 @@ title = "Wide Pool"
 description = "Expands trap trigger zone to catch +2 additional concurrent targets."
 extra_targets = 2
 
+[sub_resource type="Resource" id="Resource_gconv"]
+script = ExtResource("3_il3ue")
+speed_multiplier = 0.5
+name = "tar"
+metadata/_custom_type_script = "uid://br4nwkh0b8psj"
+
 [sub_resource type="Resource" id="Resource_x5pvt"]
 script = ExtResource("3_di8xt")
-effects = Array[ExtResource("1_il3ue")]([ExtResource("2_xqd7v")])
+effects = Array[ExtResource("1_il3ue")]([SubResource("Resource_gconv")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [resource]

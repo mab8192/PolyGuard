@@ -15,18 +15,33 @@ func _ready() -> void:
 		else:
 			push_error("MovementComponent needs a CharacterBody2D parent or assigned body reference!")
 
+var _effect_receiver: EffectReceiverComponent
+var effect_receiver: EffectReceiverComponent:
+	get:
+		if _effect_receiver: return _effect_receiver
+		var target_node = _body if _body else get_parent()
+		if target_node:
+			_effect_receiver = ComponentUtil.get_component(target_node, EffectReceiverComponent) as EffectReceiverComponent
+		return _effect_receiver
+
 var speed_multiplier: float = 1.0
 var acceleration_multiplier: float = 1.0
 
 func get_speed() -> float:
 	if not data:
 		return 0.0
-	return data.max_speed * speed_multiplier
+	var mult: float = speed_multiplier
+	if effect_receiver:
+		mult *= effect_receiver.get_speed_multiplier()
+	return data.max_speed * mult
 
 func get_acceleration() -> float:
 	if not data:
 		return 0.0
-	return data.acceleration * acceleration_multiplier
+	var mult: float = acceleration_multiplier
+	if effect_receiver:
+		mult *= effect_receiver.get_acceleration_multiplier()
+	return data.acceleration * mult
 
 ## Accelerates towards a direction vector and decelerates when direction is zero.
 func handle_movement(direction: Vector2, delta: float) -> void:
