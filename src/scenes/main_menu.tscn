@@ -8,7 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://dipgo2cam3umr" path="res://src/scenes/ui/views/codex.tscn" id="4_klrpn"]
 [ext_resource type="PackedScene" uid="uid://bjc21d0fjoi21" path="res://src/scenes/ui/views/inventory.tscn" id="5_1ipax"]
 [ext_resource type="PackedScene" uid="uid://wry12f5iawia" path="res://src/scenes/ui/popups/settings_popup.tscn" id="6_settings_popup"]
-[ext_resource type="Script" uid="uid://safeareacontainerscript" path="res://src/scenes/utility/safe_area_container.gd" id="7_safe_area"]
+[ext_resource type="Script" uid="uid://bqwvmvgwff1un" path="res://src/scenes/utility/safe_area_container.gd" id="7_safe_area"]
 
 [node name="MainMenu" type="Control" unique_id=374769933]
 layout_mode = 3
