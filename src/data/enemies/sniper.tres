@@ -36,7 +36,6 @@ metadata/_custom_type_script = "uid://bllmo3a8geds7"
 [sub_resource type="Resource" id="Resource_62wuf"]
 script = ExtResource("7_ixl5l")
 targeting_mask = 2
-can_target_through_walls = true
 metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
 
 [resource]
