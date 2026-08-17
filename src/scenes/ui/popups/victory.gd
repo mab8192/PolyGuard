@@ -22,6 +22,9 @@ func _ready() -> void:
 	retry_button.pressed.connect(_on_retry_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
+const GHOST_ALERT_SCENE: PackedScene = preload("res://src/scenes/ui/popups/ghost_alert_popup.tscn")
+const TUTORIAL_COMPLETE_SCENE: PackedScene = preload("res://src/scenes/ui/popups/tutorial_complete_popup.tscn")
+
 func _on_stage_completed() -> void:
 	if GameManager.current_stage and GameManager.current_stage.data:
 		var stage = GameManager.current_stage
@@ -71,7 +74,18 @@ func _on_stage_completed() -> void:
 		var next_stage = GameManager.get_next_stage()
 		next_stage_button.visible = (next_stage != null)
 		
-	show()
+		show()
+		
+		if stage_id == "stage_00" and is_first:
+			var tut_popup = TUTORIAL_COMPLETE_SCENE.instantiate()
+			add_child(tut_popup)
+			if tut_popup.has_method("open"):
+				tut_popup.open()
+		elif stage_id == "stage_02":
+			var alert = GHOST_ALERT_SCENE.instantiate()
+			add_child(alert)
+			if alert.has_method("open"):
+				alert.open()
 
 func _on_next_stage_pressed() -> void:
 	var next_stage: StageData = GameManager.get_next_stage()

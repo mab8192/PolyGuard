@@ -16,6 +16,11 @@ func _ready() -> void:
 	
 	SignalBus.credits_changed.connect(_on_credits_changed)
 	_update_credits_display()
+	
+	if GameManager.target_main_menu_tab >= 0:
+		var tab = GameManager.target_main_menu_tab as NavBar.Tab
+		GameManager.target_main_menu_tab = -1
+		nav_bar.select_tab(tab)
 
 func _update_credits_display() -> void:
 	if main_menu_credits_label:

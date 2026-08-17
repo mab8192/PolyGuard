@@ -8,3 +8,4 @@ enum NavStrategy {
 
 @export var strategy: NavStrategy = NavStrategy.CLOSEST
 @export_flags_2d_navigation var nav_layer: int = 1
+@export var targets_towers: bool = false

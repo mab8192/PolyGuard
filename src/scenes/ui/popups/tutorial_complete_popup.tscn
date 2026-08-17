@@ -1,0 +1,102 @@
+[gd_scene format=3 uid="uid://c8m3wax2b5n1q"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/tutorial_complete_popup.gd" id="1_tut_popup"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+
+[node name="TutorialCompletePopup" type="CanvasLayer" unique_id=2190001]
+layer = 25
+script = ExtResource("1_tut_popup")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2190002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2190003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2190004]
+custom_minimum_size = Vector2(920, 880)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2190005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2190006]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190007]
+layout_mode = 2
+theme_type_variation = &"HeaderText"
+text = "TUTORIAL COMPLETE"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190008]
+layout_mode = 2
+theme_type_variation = &"CreditText"
+text = "HEADQUARTERS BRIEFING"
+horizontal_alignment = 1
+
+[node name="InfoPanel" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190009]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="InfoMargin" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel" unique_id=2190010]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="InfoVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin" unique_id=2190011]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="InfoHeader" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin/InfoVBox" unique_id=2190012]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "RESEARCH & ARSENAL UPGRADES"
+
+[node name="InfoBody" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin/InfoVBox" unique_id=2190013]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Congratulations on completing your tactical training simulation!
+
+You have earned Research Credits from clearing this stage. Visit your INVENTORY to spend credits on upgrading tower damage, attack speed, structure health, and unlocking specialization paths before deploying into the next mission!"
+autowrap_mode = 2
+
+[node name="ButtonsVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190014]
+layout_mode = 2
+theme_override_constants/separation = 14
+
+[node name="InventoryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2190015]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "GO TO INVENTORY"
+
+[node name="ContinueButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2190016]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "CONTINUE TO NEXT STAGE"

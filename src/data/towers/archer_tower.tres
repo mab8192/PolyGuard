@@ -24,6 +24,7 @@ description = "Converts arrows to Magic Damage with +20% bonus power."
 has_damage_type_override = true
 damage_type_override = 1
 damage_multiplier = 1.2
+has_targeting_mask_override = true
 
 [sub_resource type="Resource" id="Resource_choice_true"]
 script = ExtResource("1_choice")

@@ -85,6 +85,12 @@ func _update_targets() -> void:
 				var dist_b = global_position.distance_squared_to(b.global_position)
 				return dist_a < dist_b
 			)
+		TargetingData.Strategy.FARTHEST:
+			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
+				var dist_a = global_position.distance_squared_to(a.global_position)
+				var dist_b = global_position.distance_squared_to(b.global_position)
+				return dist_a > dist_b
+			)
 		TargetingData.Strategy.STRONGEST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 				var a_hp = ComponentUtil.get_component(a, HealthComponent) as HealthComponent
@@ -93,12 +99,57 @@ func _update_targets() -> void:
 				var hp_b = b_hp.get_health() if b_hp else 0.0
 				return hp_a > hp_b
 			)
+		TargetingData.Strategy.WEAKEST:
+			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
+				var a_hp = ComponentUtil.get_component(a, HealthComponent) as HealthComponent
+				var b_hp = ComponentUtil.get_component(b, HealthComponent) as HealthComponent
+				var hp_a = a_hp.get_health() if a_hp else 0.0
+				var hp_b = b_hp.get_health() if b_hp else 0.0
+				return hp_a < hp_b
+			)
 
 	var limit: int = candidates.size()
 	if data.max_targets > 0:
 		limit = min(data.max_targets, candidates.size())
 
 	_active_targets = candidates.slice(0, limit)
+
+func get_strategy() -> TargetingData.Strategy:
+	return data.strategy if data else TargetingData.Strategy.FIRST
+
+func set_strategy(strat: TargetingData.Strategy) -> void:
+	if data:
+		data.strategy = strat
+		_update_targets()
+
+func cycle_strategy(forward: bool = true) -> TargetingData.Strategy:
+	if not data:
+		return TargetingData.Strategy.FIRST
+	var count = TargetingData.Strategy.size()
+	var next_val = (int(data.strategy) + (1 if forward else -1) + count) % count
+	data.strategy = next_val as TargetingData.Strategy
+	_update_targets()
+	return data.strategy
+
+func get_strategy_name() -> String:
+	match get_strategy():
+		TargetingData.Strategy.FIRST: return "FIRST"
+		TargetingData.Strategy.LAST: return "LAST"
+		TargetingData.Strategy.CLOSEST: return "CLOSEST"
+		TargetingData.Strategy.FARTHEST: return "FARTHEST"
+		TargetingData.Strategy.STRONGEST: return "STRONGEST"
+		TargetingData.Strategy.WEAKEST: return "WEAKEST"
+		_: return "FIRST"
+
+func get_strategy_description() -> String:
+	match get_strategy():
+		TargetingData.Strategy.FIRST: return "Targets enemy nearest to exit"
+		TargetingData.Strategy.LAST: return "Targets enemy farthest from exit"
+		TargetingData.Strategy.CLOSEST: return "Targets enemy closest to tower"
+		TargetingData.Strategy.FARTHEST: return "Targets enemy farthest from tower"
+		TargetingData.Strategy.STRONGEST: return "Targets enemy with highest HP"
+		TargetingData.Strategy.WEAKEST: return "Targets enemy with lowest HP"
+		_: return ""
 
 func _has_line_of_sight(target: Node2D) -> bool:
 	if not is_instance_valid(target):

@@ -195,6 +195,10 @@ func record_stage_clear(stage_id: String, score: int, lives_left: int, max_lives
 	if not next_unlocked_id.is_empty():
 		unlock_stage(next_unlocked_id)
 	
+	# Auto-unlock sparkler tower upon beating stage 2
+	if stage_id == "stage_02":
+		unlock_tower("sparkler", 0, true)
+	
 	save_to_disk()
 	
 	return {

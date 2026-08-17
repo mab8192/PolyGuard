@@ -180,6 +180,62 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		
 	return result
 
+func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
+	var summary = get_stat_summary(level, choice_id)
+	var scaled = get_scaled_copy(level, choice_id)
+	
+	var type_str = "Ground Trap"
+	if scaled.collision_layer > 0:
+		if (scaled.collision_layer & 16) != 0:
+			type_str = "Spectral Barrier"
+		else:
+			type_str = "%s Defense" % summary["damage_type_str"]
+			
+	var stats_dict = {
+		"name": display_name,
+		"type": type_str,
+		"cost": cost,
+		"level": level,
+		"damage": summary["damage"],
+		"cooldown": summary["cooldown"],
+		"dps": summary["dps"],
+		"damage_type_str": summary["damage_type_str"],
+		"has_attack": summary["has_attack"],
+		"has_health": summary["has_health"],
+		"max_health": summary["max_health"],
+		"max_targets": summary["max_targets"],
+		"targets_ghosts": summary["targets_ghosts"],
+		"blocks_ghosts": summary["blocks_ghosts"],
+		"is_solid": summary["is_solid"],
+		"stat_lines": []
+	}
+	
+	var lines: Array[String] = []
+	if summary["has_attack"]:
+		var cd_str = "%.2fs" % summary["cooldown"] if summary["cooldown"] > 0 else "Continuous"
+		lines.append("Damage: %.0f (%s)" % [summary["damage"], summary["damage_type_str"]])
+		lines.append("Rate: %s   •   DPS: %.1f" % [cd_str, summary["dps"]])
+	if summary["has_health"]:
+		lines.append("Structure HP: %.0f" % summary["max_health"])
+	if summary["max_targets"] > 1:
+		lines.append("Target Capacity: %d Enemies" % summary["max_targets"])
+	if summary["targets_ghosts"]:
+		lines.append("Ghost Detection: Active")
+	if summary["blocks_ghosts"]:
+		lines.append("Ghost Barrier: Active")
+	if tower_id == "soul_lantern":
+		lines.append("Trait: Ramping Focus Damage (+35%/s)")
+	elif tower_id == "tesla_tower":
+		lines.append("Trait: Arc Lightning Chain")
+	elif tower_id == "flamethrower":
+		lines.append("Trait: Continuous Thermal Cone")
+		
+	if lines.is_empty():
+		lines.append("Defensive Tactical Installation")
+		
+	stats_dict["stat_lines"] = lines
+	return stats_dict
+
 func create(is_preview: bool = true) -> Tower:
 	var tower = scene.instantiate() as Tower
 	if not tower:

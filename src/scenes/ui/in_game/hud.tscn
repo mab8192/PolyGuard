@@ -4,9 +4,9 @@
 [ext_resource type="PackedScene" uid="uid://dsr7pdgsmpf0j" path="res://src/scenes/ui/in_game/top_bar.tscn" id="1_m12ob"]
 [ext_resource type="PackedScene" uid="uid://bt16ii41hcq3a" path="res://src/scenes/ui/in_game/sub_top_bar.tscn" id="2_subtop"]
 [ext_resource type="PackedScene" uid="uid://bokydd4nvejt2" path="res://src/scenes/ui/in_game/bottom_bar.tscn" id="3_q3cwv"]
-[ext_resource type="PackedScene" uid="uid://ctoweractpnl01" path="res://src/scenes/ui/in_game/tower_action_panel.tscn" id="4_tap"]
 [ext_resource type="PackedScene" uid="uid://pausemenu001" path="res://src/scenes/ui/popups/pause_menu.tscn" id="4_pause"]
-[ext_resource type="PackedScene" uid="uid://w2hviyxoe2ky" path="res://src/scenes/ui/popups/victory.tscn" id="5_victory"]
+[ext_resource type="PackedScene" uid="uid://cnw8r04ba7dc7" path="res://src/scenes/ui/in_game/tower_action_panel.tscn" id="4_tap"]
+[ext_resource type="PackedScene" path="res://src/scenes/ui/popups/victory.tscn" id="5_victory"]
 [ext_resource type="PackedScene" uid="uid://bsvav2810uhuh" path="res://src/scenes/ui/popups/defeat.tscn" id="6_defeat"]
 
 [node name="HUD" type="CanvasLayer" unique_id=1549892069]

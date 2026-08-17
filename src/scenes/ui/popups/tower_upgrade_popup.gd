@@ -108,6 +108,12 @@ func _render() -> void:
 		stat_lines.append("Ghost Detection: ENABLED")
 	if current_stats["blocks_ghosts"]:
 		stat_lines.append("Ghost Barrier: ACTIVE (Blocks Ghosts)")
+	if tower_data.tower_id == "soul_lantern":
+		stat_lines.append("Trait: Ramping Focus Damage (+35%/s)")
+	elif tower_data.tower_id == "tesla_tower":
+		stat_lines.append("Trait: Arc Lightning Chain")
+	elif tower_data.tower_id == "flamethrower":
+		stat_lines.append("Trait: Continuous Thermal Cone")
 		
 	if stat_lines.is_empty():
 		stat_lines.append("Defensive Tactical Installation")

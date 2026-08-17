@@ -88,7 +88,12 @@ func _load_registry() -> void:
 		"grunt": load("res://src/data/enemies/grunt.tres"),
 		"heavy": load("res://src/data/enemies/heavy.tres"),
 		"citadel": load("res://src/data/enemies/citadel.tres"),
-		"splitter": load("res://src/data/enemies/splitter.tres")
+		"splitter": load("res://src/data/enemies/splitter.tres"),
+		"bomber": load("res://src/data/enemies/bomber.tres"),
+		"light_ghost": load("res://src/data/enemies/light_ghost.tres"),
+		"heavy_ghost": load("res://src/data/enemies/heavy_ghost.tres"),
+		"healer": load("res://src/data/enemies/healer.tres"),
+		"booster": load("res://src/data/enemies/booster.tres"),
 	}
 	
 	STAGES = {

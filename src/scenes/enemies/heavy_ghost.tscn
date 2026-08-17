@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://d2lam7x1v5y3q"]
+
+[ext_resource type="Script" path="res://src/scenes/enemies/enemy.gd" id="1_garty"]
+[ext_resource type="Texture2D" path="res://src/textures/enemies/heavy_ghost.png" id="2_tex"]
+[ext_resource type="Script" path="res://src/components/MovementComponent.gd" id="3_move"]
+[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="4_health"]
+[ext_resource type="Script" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 16.0
+
+[node name="HeavyGhost" type="CharacterBody2D" unique_id=1825300403 groups=["enemies"]]
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_garty")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494194]
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("2_tex")
+
+[node name="MovementComponent" type="Node" parent="." unique_id=588237637]
+script = ExtResource("3_move")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2023714486]
+script = ExtResource("4_health")
+
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399607]
+script = ExtResource("5_nav")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134392]
+navigation_layers = 4
+simplify_path = true
+avoidance_enabled = true
+max_speed = 500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1457276720]
+shape = SubResource("CircleShape2D_qgbsg")

@@ -60,6 +60,14 @@ func _ready() -> void:
 	
 	_update_style(false)
 
+func select_tab(target_tab: Tab) -> void:
+	for entry in _tabs.values():
+		if entry.get("tab") == target_tab:
+			var btn = entry.get("button")
+			if btn:
+				_on_select(btn)
+			return
+
 func _on_select(btn: BaseButton) -> void:
 	if btn == _selected:
 		return

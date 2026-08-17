@@ -1,0 +1,32 @@
+[gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dp6b0w41n7w2k"]
+
+[ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bluplgjq55i1e" path="res://src/textures/enemies/bomber.png" id="2_icon"]
+[ext_resource type="PackedScene" uid="uid://c7k0xmq2v4e5g" path="res://src/scenes/enemies/bomber.tscn" id="2_scene"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_nav"]
+[ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="5_move"]
+
+[sub_resource type="Resource" id="SubResource_health"]
+script = ExtResource("3_health")
+max_health = 70.0
+
+[sub_resource type="Resource" id="SubResource_movement"]
+script = ExtResource("5_move")
+max_speed = 120.0
+acceleration = 600.0
+
+[sub_resource type="Resource" id="Resource_nav"]
+script = ExtResource("4_nav")
+targets_towers = true
+
+[resource]
+script = ExtResource("1_script")
+display_name = "Bomber"
+description = "Volatile demolition drone that rushes defensive structures and detonates on impact, causing massive localized explosive damage."
+scene = ExtResource("2_scene")
+icon = ExtResource("2_icon")
+energy_reward = 5
+health = SubResource("SubResource_health")
+movement = SubResource("SubResource_movement")
+nav = SubResource("Resource_nav")

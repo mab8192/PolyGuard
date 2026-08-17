@@ -70,6 +70,63 @@ func get_sell_value() -> int:
 		return maxi(1, int(data.cost * SELL_REFUND_RATIO))
 	return 0
 
+func get_repair_cost() -> int:
+	if not health or not health.data or health.data.max_health <= 0 or not data:
+		return 0
+	var missing = health.data.max_health - health.get_health()
+	if missing <= 0.001:
+		return 0
+	var ratio = missing / health.data.max_health
+	return maxi(1, int(ceil(data.cost * 0.5 * ratio)))
+
+func repair() -> bool:
+	if not health or not health.data or not data:
+		return false
+	var missing = health.data.max_health - health.get_health()
+	if missing <= 0.001:
+		return false
+	health.heal(missing)
+	return true
+
+func get_stats() -> Dictionary:
+	if not data:
+		return {}
+	var current_level: int = 1
+	var active_choice: String = ""
+	var t_id = Registry.get_tower_id(data)
+	if not t_id.is_empty() and SaveManager.is_tower_unlocked(t_id):
+		current_level = SaveManager.get_tower_level(t_id)
+		active_choice = SaveManager.get_tower_choice(t_id)
+		
+	var base_stats = data.get_stats(current_level, active_choice)
+	
+	if health:
+		base_stats["current_health"] = health.get_health()
+		base_stats["max_health"] = health.get_max_health()
+	if targeting:
+		base_stats["strategy_name"] = targeting.get_strategy_name()
+		base_stats["strategy_desc"] = targeting.get_strategy_description()
+		
+	var lines: Array[String] = []
+	if base_stats.get("has_attack", false):
+		var cd_str = "%.2fs" % base_stats["cooldown"] if base_stats["cooldown"] > 0 else "Continuous"
+		lines.append("DMG: %.0f (%s)  •  SPD: %s  •  DPS: %.1f" % [base_stats["damage"], base_stats["damage_type_str"], cd_str, base_stats["dps"]])
+	if health and health.data:
+		lines.append("HEALTH: %d / %d" % [int(health.get_health()), int(health.data.max_health)])
+	if targeting and targeting.data:
+		lines.append("TARGETING: %s (%s)" % [targeting.get_strategy_name(), targeting.get_strategy_description()])
+	if base_stats.get("max_targets", 1) > 1:
+		lines.append("TARGETS: %d Enemies" % base_stats["max_targets"])
+	if base_stats.get("targets_ghosts", false):
+		lines.append("GHOST DETECTION: ENABLED")
+	if base_stats.get("blocks_ghosts", false):
+		lines.append("GHOST BARRIER: ACTIVE")
+	if data.tower_id == "soul_lantern":
+		lines.append("TRAIT: Damage Ramps Up While Focused (+35%/s)")
+		
+	base_stats["runtime_lines"] = lines
+	return base_stats
+
 func activate() -> void:
 	is_active = true
 

@@ -51,6 +51,12 @@ func _ready() -> void:
 		agent.target_desired_distance = 8.0
 	
 	SignalBus.navmesh_updated.connect(_pick_target)
+	SignalBus.tower_placed.connect(_on_towers_changed)
+	SignalBus.tower_destroyed.connect(_on_towers_changed)
+
+func _on_towers_changed() -> void:
+	if data and data.targets_towers:
+		_pick_target()
 
 func set_exits(new_exits: Array[Node2D]) -> void:
 	_exits = new_exits
@@ -110,6 +116,13 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 func _pick_target() -> void:
 	_no_path = false
 	agent.target_position = _actor.global_position
+
+	if data and data.targets_towers:
+		var target_tower = _find_target_tower()
+		if target_tower:
+			agent.target_position = target_tower.global_position
+			return
+
 	if _exits.is_empty():
 		return
 
@@ -142,6 +155,34 @@ func _pick_target() -> void:
 			var target_index: int = distances.find(max_dist)
 			if target_index >= 0 and target_index < _exits.size():
 				agent.target_position = _exits[target_index].global_position
+
+func _find_target_tower() -> Tower:
+	if not is_instance_valid(_actor) or not _actor.is_inside_tree():
+		return null
+
+	var tree = _actor.get_tree()
+	if not tree:
+		return null
+
+	var towers = tree.get_nodes_in_group("towers")
+	var candidates: Array[Tower] = []
+	for node in towers:
+		if is_instance_valid(node) and node is Tower and not node.is_queued_for_deletion() and not node.is_preview:
+			if node.collision_layer > 0 and node.health != null:
+				candidates.append(node)
+
+	if candidates.is_empty():
+		return null
+
+	var best_tower: Tower = null
+	var min_dist_sq: float = INF
+	for t in candidates:
+		var d_sq = _actor.global_position.distance_squared_to(t.global_position)
+		if d_sq < min_dist_sq:
+			min_dist_sq = d_sq
+			best_tower = t
+
+	return best_tower
 
 func _calculate_path_length(path: PackedVector2Array) -> float:
 	if path.size() < 2:

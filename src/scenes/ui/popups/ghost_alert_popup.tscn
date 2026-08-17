@@ -1,0 +1,138 @@
+[gd_scene format=3 uid="uid://dm4k8q1v5w2ca"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/ghost_alert_popup.gd" id="1_popup"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Texture2D" path="res://src/textures/enemies/ghost.png" id="3_ghost"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/sparkler.png" id="4_sparkler"]
+
+[node name="GhostAlertPopup" type="CanvasLayer" unique_id=2180001]
+layer = 25
+script = ExtResource("1_popup")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2180002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2180003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2180004]
+custom_minimum_size = Vector2(920, 960)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2180005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2180006]
+layout_mode = 2
+theme_override_constants/separation = 20
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180007]
+layout_mode = 2
+theme_type_variation = &"DangerHeaderText"
+text = "GHOST THREAT DETECTED"
+horizontal_alignment = 1
+
+[node name="IconsHBox" type="HBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180008]
+layout_mode = 2
+theme_override_constants/separation = 24
+alignment = 1
+
+[node name="GhostIcon" type="TextureRect" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IconsHBox" unique_id=2180009]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+texture = ExtResource("3_ghost")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="VsLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IconsHBox" unique_id=2180010]
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "VS"
+horizontal_alignment = 1
+
+[node name="SparklerIcon" type="TextureRect" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IconsHBox" unique_id=2180011]
+custom_minimum_size = Vector2(88, 88)
+layout_mode = 2
+texture = ExtResource("4_sparkler")
+expand_mode = 1
+stretch_mode = 5
+
+[node name="IntelPanel" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180012]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="IntelMargin" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel" unique_id=2180013]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="IntelVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel/IntelMargin" unique_id=2180014]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="IntelHeader" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel/IntelMargin/IntelVBox" unique_id=2180015]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "TACTICAL INTEL: STAGE 3"
+
+[node name="IntelBody" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel/IntelMargin/IntelVBox" unique_id=2180016]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "• The next stage introduces ETHEREAL GHOST enemies.
+• Ghost units phase directly through solid defensive towers and physical barricades.
+• Kinetic physical weapons (Archers, Crossbows, Bombs) CANNOT damage ghosts.
+• Only towers with MAGIC or TRUE damage can detect and eliminate ghosts."
+autowrap_mode = 2
+
+[node name="UnlockPanel" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180017]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="UnlockMargin" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/UnlockPanel" unique_id=2180018]
+layout_mode = 2
+theme_override_constants/margin_left = 16
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_right = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="UnlockVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/UnlockPanel/UnlockMargin" unique_id=2180019]
+layout_mode = 2
+theme_override_constants/separation = 8
+
+[node name="UnlockHeader" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/UnlockPanel/UnlockMargin/UnlockVBox" unique_id=2180020]
+layout_mode = 2
+theme_type_variation = &"CreditText"
+text = "TOWER UNLOCKED: SPARKLER"
+
+[node name="UnlockBody" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/UnlockPanel/UnlockMargin/UnlockVBox" unique_id=2180021]
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "The rapid-fire magic SPARKLER tower has been automatically unlocked in your arsenal! Be sure to equip it in your loadout before starting Stage 3."
+autowrap_mode = 2
+
+[node name="AcknowledgeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2180022]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "UNDERSTOOD (EQUIP IN LOADOUT)"

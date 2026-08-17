@@ -1,16 +1,16 @@
-[gd_scene format=3]
+[gd_scene format=3 uid="uid://dk1mrpkucl0fp"]
 
-[ext_resource type="Script" path="res://src/scenes/towers/Tower.gd" id="1_tower"]
-[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="2_health"]
-[ext_resource type="Script" path="res://src/components/TargetingComponent.gd" id="3_target"]
-[ext_resource type="Script" path="res://src/components/AttackComponent.gd" id="4_attack"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/sparkler.png" id="5_tex"]
-
-[sub_resource type="CircleShape2D" id="CircleShape2D_range"]
-radius = 220.0
+[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_tower"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_target"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_attack"]
+[ext_resource type="Texture2D" uid="uid://2fbh81vex1ec" path="res://src/textures/towers/sparkler.png" id="5_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
 size = Vector2(64, 64)
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_range"]
+radius = 192.0
 
 [sub_resource type="Gradient" id="Gradient_sparks"]
 offsets = PackedFloat32Array(0, 0.5, 1)
@@ -36,7 +36,6 @@ script = ExtResource("3_target")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966410]
-visible = false
 shape = SubResource("CircleShape2D_range")
 debug_color = Color(1, 0.8, 0.2, 0.08)
 
@@ -54,7 +53,6 @@ position = Vector2(10, -10)
 texture = ExtResource("5_tex")
 
 [node name="SparkParticles" type="CPUParticles2D" parent="." unique_id=194820210]
-amount = 8
 lifetime = 0.5
 emission_shape = 1
 emission_sphere_radius = 6.0

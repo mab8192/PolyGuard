@@ -157,6 +157,16 @@ func sell_selected_tower() -> void:
 	SignalBus.tower_sold.emit(tower_to_sell, sell_value)
 	tower_to_sell._on_died()
 
+func repair_selected_tower() -> bool:
+	if not selected_tower or not is_instance_valid(selected_tower):
+		return false
+	var cost = selected_tower.get_repair_cost()
+	if cost <= 0 or energy < cost:
+		return false
+	deduct_energy(cost)
+	var success = selected_tower.repair()
+	return success
+
 func deduct_energy(amount: int) -> void:
 	energy -= amount
 	SignalBus.energy_changed.emit(energy)

@@ -8,6 +8,7 @@ var selected_stage: StageData
 var selected_loadout: Array[TowerData] = []
 var loadout_presets: Dictionary = {} # int -> Array[TowerData]
 var active_preset_index: int = 1
+var target_main_menu_tab: int = -1
 
 var current_stage: Stage:
 	get:

@@ -83,7 +83,7 @@ func _update_details(tower: TowerData) -> void:
 	var is_avail = tower.is_available()
 	var level = SaveManager.get_tower_level(t_id) if is_unlocked else 1
 	var active_choice = SaveManager.get_tower_choice(t_id)
-	var stats = tower.get_stat_summary(level, active_choice)
+	var stats = tower.get_stats(level, active_choice)
 	
 	detail_icon.texture = tower.icon
 	detail_title.text = tower.display_name
@@ -120,7 +120,7 @@ func _update_details(tower: TowerData) -> void:
 			upgrade_button.disabled = true
 			upgrade_button.theme_type_variation = &"SecondaryButton"
 		
-	detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper() if tower.collision_layer > 0 else "GROUND TRAP"
+	detail_type_badge.text = (stats.get("type", "DEFENSE")).to_upper()
 	
 	var base_desc = tower.description if not tower.description.is_empty() else "Standard defensive installation."
 	if not is_unlocked and not is_avail:
@@ -129,20 +129,8 @@ func _update_details(tower: TowerData) -> void:
 	else:
 		detail_desc.text = base_desc
 	
-	var stat_parts: Array[String] = []
-	if stats["has_attack"]:
-		stat_parts.append("Damage: %.0f (%s)" % [stats["damage"], stats["damage_type_str"]])
-		stat_parts.append("Rate: Every %.2fs" % stats["cooldown"])
-		stat_parts.append("DPS: %.1f" % stats["dps"])
-	if stats["has_health"]:
-		stat_parts.append("Max HP: %.0f" % stats["max_health"])
-	if stats["max_targets"] > 1:
-		stat_parts.append("Max Targets: %d" % stats["max_targets"])
-		
-	if stat_parts.is_empty():
-		stat_parts.append("Defensive Tactical Installation")
-		
-	detail_stats.text = " | ".join(stat_parts)
+	var stat_lines: Array[String] = stats.get("stat_lines", [])
+	detail_stats.text = "   •   ".join(stat_lines)
 
 func _on_upgrade_button_pressed() -> void:
 	if not _selected_tower:

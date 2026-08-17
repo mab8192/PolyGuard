@@ -48,38 +48,12 @@ func _update_details(enemy: EnemyData) -> void:
 	if not enemy:
 		return
 		
+	var stats = enemy.get_stats()
 	detail_icon.texture = enemy.icon
 	detail_title.text = enemy.display_name
 	detail_reward.text = "+%d Energy" % enemy.energy_reward
-	detail_type_badge.text = "GHOST UNIT" if enemy.type == EnemyData.EnemyType.GHOST else "PHYSICAL UNIT"
+	detail_type_badge.text = stats.get("type", "HOSTILE UNIT")
 	detail_desc.text = enemy.description if not enemy.description.is_empty() else "Identified hostile geometric combat unit."
 	
-	var stat_parts: Array[String] = []
-	if enemy.health:
-		stat_parts.append("HP: %d" % enemy.health.max_health)
-		stat_parts.append("Armor: %d" % enemy.health.armor)
-		stat_parts.append("Magic Resistance: %d" % enemy.health.magic_resistance)
-	if enemy.movement:
-		stat_parts.append("Speed: %d" % int(enemy.movement.max_speed))
-	stat_parts.append("Penalty: %d Lives" % enemy.lives_penalty)
-	stat_parts.append("Nav Strategy: %s" % _get_nav_name(enemy.nav_strategy))
-	
-	if enemy.attack:
-		stat_parts.append("Attack Damage: %d" % enemy.attack.damage)
-		stat_parts.append("Attack Cooldown: %.1f s" % enemy.attack.cooldown)
-	if enemy.splitter:
-		stat_parts.append("Splits on Death: %d" % enemy.splitter.number_of_copies)
-		stat_parts.append("Maximum Splits: %d" % enemy.splitter.max_splits)
-		
-	detail_stats.text = " | ".join(stat_parts)
-
-func _get_nav_name(strategy: int) -> String:
-	match strategy:
-		NavigationData.NavStrategy.CLOSEST:
-			return "Closest"
-		NavigationData.NavStrategy.FARTHEST:
-			return "Farthest"
-		NavigationData.NavStrategy.FIRST:
-			return "First"
-		_:
-			return "Error"
+	var lines: Array[String] = stats.get("stat_lines", [])
+	detail_stats.text = "   •   ".join(lines)

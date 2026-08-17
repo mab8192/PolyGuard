@@ -118,7 +118,8 @@ func _physics_process(_delta: float) -> void:
 		if position_history.size() > MAX_HISTORY_POINTS:
 			position_history.pop_front()
 
-	if not nav.can_reach_exit() and targeting and attack and targeting.get_targets().size() > 0:
+	var should_attack: bool = (nav and nav.data and nav.data.targets_towers) or (nav and not nav.can_reach_exit())
+	if should_attack and targeting and attack and targeting.get_targets().size() > 0:
 		if movement:
 			movement.stop()
 		attack.attack_targets(targeting.get_targets())
@@ -144,3 +145,8 @@ func _on_no_path_available() -> void:
 	if is_instance_valid(tower) and not tower.is_queued_for_deletion():
 		if nav and nav.agent:
 			nav.agent.target_position = tower.global_position
+
+func get_stats() -> Dictionary:
+	if data:
+		return data.get_stats()
+	return {}

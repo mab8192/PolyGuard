@@ -1,0 +1,36 @@
+[gd_scene format=3 uid="uid://dav2x4m8q1w5b"]
+
+[ext_resource type="Script" path="res://src/scenes/enemies/booster.gd" id="1_script"]
+[ext_resource type="Texture2D" path="res://src/textures/enemies/booster.png" id="2_tex"]
+[ext_resource type="Script" path="res://src/components/MovementComponent.gd" id="3_move"]
+[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="4_health"]
+[ext_resource type="Script" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_body"]
+radius = 12.0
+
+[node name="Booster" type="CharacterBody2D" unique_id=1825300405 groups=["enemies"]]
+collision_layer = 4
+collision_mask = 7
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_script")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494196]
+scale = Vector2(0.45, 0.45)
+texture = ExtResource("2_tex")
+
+[node name="MovementComponent" type="Node" parent="." unique_id=588237639]
+script = ExtResource("3_move")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2023714488]
+script = ExtResource("4_health")
+
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399609]
+script = ExtResource("5_nav")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065245]
+simplify_path = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879432685]
+shape = SubResource("CircleShape2D_body")

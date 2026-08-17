@@ -3,6 +3,9 @@ class_name TowerActionPanel extends PanelContainer
 @onready var icon_rect: TextureRect = %IconRect
 @onready var title_label: Label = %TitleLabel
 @onready var stats_label: Label = %StatsLabel
+@onready var strategy_row: HBoxContainer = %StrategyRow
+@onready var strategy_button: Button = %StrategyButton
+@onready var repair_button: Button = %RepairButton
 @onready var sell_button: Button = %SellButton
 @onready var close_button: Button = %CloseButton
 
@@ -12,25 +15,40 @@ func _ready() -> void:
 	hide()
 	
 	sell_button.focus_mode = Control.FOCUS_NONE
+	repair_button.focus_mode = Control.FOCUS_NONE
+	strategy_button.focus_mode = Control.FOCUS_NONE
 	close_button.focus_mode = Control.FOCUS_NONE
 	
 	sell_button.pressed.connect(_on_sell_pressed)
+	repair_button.pressed.connect(_on_repair_pressed)
+	strategy_button.pressed.connect(_on_strategy_pressed)
 	close_button.pressed.connect(_on_close_pressed)
 	
 	SignalBus.tower_selected.connect(_on_tower_selected)
 	SignalBus.tower_deselected.connect(_on_tower_deselected)
 	SignalBus.placement_mode_changed.connect(_on_placement_mode_changed)
+	SignalBus.energy_changed.connect(_on_energy_changed)
 
 func open(tower: Tower) -> void:
 	if not is_instance_valid(tower) or not tower.data:
 		close()
 		return
 	
+	if _current_tower and is_instance_valid(_current_tower) and _current_tower.health:
+		if _current_tower.health.health_changed.is_connected(_on_tower_health_changed):
+			_current_tower.health.health_changed.disconnect(_on_tower_health_changed)
+
 	_current_tower = tower
+	if _current_tower and _current_tower.health:
+		_current_tower.health.health_changed.connect(_on_tower_health_changed)
+
 	_update_ui()
 	show()
 
 func close() -> void:
+	if _current_tower and is_instance_valid(_current_tower) and _current_tower.health:
+		if _current_tower.health.health_changed.is_connected(_on_tower_health_changed):
+			_current_tower.health.health_changed.disconnect(_on_tower_health_changed)
 	_current_tower = null
 	hide()
 
@@ -49,39 +67,48 @@ func _update_ui() -> void:
 	if sell_button:
 		sell_button.text = "SELL +%d ENERGY" % sell_amount
 	
+	# Rich stats display
 	if stats_label:
-		var stat_lines: Array[String] = []
-		
-		var attack_data: AttackData = null
-		if _current_tower.attack and _current_tower.attack.data:
-			attack_data = _current_tower.attack.data
-		elif data.attack:
-			attack_data = data.attack
-			
-		if attack_data:
-			var dps: float = attack_data.damage / maxf(attack_data.cooldown, 0.05)
-			stat_lines.append("DMG: %.0f   SPD: %.2fs   DPS: %.1f" % [attack_data.damage, attack_data.cooldown, dps])
-		
-		var effect_data: EffectApplierData = null
-		if _current_tower.effect_applier and _current_tower.effect_applier.data:
-			effect_data = _current_tower.effect_applier.data
-		elif data.effect_applier:
-			effect_data = data.effect_applier
-			
-		if effect_data:
-			var cd_str: String = "%.1fs" % effect_data.cooldown if effect_data.cooldown > 0.0 else "Continuous"
-			stat_lines.append("TRAP COOLDOWN: %s" % cd_str)
-		
-		if _current_tower.health and _current_tower.health.data:
-			var current_hp: float = _current_tower.health.get_health()
-			var max_hp: float = _current_tower.health.data.max_health
-			stat_lines.append("HEALTH: %d / %d" % [int(current_hp), int(max_hp)])
-		elif data.health:
-			stat_lines.append("HEALTH: %d / %d" % [int(data.health.max_health), int(data.health.max_health)])
-		elif data.collision_layer > 0:
-			stat_lines.append("TYPE: SOLID DEFENSE")
-		
-		stats_label.text = "\n".join(stat_lines)
+		var stats = _current_tower.get_stats()
+		var lines: Array[String] = stats.get("runtime_lines", [])
+		if lines.is_empty():
+			lines = stats.get("stat_lines", [])
+		stats_label.text = "\n".join(lines)
+	
+	# Targeting Strategy Row
+	if _current_tower.targeting and _current_tower.targeting.data:
+		strategy_row.show()
+		var strat_name = _current_tower.targeting.get_strategy_name()
+		strategy_button.text = "TARGET: %s 🔄" % strat_name
+	else:
+		strategy_row.hide()
+	
+	# Repair Button
+	if _current_tower.health and _current_tower.health.data and _current_tower.collision_layer > 0:
+		repair_button.show()
+		var cost = _current_tower.get_repair_cost()
+		if cost > 0:
+			repair_button.text = "REPAIR (%d ENERGY)" % cost
+			var current_energy = GameManager.current_stage.energy if GameManager.current_stage else 0
+			repair_button.disabled = (current_energy < cost)
+		else:
+			repair_button.text = "FULL HEALTH"
+			repair_button.disabled = true
+	else:
+		repair_button.hide()
+
+func _on_strategy_pressed() -> void:
+	if _current_tower and is_instance_valid(_current_tower) and _current_tower.targeting:
+		_current_tower.targeting.cycle_strategy(true)
+		_update_ui()
+
+func _on_repair_pressed() -> void:
+	if GameManager.current_stage:
+		var success = GameManager.current_stage.repair_selected_tower()
+		if success:
+			_update_ui()
+	else:
+		close()
 
 func _on_sell_pressed() -> void:
 	if GameManager.current_stage:
@@ -94,6 +121,14 @@ func _on_close_pressed() -> void:
 		GameManager.current_stage.deselect_tower()
 	else:
 		close()
+
+func _on_tower_health_changed(_hp: float) -> void:
+	if visible and is_instance_valid(_current_tower):
+		_update_ui()
+
+func _on_energy_changed(_energy: int) -> void:
+	if visible and is_instance_valid(_current_tower):
+		_update_ui()
 
 func _on_tower_selected(tower: Tower) -> void:
 	open(tower)

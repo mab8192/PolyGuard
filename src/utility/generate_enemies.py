@@ -238,6 +238,116 @@ def draw_citadel() -> Image.Image:
     
     return img.resize((64, 64), Image.Resampling.LANCZOS)
 
+# 10. Bomber: Volatile Spiked Explosive Core
+def draw_bomber() -> Image.Image:
+    img, draw, f, s = create_supersampled(64, 4)
+    cx, cy = s / 2, s / 2
+    r_out = 22 * f
+    r_in = 14 * f
+    
+    # 8-point spiked explosive star
+    pts = []
+    import math
+    for i in range(16):
+        angle = i * (math.pi / 8.0)
+        r = r_out if i % 2 == 0 else r_in
+        pts.append((cx + math.cos(angle) * r, cy + math.sin(angle) * r))
+    
+    draw.polygon(pts, fill=(55, 12, 10, 255), outline=(255, 60, 40, 255), width=int(2.5 * f))
+    
+    # Inner danger core
+    draw.circle((cx, cy), 11 * f, fill=(180, 30, 20, 255), outline=(255, 180, 30, 255), width=int(1.8 * f))
+    draw.circle((cx, cy), 6 * f, fill=(255, 220, 40, 255))
+    
+    # Radiating warning flares
+    draw.line([(cx - 8 * f, cy), (cx + 8 * f, cy)], fill=(255, 255, 200, 255), width=int(1.5 * f))
+    draw.line([(cx, cy - 8 * f), (cx, cy + 8 * f)], fill=(255, 255, 200, 255), width=int(1.5 * f))
+    
+    return img.resize((64, 64), Image.Resampling.LANCZOS)
+
+# 11. Light Ghost: Slender Ethereal Swift Phantom
+def draw_light_ghost() -> Image.Image:
+    img, draw, f, s = create_supersampled(64, 4)
+    cx, cy = s / 2, s / 2
+    
+    pts_outer = [(cx + 23 * f, cy), (cx - 1 * f, cy - 13 * f), (cx - 21 * f, cy), (cx - 1 * f, cy + 13 * f)]
+    draw.polygon(pts_outer, fill=(0, 230, 255, 45))
+    
+    pts = [(cx + 20 * f, cy), (cx - 1 * f, cy - 11 * f), (cx - 17 * f, cy), (cx - 1 * f, cy + 11 * f)]
+    draw.polygon(pts, fill=(40, 15, 110, 180), outline=(0, 245, 255, 240), width=int(2.2 * f))
+    
+    draw.polygon([(cx + 17 * f, cy), (cx - 1 * f, cy - 8 * f), (cx - 13 * f, cy)], fill=(0, 220, 255, 190))
+    draw.polygon([(cx + 17 * f, cy), (cx - 1 * f, cy + 8 * f), (cx - 13 * f, cy)], fill=(160, 60, 255, 190))
+    
+    return img.resize((64, 64), Image.Resampling.LANCZOS)
+
+# 12. Heavy Ghost: Fortified Massive Dark Wraith
+def draw_heavy_ghost() -> Image.Image:
+    img, draw, f, s = create_supersampled(64, 4)
+    cx, cy = s / 2, s / 2
+    
+    pts_aura = [(cx + 25 * f, cy), (cx - 3 * f, cy - 22 * f), (cx - 23 * f, cy), (cx - 3 * f, cy + 22 * f)]
+    draw.polygon(pts_aura, fill=(160, 30, 230, 50))
+    
+    pts_mid = [(cx + 22 * f, cy), (cx - 3 * f, cy - 18 * f), (cx - 20 * f, cy), (cx - 3 * f, cy + 18 * f)]
+    draw.polygon(pts_mid, fill=(28, 8, 65, 230), outline=(220, 120, 255, 255), width=int(3.0 * f))
+    
+    pts_inner = [(cx + 17 * f, cy), (cx - 3 * f, cy - 13 * f), (cx - 15 * f, cy), (cx - 3 * f, cy + 13 * f)]
+    draw.polygon(pts_inner, fill=(75, 20, 140, 200), outline=(130, 40, 240, 255), width=int(1.8 * f))
+    
+    draw.line([(cx - 18 * f, cy), (cx + 19 * f, cy)], fill=(240, 160, 255, 220), width=int(2.0 * f))
+    
+    return img.resize((64, 64), Image.Resampling.LANCZOS)
+
+# 13. Healer: Emerald Restorative Bio-Cross
+def draw_healer() -> Image.Image:
+    img, draw, f, s = create_supersampled(64, 4)
+    cx, cy = s / 2, s / 2
+    
+    # Outer healing ward aura
+    draw.circle((cx, cy), 22 * f, fill=(0, 255, 170, 35))
+    draw.regular_polygon((cx, cy, 21 * f), 8, rotation=22.5, fill=(8, 42, 30, 255), outline=(0, 255, 180, 255), width=int(2.5 * f))
+    
+    # Green cross emblem
+    cw = 6 * f
+    cl = 15 * f
+    
+    cross_pts = [
+        (cx - cw, cy - cl), (cx + cw, cy - cl),
+        (cx + cw, cy - cw), (cx + cl, cy - cw),
+        (cx + cl, cy + cw), (cx + cw, cy + cw),
+        (cx + cw, cy + cl), (cx - cw, cy + cl),
+        (cx - cw, cy + cw), (cx - cl, cy + cw),
+        (cx - cl, cy - cw), (cx - cw, cy - cw),
+    ]
+    draw.polygon(cross_pts, fill=(0, 215, 140, 255), outline=(180, 255, 230, 255), width=int(1.5 * f))
+    draw.circle((cx, cy), 3.5 * f, fill=(255, 255, 255, 255))
+    
+    return img.resize((64, 64), Image.Resampling.LANCZOS)
+
+# 14. Booster: Kinetic Overclock Energizer Star
+def draw_booster() -> Image.Image:
+    img, draw, f, s = create_supersampled(64, 4)
+    cx, cy = s / 2, s / 2
+    
+    # Radiating orange kinetic beacon
+    draw.circle((cx, cy), 23 * f, fill=(255, 140, 0, 40))
+    draw.regular_polygon((cx, cy, 21 * f), 6, rotation=0, fill=(48, 22, 5, 255), outline=(255, 160, 20, 255), width=int(2.8 * f))
+    
+    # Inner energy conduits
+    draw.regular_polygon((cx, cy, 14 * f), 6, rotation=30, fill=(180, 75, 10, 255), outline=(255, 220, 60, 255), width=int(1.8 * f))
+    draw.circle((cx, cy), 6 * f, fill=(255, 240, 100, 255))
+    
+    # Energy vane lines
+    import math
+    for i in range(6):
+        ang = i * (math.pi / 3.0)
+        p_in = (cx + math.cos(ang) * 6 * f, cy + math.sin(ang) * 6 * f)
+        p_out = (cx + math.cos(ang) * 19 * f, cy + math.sin(ang) * 19 * f)
+        draw.line([p_in, p_out], fill=(255, 255, 180, 220), width=int(1.8 * f))
+    
+    return img.resize((64, 64), Image.Resampling.LANCZOS)
+
 GENERATORS = {
     "grunt.png": draw_grunt,
     "heavy.png": draw_heavy,
@@ -248,6 +358,11 @@ GENERATORS = {
     "ghost.png": draw_ghost,
     "splitter.png": draw_splitter,
     "citadel.png": draw_citadel,
+    "bomber.png": draw_bomber,
+    "light_ghost.png": draw_light_ghost,
+    "heavy_ghost.png": draw_heavy_ghost,
+    "healer.png": draw_healer,
+    "booster.png": draw_booster,
 }
 
 def generate_all_enemies(output_dir: str = None) -> list[str]:

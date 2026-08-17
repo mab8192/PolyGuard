@@ -177,7 +177,7 @@ func _update_details_panel() -> void:
 	var is_unlocked = SaveManager.is_tower_unlocked(t_id)
 	var level = SaveManager.get_tower_level(t_id) if is_unlocked else 1
 	var active_choice = SaveManager.get_tower_choice(t_id)
-	var stats = selected_tower.get_stat_summary(level, active_choice)
+	var stats = selected_tower.get_stats(level, active_choice)
 	
 	var is_avail = selected_tower.is_available()
 	
@@ -210,24 +210,9 @@ func _update_details_panel() -> void:
 			detail_level_badge.get_parent().theme_type_variation = &"LockedBadge"
 		detail_level_badge.text = "LOCKED"
 		
-	if selected_tower.collision_layer > 0:
-		detail_type_badge.text = ("%s DEFENSE" % stats["damage_type_str"]).to_upper()
-	else:
-		detail_type_badge.text = "GROUND TRAP"
+	detail_type_badge.text = (stats.get("type", "DEFENSE")).to_upper()
 		
-	var stat_lines: Array[String] = []
-	if stats["has_attack"]:
-		stat_lines.append("Damage: %.0f (%s)" % [stats["damage"], stats["damage_type_str"]])
-		stat_lines.append("Rate: Every %.2fs" % stats["cooldown"])
-		stat_lines.append("DPS: %.1f" % stats["dps"])
-	if stats["has_health"]:
-		stat_lines.append("Max HP: %.0f" % stats["max_health"])
-	if stats["max_targets"] > 1:
-		stat_lines.append("Targets: %d" % stats["max_targets"])
-		
-	if stat_lines.is_empty():
-		stat_lines.append("Defensive Tactical Installation")
-		
+	var stat_lines: Array[String] = stats.get("stat_lines", [])
 	detail_stats.text = "   •   ".join(stat_lines)
 	
 	# Action Button

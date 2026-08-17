@@ -1,6 +1,6 @@
 class_name TargetingData extends Resource
 
-enum Strategy { FIRST, LAST, CLOSEST, STRONGEST }
+enum Strategy { FIRST, LAST, CLOSEST, FARTHEST, STRONGEST, WEAKEST }
 
 @export var strategy: Strategy = Strategy.FIRST
 @export var max_targets: int = 1

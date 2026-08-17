@@ -30,7 +30,6 @@ script = ExtResource("4_2o1o6")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
-visible = false
 shape = SubResource("CircleShape2D_qgbsg")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=635266676]

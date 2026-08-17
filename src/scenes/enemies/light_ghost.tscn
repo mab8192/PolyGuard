@@ -1,0 +1,37 @@
+[gd_scene format=3 uid="uid://b1m8c5k2v3yaq"]
+
+[ext_resource type="Script" path="res://src/scenes/enemies/enemy.gd" id="1_garty"]
+[ext_resource type="Texture2D" path="res://src/textures/enemies/light_ghost.png" id="2_tex"]
+[ext_resource type="Script" path="res://src/components/MovementComponent.gd" id="3_move"]
+[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="4_health"]
+[ext_resource type="Script" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_qgbsg"]
+radius = 10.0
+
+[node name="LightGhost" type="CharacterBody2D" unique_id=1825300402 groups=["enemies"]]
+motion_mode = 1
+wall_min_slide_angle = 0.0
+script = ExtResource("1_garty")
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=111494193]
+scale = Vector2(0.4, 0.4)
+texture = ExtResource("2_tex")
+
+[node name="MovementComponent" type="Node" parent="." unique_id=588237636]
+script = ExtResource("3_move")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=2023714485]
+script = ExtResource("4_health")
+
+[node name="NavigationComponent" type="Node" parent="." unique_id=587399606]
+script = ExtResource("5_nav")
+
+[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134391]
+navigation_layers = 4
+simplify_path = true
+avoidance_enabled = true
+max_speed = 500.0
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1457276719]
+shape = SubResource("CircleShape2D_qgbsg")
