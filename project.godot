@@ -40,7 +40,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/stage_thumbnail_generator/plugin.cfg")
+enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/stage_thumbnail_generator/plugin.cfg", "res://addons/wave_editor/plugin.cfg")
 
 [file_customization]
 

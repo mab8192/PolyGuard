@@ -1,35 +1,35 @@
 [
   {
-	"wave_number": 1,
-	"reward_energy": 400,
+	"reward_energy": 50.0,
 	"spawns": [
 	  {
-		"spawner_id": "Spawner",
+		"count": 6.0,
+		"delay": 0.5,
 		"enemy_type": "light",
-		"count": 5,
 		"interval": 1.0,
-		"delay": 0.5
+		"spawner_id": "Spawner"
 	  }
-	]
+	],
+	"wave_number": 1
   },
   {
-	"wave_number": 2,
-	"reward_energy": 0,
+	"reward_energy": 100.0,
 	"spawns": [
 	  {
-		"spawner_id": "Spawner",
+		"count": 2.0,
+		"delay": 0.5,
 		"enemy_type": "grunt",
-		"count": 5,
-		"interval": 1.0,
-		"delay": 0.5
+		"interval": 1.5,
+		"spawner_id": "Spawner"
 	  },
 	  {
-		"spawner_id": "Spawner",
+		"count": 10.0,
+		"delay": 3.0,
 		"enemy_type": "light",
-		"count": 10,
-		"interval": 0.7,
-		"delay": 2.0
+		"interval": 0.8,
+		"spawner_id": "Spawner"
 	  }
-	]
+	],
+	"wave_number": 2
   }
 ]
