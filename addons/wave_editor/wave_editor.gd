@@ -4,30 +4,6 @@ extends Control
 const WAVES_DIR := "res://src/data/stages/waves/"
 const ENEMIES_DIR := "res://src/data/enemies/"
 
-const ENEMY_TYPES: Array[String] = [
-	"light",
-	"grunt",
-	"heavy",
-	"tank",
-	"speeder",
-	"splitter",
-	"sniper",
-	"ghost",
-	"citadel"
-]
-
-const DEFAULT_ENEMY_REWARDS: Dictionary = {
-	"light": 10,
-	"grunt": 15,
-	"heavy": 30,
-	"tank": 50,
-	"speeder": 15,
-	"splitter": 20,
-	"sniper": 35,
-	"ghost": 30,
-	"citadel": 250
-}
-
 const COMMON_SPAWNERS: Array[String] = [
 	"Spawner",
 	"Spawner2",
@@ -35,7 +11,9 @@ const COMMON_SPAWNERS: Array[String] = [
 	"Spawner4"
 ]
 
-var enemy_rewards_cache: Dictionary = {}
+# Discovered dynamically from .tres files in ENEMIES_DIR
+var discovered_enemies: Dictionary = {} # id (String) -> EnemyData
+var enemy_type_keys: Array[String] = []
 
 var file_selector: OptionButton
 var status_label: Label
@@ -51,25 +29,53 @@ var is_loading_ui: bool = false
 func _init() -> void:
 	size_flags_horizontal = Control.SIZE_EXPAND_FILL
 	size_flags_vertical = Control.SIZE_EXPAND_FILL
-	_load_enemy_rewards()
+	_load_enemy_data()
 
 func _ready() -> void:
+	_load_enemy_data()
 	_build_ui()
 	_refresh_file_list()
 	if file_selector.item_count > 0:
 		_on_file_selected(0)
 
-func _load_enemy_rewards() -> void:
-	enemy_rewards_cache = DEFAULT_ENEMY_REWARDS.duplicate()
-	for etype in ENEMY_TYPES:
-		var tres_path = ENEMIES_DIR.path_join("%s.tres" % etype)
-		if ResourceLoader.exists(tres_path):
-			var res = ResourceLoader.load(tres_path)
-			if res and "energy_reward" in res:
-				enemy_rewards_cache[etype] = int(res.energy_reward)
+## Dynamically discovers all EnemyData resources from .tres files
+func _load_enemy_data() -> void:
+	discovered_enemies.clear()
+	enemy_type_keys.clear()
+
+	# 1. Scan res://src/data/enemies/ directory for .tres files
+	var dir := DirAccess.open(ENEMIES_DIR)
+	if dir:
+		dir.list_dir_begin()
+		var fname = dir.get_next()
+		while fname != "":
+			if not dir.current_is_dir() and fname.ends_with(".tres"):
+				var etype = fname.get_basename()
+				var res_path = ENEMIES_DIR.path_join(fname)
+				# Use CACHE_MODE_REPLACE to ensure latest values on disk are reloaded
+				var res = ResourceLoader.load(res_path, "", ResourceLoader.CACHE_MODE_REPLACE)
+				if res and res is EnemyData:
+					discovered_enemies[etype] = res
+			fname = dir.get_next()
+		dir.list_dir_end()
+
+	for k in discovered_enemies:
+		enemy_type_keys.append(str(k))
+	enemy_type_keys.sort()
 
 func get_enemy_reward(etype: String) -> int:
-	return enemy_rewards_cache.get(etype, DEFAULT_ENEMY_REWARDS.get(etype, 10))
+	if discovered_enemies.has(etype):
+		var edata = discovered_enemies[etype] as EnemyData
+		if edata:
+			return int(edata.energy_reward)
+	return 0
+
+func get_enemy_display_name(etype: String) -> String:
+	if discovered_enemies.has(etype):
+		var edata = discovered_enemies[etype] as EnemyData
+		if edata and not edata.display_name.is_empty():
+			return edata.display_name
+	return etype.capitalize()
 
 func _build_ui() -> void:
 	for child in get_children():
@@ -194,9 +200,9 @@ func _on_file_selected(index: int) -> void:
 
 func _on_reload_pressed() -> void:
 	if not current_file_path.is_empty():
-		_load_enemy_rewards()
+		_load_enemy_data()
 		_load_file(current_file_path)
-		_set_status("Reloaded %s" % current_file_path.get_file())
+		_set_status("Reloaded enemy .tres resources & %s" % current_file_path.get_file())
 
 func _load_file(path: String) -> void:
 	if not FileAccess.file_exists(path):
@@ -246,13 +252,14 @@ func _on_save_pressed() -> void:
 
 func _on_add_wave_pressed() -> void:
 	var new_wave_num = current_waves_data.size() + 1
+	var default_enemy = enemy_type_keys[0] if not enemy_type_keys.is_empty() else "grunt"
 	var new_wave = {
 		"wave_number": new_wave_num,
 		"reward_energy": 250,
 		"spawns": [
 			{
 				"spawner_id": "Spawner",
-				"enemy_type": "grunt",
+				"enemy_type": default_enemy,
 				"count": 15,
 				"interval": 0.8,
 				"delay": 0.5
@@ -309,8 +316,8 @@ func _update_stats_and_warnings() -> void:
 			total_kill_energy += get_enemy_reward(etype) * cnt
 			counts[etype] = counts.get(etype, 0) + cnt
 
-			if not ENEMY_TYPES.has(etype):
-				warnings.append("Wave %d: Unknown enemy type '%s'" % [w_num, etype])
+			if not discovered_enemies.has(etype):
+				warnings.append("Wave %d: Unknown enemy type '%s' (not found in %s)" % [w_num, etype, ENEMIES_DIR])
 			if etype == "splitter" and cnt > 3:
 				warnings.append("Wave %d: Splitter count is %d (Must be <= 3)" % [w_num, cnt])
 			if etype == "speeder" and cnt > 12:
@@ -333,9 +340,17 @@ func _update_stats_and_warnings() -> void:
 	])
 	
 	var enemy_parts: Array[String] = []
-	for etype in ENEMY_TYPES:
+	for etype in enemy_type_keys:
 		if counts.has(etype):
-			enemy_parts.append("%s: %d" % [etype.capitalize(), counts[etype]])
+			var dname = get_enemy_display_name(etype)
+			var r_each = get_enemy_reward(etype)
+			enemy_parts.append("%s (%d⚡): %d" % [dname, r_each, counts[etype]])
+	
+	# Show any unrecognized enemies that might exist in the data
+	for etype in counts:
+		if not enemy_type_keys.has(etype):
+			enemy_parts.append("%s (unknown): %d" % [etype, counts[etype]])
+
 	if not enemy_parts.is_empty():
 		stats_parts.append("Breakdown: " + ", ".join(enemy_parts))
 
@@ -401,7 +416,7 @@ func _create_wave_card(wave_index: int, wave_dict: Dictionary) -> Control:
 		var bonus = int(wave_dict.get("reward_energy", 0))
 		var kills = _calculate_wave_kill_energy(wave_dict)
 		var total = bonus + kills
-		energy_summary_lbl.text = "  Kills: +%d  |  Total: %d" % [kills, total]
+		energy_summary_lbl.text = "  Kills: +%d⚡  |  Total: %d⚡" % [kills, total]
 		energy_summary_lbl.modulate = Color(0.3, 0.95, 0.75)
 		duration_lbl.text = "    Duration: ~%.1fs" % _calculate_wave_duration(wave_dict)
 
@@ -416,9 +431,10 @@ func _create_wave_card(wave_index: int, wave_dict: Dictionary) -> Control:
 	add_spawn_btn.text = "+ Add Spawn"
 	add_spawn_btn.pressed.connect(func() -> void:
 		var spawns: Array = wave_dict.get("spawns", [])
+		var default_enemy = enemy_type_keys[0] if not enemy_type_keys.is_empty() else "grunt"
 		spawns.append({
 			"spawner_id": "Spawner",
-			"enemy_type": "grunt",
+			"enemy_type": default_enemy,
 			"count": 10,
 			"interval": 0.8,
 			"delay": 0.0
@@ -498,7 +514,7 @@ func _create_wave_card(wave_index: int, wave_dict: Dictionary) -> Control:
 
 		var h_type := Label.new()
 		h_type.text = "Enemy Type"
-		h_type.custom_minimum_size = Vector2(120, 0)
+		h_type.custom_minimum_size = Vector2(130, 0)
 		grid.add_child(h_type)
 
 		var h_cnt := Label.new()
@@ -559,17 +575,28 @@ func _populate_spawn_grid_row(grid: GridContainer, wave_dict: Dictionary, spawns
 	)
 	grid.add_child(spawner_opt)
 
-	# 2. Enemy Type
+	# 2. Enemy Type (Discovered from .tres files)
 	var type_opt := OptionButton.new()
-	type_opt.custom_minimum_size = Vector2(120, 0)
+	type_opt.custom_minimum_size = Vector2(130, 0)
 	var cur_type = str(spawn_dict.get("enemy_type", "grunt"))
-	for etype in ENEMY_TYPES:
+
+	var select_idx = -1
+	for item_idx in range(enemy_type_keys.size()):
+		var etype = enemy_type_keys[item_idx]
 		type_opt.add_item(etype)
-	
-	for item_idx in range(type_opt.item_count):
-		if type_opt.get_item_text(item_idx) == cur_type:
-			type_opt.select(item_idx)
-			break
+		if discovered_enemies.has(etype):
+			var edata = discovered_enemies[etype] as EnemyData
+			if edata and edata.icon:
+				type_opt.set_item_icon(item_idx, edata.icon)
+		if etype == cur_type:
+			select_idx = item_idx
+
+	if select_idx == -1 and not cur_type.is_empty():
+		type_opt.add_item(cur_type)
+		select_idx = type_opt.item_count - 1
+
+	if select_idx != -1:
+		type_opt.select(select_idx)
 
 	var count_spin := SpinBox.new()
 	count_spin.min_value = 1
@@ -605,7 +632,7 @@ func _populate_spawn_grid_row(grid: GridContainer, wave_dict: Dictionary, spawns
 		var et = str(spawn_dict.get("enemy_type", "grunt"))
 		var r_each = get_enemy_reward(et)
 		var total_bounty = r_each * c
-		bounty_lbl.text = "+%d (%d ea)" % [total_bounty, r_each]
+		bounty_lbl.text = "+%d⚡ (%d ea)" % [total_bounty, r_each]
 		bounty_lbl.modulate = Color(0.3, 0.95, 0.75)
 
 		var end_t = dl + (c - 1) * iv if c > 1 else dl
