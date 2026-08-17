@@ -814,6 +814,54 @@ def generate_soul_lantern_texture(output_path: str = None) -> str:
 
     return save_cropped_sprite(img, (64, 64), output_path, "soul_lantern")
 
+def generate_sparkler_texture(output_path: str = None) -> str:
+    """Full 64x64 solid entry-level magic tower: stone foundation, brass mounting ring, and spark emitter prongs."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "sparkler.png")
+
+    img, draw, f, sw, sh = create_canvas(64, 64, 4)
+    cx, cy = sw / 2.0, sh / 2.0
+
+    # Palette: Clean stone, brass/bronze metallic trim, amber/gold spark accents
+    c_stone_dark = (24, 28, 36, 255)
+    c_stone_mid = (42, 50, 62, 255)
+    c_stone_light = (65, 78, 96, 255)
+    c_brass_dark = (120, 85, 35, 255)
+    c_brass_mid = (195, 145, 55, 255)
+    c_spark_gold = (255, 205, 50, 255)
+    c_spark_bright = (255, 245, 160, 255)
+
+    # 1. Solid fortified stone base (64x64)
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+
+    # 4 Corner Fortification Rivets / Mounts
+    for ox, oy in [(-20 * f, -20 * f), (20 * f, -20 * f), (-20 * f, 20 * f), (20 * f, 20 * f)]:
+        draw.ellipse([cx + ox - 2.5 * f, cy + oy - 2.5 * f, cx + ox + 2.5 * f, cy + oy + 2.5 * f], fill=c_stone_light, outline=c_stone_dark, width=int(1.0 * f))
+
+    # 2. Circular Brass Turret Turntable / Ring
+    draw.ellipse([cx - 16 * f, cy - 16 * f, cx + 16 * f, cy + 16 * f], fill=c_stone_dark, outline=c_brass_mid, width=int(2 * f))
+    draw.ellipse([cx - 12 * f, cy - 12 * f, cx + 12 * f, cy + 12 * f], fill=c_stone_mid)
+
+    # 3. Twin Spark Emitter Prongs (Diagonal / Dual Rods)
+    rod_len = 14 * f
+    for angle_deg in [45, 135, 225, 315]:
+        rad = math.radians(angle_deg)
+        rx = cx + math.cos(rad) * rod_len
+        ry = cy + math.sin(rad) * rod_len
+        draw.line([cx, cy, rx, ry], fill=c_brass_dark, width=int(3.0 * f))
+        draw.line([cx, cy, rx, ry], fill=c_brass_mid, width=int(1.5 * f))
+        # Emitter tip nodes
+        draw.ellipse([rx - 2.5 * f, ry - 2.5 * f, rx + 2.5 * f, ry + 2.5 * f], fill=c_spark_gold, outline=c_brass_dark, width=int(1.0 * f))
+        draw.ellipse([rx - 1.2 * f, ry - 1.2 * f, rx + 1.2 * f, ry + 1.2 * f], fill=c_spark_bright)
+
+    # 4. Central Spark Core (Octagonal Arcane Core)
+    draw.regular_polygon((cx, cy, 7.5 * f), 8, rotation=22.5, fill=c_stone_dark, outline=c_spark_gold, width=int(1.5 * f))
+    draw.regular_polygon((cx, cy, 5.0 * f), 4, rotation=45, fill=c_spark_gold, outline=c_spark_bright, width=int(1.0 * f))
+    draw.ellipse([cx - 2.0 * f, cy - 2.0 * f, cx + 2.0 * f, cy + 2.0 * f], fill=(255, 255, 255, 255))
+
+    return save_cropped_sprite(img, (64, 64), output_path, "sparkler")
+
 # =========================================================================
 # ALL TOWERS ENTRYPOINT
 # =========================================================================
@@ -835,6 +883,7 @@ def generate_all_towers():
     generate_corrosive_vapor_texture()
     generate_spike_trap_texture()
     generate_soul_lantern_texture()
+    generate_sparkler_texture()
 
 if __name__ == "__main__":
     generate_all_towers()

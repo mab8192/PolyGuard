@@ -1,0 +1,68 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/scenes/towers/Tower.gd" id="1_tower"]
+[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" path="res://src/components/TargetingComponent.gd" id="3_target"]
+[ext_resource type="Script" path="res://src/components/AttackComponent.gd" id="4_attack"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/sparkler.png" id="5_tex"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_range"]
+radius = 220.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_body"]
+size = Vector2(64, 64)
+
+[sub_resource type="Gradient" id="Gradient_sparks"]
+offsets = PackedFloat32Array(0, 0.5, 1)
+colors = PackedColorArray(1, 0.95, 0.6, 0.9, 1, 0.75, 0.2, 0.7, 1, 0.4, 0.1, 0)
+
+[node name="Sparkler" type="StaticBody2D" unique_id=887214710]
+collision_layer = 2
+collision_mask = 0
+script = ExtResource("1_tower")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195477910]
+visible = false
+shape = SubResource("RectangleShape2D_body")
+
+[node name="HealthComponent" type="Node" parent="." unique_id=75994510]
+script = ExtResource("2_health")
+metadata/_custom_type_script = "uid://b25aa5trewubh"
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=854869510]
+collision_layer = 0
+collision_mask = 12
+script = ExtResource("3_target")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966410]
+visible = false
+shape = SubResource("CircleShape2D_range")
+debug_color = Color(1, 0.8, 0.2, 0.08)
+
+[node name="AttackComponent" type="Node" parent="." unique_id=635266710]
+script = ExtResource("4_attack")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
+
+[node name="MarkerLeft" type="Marker2D" parent="." unique_id=522312760]
+position = Vector2(-10, -10)
+
+[node name="MarkerRight" type="Marker2D" parent="." unique_id=522312761]
+position = Vector2(10, -10)
+
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1845019410]
+texture = ExtResource("5_tex")
+
+[node name="SparkParticles" type="CPUParticles2D" parent="." unique_id=194820210]
+amount = 8
+lifetime = 0.5
+emission_shape = 1
+emission_sphere_radius = 6.0
+direction = Vector2(0, -1)
+spread = 180.0
+gravity = Vector2(0, 0)
+initial_velocity_min = 10.0
+initial_velocity_max = 30.0
+scale_amount_min = 1.5
+scale_amount_max = 3.0
+color_ramp = SubResource("Gradient_sparks")

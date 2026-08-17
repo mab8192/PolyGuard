@@ -133,4 +133,5 @@ func _load_registry() -> void:
 		"artillery": load("res://src/data/towers/artillery.tres"),
 		"spike_trap": load("res://src/data/towers/spike_trap.tres"),
 		"soul_lantern": load("res://src/data/towers/soul_lantern.tres"),
+		"sparkler": load("res://src/data/towers/sparkler.tres"),
 	}

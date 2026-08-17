@@ -1,0 +1,32 @@
+[gd_scene format=3]
+
+[ext_resource type="Script" path="res://src/scenes/towers/projectiles/projectile.gd" id="1_proj"]
+[ext_resource type="Script" path="res://src/components/DamageComponent.gd" id="2_dmg"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_spark"]
+radius = 5.0
+
+[node name="SparkProjectile" type="Node2D" unique_id=1033502453]
+script = ExtResource("1_proj")
+
+[node name="SparkGlow" type="Polygon2D" parent="." unique_id=287040308]
+color = Color(1, 0.82, 0.2, 0.9)
+polygon = PackedVector2Array(0, -5, -2, -2, -5, 0, -2, 2, 0, 5, 2, 2, 5, 0, 2, -2)
+
+[node name="SparkCore" type="Polygon2D" parent="." unique_id=287040309]
+color = Color(1, 0.98, 0.85, 1)
+polygon = PackedVector2Array(0, -2.5, -2.5, 0, 0, 2.5, 2.5, 0)
+
+[node name="DamageComponent" type="Area2D" parent="." unique_id=881148203]
+collision_layer = 0
+collision_mask = 12
+script = ExtResource("2_dmg")
+damage = 16.0
+damage_type = 1
+metadata/_custom_type_script = "uid://bvdy44yq25vtv"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="DamageComponent" unique_id=104444699]
+shape = SubResource("CircleShape2D_spark")
+
+[node name="VisibleOnScreenNotifier2D" type="VisibleOnScreenNotifier2D" parent="." unique_id=1913716860]
+rect = Rect2(-6, -6, 12, 12)
