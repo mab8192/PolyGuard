@@ -41,22 +41,23 @@ metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
 [node name="SpectralBeamVisualizer" type="Node2D" parent="." unique_id=905728399]
 script = ExtResource("5_beam")
 
+[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1845019399]
+texture = ExtResource("6_tex")
+
 [node name="SoulParticles" type="CPUParticles2D" parent="." unique_id=194820199]
 position = Vector2(0, -2)
 lifetime = 0.8
 emission_shape = 1
 emission_sphere_radius = 6.0
 direction = Vector2(0, -1)
-spread = 30.0
-gravity = Vector2(0, -20)
+spread = 180.0
+gravity = Vector2(0, 0)
 initial_velocity_min = 10.0
 initial_velocity_max = 25.0
 scale_amount_min = 2.0
 scale_amount_max = 3.5
 color_ramp = SubResource("Gradient_wisps")
 
-[node name="Sprite2D" type="Sprite2D" parent="." unique_id=1845019399]
-texture = ExtResource("6_tex")
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195477899]
+visible = false
 shape = SubResource("RectangleShape2D_body")
