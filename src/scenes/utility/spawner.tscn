@@ -2,12 +2,16 @@
 
 [ext_resource type="Script" uid="uid://cy04gqumfumjy" path="res://src/scenes/utility/spawner.gd" id="1_y5mdg"]
 [ext_resource type="Texture2D" uid="uid://cbvygrw6iwl3j" path="res://src/textures/utility/spawner.png" id="2_spawner_tex"]
+[ext_resource type="Script" uid="uid://duyvjjug04cvq" path="res://src/scenes/utility/spawner_path_preview.gd" id="3_path_preview"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
 size = Vector2(64, 64)
 
 [node name="Spawner" type="Area2D" unique_id=964929055 groups=["spawners"]]
 script = ExtResource("1_y5mdg")
+
+[node name="PathPreview" type="Node2D" parent="." unique_id=89237194]
+script = ExtResource("3_path_preview")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1912200016]
 texture = ExtResource("2_spawner_tex")

@@ -29,6 +29,7 @@ var indicator_state: IndicatorState = IndicatorState.NONE
 var _indicator_node: Node2D = null
 var _pulse_tween: Tween = null
 var _highlight_tween: Tween = null
+var path_preview: SpawnerPathPreview = null
 
 const ACTIVE_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
 const INACTIVE_MODULATE: Color = Color(0.48, 0.48, 0.54, 0.75)
@@ -36,6 +37,13 @@ const INACTIVE_MODULATE: Color = Color(0.48, 0.48, 0.54, 0.75)
 func _ready() -> void:
 	if spawner_id.is_empty():
 		spawner_id = name
+	
+	path_preview = find_child("PathPreview", false, false) as SpawnerPathPreview
+	if not path_preview:
+		path_preview = SpawnerPathPreview.new()
+		path_preview.name = "PathPreview"
+		add_child(path_preview)
+		
 	_update_visuals(false)
 	_update_indicator_ui()
 
@@ -75,6 +83,8 @@ func set_indicator(state: IndicatorState) -> void:
 		return
 	indicator_state = state
 	_update_indicator_ui()
+	if path_preview and is_instance_valid(path_preview):
+		path_preview.update_preview()
 
 func _update_indicator_ui() -> void:
 	if not is_inside_tree():
