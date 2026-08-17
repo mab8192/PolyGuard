@@ -12,6 +12,7 @@ const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
 @onready var next_unlock_label: Label = %NextUnlockLabel
 @onready var next_stage_button: Button = %NextStageButton
 @onready var retry_button: Button = %RetryButton
+@onready var inventory_button: Button = %InventoryButton
 @onready var main_menu_button: Button = %MainMenuButton
 
 func _ready() -> void:
@@ -20,6 +21,7 @@ func _ready() -> void:
 
 	next_stage_button.pressed.connect(_on_next_stage_pressed)
 	retry_button.pressed.connect(_on_retry_pressed)
+	inventory_button.pressed.connect(_on_inventory_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 const GHOST_ALERT_SCENE: PackedScene = preload("res://src/scenes/ui/popups/ghost_alert_popup.tscn")
@@ -95,6 +97,10 @@ func _on_next_stage_pressed() -> void:
 
 func _on_retry_pressed() -> void:
 	get_tree().reload_current_scene()
+
+func _on_inventory_pressed() -> void:
+	GameManager.target_main_menu_tab = 1 # NavBar.Tab.INVENTORY
+	GameManager.load_view(GameManager.View.MAIN_MENU)
 
 func _on_main_menu_pressed() -> void:
 	GameManager.load_view(GameManager.View.MAIN_MENU)

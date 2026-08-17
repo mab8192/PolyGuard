@@ -25,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2160004]
-custom_minimum_size = Vector2(920, 850)
+custom_minimum_size = Vector2(920, 940)
 layout_mode = 2
 theme_type_variation = &"DefeatModalPanel"
 
@@ -73,6 +73,14 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "CHANGE LOADOUT"
+
+[node name="InventoryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2160013]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "INVENTORY"
 
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2160012]
 unique_name_in_owner = true

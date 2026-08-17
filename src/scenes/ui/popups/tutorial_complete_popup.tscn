@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://c8m3wax2b5n1q"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/popups/tutorial_complete_popup.gd" id="1_tut_popup"]
+[ext_resource type="Script" uid="uid://bx4mvjjxkvoyc" path="res://src/scenes/ui/popups/tutorial_complete_popup.gd" id="1_tut_popup"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="TutorialCompletePopup" type="CanvasLayer" unique_id=2190001]

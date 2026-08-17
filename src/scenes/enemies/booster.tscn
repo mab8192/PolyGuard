@@ -1,10 +1,10 @@
 [gd_scene format=3 uid="uid://dav2x4m8q1w5b"]
 
-[ext_resource type="Script" path="res://src/scenes/enemies/booster.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://src/textures/enemies/booster.png" id="2_tex"]
-[ext_resource type="Script" path="res://src/components/MovementComponent.gd" id="3_move"]
-[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="4_health"]
-[ext_resource type="Script" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://hg4doxttpgws" path="res://src/scenes/enemies/booster.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://s3i5xb23kwb" path="res://src/textures/enemies/booster.png" id="2_tex"]
+[ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="3_move"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="4_health"]
+[ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="5_nav"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 12.0
@@ -33,4 +33,5 @@ script = ExtResource("5_nav")
 simplify_path = true
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879432685]
+visible = false
 shape = SubResource("CircleShape2D_body")

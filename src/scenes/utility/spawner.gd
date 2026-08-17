@@ -92,7 +92,7 @@ func _update_indicator_ui() -> void:
 	if not _indicator_node:
 		_indicator_node = Node2D.new()
 		_indicator_node.name = "WaveIndicator"
-		_indicator_node.position = Vector2(0, -44)
+		_indicator_node.position = Vector2(0, -46)
 		add_child(_indicator_node)
 
 	for child in _indicator_node.get_children():
@@ -100,8 +100,6 @@ func _update_indicator_ui() -> void:
 
 	var badge_panel = PanelContainer.new()
 	badge_panel.theme = preload("res://src/misc/theme.tres")
-	badge_panel.position = Vector2(-46, -14)
-	badge_panel.custom_minimum_size = Vector2(92, 28)
 	badge_panel.mouse_filter = Control.MOUSE_FILTER_IGNORE
 
 	var label = Label.new()
@@ -116,6 +114,11 @@ func _update_indicator_ui() -> void:
 
 	badge_panel.add_child(label)
 	_indicator_node.add_child(badge_panel)
+
+	# Dynamic centering of badge around (0, 0)
+	badge_panel.reset_size()
+	var sz = badge_panel.get_combined_minimum_size()
+	badge_panel.position = -sz / 2.0
 
 	# Pulse animation
 	_pulse_tween = create_tween().set_loops()

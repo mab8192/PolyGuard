@@ -26,7 +26,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2170004]
-custom_minimum_size = Vector2(920, 1020)
+custom_minimum_size = Vector2(920, 1100)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -39,7 +39,7 @@ theme_override_constants/margin_bottom = 36
 
 [node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2170006]
 layout_mode = 2
-theme_override_constants/separation = 22
+theme_override_constants/separation = 20
 alignment = 1
 
 [node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170007]
@@ -120,11 +120,11 @@ horizontal_alignment = 1
 
 [node name="ButtonsVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2170009]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 14
 
 [node name="NextStageButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170010]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 96)
+custom_minimum_size = Vector2(0, 92)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
@@ -132,15 +132,23 @@ text = "NEXT STAGE"
 
 [node name="RetryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170011]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "REPLAY STAGE"
 
+[node name="InventoryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170023]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "INVENTORY"
+
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170012]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 84)
+custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"

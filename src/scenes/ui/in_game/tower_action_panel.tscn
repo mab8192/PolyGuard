@@ -4,6 +4,7 @@
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="TowerActionPanel" type="PanelContainer" unique_id=3100001]
+custom_minimum_size = Vector2(960, 0)
 anchors_preset = 7
 anchor_left = 0.5
 anchor_top = 1.0

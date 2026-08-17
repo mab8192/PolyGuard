@@ -2,6 +2,7 @@ class_name PauseMenu extends CanvasLayer
 
 @onready var resume_button: Button = %ResumeButton
 @onready var restart_button: Button = %RestartButton
+@onready var loadout_button: Button = %LoadoutButton
 @onready var main_menu_button: Button = %MainMenuButton
 
 @onready var bgm_slider: HSlider = %BGMSlider
@@ -13,6 +14,7 @@ func _ready() -> void:
 
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
+	loadout_button.pressed.connect(_on_loadout_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 	_setup_audio_sliders()
@@ -42,6 +44,10 @@ func _on_resume_pressed() -> void:
 func _on_restart_pressed() -> void:
 	close()
 	get_tree().reload_current_scene()
+
+func _on_loadout_pressed() -> void:
+	close()
+	GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_main_menu_pressed() -> void:
 	close()

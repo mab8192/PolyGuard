@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://bwcihaqa42en3" path="res://src/scenes/ui/views/codex.gd" id="1_ggl2t"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
-[ext_resource type="Script" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="4_drag_scroll"]
+[ext_resource type="Script" uid="uid://djnudry8xsxvq" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="4_drag_scroll"]
 
 [node name="CodexView" type="MarginContainer" unique_id=157242470]
 anchors_preset = 15
@@ -31,7 +31,7 @@ text = "ENEMY CODEX"
 horizontal_alignment = 1
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681921]
-custom_minimum_size = Vector2(0, 340)
+custom_minimum_size = Vector2(0, 300)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -99,7 +99,7 @@ theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681935]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 100)
+custom_minimum_size = Vector2(0, 110)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Standard polygon foot soldier."
@@ -108,7 +108,7 @@ clip_text = true
 
 [node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 60)
+custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
 theme_type_variation = &"StatText"
 text = "HP: 100 | Speed: 150 | Lives Penalty: 1"

@@ -3,6 +3,7 @@ extends CanvasLayer
 @onready var desc_label: Label = %DescLabel
 @onready var retry_button: Button = %RetryButton
 @onready var loadout_button: Button = %LoadoutButton
+@onready var inventory_button: Button = %InventoryButton
 @onready var main_menu_button: Button = %MainMenuButton
 
 func _ready() -> void:
@@ -11,6 +12,7 @@ func _ready() -> void:
 
 	retry_button.pressed.connect(_on_retry_pressed)
 	loadout_button.pressed.connect(_on_loadout_pressed)
+	inventory_button.pressed.connect(_on_inventory_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 func _on_stage_failed() -> void:
@@ -28,6 +30,10 @@ func _on_retry_pressed() -> void:
 
 func _on_loadout_pressed() -> void:
 	GameManager.load_view(GameManager.View.LOADOUT)
+
+func _on_inventory_pressed() -> void:
+	GameManager.target_main_menu_tab = 1 # NavBar.Tab.INVENTORY
+	GameManager.load_view(GameManager.View.MAIN_MENU)
 
 func _on_main_menu_pressed() -> void:
 	GameManager.load_view(GameManager.View.MAIN_MENU)
