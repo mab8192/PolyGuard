@@ -32,6 +32,7 @@ func _process(delta: float) -> void:
 	if wave_is_active:
 		stage_time += delta
 		var total_secs = int(stage_time)
+		@warning_ignore("integer_division")
 		var mins = total_secs / 60
 		var secs = total_secs % 60
 		SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])

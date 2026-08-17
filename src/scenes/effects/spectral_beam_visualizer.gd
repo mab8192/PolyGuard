@@ -27,9 +27,6 @@ func _draw() -> void:
 		if dist <= 2.0:
 			continue
 
-		var dir := (end_pos - start_pos).normalized()
-		var perp := Vector2(-dir.y, dir.x)
-
 		# 1. Broad outer ethereal violet aura
 		draw_line(start_pos, end_pos, Color(0.7, 0.25, 0.95, 0.22), 8.0)
 		

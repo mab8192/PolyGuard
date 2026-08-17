@@ -3,7 +3,7 @@ extends Node2D
 @onready var targeting_component: TargetingComponent = $"../TargetingComponent"
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _process(_delta: float) -> void:
 	queue_redraw()
 
 func _draw() -> void:

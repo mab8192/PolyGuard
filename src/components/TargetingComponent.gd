@@ -20,8 +20,8 @@ var _targets: Array[Node2D] = []
 var _rays: Dictionary[Node2D, RayCast2D] = {}
 var _active_targets: Array[Node2D] = []
 
-func set_range_visible(visible: bool) -> void:
-	is_range_visible = visible
+func set_range_visible(vis: bool) -> void:
+	is_range_visible = vis
 
 func get_targets() -> Array[Node2D]:
 	return _active_targets

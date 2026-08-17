@@ -12,6 +12,7 @@
 [sub_resource type="Resource" id="Resource_4rgg6"]
 script = ExtResource("1_igubi")
 damage = 250.0
+attack_mode = 1
 cooldown = 4.0
 metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
