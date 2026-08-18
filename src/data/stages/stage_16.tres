@@ -12,5 +12,5 @@ scene = ExtResource("3_scene")
 icon = ExtResource("1_icon")
 starting_energy = 1200
 starting_lives = 30
-loadout_size = 7
+loadout_size = 6
 wave_data_file = "res://src/data/stages/waves/Stage16.json"

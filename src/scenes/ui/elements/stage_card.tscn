@@ -19,7 +19,6 @@ script = ExtResource("1_script")
 
 [node name="HBoxContainer" type="HBoxContainer" parent="." unique_id=741002]
 layout_mode = 2
-mouse_filter = 1
 theme_override_constants/separation = 16
 
 [node name="ImageFrame" type="PanelContainer" parent="HBoxContainer" unique_id=741003]
@@ -39,30 +38,35 @@ texture = ExtResource("3_icon")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer" unique_id=741005]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer" unique_id=566757929]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/margin_top = 16
+theme_override_constants/margin_bottom = 16
+
+[node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer" unique_id=741005]
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-size_flags_vertical = 4
 mouse_filter = 2
-theme_override_constants/separation = 6
+theme_override_constants/separation = 8
 
-[node name="TitleRowHBox" type="HBoxContainer" parent="HBoxContainer/InfoVBox" unique_id=741010]
+[node name="TitleRowHBox" type="HBoxContainer" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=741010]
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
 theme_override_constants/separation = 10
 
-[node name="TitleLabel" type="Label" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741006]
+[node name="TitleLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox" unique_id=741006]
 unique_name_in_owner = true
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
+size_flags_vertical = 0
 theme_type_variation = &"TitleText"
 text = "Stage 1"
 clip_text = true
 
-[node name="StarsContainer" type="HBoxContainer" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741014]
+[node name="StarsContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox" unique_id=741014]
 unique_name_in_owner = true
 visible = false
 layout_mode = 2
@@ -70,7 +74,7 @@ mouse_filter = 2
 theme_override_constants/separation = 4
 alignment = 2
 
-[node name="Star1" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741015]
+[node name="Star1" type="TextureRect" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741015]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -80,7 +84,7 @@ texture = ExtResource("4_star")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Star2" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741016]
+[node name="Star2" type="TextureRect" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741016]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -90,7 +94,7 @@ texture = ExtResource("4_star")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="Star3" type="TextureRect" parent="HBoxContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741017]
+[node name="Star3" type="TextureRect" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox/StarsContainer" unique_id=741017]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(30, 30)
 layout_mode = 2
@@ -100,35 +104,33 @@ texture = ExtResource("4_star")
 expand_mode = 1
 stretch_mode = 5
 
-[node name="StatusBadgeContainer" type="PanelContainer" parent="HBoxContainer/InfoVBox/TitleRowHBox" unique_id=741011]
+[node name="StatusBadgeContainer" type="PanelContainer" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox" unique_id=741011]
 unique_name_in_owner = true
 layout_mode = 2
 mouse_filter = 2
 theme_type_variation = &"StatusBadge"
 
-[node name="StatusBadgeLabel" type="Label" parent="HBoxContainer/InfoVBox/TitleRowHBox/StatusBadgeContainer" unique_id=741012]
+[node name="StatusBadgeLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox/StatusBadgeContainer" unique_id=741012]
 unique_name_in_owner = true
 layout_mode = 2
-mouse_filter = 2
 theme_type_variation = &"BadgeText"
 text = "UNLOCKED"
 
-[node name="StatsLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741007]
+[node name="StatsLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=741007]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
+size_flags_vertical = 3
 theme_type_variation = &"BodyText"
-text = "Energy: 700 • Lives: 20 • Waves: 15 • Slots: 4"
+text = "5 waves"
 autowrap_mode = 2
 
-[node name="RecordLabel" type="Label" parent="HBoxContainer/InfoVBox" unique_id=741013]
+[node name="RecordLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=741013]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(1, 0)
 layout_mode = 2
 size_flags_horizontal = 3
-mouse_filter = 2
+size_flags_vertical = 8
 theme_type_variation = &"StatText"
 text = "High Score: 0"
 autowrap_mode = 2

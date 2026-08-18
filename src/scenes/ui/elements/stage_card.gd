@@ -48,18 +48,8 @@ func _render() -> void:
 	
 	if stats_label:
 		var wave_count := stage_data.get_waves().size()
-		var stat_parts: Array[String] = []
-		
-		stat_parts.append("Energy: %d" % stage_data.starting_energy)
-		stat_parts.append("Lives: %d" % stage_data.starting_lives)
-		
-		if wave_count > 0:
-			stat_parts.append("Waves: %d" % wave_count)
-			
-		var slots := stage_data.loadout_size if stage_data.loadout_size > 0 else 4
-		stat_parts.append("Slots: %d" % slots)
-		
-		stats_label.text = " • ".join(stat_parts)
+
+		stats_label.text = str(wave_count) + " waves"
 
 	if is_unlocked:
 		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
@@ -112,4 +102,3 @@ func _on_card_pressed() -> void:
 		var stage_id = Registry.get_stage_id(stage_data)
 		if SaveManager.is_stage_unlocked(stage_id):
 			stage_selected.emit(stage_data)
-
