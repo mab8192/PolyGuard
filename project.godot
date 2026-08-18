@@ -14,6 +14,7 @@ config/name="Poly Guard 2D"
 run/main_scene="uid://duii2yuv2y63u"
 config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=240
+boot_splash/bg_color=Color(0.0313726, 0.0470588, 0.0862745, 1)
 boot_splash/image="res://src/textures/splash.png"
 config/icon="uid://dl76pbu2a8ce5"
 
@@ -29,6 +30,7 @@ SignalBus="*uid://f4x1spochkwu"
 AudioManager="*uid://dns2dtsx4xm5b"
 SaveManager="*uid://c36ci1uxro7aq"
 SettingsManager="*uid://ce1684yjgnm6d"
+AdManager="*uid://c6rhxwc573nin"
 
 [display]
 
@@ -103,4 +105,4 @@ textures/canvas_textures/default_texture_filter=0
 rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
-environment/defaults/default_clear_color=Color(0.15487596, 0.154876, 0.15487596, 1)
+environment/defaults/default_clear_color=Color(0.0313726, 0.0470588, 0.0862745, 1)
