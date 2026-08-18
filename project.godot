@@ -40,7 +40,7 @@ window/handheld/orientation=1
 
 [editor_plugins]
 
-enabled=PackedStringArray("res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/stage_thumbnail_generator/plugin.cfg", "res://addons/wave_editor/plugin.cfg")
+enabled=PackedStringArray("res://addons/admob/plugin.cfg", "res://addons/brackeys_particle_controls/plugin.cfg", "res://addons/script-ide/plugin.cfg", "res://addons/stage_thumbnail_generator/plugin.cfg", "res://addons/wave_editor/plugin.cfg")
 
 [file_customization]
 
@@ -73,6 +73,10 @@ theme/custom="uid://knh4f5ekk7vf"
 [input_devices]
 
 pointing/emulate_touch_from_mouse=true
+
+[internationalization]
+
+locale/translations=PackedStringArray("res://addons/admob/gdscript/sample/translations/admob_sample.en.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.pt_BR.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.es.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.zh_CN.translation", "res://addons/admob/gdscript/sample/translations/admob_sample.ja.translation")
 
 [layer_names]
 
