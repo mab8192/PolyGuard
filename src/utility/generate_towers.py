@@ -521,29 +521,90 @@ def generate_carpet_bomb_artillery_texture(output_path: str = None) -> str:
 # =========================================================================
 
 def generate_brimstone_texture(output_path: str = None) -> str:
-    """Cyber Magma / Thermal Plate with glowing heat slits and center core."""
+    """Cyber Scorch / Brimstone Incinerator Floor Trap.
+    Heavy volcanic-alloy chassis with corner heat-sink radiators, octagonal combustion hearth,
+    diagonal heat-diffuser struts, cardinal thermal exhaust grilles, and a glowing white-hot ignition core."""
     if output_path is None:
         output_path = os.path.join(get_project_root(), "src", "textures", "towers", "brimstone.png")
 
     img, draw, f, sw, sh = create_canvas(64, 64, 4)
     cx, cy = sw / 2.0, sh / 2.0
 
-    c_plate_dark = (16, 18, 22, 255)
-    c_plate_mid = (30, 32, 40, 255)
-    c_neon_crimson = (255, 60, 20, 255)
-    c_magma_orange = (255, 140, 20, 255)
-    c_magma_yellow = (255, 230, 80, 255)
+    # Color Palette: Heavy Dark Volcanic Chassis, Heat Sinks, Molten Lava & Searing Plasma
+    c_frame_dark = (16, 14, 18, 255)
+    c_frame_mid = (28, 24, 30, 255)
+    c_frame_edge = (10, 8, 12, 255)
+    c_bracket = (42, 34, 38, 255)
+    c_bronze = (160, 75, 25, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_plate_dark, outline=(10, 12, 14, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_plate_mid)
-    draw.rounded_rectangle([8 * f, 8 * f, sw - 8 * f, sh - 8 * f], radius=2.5 * f, fill=(12, 14, 16, 255), outline=c_neon_crimson, width=int(1.8 * f))
+    c_lava_deep = (140, 20, 10, 255)
+    c_lava_crimson = (210, 45, 15, 255)
+    c_lava_orange = (255, 110, 20, 255)
+    c_lava_yellow = (255, 210, 50, 255)
+    c_lava_white = (255, 255, 220, 255)
 
-    for vy in [-12 * f, -4 * f, 4 * f, 12 * f]:
-        span = 14 * f if abs(vy) < 8 * f else 10 * f
-        draw.rounded_rectangle([cx - span, cy + vy - 2 * f, cx + span, cy + vy + 2 * f], radius=1.5 * f, fill=c_neon_crimson, outline=c_magma_orange, width=int(1 * f))
-        draw.line([cx - span + 2 * f, cy + vy, cx + span - 2 * f, cy + vy], fill=c_magma_yellow, width=int(1.2 * f))
+    # 1. Outer Heavy Chassis Base (64x64 with 2px margin)
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_frame_mid)
 
-    draw.regular_polygon((cx, cy, 6 * f), 4, rotation=45, fill=c_magma_yellow, outline=c_neon_crimson, width=int(1.2 * f))
+    # 2. 4 Corner Heat-Sink Radiators with thermal exhaust notches
+    corner_offsets = [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]
+    for ox, oy in corner_offsets:
+        # Corner bracket pad
+        draw.rounded_rectangle([cx + ox - 5 * f, cy + oy - 5 * f, cx + ox + 5 * f, cy + oy + 5 * f], radius=2 * f, fill=c_bracket, outline=c_frame_dark, width=int(1.2 * f))
+        # Angled thermal vent slit in corner
+        vx = 1.8 * f if ox > 0 else -1.8 * f
+        vy = 1.8 * f if oy > 0 else -1.8 * f
+        draw.line([cx + ox - vx, cy + oy - vy, cx + ox + vx, cy + oy + vy], fill=c_lava_orange, width=int(1.5 * f))
+        draw.ellipse([cx + ox - 1 * f, cy + oy - 1 * f, cx + ox + 1 * f, cy + oy + 1 * f], fill=c_lava_yellow)
+
+    # 3. Thermal Hazard Warning Trim (top and bottom rails) with chevron notches
+    for ry in [6 * f, sh - 6 * f]:
+        draw.line([14 * f, ry, sw - 14 * f, ry], fill=c_bronze, width=int(1.5 * f))
+        for rx in [-10 * f, -3 * f, 3 * f, 10 * f]:
+            draw.line([cx + rx - 1.5 * f, ry - 1 * f, cx + rx + 1.5 * f, ry + 1 * f], fill=c_lava_orange, width=int(1 * f))
+
+    # 4. Central Octagonal Combustion Hearth / Containment Basin
+    r_hearth = 21 * f
+    draw.regular_polygon((cx, cy, r_hearth), 8, rotation=22.5, fill=c_frame_dark, outline=c_lava_crimson, width=int(2 * f))
+    draw.regular_polygon((cx, cy, r_hearth - 2 * f), 8, rotation=22.5, fill=(12, 10, 14, 255))
+
+    # Searing Radiant Heat Reservoir (Underglow)
+    draw.ellipse([cx - 16 * f, cy - 16 * f, cx + 16 * f, cy + 16 * f], fill=c_lava_deep)
+    draw.ellipse([cx - 12 * f, cy - 12 * f, cx + 12 * f, cy + 12 * f], fill=c_lava_crimson)
+    draw.ellipse([cx - 8 * f, cy - 8 * f, cx + 8 * f, cy + 8 * f], fill=c_lava_orange)
+
+    # 5. Diagonal Heavy Thermal Grille Struts (dividing hearth into 4 quadrants)
+    d = 16 * f
+    for dx, dy in [(-d, -d), (d, -d), (-d, d), (d, d)]:
+        draw.line([cx, cy, cx + dx, cy + dy], fill=c_frame_dark, width=int(3.2 * f))
+        draw.line([cx, cy, cx + dx, cy + dy], fill=c_bracket, width=int(2.0 * f))
+        draw.line([cx + dx * 0.3, cy + dy * 0.3, cx + dx * 0.9, cy + dy * 0.9], fill=c_bronze, width=int(1.0 * f))
+
+    # 6. Thermal Exhaust Louvers & Flame Slits in all 4 cardinal quadrants
+    # North & South curved/angled combustion slats
+    for sign_y in [-1, 1]:
+        for dy in [5 * f, 10 * f, 14 * f]:
+            y = cy + sign_y * dy
+            span = 12 * f - (dy * 0.45)
+            draw.rounded_rectangle([cx - span, y - 1.2 * f, cx + span, y + 1.2 * f], radius=1 * f, fill=c_frame_dark, outline=c_lava_orange, width=int(1 * f))
+            draw.line([cx - span + 2 * f, y, cx + span - 2 * f, y], fill=c_lava_yellow, width=int(1.2 * f))
+
+    # East & West vertical combustion slits
+    for sign_x in [-1, 1]:
+        x = cx + sign_x * 12 * f
+        draw.rounded_rectangle([x - 1.5 * f, cy - 7 * f, x + 1.5 * f, cy + 7 * f], radius=1 * f, fill=c_frame_dark, outline=c_lava_orange, width=int(1 * f))
+        draw.line([x, cy - 5 * f, x, cy + 5 * f], fill=c_lava_yellow, width=int(1.2 * f))
+
+    # 7. Searing Central Igniter Core / Plasma Node
+    draw.regular_polygon((cx, cy, 7.5 * f), 8, rotation=22.5, fill=c_frame_dark, outline=c_lava_orange, width=int(1.8 * f))
+    draw.ellipse([cx - 5 * f, cy - 5 * f, cx + 5 * f, cy + 5 * f], fill=c_lava_orange)
+    draw.ellipse([cx - 3.5 * f, cy - 3.5 * f, cx + 3.5 * f, cy + 3.5 * f], fill=c_lava_yellow)
+    draw.regular_polygon((cx, cy, 2.5 * f), 4, rotation=45, fill=c_lava_white)
+
+    # 4 Cardinal Igniter Injection Nodes
+    for ox, oy in [(0, -7.5 * f), (0, 7.5 * f), (-7.5 * f, 0), (7.5 * f, 0)]:
+        draw.ellipse([cx + ox - 1.5 * f, cy + oy - 1.5 * f, cx + ox + 1.5 * f, cy + oy + 1.5 * f], fill=c_lava_white, outline=c_lava_orange, width=int(0.8 * f))
 
     return save_cropped_sprite(img, (64, 64), output_path, "brimstone")
 

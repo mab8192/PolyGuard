@@ -25,6 +25,7 @@ from generate_icons import (
 from generate_tiles import generate_spawner_tile, generate_exit_tile
 from generate_enemies import generate_all_enemies
 from generate_towers import generate_all_towers
+from generate_tower_variants import generate_all_variants
 from generate_splash import generate_splash
 
 def main():
@@ -32,7 +33,7 @@ def main():
     print("  Poly Guard - Sprite Generator Suite")
     print("========================================")
     
-    print("\n[1/5] Generating HUD & UI Icons...")
+    print("\n[1/6] Generating HUD & UI Icons...")
     generate_lives_icon()
     generate_energy_icon()
     generate_build_icon()
@@ -40,17 +41,20 @@ def main():
     generate_rotate_icon()
     generate_confirm_icon()
     
-    print("\n[2/5] Generating Map Floor Tiles...")
+    print("\n[2/6] Generating Map Floor Tiles...")
     generate_spawner_tile()
     generate_exit_tile()
     
-    print("\n[3/5] Generating Enemy Sprites...")
+    print("\n[3/6] Generating Enemy Sprites...")
     generate_all_enemies()
 
-    print("\n[4/5] Generating Tower Sprites...")
+    print("\n[4/6] Generating Tower Sprites...")
     generate_all_towers()
     
-    print("\n[5/5] Generating Splash Screen...")
+    print("\n[5/6] Generating Tower Variant Sprites...")
+    generate_all_variants()
+    
+    print("\n[6/6] Generating Splash Screen...")
     generate_splash()
     
     print("\nAll assets regenerated successfully!")
