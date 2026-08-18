@@ -15,6 +15,8 @@ const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
 @onready var inventory_button: Button = %InventoryButton
 @onready var main_menu_button: Button = %MainMenuButton
 
+var _ad_bonus_claimed: bool = false
+
 func _ready() -> void:
 	hide()
 	SignalBus.stage_completed.connect(_on_stage_completed)

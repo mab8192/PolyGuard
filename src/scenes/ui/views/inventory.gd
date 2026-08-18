@@ -11,6 +11,7 @@ const CARD_SCENE: PackedScene = preload("res://src/scenes/ui/elements/card.tscn"
 @onready var detail_desc: Label = %DetailDesc
 @onready var detail_stats: Label = %DetailStats
 @onready var upgrade_button: Button = %UpgradeButton
+@onready var add_credits_button: Button = %AddCreditsButton
 @onready var tower_upgrade_popup: TowerUpgradePopup = %TowerUpgradePopup
 
 var _cards: Array[Card] = []
@@ -18,6 +19,8 @@ var _selected_tower: TowerData = null
 
 func _ready() -> void:
 	upgrade_button.pressed.connect(_on_upgrade_button_pressed)
+	if add_credits_button:
+		add_credits_button.pressed.connect(_on_add_credits_pressed)
 	
 	SignalBus.credits_changed.connect(func(_c): _refresh_all())
 	SignalBus.tower_unlocked.connect(func(_t): _refresh_all())
@@ -141,3 +144,6 @@ func _on_upgrade_button_pressed() -> void:
 		return
 	if tower_upgrade_popup:
 		tower_upgrade_popup.open(_selected_tower)
+
+func _on_add_credits_pressed() -> void:
+	AdManager.show_rewarded()

@@ -25,6 +25,17 @@ script = ExtResource("1_7a65l")
 layout_mode = 2
 theme_override_constants/separation = 14
 
+[node name="TopActionsHBox" type="HBoxContainer" parent="RootVBox" unique_id=637681930]
+layout_mode = 2
+
+[node name="AddCreditsButton" type="Button" parent="RootVBox/TopActionsHBox" unique_id=637681931]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(250, 52)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "+100 CREDITS (AD)"
+
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
 custom_minimum_size = Vector2(0, 430)
 layout_mode = 2
