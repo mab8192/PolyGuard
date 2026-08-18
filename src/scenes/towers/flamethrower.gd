@@ -10,21 +10,6 @@ func _ready() -> void:
 		if not effect_applier.deactivated.is_connected(_on_deactivated):
 			effect_applier.deactivated.connect(_on_deactivated)
 
-func _process(_delta: float) -> void:
-	if is_preview:
-		if flame_effect and flame_effect.emitting:
-			flame_effect.emitting = false
-		return
-	
-	if effect_applier and flame_effect:
-		var has_enemies = false
-		for b in effect_applier.get_overlapping_bodies():
-			if is_instance_valid(b) and b is Enemy:
-				has_enemies = true
-				break
-		if flame_effect.emitting != has_enemies:
-			flame_effect.emitting = has_enemies
-
 func _on_triggered() -> void:
 	if flame_effect and not is_preview:
 		flame_effect.emitting = true

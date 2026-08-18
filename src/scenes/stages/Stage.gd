@@ -72,7 +72,7 @@ func _unhandled_input(event: InputEvent) -> void:
 		get_viewport().set_input_as_handled()
 		return
 		
-	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and event.is_pressed():
+	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.is_pressed():
 		var click_pos = get_global_mouse_position()
 		var clicked_tower = _find_tower_at(click_pos)
 		if clicked_tower:

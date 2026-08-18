@@ -1,6 +1,7 @@
 [gd_scene format=3 uid="uid://cslsestkvwjl2"]
 
 [ext_resource type="Script" uid="uid://dtsyevv75wql0" path="res://src/scenes/game.gd" id="1_covw0"]
+[ext_resource type="Script" path="res://src/scenes/camera_controller.gd" id="2_cam"]
 [ext_resource type="PackedScene" uid="uid://ckbyw6p0dd4tr" path="res://src/scenes/ui/in_game/hud.tscn" id="2_3rtjt"]
 [ext_resource type="PackedScene" uid="uid://cxsn1h00q1jo3" path="res://src/scenes/stage_root.tscn" id="2_yufto"]
 
@@ -18,5 +19,6 @@ environment = SubResource("Environment_qgbsg")
 [node name="StageRoot" parent="." unique_id=28076084 instance=ExtResource("2_yufto")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
+script = ExtResource("2_cam")
 
 [node name="HUD" parent="." unique_id=4857712 instance=ExtResource("2_3rtjt")]

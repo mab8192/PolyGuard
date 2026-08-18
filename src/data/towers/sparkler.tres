@@ -1,23 +1,21 @@
-[gd_resource type="Resource" script_class="TowerData" format=3]
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://c5c4jkvsqb1up"]
 
-[ext_resource type="Script" path="res://src/data/components/AttackData.gd" id="1_attack"]
-[ext_resource type="Script" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="2_choice"]
-[ext_resource type="Script" path="res://src/data/components/HealthData.gd" id="3_health"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/sparkler.png" id="4_icon"]
-[ext_resource type="PackedScene" path="res://src/scenes/towers/sparkler.tscn" id="5_scene"]
-[ext_resource type="Script" path="res://src/data/towers/TowerData.gd" id="6_tower"]
-[ext_resource type="Script" path="res://src/data/components/TargetingData.gd" id="7_target"]
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="2_choice"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Texture2D" uid="uid://2fbh81vex1ec" path="res://src/textures/towers/sparkler.png" id="4_icon"]
+[ext_resource type="PackedScene" uid="uid://dk1mrpkucl0fp" path="res://src/scenes/towers/sparkler.tscn" id="5_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_tower"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_target"]
 [ext_resource type="PackedScene" path="res://src/scenes/towers/projectiles/spark_projectile.tscn" id="8_proj"]
 
 [sub_resource type="Resource" id="Resource_attack"]
 script = ExtResource("1_attack")
 damage = 16.0
 damage_type = 1
-attack_mode = 0
 cooldown = 0.4
 projectile_scene = ExtResource("8_proj")
 projectile_speed = 520.0
-projectile_follow_target = true
 
 [sub_resource type="Resource" id="Resource_choice_prismatic"]
 script = ExtResource("2_choice")
@@ -42,7 +40,6 @@ armor = 15.0
 
 [sub_resource type="Resource" id="Resource_target"]
 script = ExtResource("7_target")
-strategy = 0
 max_targets = 2
 targeting_mask = 12
 
@@ -52,13 +49,11 @@ tower_id = "sparkler"
 display_name = "Sparkler"
 icon = ExtResource("4_icon")
 scene = ExtResource("5_scene")
-description = "Arcane rapid-fire tower that launches spark projectiles at up to two enemies simultaneously. Can target and damage ethereal ghosts."
-unlock_cost = 0
+description = "Arcane rapid-fire tower that launches spark projectiles at up to two enemies simultaneously. Can target and damage ghosts."
 required_stage_id = "stage_02"
 choices = Array[ExtResource("2_choice")]([SubResource("Resource_choice_prismatic"), SubResource("Resource_choice_overcharge")])
 damage_upgrade_per_level = 0.15
 cooldown_reduction_per_level = 0.08
-health_upgrade_per_level = 0.1
 cost = 200
 can_rotate = false
 health = SubResource("Resource_health")
