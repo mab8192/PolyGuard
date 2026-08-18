@@ -23,12 +23,6 @@ script = ExtResource("1_323lx")
 layout_mode = 2
 theme_override_constants/separation = 16
 
-[node name="TitleLabel" type="Label" parent="RootVBox" unique_id=1217442947]
-layout_mode = 2
-theme_type_variation = &"SubHeaderText"
-text = "CAMPAIGN"
-horizontal_alignment = 1
-
 [node name="ScrollContainer" type="ScrollContainer" parent="RootVBox" unique_id=1931280036]
 layout_mode = 2
 size_flags_vertical = 3

@@ -114,7 +114,7 @@ func get_stats() -> Dictionary:
 	if health and health.data:
 		lines.append("HEALTH: %d / %d" % [int(health.get_health()), int(health.data.max_health)])
 	if targeting and targeting.data:
-		lines.append("TARGETING: %s (%s)" % [targeting.get_strategy_name(), targeting.get_strategy_description()])
+		lines.append("TARGETING: %s" % [targeting.get_strategy_name()])
 	if base_stats.get("max_targets", 1) > 1:
 		lines.append("TARGETS: %d Enemies" % base_stats["max_targets"])
 	if base_stats.get("targets_ghosts", false):

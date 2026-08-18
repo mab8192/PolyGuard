@@ -36,7 +36,6 @@ func _on_pause_pressed() -> void:
 
 func _on_ff_pressed(toggled_on: bool) -> void:
 	Engine.time_scale = 2 if toggled_on else 1
-	fast_forward_button.text = "2x" if toggled_on else "1x"
 
 func _on_stage_complete() -> void:
 	Engine.time_scale = 1

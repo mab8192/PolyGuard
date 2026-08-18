@@ -5,7 +5,13 @@ class_name SettingsPopup extends CanvasLayer
 @onready var sfx_slider: HSlider = %SFXSlider
 @onready var reset_button: Button = %ResetButton
 @onready var dev_cheats_button: Button = %DevCheatsButton
+@onready var credits_button: Button = %CreditsButton
 @onready var close_button: Button = %CloseButton
+
+const DEV_CHEAT_MENU_SCENE = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
+const CREDITS_POPUP_SCENE = preload("res://src/scenes/ui/popups/credits_popup.tscn")
+var _cheat_menu: DevCheatMenu = null
+var _credits_popup: CreditsPopup = null
 
 func _ready() -> void:
 	hide()
@@ -13,16 +19,21 @@ func _ready() -> void:
 	reset_button.pressed.connect(_on_reset_pressed)
 	if dev_cheats_button:
 		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
+	if credits_button:
+		credits_button.pressed.connect(_on_credits_pressed)
 	_setup_sliders()
-
-const DEV_CHEAT_MENU_SCENE = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
-var _cheat_menu: DevCheatMenu = null
 
 func _on_dev_cheats_pressed() -> void:
 	if not _cheat_menu:
 		_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
 		add_child(_cheat_menu)
 	_cheat_menu.open()
+
+func _on_credits_pressed() -> void:
+	if not _credits_popup:
+		_credits_popup = CREDITS_POPUP_SCENE.instantiate() as CreditsPopup
+		add_child(_credits_popup)
+	_credits_popup.open()
 
 func open() -> void:
 	_setup_sliders()

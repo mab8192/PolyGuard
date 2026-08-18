@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://wry12f5iawia"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/popups/settings_popup.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://cj246ef7ddvbp" path="res://src/scenes/ui/popups/settings_popup.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="SettingsPopup" type="CanvasLayer" unique_id=2190001]
@@ -128,6 +128,14 @@ layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "DEVELOPER CHEATS (F1)"
+
+[node name="CreditsButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190029]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "VIEW CREDITS"
 
 [node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190027]
 unique_name_in_owner = true

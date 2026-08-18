@@ -1,0 +1,76 @@
+[gd_scene format=3 uid="uid://b7vcredits123"]
+
+[ext_resource type="Script" uid="uid://dtry6n2xy6khu" path="res://src/scenes/ui/popups/credits_popup.gd" id="1_script"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+[ext_resource type="Script" uid="uid://djnudry8xsxvq" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="3_drag_scroll"]
+
+[node name="CreditsPopup" type="CanvasLayer" unique_id=2191001]
+layer = 30
+script = ExtResource("1_script")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2191002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2191003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2191004]
+custom_minimum_size = Vector2(920, 1100)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2191005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2191006]
+layout_mode = 2
+theme_override_constants/separation = 20
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2191007]
+layout_mode = 2
+theme_type_variation = &"HeaderText"
+text = "CREDITS"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2191008]
+layout_mode = 2
+theme_type_variation = &"CreditText"
+text = "THIRD-PARTY & VENDOR ATTRIBUTION"
+horizontal_alignment = 1
+
+[node name="ScrollContainer" type="ScrollContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2191009]
+layout_mode = 2
+size_flags_vertical = 3
+horizontal_scroll_mode = 0
+vertical_scroll_mode = 3
+script = ExtResource("3_drag_scroll")
+
+[node name="CreditsContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ScrollContainer" unique_id=2191010]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_constants/separation = 14
+
+[node name="CloseButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2191011]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 92)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "BACK TO SETTINGS"

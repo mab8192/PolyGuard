@@ -25,12 +25,6 @@ script = ExtResource("1_7a65l")
 layout_mode = 2
 theme_override_constants/separation = 14
 
-[node name="TitleLabel" type="Label" parent="RootVBox" unique_id=448504113]
-layout_mode = 2
-theme_type_variation = &"SubHeaderText"
-text = "TOWER ARSENAL"
-horizontal_alignment = 1
-
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
 custom_minimum_size = Vector2(0, 430)
 layout_mode = 2

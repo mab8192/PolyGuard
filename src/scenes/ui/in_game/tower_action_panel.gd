@@ -71,6 +71,7 @@ func _update_ui() -> void:
 	if stats_label:
 		var stats = _current_tower.get_stats()
 		var lines: Array[String] = stats.get("runtime_lines", [])
+		lines = lines.filter(func (line: String): return !line.contains("TARGETING"))
 		if lines.is_empty():
 			lines = stats.get("stat_lines", [])
 		stats_label.text = "\n".join(lines)
@@ -79,7 +80,7 @@ func _update_ui() -> void:
 	if _current_tower.targeting and _current_tower.targeting.data:
 		strategy_row.show()
 		var strat_name = _current_tower.targeting.get_strategy_name()
-		strategy_button.text = "TARGET: %s 🔄" % strat_name
+		strategy_button.text = "TARGET: %s" % strat_name
 	else:
 		strategy_row.hide()
 	

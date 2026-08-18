@@ -8,6 +8,7 @@ class_name MainMenu extends Control
 @onready var settings_button: TextureButton = %SettingsButton
 @onready var settings_popup: SettingsPopup = %SettingsPopup
 @onready var main_menu_credits_label: Label = %MainMenuCreditsLabel
+@onready var tab_title_label: Label = %TabTitleLabel
 
 func _ready() -> void:
 	nav_bar.tab_select.connect(_on_tab_select)
@@ -21,6 +22,8 @@ func _ready() -> void:
 		var tab = GameManager.target_main_menu_tab as NavBar.Tab
 		GameManager.target_main_menu_tab = -1
 		nav_bar.select_tab(tab)
+	else:
+		_on_tab_select(NavBar.Tab.CAMPAIGN)
 
 func _update_credits_display() -> void:
 	if main_menu_credits_label:
@@ -35,14 +38,20 @@ func _on_tab_select(tab: NavBar.Tab) -> void:
 			campaign.show()
 			inventory.hide()
 			codex.hide()
+			if tab_title_label:
+				tab_title_label.text = "CAMPAIGN"
 		NavBar.Tab.INVENTORY:
 			campaign.hide()
 			inventory.show()
 			codex.hide()
+			if tab_title_label:
+				tab_title_label.text = "TOWER ARSENAL"
 		NavBar.Tab.CODEX:
 			campaign.hide()
 			inventory.hide()
 			codex.show()
+			if tab_title_label:
+				tab_title_label.text = "ENEMY CODEX"
 
 func _on_settings_select() -> void:
 	if settings_popup:
