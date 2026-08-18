@@ -12,6 +12,7 @@ const CARD_SCENE: PackedScene = preload("res://src/scenes/ui/elements/card.tscn"
 @onready var detail_stats: Label = %DetailStats
 @onready var upgrade_button: Button = %UpgradeButton
 @onready var add_credits_button: Button = %AddCreditsButton
+@onready var respec_arsenal_button: Button = %RespecArsenalButton
 @onready var tower_upgrade_popup: TowerUpgradePopup = %TowerUpgradePopup
 
 var _cards: Array[Card] = []
@@ -21,18 +22,34 @@ func _ready() -> void:
 	upgrade_button.pressed.connect(_on_upgrade_button_pressed)
 	if add_credits_button:
 		add_credits_button.pressed.connect(_on_add_credits_pressed)
+	if respec_arsenal_button:
+		respec_arsenal_button.pressed.connect(_on_respec_arsenal_pressed)
 	
 	SignalBus.credits_changed.connect(func(_c): _refresh_all())
 	SignalBus.tower_unlocked.connect(func(_t): _refresh_all())
 	SignalBus.tower_upgraded.connect(func(_t, _l): _refresh_all())
 	SignalBus.tower_choice_changed.connect(func(_t, _c): _refresh_all())
 	
+	if AdManager and AdManager.has_signal("ads_enabled_changed"):
+		AdManager.ads_enabled_changed.connect(func(_e): _update_action_buttons())
+	
+	_update_action_buttons()
 	_populate_towers()
 
 func _refresh_all() -> void:
+	_update_action_buttons()
 	_populate_towers()
 	if _selected_tower:
 		_update_details(_selected_tower)
+
+func _update_action_buttons() -> void:
+	if add_credits_button:
+		add_credits_button.visible = not AdManager.is_paid_version()
+	
+	if respec_arsenal_button:
+		var total_spent := SaveManager.get_total_spent_credits()
+		respec_arsenal_button.visible = (total_spent > 0)
+		respec_arsenal_button.text = "RESET ARSENAL"
 
 func _populate_towers() -> void:
 	for child in grid_container.get_children():
@@ -147,3 +164,11 @@ func _on_upgrade_button_pressed() -> void:
 
 func _on_add_credits_pressed() -> void:
 	AdManager.show_rewarded()
+
+func _on_respec_arsenal_pressed() -> void:
+	var popup_scene = load("res://src/scenes/ui/popups/respec_popup.tscn")
+	if popup_scene:
+		var popup = popup_scene.instantiate()
+		get_tree().root.add_child(popup)
+		popup.respec_completed.connect(func(_amt): _refresh_all())
+		popup.open_for_all()

@@ -15,8 +15,6 @@ const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
 @onready var inventory_button: Button = %InventoryButton
 @onready var main_menu_button: Button = %MainMenuButton
 
-var _ad_bonus_claimed: bool = false
-
 func _ready() -> void:
 	hide()
 	SignalBus.stage_completed.connect(_on_stage_completed)
@@ -29,11 +27,11 @@ func _ready() -> void:
 const GHOST_ALERT_SCENE: PackedScene = preload("res://src/scenes/ui/popups/ghost_alert_popup.tscn")
 const TUTORIAL_COMPLETE_SCENE: PackedScene = preload("res://src/scenes/ui/popups/tutorial_complete_popup.tscn")
 
-func _on_stage_completed() -> void:
+func _on_stage_completed(completed_stage_id: String = "") -> void:
 	if GameManager.current_stage and GameManager.current_stage.data:
 		var stage = GameManager.current_stage
 		var stage_data = stage.data
-		var stage_id = Registry.get_stage_id(stage_data)
+		var stage_id = completed_stage_id if not completed_stage_id.is_empty() else Registry.get_stage_id(stage_data)
 		var lives = stage.lives
 		var max_lives = stage_data.starting_lives
 		var energy = stage.energy
@@ -61,6 +59,8 @@ func _on_stage_completed() -> void:
 			reward_breakdown_label.text = "Repeat Clear: +%d Credits\nNew Star Bonus: +%d Credits\nTotal Earned: +%d Credits" % [
 				base_rew, star_rew, total_rew
 			]
+		elif total_rew == 0:
+			reward_breakdown_label.text = "Tutorial Replay: +0 Credits\nTotal Earned: +0 Credits"
 		else:
 			reward_breakdown_label.text = "Repeat Clear: +%d Credits\nTotal Earned: +%d Credits" % [
 				base_rew, total_rew

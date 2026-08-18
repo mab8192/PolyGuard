@@ -37,5 +37,5 @@ func _on_pause_pressed() -> void:
 func _on_ff_pressed(toggled_on: bool) -> void:
 	Engine.time_scale = 2 if toggled_on else 1
 
-func _on_stage_complete() -> void:
+func _on_stage_complete(_stage_id: String = "") -> void:
 	Engine.time_scale = 1

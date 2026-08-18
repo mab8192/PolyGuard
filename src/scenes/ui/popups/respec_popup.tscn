@@ -1,0 +1,136 @@
+[gd_scene format=3 uid="uid://d3m7qax2y4k1l"]
+
+[ext_resource type="Script" path="res://src/scenes/ui/popups/respec_popup.gd" id="1_popup"]
+[ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
+
+[node name="RespecPopup" type="CanvasLayer" unique_id=2210001]
+layer = 30
+script = ExtResource("1_popup")
+
+[node name="OverlayBackground" type="Panel" parent="." unique_id=2210002]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+theme_type_variation = &"DimOverlay"
+
+[node name="CenterContainer" type="CenterContainer" parent="." unique_id=2210003]
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme = ExtResource("2_theme")
+
+[node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2210004]
+custom_minimum_size = Vector2(920, 800)
+layout_mode = 2
+theme_type_variation = &"ModalPanel"
+
+[node name="MarginContainer" type="MarginContainer" parent="CenterContainer/PanelContainer" unique_id=2210005]
+layout_mode = 2
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_top = 36
+theme_override_constants/margin_right = 36
+theme_override_constants/margin_bottom = 36
+
+[node name="VBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer" unique_id=2210006]
+layout_mode = 2
+theme_override_constants/separation = 16
+alignment = 1
+
+[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210007]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"HeaderText"
+text = "RESPEC TOWER"
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210008]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"CreditText"
+text = "INVESTED: 0 CREDITS"
+horizontal_alignment = 1
+
+[node name="InfoPanel" type="PanelContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210009]
+layout_mode = 2
+theme_type_variation = &"DetailPanel"
+
+[node name="InfoMargin" type="MarginContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel" unique_id=2210010]
+layout_mode = 2
+theme_override_constants/margin_left = 20
+theme_override_constants/margin_top = 20
+theme_override_constants/margin_right = 20
+theme_override_constants/margin_bottom = 20
+
+[node name="InfoVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin" unique_id=2210011]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="InfoHeader" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin/InfoVBox" unique_id=2210012]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "REFUND & RESET CONFIRMATION"
+
+[node name="InfoBody" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/InfoPanel/InfoMargin/InfoVBox" unique_id=2210013]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "Resetting will restore the tower to Level 1 and lock any specializations."
+autowrap_mode = 2
+
+[node name="StatusBadgeLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210014]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SubHeaderText"
+text = "CHOOSE RESPEC METHOD"
+horizontal_alignment = 1
+
+[node name="ActionButtonsContainer" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210015]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PaidVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ActionButtonsContainer" unique_id=2210016]
+unique_name_in_owner = true
+layout_mode = 2
+
+[node name="PaidConfirmButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ActionButtonsContainer/PaidVBox" unique_id=2210017]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "CONFIRM RESPEC (+0 CREDITS)"
+
+[node name="FreeVBox" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ActionButtonsContainer" unique_id=2210018]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="FreeAdButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ActionButtonsContainer/FreeVBox" unique_id=2210019]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "WATCH AD (100% REFUND: +0 ¢)"
+
+[node name="FreeFeeButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ActionButtonsContainer/FreeVBox" unique_id=2210020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 76)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "RESPEC WITH 10% FEE (+0 ¢)"
+
+[node name="CancelButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2210021]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"DangerButton"
+text = "CANCEL"

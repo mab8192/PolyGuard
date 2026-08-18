@@ -13,9 +13,21 @@ var _tower_levels: Dictionary = {} # tower_id -> int (1 to 5)
 var _tower_choices: Dictionary = {} # tower_id -> choice_id (String)
 var _unlocked_specializations: Dictionary = {} # tower_id -> Array[String]
 var _selected_loadout: Array[String] = []
+var _is_ad_free: bool = false
 
 func _ready() -> void:
 	load_save()
+
+func is_ad_free() -> bool:
+	return _is_ad_free
+
+func set_ad_free(p_ad_free: bool) -> void:
+	if _is_ad_free == p_ad_free:
+		return
+	_is_ad_free = p_ad_free
+	save_to_disk()
+	if AdManager and AdManager.has_signal("ads_enabled_changed"):
+		AdManager.ads_enabled_changed.emit(AdManager.are_ads_enabled())
 
 func get_selected_loadout() -> Array[String]:
 	return _selected_loadout.duplicate()
@@ -177,12 +189,14 @@ func record_stage_clear(stage_id: String, score: int, lives_left: int, max_lives
 	
 	# Reward calculation:
 	# - First clear: 300 base credits + 100 per star earned (100 to 300)
-	# - Repeat clear: 50 base credits + 100 per newly achieved star (0 if already earned)
-	var base_reward: int = 300 if is_first_clear else 50
-	var star_bonus: int = newly_earned_stars * 100
+	# - Repeat clear: 50 base credits (0 for tutorial) + 100 per newly achieved star (0 if already earned)
+	var is_tutorial: bool = (stage_id == "stage_00" or stage_id.begins_with("tutorial"))
+	var base_reward: int = 300 if is_first_clear else (0 if is_tutorial else 50)
+	var star_bonus: int = 0 if (is_tutorial and not is_first_clear) else (newly_earned_stars * 100)
 	var total_reward: int = base_reward + star_bonus
 	
-	add_credits(total_reward)
+	if total_reward > 0:
+		add_credits(total_reward)
 	
 	record["completed"] = true
 	record["cleared_once"] = true
@@ -221,9 +235,133 @@ func _get_next_stage_id(current_stage_id: String) -> String:
 			break
 	return ""
 
+# =========================================================================
+# RESPEC & SPENT CREDITS API
+# =========================================================================
+
+func get_tower_spent_credits(tower_id: String) -> int:
+	var total: int = 0
+	var tower_data = Registry.get_tower_data(tower_id)
+	if not tower_data:
+		return 0
+	
+	# Tower unlock cost (only if unlocked and cost > 0 and not a starter tower)
+	if is_tower_unlocked(tower_id) and tower_data.unlock_cost > 0 and not DEFAULT_UNLOCKED_TOWERS.has(tower_id):
+		total += tower_data.unlock_cost
+	
+	# Level upgrade costs
+	var current_level: int = get_tower_level(tower_id)
+	for lvl in range(2, current_level + 1):
+		total += tower_data.get_upgrade_cost(lvl)
+	
+	# Specializations costs
+	var unlocked_specs: Array = _unlocked_specializations.get(tower_id, [])
+	for spec_id in unlocked_specs:
+		var choice = tower_data.get_choice(spec_id)
+		if choice:
+			total += choice.unlock_cost
+		else:
+			total += 300
+	
+	return total
+
+func get_total_spent_credits() -> int:
+	var total: int = 0
+	var all_towers = Registry.get_all_towers()
+	for t in all_towers:
+		var t_id = Registry.get_tower_id(t)
+		total += get_tower_spent_credits(t_id)
+	return total
+
+func respec_tower(tower_id: String, is_free: bool) -> Dictionary:
+	var spent := get_tower_spent_credits(tower_id)
+	if spent <= 0:
+		return {"spent": 0, "refund": 0, "fee": 0}
+	
+	var refund := spent if is_free else int(floor(float(spent) * 0.90))
+	var fee := spent - refund
+	
+	var tower_data = Registry.get_tower_data(tower_id)
+	var should_lock: bool = tower_data != null and tower_data.unlock_cost > 0 and not DEFAULT_UNLOCKED_TOWERS.has(tower_id)
+	
+	if should_lock:
+		_unlocked_towers.erase(tower_id)
+		_selected_loadout.erase(tower_id)
+		_ensure_valid_loadout()
+	
+	_tower_levels[tower_id] = 1
+	_unlocked_specializations[tower_id] = []
+	_tower_choices[tower_id] = ""
+	
+	if refund > 0:
+		add_credits(refund)
+	else:
+		save_to_disk()
+	
+	SignalBus.tower_upgraded.emit(tower_id, 1)
+	SignalBus.specialization_unlocked.emit(tower_id, "")
+	SignalBus.tower_choice_changed.emit(tower_id, "")
+	if should_lock:
+		SignalBus.tower_unlocked.emit(tower_id)
+	
+	return {"spent": spent, "refund": refund, "fee": fee}
+
+func respec_all_towers(is_free: bool) -> Dictionary:
+	var total_spent := get_total_spent_credits()
+	if total_spent <= 0:
+		return {"spent": 0, "refund": 0, "fee": 0}
+	
+	var refund := total_spent if is_free else int(floor(float(total_spent) * 0.90))
+	var fee := total_spent - refund
+	
+	# Relock any unlocked towers that required credit purchase (preserves free/earned towers like sparkler)
+	var all_towers = Registry.get_all_towers()
+	for t in all_towers:
+		var t_id = Registry.get_tower_id(t)
+		if t and t.unlock_cost > 0 and not DEFAULT_UNLOCKED_TOWERS.has(t_id):
+			if _unlocked_towers.has(t_id):
+				_unlocked_towers.erase(t_id)
+				SignalBus.tower_unlocked.emit(t_id)
+	
+	_ensure_valid_loadout()
+	
+	for t_id in _tower_levels.keys():
+		_tower_levels[t_id] = 1
+		SignalBus.tower_upgraded.emit(t_id, 1)
+		
+	for t_id in _unlocked_specializations.keys():
+		_unlocked_specializations[t_id] = []
+		SignalBus.specialization_unlocked.emit(t_id, "")
+		
+	for t_id in _tower_choices.keys():
+		_tower_choices[t_id] = ""
+		SignalBus.tower_choice_changed.emit(t_id, "")
+	
+	if refund > 0:
+		add_credits(refund)
+	else:
+		save_to_disk()
+	
+	return {"spent": total_spent, "refund": refund, "fee": fee}
+
+func _ensure_valid_loadout() -> void:
+	var valid_loadout: Array[String] = []
+	for t_id in _selected_loadout:
+		if is_tower_unlocked(t_id) and not valid_loadout.has(t_id):
+			valid_loadout.append(t_id)
+	
+	for t_id in _unlocked_towers:
+		if valid_loadout.size() >= 4:
+			break
+		if not valid_loadout.has(t_id):
+			valid_loadout.append(t_id)
+	
+	_selected_loadout = valid_loadout
+
 func save_to_disk() -> void:
 	var data = {
 		"credits": _credits,
+		"is_ad_free": _is_ad_free,
 		"unlocked_stages": _unlocked_stages,
 		"stage_records": _stage_records,
 		"unlocked_towers": _unlocked_towers,
@@ -264,6 +402,7 @@ func load_save() -> void:
 		return
 	
 	_credits = int(data.get("credits", 0))
+	_is_ad_free = bool(data.get("is_ad_free", false))
 	
 	var saved_stages = data.get("unlocked_stages", [])
 	if saved_stages is Array:
@@ -310,6 +449,7 @@ func load_save() -> void:
 
 func _init_defaults() -> void:
 	_credits = 0
+	_is_ad_free = false
 	_unlocked_stages = DEFAULT_UNLOCKED_STAGES.duplicate()
 	_stage_records = {}
 	_unlocked_towers = DEFAULT_UNLOCKED_TOWERS.duplicate()

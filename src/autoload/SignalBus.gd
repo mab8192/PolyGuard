@@ -42,7 +42,7 @@ signal wave_completed()
 @warning_ignore("unused_signal")
 signal stage_loaded()
 @warning_ignore("unused_signal")
-signal stage_completed()
+signal stage_completed(stage_id: String)
 @warning_ignore("unused_signal")
 signal stage_failed()
 

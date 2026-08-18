@@ -115,3 +115,13 @@ rendering_device/driver.windows="d3d12"
 renderer/rendering_method="mobile"
 textures/vram_compression/import_etc2_astc=true
 environment/defaults/default_clear_color=Color(0.0313726, 0.0470588, 0.0862745, 1)
+
+[admob]
+
+general/enabled=true
+general/android/enabled=true
+general/android/app_id="ca-app-pub-3940256099942544~3347511713"
+general/android/disable_initialization_optimization=false
+general/android/disable_ad_loading_optimization=false
+general/ios/enabled=true
+general/ios/app_id="ca-app-pub-3940256099942544~1458002511"

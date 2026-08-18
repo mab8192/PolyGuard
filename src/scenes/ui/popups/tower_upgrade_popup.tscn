@@ -3,7 +3,7 @@
 [ext_resource type="Script" uid="uid://dbxttbiavc1f0" path="res://src/scenes/ui/popups/tower_upgrade_popup.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
-[ext_resource type="Texture2D" path="res://src/textures/icons/cancel.png" id="4_cancel"]
+[ext_resource type="Texture2D" uid="uid://dcq6tm48yeicc" path="res://src/textures/icons/cancel.png" id="4_cancel"]
 
 [node name="TowerUpgradePopup" type="CanvasLayer" unique_id=9870001]
 layer = 20
@@ -141,10 +141,15 @@ Max HP: 200 -> 250 (+25%)"
 layout_mode = 2
 theme_override_constants/separation = 8
 
-[node name="UpgradeActionButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/UpgradeSectionVBox" unique_id=9870044]
+[node name="ButtonsHBox" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/UpgradeSectionVBox" unique_id=9870046]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="UpgradeActionButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/UpgradeSectionVBox/ButtonsHBox" unique_id=9870044]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
+size_flags_horizontal = 3
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
 text = "UPGRADE TO LEVEL 2 (150 CREDITS)"
@@ -190,11 +195,11 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HeaderA" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA"]
+[node name="HeaderA" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=1194671147]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChoiceIconA" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/HeaderA"]
+[node name="ChoiceIconA" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/HeaderA" unique_id=2139698481]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2
@@ -255,11 +260,11 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="HeaderB" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB"]
+[node name="HeaderB" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=1486269155]
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChoiceIconB" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/HeaderB"]
+[node name="ChoiceIconB" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/HeaderB" unique_id=582219919]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(36, 36)
 layout_mode = 2

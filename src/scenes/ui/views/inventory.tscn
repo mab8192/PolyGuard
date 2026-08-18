@@ -4,7 +4,7 @@
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://c3pkyojs8gtfc" path="res://src/scenes/ui/popups/tower_upgrade_popup.tscn" id="4_upgrade_popup"]
-[ext_resource type="Script" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="5_drag_scroll"]
+[ext_resource type="Script" uid="uid://djnudry8xsxvq" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="5_drag_scroll"]
 
 [node name="Inventory" type="MarginContainer" unique_id=1988686629]
 anchors_preset = 15
@@ -27,14 +27,25 @@ theme_override_constants/separation = 14
 
 [node name="TopActionsHBox" type="HBoxContainer" parent="RootVBox" unique_id=637681930]
 layout_mode = 2
+theme_override_constants/separation = 14
 
 [node name="AddCreditsButton" type="Button" parent="RootVBox/TopActionsHBox" unique_id=637681931]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 52)
 layout_mode = 2
+size_flags_horizontal = 0
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
 text = "+100 CREDITS (AD)"
+
+[node name="RespecArsenalButton" type="Button" parent="RootVBox/TopActionsHBox" unique_id=637681932]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(220, 52)
+layout_mode = 2
+size_flags_horizontal = 10
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "RESET ARSENAL"
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
 custom_minimum_size = Vector2(0, 430)

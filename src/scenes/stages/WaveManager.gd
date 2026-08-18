@@ -194,7 +194,8 @@ func _check_wave_completion() -> void:
 			var time_bonus = max(0, 5000 - int(stage_time) * 10)
 			var lives_bonus = stage.lives * 1000
 			stage.add_score(lives_bonus + time_bonus)
-			SignalBus.stage_completed.emit()
+			var stage_id = stage.data.stage_id if stage and stage.data else ""
+			SignalBus.stage_completed.emit(stage_id)
 		else:
 			# Preview upcoming indicators for the next wave during build phase
 			update_upcoming_wave_preview()

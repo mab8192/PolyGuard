@@ -264,7 +264,7 @@ func _on_stage_loaded() -> void:
 	_update_target_visibility()
 	_schedule_recalculate()
 
-func _on_stage_ended() -> void:
+func _on_stage_ended(_stage_id: String = "") -> void:
 	_stage_is_active = false
 	_update_target_visibility()
 

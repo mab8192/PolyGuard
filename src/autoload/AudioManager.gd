@@ -276,7 +276,7 @@ func _on_wave_completed() -> void:
 func _on_stage_loaded() -> void:
 	play_music(music_build)
 
-func _on_stage_completed() -> void:
+func _on_stage_completed(_stage_id: String = "") -> void:
 	play_music(music_victory)
 	play_sfx(sfx_stage_complete)
 

@@ -1,6 +1,7 @@
 extends Node
 
 ## Signals
+signal ads_enabled_changed(is_enabled: bool)
 signal rewarded_ad_loaded()
 signal rewarded_ad_failed_to_load(error_message: String)
 signal rewarded_ad_opened()
@@ -11,6 +12,10 @@ signal interstitial_ad_loaded()
 signal interstitial_ad_failed_to_load(error_message: String)
 signal interstitial_ad_opened()
 signal interstitial_ad_closed()
+
+## Configuration
+## Set to false to disable all ads globally for paid/premium builds.
+@export var ads_enabled: bool = true
 
 ## Ad Unit IDs (Google AdMob Sample Test IDs)
 const ANDROID_REWARDED_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/5224354917"
@@ -45,10 +50,40 @@ func _ready() -> void:
 	_setup_listeners()
 	SignalBus.stage_completed.connect(_on_stage_completed)
 	
+	if is_paid_version():
+		print("[AdManager] Paid / Premium version active. All ads disabled.")
+		return
+	
 	if is_mobile() or OS.has_feature("editor"):
 		_initialize_mobile_ads()
 	else:
 		_is_initialized = true
+
+
+func is_paid_version() -> bool:
+	if not ads_enabled:
+		return true
+	if OS.has_feature("premium") or OS.has_feature("ad_free") or OS.has_feature("paid"):
+		return true
+	if not ProjectSettings.get_setting("admob/general/enabled", true):
+		return true
+	if SaveManager and SaveManager.has_method("is_ad_free") and SaveManager.is_ad_free():
+		return true
+	return false
+
+
+func are_ads_enabled() -> bool:
+	return not is_paid_version()
+
+
+func set_ads_enabled(p_enabled: bool) -> void:
+	if ads_enabled == p_enabled:
+		return
+	ads_enabled = p_enabled
+	ads_enabled_changed.emit(are_ads_enabled())
+	if not is_paid_version() and not _is_initialized:
+		if is_mobile() or OS.has_feature("editor"):
+			_initialize_mobile_ads()
 
 
 func _initialize_mobile_ads() -> void:
@@ -153,6 +188,10 @@ func load_rewarded_ad() -> void:
 
 
 func show_rewarded(on_reward_earned: Callable = Callable()) -> bool:
+	if not are_ads_enabled():
+		print("[AdManager] Cannot show rewarded ad: Ads are disabled.")
+		return false
+		
 	if on_reward_earned.is_valid():
 		_pending_reward_callback = on_reward_earned
 	
@@ -218,7 +257,7 @@ func is_interstitial_ad_ready() -> bool:
 
 
 func load_interstitial_ad() -> void:
-	if not _is_initialized:
+	if not _is_initialized or not are_ads_enabled():
 		return
 	if _is_loading_interstitial or _interstitial_ad != null:
 		return
@@ -233,6 +272,11 @@ func load_interstitial_ad() -> void:
 
 
 func show_interstitial(on_closed: Callable = Callable()) -> bool:
+	if not are_ads_enabled():
+		if on_closed.is_valid():
+			on_closed.call()
+		return true
+		
 	if on_closed.is_valid():
 		_pending_interstitial_callback = on_closed
 	
@@ -281,6 +325,11 @@ func _destroy_interstitial_ad() -> void:
 #endregion
 
 
-func _on_stage_completed() -> void:
-	print("[AdManager] Stage completed! Triggering post-stage interstitial ad...")
+func _on_stage_completed(stage_id: String = "") -> void:
+	if not are_ads_enabled():
+		return
+	if stage_id == "stage_00" or stage_id.begins_with("tutorial"):
+		print("[AdManager] Tutorial stage (%s) completed. Skipping interstitial ad." % stage_id)
+		return
+	print("[AdManager] Stage (%s) completed! Triggering post-stage interstitial ad..." % stage_id)
 	show_interstitial()
