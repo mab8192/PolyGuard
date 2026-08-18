@@ -7,6 +7,8 @@
 [ext_resource type="Script" uid="uid://1377k7q587j4" path="res://src/data/effects/types/ArmorReductionEffectData.gd" id="3_tcoeq"]
 [ext_resource type="PackedScene" uid="uid://b6x336krcls3r" path="res://src/scenes/towers/corrosive_vapor.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
+[ext_resource type="Texture2D" uid="uid://d1b4hy2wblmfr" path="res://src/textures/towers/variants/corrosive_vapor_acid.png" id="ext_var_concentrated_acid"]
+[ext_resource type="Texture2D" uid="uid://cvn8aeutpuwcf" path="res://src/textures/towers/variants/corrosive_vapor_volatile.png" id="ext_var_volatile_dispersion"]
 
 [sub_resource type="Resource" id="Resource_choice_acid"]
 script = ExtResource("1_choice")
@@ -14,6 +16,7 @@ id = "concentrated_acid"
 title = "Concentrated Acid"
 description = "High-acidity mist providing 25% enhanced armor degradation potency."
 damage_multiplier = 1.25
+icon = ExtResource("ext_var_concentrated_acid")
 
 [sub_resource type="Resource" id="Resource_choice_volatile"]
 script = ExtResource("1_choice")
@@ -21,6 +24,7 @@ id = "volatile_dispersion"
 title = "Volatile Dispersion"
 description = "Rapid pressure injectors reducing mist release cooldowns."
 cooldown_multiplier = 0.8
+icon = ExtResource("ext_var_volatile_dispersion")
 
 [sub_resource type="Resource" id="Resource_18qce"]
 script = ExtResource("3_tcoeq")

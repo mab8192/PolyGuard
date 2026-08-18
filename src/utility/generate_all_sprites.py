@@ -14,7 +14,14 @@ import os
 # Add current directory to path
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
-from generate_icons import generate_lives_icon, generate_energy_icon, generate_build_icon
+from generate_icons import (
+    generate_lives_icon,
+    generate_energy_icon,
+    generate_build_icon,
+    generate_cancel_icon,
+    generate_rotate_icon,
+    generate_confirm_icon,
+)
 from generate_tiles import generate_spawner_tile, generate_exit_tile
 from generate_enemies import generate_all_enemies
 from generate_towers import generate_all_towers
@@ -29,6 +36,9 @@ def main():
     generate_lives_icon()
     generate_energy_icon()
     generate_build_icon()
+    generate_cancel_icon()
+    generate_rotate_icon()
+    generate_confirm_icon()
     
     print("\n[2/5] Generating Map Floor Tiles...")
     generate_spawner_tile()

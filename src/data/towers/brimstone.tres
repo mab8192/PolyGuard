@@ -7,6 +7,8 @@
 [ext_resource type="Texture2D" uid="uid://dybeb7xv2w4i4" path="res://src/textures/towers/brimstone.png" id="4_onxbk"]
 [ext_resource type="PackedScene" uid="uid://b2k4xt3p0yf8i" path="res://src/scenes/towers/brimstone.tscn" id="5_8mal4"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_y670i"]
+[ext_resource type="Texture2D" uid="uid://cn52lx76u6ugd" path="res://src/textures/towers/variants/brimstone_hellfire.png" id="ext_var_hellfire_core"]
+[ext_resource type="Texture2D" uid="uid://nt1pvv548w3q" path="res://src/textures/towers/variants/brimstone_void.png" id="ext_var_nether_void"]
 
 [sub_resource type="Resource" id="Resource_choice_quick_fire"]
 script = ExtResource("1_choice")
@@ -14,6 +16,7 @@ id = "hellfire_core"
 title = "Hellfire Core"
 description = "Intensified hellstone hearth providing 25% faster thermal discharge cooldown."
 cooldown_multiplier = 0.75
+icon = ExtResource("ext_var_hellfire_core")
 
 [sub_resource type="Resource" id="Resource_choice_wide_flame"]
 script = ExtResource("1_choice")
@@ -21,6 +24,7 @@ id = "nether_void"
 title = "Nether Void"
 description = "Broad inferno field that engulfs +3 additional targets in blazing heat."
 extra_targets = 3
+icon = ExtResource("ext_var_nether_void")
 
 [sub_resource type="Resource" id="Resource_xi70r"]
 script = ExtResource("2_onxbk")

@@ -84,6 +84,7 @@ var effect_receiver: EffectReceiverComponent:
 		return _effect_receiver
 
 var armor_reduction: float = 0.0
+var magic_resistance_reduction: float = 0.0
 
 func get_effective_armor() -> float:
 	if not data:
@@ -93,6 +94,14 @@ func get_effective_armor() -> float:
 		reduction += effect_receiver.get_armor_reduction()
 	return maxf(0.0, data.armor - reduction)
 
+func get_effective_magic_resistance() -> float:
+	if not data:
+		return 0.0
+	var reduction: float = magic_resistance_reduction
+	if effect_receiver:
+		reduction += effect_receiver.get_magic_resistance_reduction()
+	return maxf(0.0, data.magic_resistance - reduction)
+
 func damage(amount: float, type: AttackData.DamageType) -> void:
 	# Ensures armor doesn't divide by zero or turn negative into health gain
 	var damage_multiplier: float = 1.0
@@ -101,7 +110,7 @@ func damage(amount: float, type: AttackData.DamageType) -> void:
 		var effective_armor: float = get_effective_armor()
 		damage_multiplier = ARMOR_CONSTANT / (ARMOR_CONSTANT + effective_armor)
 	elif type == AttackData.DamageType.MAGIC:
-		var effective_resistance: float = max(0.0, data.magic_resistance)
+		var effective_resistance: float = get_effective_magic_resistance()
 		damage_multiplier = ARMOR_CONSTANT / (ARMOR_CONSTANT + effective_resistance)
 	
 	var final_damage: float = amount * damage_multiplier

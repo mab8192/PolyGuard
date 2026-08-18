@@ -28,3 +28,9 @@ class_name TowerChoiceUpgrade extends Resource
 @export_flags_2d_physics var collision_layer_override: int = 18 ## e.g. 18 = Layer 2 Solid Tower (2) + Layer 5 Spectral Tower (16)
 @export var has_collision_mask_override: bool = false
 @export_flags_2d_physics var collision_mask_override: int = 0
+
+@export_group("Effects")
+@export var added_effects: Array[EffectData] = []
+
+@export_group("Visuals")
+@export var icon: Texture2D ## Texture variant when this specialization is active

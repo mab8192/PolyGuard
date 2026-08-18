@@ -84,6 +84,12 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 			copy.collision_layer = choice.collision_layer_override
 		if choice.has_collision_mask_override:
 			copy.collision_mask = choice.collision_mask_override
+		if choice.icon:
+			copy.icon = choice.icon
+		if not choice.added_effects.is_empty() and copy.effect_applier:
+			for eff in choice.added_effects:
+				if eff:
+					copy.effect_applier.effects.append(eff.duplicate(true))
 		dmg_mult *= choice.damage_multiplier
 		cd_mult *= choice.cooldown_multiplier
 		hp_mult *= choice.health_multiplier
@@ -106,7 +112,7 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 				eff.initial_damage *= dmg_mult
 			if "damage_per_second" in eff:
 				eff.damage_per_second *= dmg_mult
-	
+
 	return copy
 
 func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
@@ -114,6 +120,7 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 	var result = {
 		"level": level,
 		"cost": cost,
+		"icon": scaled.icon,
 		"is_solid": scaled.collision_layer > 0,
 		"collision_layer": scaled.collision_layer,
 		"damage": 0.0,
@@ -140,10 +147,6 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
 			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
 	elif scaled.effect_applier:
-		result["has_attack"] = true
-		result["cooldown"] = scaled.effect_applier.cooldown
-		result["max_targets"] = scaled.effect_applier.max_targets
-		result["targets_ghosts"] = (scaled.effect_applier.targeting_mask & 8) != 0
 		var total_dmg = 0.0
 		for eff in scaled.effect_applier.effects:
 			if "damage" in eff:
@@ -155,12 +158,17 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 			elif "damage_per_second" in eff:
 				total_dmg += eff.damage_per_second * eff.duration
 				result["damage_type"] = eff.damage_type
-		result["damage"] = total_dmg
-		result["dps"] = total_dmg / maxf(scaled.effect_applier.cooldown, 0.05) if scaled.effect_applier.cooldown > 0 else total_dmg
-		match result["damage_type"]:
-			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
-			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
-			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
+		if total_dmg > 0.0:
+			result["has_attack"] = true
+			result["damage"] = total_dmg
+			result["cooldown"] = scaled.effect_applier.cooldown
+			result["dps"] = total_dmg / maxf(scaled.effect_applier.cooldown, 0.05) if scaled.effect_applier.cooldown > 0 else total_dmg
+			match result["damage_type"]:
+				AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
+				AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
+				AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
+		result["max_targets"] = scaled.effect_applier.max_targets
+		result["targets_ghosts"] = (scaled.effect_applier.targeting_mask & 8) != 0
 			
 	if scaled.health:
 		result["has_health"] = true
@@ -229,6 +237,12 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Trait: Arc Lightning Chain")
 	elif tower_id == "flamethrower":
 		lines.append("Trait: Continuous Thermal Cone")
+	elif tower_id == "tar_trap":
+		lines.append("Effect: Reduces Enemy Speed by 50%")
+		if choice_id == "acid_tar":
+			lines.append("Specialization: Strips 20 Armor")
+		elif choice_id == "hex_pitch":
+			lines.append("Specialization: Strips 20 Magic Resistance")
 		
 	if lines.is_empty():
 		lines.append("Defensive Tactical Installation")
@@ -254,6 +268,16 @@ func apply_to(tower: Tower) -> void:
 		
 	tower.collision_layer = collision_layer
 	tower.collision_mask = collision_mask
+
+	if icon:
+		var sprite = tower.get_node_or_null("Sprite2D") as Sprite2D
+		if not sprite:
+			for child in tower.get_children():
+				if child is Sprite2D:
+					sprite = child
+					break
+		if sprite:
+			sprite.texture = icon
 
 	if health:
 		ComponentUtil.update_component(tower, HealthComponent, tower.data.health)

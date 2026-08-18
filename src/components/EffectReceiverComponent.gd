@@ -71,3 +71,10 @@ func get_armor_reduction() -> float:
 		if effect is ArmorReductionEffect and effect.data:
 			reduction = maxf(reduction, (effect.data as ArmorReductionEffectData).armor_reduction)
 	return reduction
+
+func get_magic_resistance_reduction() -> float:
+	var reduction: float = 0.0
+	for effect in _active_effects:
+		if effect is MagicResistanceReductionEffect and effect.data:
+			reduction = maxf(reduction, (effect.data as MagicResistanceReductionEffectData).magic_resistance_reduction)
+	return reduction

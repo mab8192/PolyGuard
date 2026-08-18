@@ -4,10 +4,13 @@
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_attack"]
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="3_choice"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_jckec"]
 [ext_resource type="Texture2D" uid="uid://1yg1wsly8m4" path="res://src/textures/towers/crossbow.png" id="5_icon"]
 [ext_resource type="PackedScene" uid="uid://bprvikvhw11t1" path="res://src/scenes/towers/crossbow.tscn" id="6_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_script"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_target"]
+[ext_resource type="Texture2D" uid="uid://dnyp4uo8bfbhv" path="res://src/textures/towers/variants/crossbow_windlass.png" id="ext_var_quick_windlass"]
+[ext_resource type="Texture2D" uid="uid://bs5b6ul52jq08" path="res://src/textures/towers/variants/crossbow_spectral.png" id="ext_var_spectral_bolt"]
 
 [sub_resource type="Resource" id="Resource_cb_attack"]
 script = ExtResource("2_attack")
@@ -24,6 +27,7 @@ title = "Spectral Bolt"
 description = "Phased kinetic bolts that can detect and target Ghost-type enemies with +25% bonus damage."
 damage_multiplier = 1.25
 has_targeting_mask_override = true
+icon = ExtResource("ext_var_spectral_bolt")
 
 [sub_resource type="Resource" id="Resource_choice_windlass"]
 script = ExtResource("3_choice")
@@ -31,6 +35,7 @@ id = "quick_windlass"
 title = "Quick Windlass"
 description = "High-tension spanning mechanism providing +30% attack speed."
 cooldown_multiplier = 0.7
+icon = ExtResource("ext_var_quick_windlass")
 
 [sub_resource type="Resource" id="Resource_cb_health"]
 script = ExtResource("4_health")

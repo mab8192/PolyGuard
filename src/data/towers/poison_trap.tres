@@ -7,6 +7,8 @@
 [ext_resource type="PackedScene" uid="uid://bky7ibv66m81f" path="res://src/scenes/towers/poison.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_towerdata"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_ydhdu"]
+[ext_resource type="Texture2D" uid="uid://d2j1lbd0k0550" path="res://src/textures/towers/variants/poison_trap_plume.png" id="ext_var_broad_plume"]
+[ext_resource type="Texture2D" uid="uid://df6dy5psonm3n" path="res://src/textures/towers/variants/poison_trap_rapid.png" id="ext_var_rapid_dispersion"]
 
 [sub_resource type="Resource" id="Resource_choice_quick"]
 script = ExtResource("1_choice")
@@ -14,6 +16,7 @@ id = "rapid_dispersion"
 title = "Rapid Dispersion"
 description = "Quickened chemical charge delivering 20% faster trap trigger cycle."
 cooldown_multiplier = 0.8
+icon = ExtResource("ext_var_rapid_dispersion")
 
 [sub_resource type="Resource" id="Resource_choice_cloud"]
 script = ExtResource("1_choice")
@@ -21,6 +24,7 @@ id = "broad_plume"
 title = "Broad Plume"
 description = "Expanded toxin cloud catching +3 additional enemies per eruption."
 extra_targets = 3
+icon = ExtResource("ext_var_broad_plume")
 
 [sub_resource type="Resource" id="Resource_gconv"]
 script = ExtResource("3_ydhdu")

@@ -7,19 +7,37 @@
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_di8xt"]
 [ext_resource type="Script" uid="uid://br4nwkh0b8psj" path="res://src/data/effects/types/SlowEffectData.gd" id="3_il3ue"]
+[ext_resource type="Script" uid="uid://1377k7q587j4" path="res://src/data/effects/types/ArmorReductionEffectData.gd" id="4_armor"]
+[ext_resource type="Script" uid="uid://btf2akhqmbc8g" path="res://src/data/effects/types/MagicResistanceReductionEffectData.gd" id="5_magic_res"]
+[ext_resource type="Texture2D" uid="uid://dskobkxmvrprp" path="res://src/textures/towers/variants/tar_trap_acid.png" id="ext_var_acid_tar"]
+[ext_resource type="Texture2D" uid="uid://c23x0h0umjlnd" path="res://src/textures/towers/variants/tar_trap_hex.png" id="ext_var_hex_pitch"]
 
-[sub_resource type="Resource" id="Resource_choice_adhesive"]
+[sub_resource type="Resource" id="Resource_eff_mr"]
+script = ExtResource("5_magic_res")
+name = "tar_magic_vulnerability"
+
+[sub_resource type="Resource" id="Resource_choice_hex"]
+script = ExtResource("1_choice")
+id = "hex_pitch"
+title = "Hex Pitch"
+description = "Infuses the tar with mystic pitch that strips 20 Magic Resistance and allows the tar trap to affect Ghost enemies."
+required_level = 1
+has_targeting_mask_override = true
+added_effects = Array[ExtResource("1_il3ue")]([SubResource("Resource_eff_mr")])
+icon = ExtResource("ext_var_hex_pitch")
+
+[sub_resource type="Resource" id="Resource_eff_armor"]
+script = ExtResource("4_armor")
+name = "tar_acid"
+
+[sub_resource type="Resource" id="Resource_choice_acid"]
 script = ExtResource("1_choice")
 id = "acid_tar"
-title = "Acid Tar"
-description = "[WIP] Adds an acid effect that also lowers armor"
-cooldown_multiplier = 0.8
-
-[sub_resource type="Resource" id="Resource_choice_expand"]
-script = ExtResource("1_choice")
-id = "ethereal_recipe"
-title = "Ethereal Recipe"
-description = "[WIP] Can now affect ghosts as well"
+title = "Acidic Tar"
+description = "Infuses the tar with corrosive acid that strips 20 Armor from enemies caught within."
+required_level = 1
+added_effects = Array[ExtResource("1_il3ue")]([SubResource("Resource_eff_armor")])
+icon = ExtResource("ext_var_acid_tar")
 
 [sub_resource type="Resource" id="Resource_gconv"]
 script = ExtResource("3_il3ue")
@@ -40,7 +58,7 @@ icon = ExtResource("1_wdlj1")
 scene = ExtResource("2_wdlj1")
 description = "Non-solid trap that slows enemies who walk over it"
 max_level = 1
-choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_adhesive"), SubResource("Resource_choice_expand")])
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_hex"), SubResource("Resource_choice_acid")])
 damage_upgrade_per_level = 0.0
 cooldown_reduction_per_level = 0.0
 health_upgrade_per_level = 0.0

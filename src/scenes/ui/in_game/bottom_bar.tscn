@@ -5,6 +5,9 @@
 [ext_resource type="PackedScene" uid="uid://ce4x7k5wan21m" path="res://src/scenes/ui/elements/radial_menu.tscn" id="3_oibdf"]
 [ext_resource type="Texture2D" uid="uid://eoxnj6vvp3mj" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/arrowRight.png" id="5_3lhge"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="5_theme"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/cancel.png" id="6_cancel"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/rotate.png" id="7_rotate"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/confirm.png" id="8_confirm"]
 
 [node name="BottomBar" type="MarginContainer" unique_id=192044941]
 anchors_preset = 12
@@ -40,7 +43,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"PlacementCancelButton"
-text = "✕"
+icon = ExtResource("6_cancel")
+icon_alignment = 1
+expand_icon = true
 
 [node name="RotatePlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857604]
 unique_name_in_owner = true
@@ -50,7 +55,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"PlacementRotateButton"
-text = "⟳"
+icon = ExtResource("7_rotate")
+icon_alignment = 1
+expand_icon = true
 
 [node name="ConfirmPlacementButton" type="Button" parent="VBoxContainer/PlacementButtons" unique_id=104857603]
 unique_name_in_owner = true
@@ -60,7 +67,9 @@ size_flags_horizontal = 4
 size_flags_vertical = 4
 focus_mode = 0
 theme_type_variation = &"PlacementConfirmButton"
-text = "✓"
+icon = ExtResource("8_confirm")
+icon_alignment = 1
+expand_icon = true
 
 [node name="DockContainer" type="HBoxContainer" parent="VBoxContainer" unique_id=35361616]
 layout_mode = 2

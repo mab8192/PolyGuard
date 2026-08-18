@@ -3,11 +3,14 @@
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="2_choice"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_1rub2"]
 [ext_resource type="Texture2D" uid="uid://2fbh81vex1ec" path="res://src/textures/towers/sparkler.png" id="4_icon"]
 [ext_resource type="PackedScene" uid="uid://dk1mrpkucl0fp" path="res://src/scenes/towers/sparkler.tscn" id="5_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_tower"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_target"]
 [ext_resource type="PackedScene" path="res://src/scenes/towers/projectiles/spark_projectile.tscn" id="8_proj"]
+[ext_resource type="Texture2D" uid="uid://b3o41rncw474v" path="res://src/textures/towers/variants/sparkler_overcharge.png" id="ext_var_arcane_overcharge"]
+[ext_resource type="Texture2D" uid="uid://dlwqyx6rd0cj7" path="res://src/textures/towers/variants/sparkler_prismatic.png" id="ext_var_prismatic_array"]
 
 [sub_resource type="Resource" id="Resource_attack"]
 script = ExtResource("1_attack")
@@ -24,6 +27,7 @@ title = "Prismatic Array"
 description = "Splits spark conduits to target +1 additional enemy (up to 3 simultaneous targets)."
 damage_multiplier = 1.05
 extra_targets = 1
+icon = ExtResource("ext_var_prismatic_array")
 
 [sub_resource type="Resource" id="Resource_choice_overcharge"]
 script = ExtResource("2_choice")
@@ -32,6 +36,7 @@ title = "Arcane Overcharge"
 description = "Overcharges sparking crystal cores, increasing Magic Damage by +35% and attack rate by 10%."
 damage_multiplier = 1.35
 cooldown_multiplier = 0.9
+icon = ExtResource("ext_var_arcane_overcharge")
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("3_health")

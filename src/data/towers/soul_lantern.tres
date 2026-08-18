@@ -2,11 +2,14 @@
 
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_attack"]
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="2_choice"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="3_fmh6g"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Texture2D" uid="uid://cw1gqarw71oql" path="res://src/textures/towers/soul_lantern.png" id="4_icon"]
 [ext_resource type="PackedScene" uid="uid://mpjhedk6kvu" path="res://src/scenes/towers/soul_lantern.tscn" id="5_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_tower"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_target"]
+[ext_resource type="Texture2D" uid="uid://d4ekqelli8ckf" path="res://src/textures/towers/variants/soul_lantern_focus.png" id="ext_var_ethereal_focus"]
+[ext_resource type="Texture2D" uid="uid://b4l3roublllnb" path="res://src/textures/towers/variants/soul_lantern_split.png" id="ext_var_soul_split"]
 
 [sub_resource type="Resource" id="Resource_attack"]
 script = ExtResource("1_attack")
@@ -19,9 +22,10 @@ cooldown = 0.25
 script = ExtResource("2_choice")
 id = "soul_split"
 title = "Soul Split"
-description = "Refracts the spectral beam into multiple prongs, targeting +2 additional enemies simultaneously."
+description = "Refracts the spectral beam into multiple prongs, targeting an additional enemy simultaneously."
 damage_multiplier = 1.1
-extra_targets = 2
+extra_targets = 1
+icon = ExtResource("ext_var_soul_split")
 
 [sub_resource type="Resource" id="Resource_choice_focus"]
 script = ExtResource("2_choice")
@@ -30,6 +34,7 @@ title = "Ethereal Focus"
 description = "Intensifies beam wattage by 35% and reduces attack interval by 20% to melt ghost escorts."
 damage_multiplier = 1.35
 cooldown_multiplier = 0.8
+icon = ExtResource("ext_var_ethereal_focus")
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("3_health")

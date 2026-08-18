@@ -12,6 +12,7 @@ var tower_data: TowerData = null
 
 @onready var choices_section: VBoxContainer = %ChoicesSectionVBox
 @onready var choice_card_a: PanelContainer = %ChoiceCardA
+@onready var choice_icon_a: TextureRect = %ChoiceIconA
 @onready var choice_title_a: Label = %ChoiceTitleA
 @onready var choice_type_badge_a: PanelContainer = %ChoiceTypeBadgeA
 @onready var choice_type_label_a: Label = %ChoiceTypeLabelA
@@ -19,6 +20,7 @@ var tower_data: TowerData = null
 @onready var choice_select_btn_a: Button = %ChoiceSelectBtnA
 
 @onready var choice_card_b: PanelContainer = %ChoiceCardB
+@onready var choice_icon_b: TextureRect = %ChoiceIconB
 @onready var choice_title_b: Label = %ChoiceTitleB
 @onready var choice_type_badge_b: PanelContainer = %ChoiceTypeBadgeB
 @onready var choice_type_label_b: Label = %ChoiceTypeLabelB
@@ -59,7 +61,6 @@ func _render() -> void:
 	var active_choice = SaveManager.get_tower_choice(tower_id)
 	var credits = SaveManager.get_credits()
 	
-	tower_icon.texture = tower_data.icon
 	tower_name_label.text = tower_data.display_name.to_upper()
 	credits_balance_label.text = "AVAILABLE: %d CREDITS" % credits
 	
@@ -79,6 +80,7 @@ func _render() -> void:
 	var current_stats = tower_data.get_stat_summary(level, active_choice)
 	var next_stats = tower_data.get_stat_summary(min(level + 1, tower_data.max_level), active_choice)
 	
+	tower_icon.texture = current_stats.get("icon", tower_data.icon)
 	damage_type_badge_label.text = ("%s DAMAGE" % current_stats["damage_type_str"]).to_upper()
 	
 	var stat_lines: Array[String] = []
@@ -114,6 +116,8 @@ func _render() -> void:
 		stat_lines.append("Trait: Arc Lightning Chain")
 	elif tower_data.tower_id == "flamethrower":
 		stat_lines.append("Trait: Continuous Thermal Cone")
+	elif tower_data.tower_id == "tar_trap":
+		stat_lines.append("Effect: Reduces Enemy Movement Speed by 50%")
 		
 	if stat_lines.is_empty():
 		stat_lines.append("Defensive Tactical Installation")
@@ -132,8 +136,8 @@ func _render() -> void:
 		choice_title_b.text = choice_b.title
 		choice_desc_b.text = choice_b.description
 		
-		_render_choice_card(choice_a, choice_card_a, choice_type_badge_a, choice_type_label_a, choice_select_btn_a, tower_id, level, active_choice, credits, is_unlocked)
-		_render_choice_card(choice_b, choice_card_b, choice_type_badge_b, choice_type_label_b, choice_select_btn_b, tower_id, level, active_choice, credits, is_unlocked)
+		_render_choice_card(choice_a, choice_card_a, choice_icon_a, choice_type_badge_a, choice_type_label_a, choice_select_btn_a, tower_id, level, active_choice, credits, is_unlocked)
+		_render_choice_card(choice_b, choice_card_b, choice_icon_b, choice_type_badge_b, choice_type_label_b, choice_select_btn_b, tower_id, level, active_choice, credits, is_unlocked)
 	else:
 		choices_section.hide()
 		
@@ -175,6 +179,7 @@ func _render() -> void:
 func _render_choice_card(
 	choice: TowerChoiceUpgrade,
 	card_panel: PanelContainer,
+	icon_rect: TextureRect,
 	type_badge: PanelContainer,
 	type_label: Label,
 	select_btn: Button,
@@ -188,6 +193,9 @@ func _render_choice_card(
 	var is_level_met = (tower_level >= req_level) and is_tower_unlocked
 	var is_bought = SaveManager.is_specialization_unlocked(tower_id, choice.id)
 	var is_active = (active_choice == choice.id)
+	
+	if icon_rect:
+		icon_rect.texture = choice.icon if choice.icon else tower_data.icon
 	
 	if not is_level_met:
 		card_panel.theme_type_variation = &"CardPanel"
@@ -217,7 +225,7 @@ func _render_choice_card(
 		type_label.text = _get_damage_type_label(choice)
 		if is_active:
 			card_panel.theme_type_variation = &"CardSelectedPanel"
-			select_btn.text = "ACTIVE (CLICK TO REMOVE)"
+			select_btn.text = "DEACTIVATE"
 			select_btn.disabled = false
 			select_btn.theme_type_variation = &"PrimaryButton"
 		else:
@@ -236,6 +244,11 @@ func _get_damage_type_label(choice: TowerChoiceUpgrade) -> String:
 			AttackData.DamageType.PHYSICAL: return "PHYSICAL DAMAGE"
 			AttackData.DamageType.MAGIC: return "MAGIC DAMAGE"
 			AttackData.DamageType.TRUE: return "TRUE DAMAGE"
+	for eff in choice.added_effects:
+		if eff is ArmorReductionEffectData:
+			return "ARMOR SHRED"
+		elif eff is MagicResistanceReductionEffectData:
+			return "MAGIC SHRED"
 	return "SPECIALIZATION"
 
 func _on_choice_selected(index: int) -> void:

@@ -2,11 +2,14 @@
 
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="3_8y1ng"]
 [ext_resource type="Texture2D" uid="uid://dl76pbu2a8ce5" path="res://src/textures/towers/tesla_tower.png" id="3_icon"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
 [ext_resource type="PackedScene" uid="uid://dq7dblfl82ce5" path="res://src/scenes/towers/tesla_tower.tscn" id="4_tafxk"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
+[ext_resource type="Texture2D" uid="uid://d15r5vc2jb2c6" path="res://src/textures/towers/variants/tesla_tower_overcharge.png" id="ext_var_overcharge_volt"]
+[ext_resource type="Texture2D" uid="uid://cvodffpniknoo" path="res://src/textures/towers/variants/tesla_tower_superconductor.png" id="ext_var_superconductor"]
 
 [sub_resource type="Resource" id="Resource_tafxk"]
 script = ExtResource("5_attack")
@@ -23,6 +26,7 @@ has_damage_type_override = true
 damage_type_override = 2
 damage_multiplier = 0.85
 extra_targets = 1
+icon = ExtResource("ext_var_superconductor")
 
 [sub_resource type="Resource" id="Resource_choice_overcharge"]
 script = ExtResource("1_choice")
@@ -33,6 +37,7 @@ has_damage_type_override = true
 damage_type_override = 1
 damage_multiplier = 1.4
 cooldown_multiplier = 1.1
+icon = ExtResource("ext_var_overcharge_volt")
 
 [sub_resource type="Resource" id="Resource_yrpxl"]
 script = ExtResource("4_health")

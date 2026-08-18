@@ -3,6 +3,7 @@
 [ext_resource type="Script" uid="uid://dbxttbiavc1f0" path="res://src/scenes/ui/popups/tower_upgrade_popup.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/cancel.png" id="4_cancel"]
 
 [node name="TowerUpgradePopup" type="CanvasLayer" unique_id=9870001]
 layer = 20
@@ -58,7 +59,9 @@ custom_minimum_size = Vector2(80, 80)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
-text = "X"
+icon = ExtResource("4_cancel")
+icon_alignment = 1
+expand_icon = true
 
 [node name="BannerPanel" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox" unique_id=9870010]
 layout_mode = 2
@@ -187,9 +190,21 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChoiceTitleA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870030]
+[node name="HeaderA" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChoiceIconA" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/HeaderA"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ChoiceTitleA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/HeaderA" unique_id=9870030]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "Arcane Infusion"
 
@@ -240,9 +255,21 @@ theme_override_constants/margin_bottom = 16
 layout_mode = 2
 theme_override_constants/separation = 10
 
-[node name="ChoiceTitleB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870038]
+[node name="HeaderB" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="ChoiceIconB" type="TextureRect" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/HeaderB"]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(36, 36)
+layout_mode = 2
+expand_mode = 1
+stretch_mode = 5
+
+[node name="ChoiceTitleB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/HeaderB" unique_id=9870038]
 unique_name_in_owner = true
 layout_mode = 2
+size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "True Piercer"
 

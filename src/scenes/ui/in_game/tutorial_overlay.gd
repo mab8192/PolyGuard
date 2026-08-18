@@ -6,8 +6,9 @@ const ICON_LIVES = preload("res://src/textures/icons/lives.png")
 const ICON_ENERGY = preload("res://src/textures/icons/energy.png")
 const ICON_BUILD = preload("res://src/textures/icons/build.png")
 const ICON_STAR = preload("res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/star.png")
-const ICON_CHECK = preload("res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/checkmark.png")
-const ICON_ROTATE = preload("res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/return.png")
+const ICON_CONFIRM = preload("res://src/textures/icons/confirm.png")
+const ICON_ROTATE = preload("res://src/textures/icons/rotate.png")
+const ICON_CANCEL = preload("res://src/textures/icons/cancel.png")
 const ICON_TRASH = preload("res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/trashcan.png")
 const ICON_ARCHER = preload("res://src/textures/towers/archer_tower.png")
 const ICON_TAR = preload("res://src/textures/towers/tar_trap.png")
@@ -114,7 +115,7 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 				"body": "Tap the BUILD button at the bottom center to open your equipped tower selection wheel. Selecting any tower enters real-time placement mode."
 			},
 			{
-				"icon": ICON_CHECK,
+				"icon": ICON_CONFIRM,
 				"modulate": Color(0.3, 1.0, 0.4),
 				"headline": "POSITIONING & CONFIRMATION",
 				"body": "Drag or tap anywhere on the battlefield grid to move the preview.\n• Green: Valid placement zone.\n• Red: Obstructed (cannot block spawners, exits, or existing walls).\nTap the Checkmark (✓) to build, or Rotate (↺) for directional towers."

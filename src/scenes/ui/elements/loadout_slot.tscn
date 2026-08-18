@@ -3,6 +3,7 @@
 [ext_resource type="Script" path="res://src/scenes/ui/elements/loadout_slot.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 [ext_resource type="Texture2D" uid="uid://ghvwv5ve75a7" path="res://icon.svg" id="3_icon"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/cancel.png" id="4_cancel"]
 
 [node name="LoadoutSlot" type="Control" unique_id=14701]
 custom_minimum_size = Vector2(115, 115)
@@ -111,4 +112,6 @@ offset_bottom = 38.0
 grow_horizontal = 0
 focus_mode = 0
 theme_type_variation = &"DangerIconButton"
-text = "✕"
+icon = ExtResource("4_cancel")
+icon_alignment = 1
+expand_icon = true

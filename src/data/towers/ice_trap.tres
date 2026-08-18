@@ -7,13 +7,17 @@
 [ext_resource type="Texture2D" uid="uid://cv1hbp3cgss0y" path="res://src/textures/towers/ice_trap.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://bvj5t0y7wiin" path="res://src/scenes/towers/ice_trap.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
+[ext_resource type="Texture2D" uid="uid://dbj5rtj5rtews" path="res://src/textures/towers/variants/ice_trap_permafrost.png" id="ext_var_permafrost_seal"]
+[ext_resource type="Texture2D" uid="uid://dbrud1s6285it" path="res://src/textures/towers/variants/ice_trap_glaze.png" id="ext_var_sub_zero_glaze"]
 
 [sub_resource type="Resource" id="Resource_choice_permafrost"]
 script = ExtResource("1_choice")
 id = "permafrost_seal"
-title = "Permafrost Coating"
-description = "Supercooled cryo matrix that reduces trap construction and upgrade energy costs."
+title = "Supercooling"
+description = "Supercooled cryo matrix that reduces trap construction cost."
+cost_reduction = 100
 cooldown_multiplier = 0.8
+icon = ExtResource("ext_var_permafrost_seal")
 
 [sub_resource type="Resource" id="Resource_choice_glaze"]
 script = ExtResource("1_choice")
@@ -21,6 +25,7 @@ id = "sub_zero_glaze"
 title = "Sub-Zero Glaze"
 description = "Extremely low friction glaze increasing target slide instability."
 damage_multiplier = 1.2
+icon = ExtResource("ext_var_sub_zero_glaze")
 
 [sub_resource type="Resource" id="Resource_mxbel"]
 script = ExtResource("3_4rdip")

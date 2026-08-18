@@ -6,8 +6,11 @@
 [ext_resource type="PackedScene" uid="uid://dg12a81rft006" path="res://src/scenes/towers/archer_tower.tscn" id="2_scene"]
 [ext_resource type="Texture2D" uid="uid://bkf5saqqqw1s7" path="res://src/textures/towers/archer_tower.png" id="3_icon"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_mvjca"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="5_attack"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
+[ext_resource type="Texture2D" uid="uid://bu6tythvv0fpb" path="res://src/textures/towers/variants/archer_tower_arcane.png" id="ext_var_arcane_infusion"]
+[ext_resource type="Texture2D" uid="uid://b8jq4vslydpxb" path="res://src/textures/towers/variants/archer_tower_piercer.png" id="ext_var_true_piercer"]
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("5_attack")
@@ -25,6 +28,7 @@ has_damage_type_override = true
 damage_type_override = 1
 damage_multiplier = 1.2
 has_targeting_mask_override = true
+icon = ExtResource("ext_var_arcane_infusion")
 
 [sub_resource type="Resource" id="Resource_choice_true"]
 script = ExtResource("1_choice")
@@ -34,6 +38,7 @@ description = "Converts arrows to True Damage (bypasses all armor and resistance
 has_damage_type_override = true
 damage_type_override = 2
 cooldown_multiplier = 0.8
+icon = ExtResource("ext_var_true_piercer")
 
 [sub_resource type="Resource" id="Resource_rcoxi"]
 script = ExtResource("4_health")

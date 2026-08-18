@@ -5,9 +5,12 @@
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_mg0rn"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_dk2il"]
 [ext_resource type="Texture2D" uid="uid://ddw2yv1n3sjhi" path="res://src/textures/towers/bomb_tower.png" id="4_ju8xy"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_lypew"]
 [ext_resource type="PackedScene" uid="uid://c5h3tfowoxgd7" path="res://src/scenes/towers/bomb_tower.tscn" id="5_ju8xy"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_v285l"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_fy0nx"]
+[ext_resource type="Texture2D" uid="uid://b15jixowp4452" path="res://src/textures/towers/variants/bomb_tower_concussion.png" id="ext_var_heavy_concussion"]
+[ext_resource type="Texture2D" uid="uid://cvrfs1cjunbu7" path="res://src/textures/towers/variants/bomb_tower_incendiary.png" id="ext_var_incendiary_shells"]
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_mg0rn")
@@ -25,6 +28,7 @@ description = "Converts bomb blast to Magic Damage dealing +30% explosive damage
 has_damage_type_override = true
 damage_type_override = 1
 damage_multiplier = 1.3
+icon = ExtResource("ext_var_incendiary_shells")
 
 [sub_resource type="Resource" id="Resource_choice_true_bomb"]
 script = ExtResource("1_choice")
@@ -35,6 +39,7 @@ has_damage_type_override = true
 damage_type_override = 2
 damage_multiplier = 0.85
 cooldown_multiplier = 0.9
+icon = ExtResource("ext_var_heavy_concussion")
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("3_dk2il")
