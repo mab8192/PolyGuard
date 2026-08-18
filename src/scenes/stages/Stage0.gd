@@ -8,6 +8,8 @@ func _ready() -> void:
 	super._ready()
 	_setup_tutorial()
 	_spawn_initial_sample_tower()
+	
+	AdManager.show_rewarded()
 
 func _setup_tutorial() -> void:
 	_tutorial_overlay = TUTORIAL_OVERLAY_SCENE.instantiate() as TutorialOverlay
