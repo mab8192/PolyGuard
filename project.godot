@@ -8,10 +8,6 @@
 
 config_version=5
 
-[admob]
-
-general/enabled=true
-
 [application]
 
 config/name="Poly Guard 2D"

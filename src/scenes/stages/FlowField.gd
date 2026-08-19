@@ -5,10 +5,11 @@ class_name FlowField extends RefCounted
 ## that factors in dynamic enemy swarm congestion to route crowds around chokepoints.
 
 const BLOCKED_COST: float = 100000.0
+const TOWER_COST: float = 500.0
 const SQRT_2: float = 1.41421356
 
 var world_origin: Vector2 = Vector2.ZERO
-var cell_size: Vector2 = Vector2(24.0, 24.0)
+var cell_size: Vector2 = Vector2(16.0, 16.0)
 var grid_size: Vector2i = Vector2i.ZERO
 var total_cells: int = 0
 
@@ -84,7 +85,7 @@ class FlatMinHeap:
 
 var _heap: FlatMinHeap = FlatMinHeap.new()
 
-func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(24.0, 24.0)) -> void:
+func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(16.0, 16.0)) -> void:
 	cell_size = p_cell_size
 	world_origin = bounds.position
 	grid_size = Vector2i(
@@ -140,7 +141,11 @@ func set_cell_blocked(gx: int, gy: int, blocked: bool) -> void:
 		var idx = gy * grid_size.x + gx
 		base_cost[idx] = BLOCKED_COST if blocked else 1.0
 
-func set_rect_blocked(rect: Rect2, blocked: bool, min_overlap_ratio: float = 0.0) -> void:
+func set_cell_cost(gx: int, gy: int, cost: float) -> void:
+	if is_valid_cell(gx, gy):
+		base_cost[gy * grid_size.x + gx] = cost
+
+func set_rect_cost(rect: Rect2, cost: float, min_overlap_ratio: float = 0.0) -> void:
 	var min_cell = global_to_grid(rect.position)
 	var max_cell = global_to_grid(rect.end - Vector2(0.001, 0.001))
 	var cell_area = cell_size.x * cell_size.y
@@ -171,7 +176,12 @@ func set_rect_blocked(rect: Rect2, blocked: bool, min_overlap_ratio: float = 0.0
 					var ratio = (overlap_w * overlap_h) / cell_area
 					if ratio < min_overlap_ratio:
 						continue
-				base_cost[row_offset + gx] = BLOCKED_COST if blocked else 1.0
+				# Don't overwrite permanent walls (BLOCKED_COST) with tower costs
+				if base_cost[row_offset + gx] < BLOCKED_COST:
+					base_cost[row_offset + gx] = cost
+
+func set_rect_blocked(rect: Rect2, blocked: bool, min_overlap_ratio: float = 0.0) -> void:
+	set_rect_cost(rect, BLOCKED_COST if blocked else 1.0, min_overlap_ratio)
 
 func global_to_grid(pos: Vector2) -> Vector2i:
 	var local = pos - world_origin
@@ -192,13 +202,36 @@ func index_to_grid(idx: int) -> Vector2i:
 func is_valid_cell(gx: int, gy: int) -> bool:
 	return gx >= 0 and gx < grid_size.x and gy >= 0 and gy < grid_size.y
 
+func is_open_path(world_pos: Vector2) -> bool:
+	if total_cells == 0:
+		return false
+	var local = world_pos - world_origin
+	var gx = int(floor(local.x / cell_size.x))
+	var gy = int(floor(local.y / cell_size.y))
+	if is_valid_cell(gx, gy):
+		var idx = gy * grid_size.x + gx
+		if integration_cost[idx] < TOWER_COST:
+			return true
+
+	# Check a 1-cell neighborhood around world_pos to prevent false negatives near boundaries
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var nx = gx + dx
+			var ny = gy + dy
+			if is_valid_cell(nx, ny):
+				if integration_cost[ny * grid_size.x + nx] < TOWER_COST:
+					return true
+	return false
+
 func is_reachable(world_pos: Vector2) -> bool:
 	if total_cells == 0:
 		return false
 	var local = world_pos - world_origin
 	var gx = int(floor(local.x / cell_size.x))
 	var gy = int(floor(local.y / cell_size.y))
-	if gx >= 0 and gx < grid_size.x and gy >= 0 and gy < grid_size.y:
+	if is_valid_cell(gx, gy):
 		var idx = gy * grid_size.x + gx
 		if integration_cost[idx] < BLOCKED_COST:
 			return true
@@ -210,7 +243,7 @@ func is_reachable(world_pos: Vector2) -> bool:
 				continue
 			var nx = gx + dx
 			var ny = gy + dy
-			if nx >= 0 and nx < grid_size.x and ny >= 0 and ny < grid_size.y:
+			if is_valid_cell(nx, ny):
 				if integration_cost[ny * grid_size.x + nx] < BLOCKED_COST:
 					return true
 	return false
@@ -279,9 +312,9 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 			if n_base >= BLOCKED_COST:
 				continue
 
-			# Diagonal corner-cutting safety check
+			# Diagonal corner-cutting safety check: prevent cutting across walls or towers
 			if i >= 4:
-				if base_cost[gy * w + nx] >= BLOCKED_COST or base_cost[ny * w + gx] >= BLOCKED_COST:
+				if base_cost[gy * w + nx] >= TOWER_COST or base_cost[ny * w + gx] >= TOWER_COST:
 					continue
 
 			# Effective cell cost includes dynamic enemy congestion
@@ -364,7 +397,7 @@ func _calculate_continuous_gradient_vectors() -> void:
 					continue
 
 				if i >= 4:
-					if base_cost[row_offset + nx] >= BLOCKED_COST or base_cost[ny * w + gx] >= BLOCKED_COST:
+					if base_cost[row_offset + nx] >= TOWER_COST or base_cost[ny * w + gx] >= TOWER_COST:
 						continue
 
 				var n_cost = integration_cost[n_idx]
@@ -379,7 +412,7 @@ func _calculate_continuous_gradient_vectors() -> void:
 			else:
 				flow_vectors[idx] = Vector2.ZERO
 
-## Smooth Bilinear Vector Sampling
+## Smooth Bilinear Vector Sampling with Non-Zero Neighbor Blending
 func sample_direction(world_pos: Vector2) -> Vector2:
 	if total_cells == 0:
 		return Vector2.ZERO
@@ -387,8 +420,8 @@ func sample_direction(world_pos: Vector2) -> Vector2:
 	var local = (world_pos - world_origin - cell_size * 0.5) / cell_size
 	var x0 = int(floor(local.x))
 	var y0 = int(floor(local.y))
-	var tx = local.x - float(x0)
-	var ty = local.y - float(y0)
+	var tx = clampf(local.x - float(x0), 0.0, 1.0)
+	var ty = clampf(local.y - float(y0), 0.0, 1.0)
 
 	var x1 = x0 + 1
 	var y1 = y0 + 1
@@ -406,67 +439,88 @@ func sample_direction(world_pos: Vector2) -> Vector2:
 	var v01 = flow_vectors[cy1 * w + cx0]
 	var v11 = flow_vectors[cy1 * w + cx1]
 
-	var base_dir: Vector2 = Vector2.ZERO
-	if v00 != Vector2.ZERO and v10 != Vector2.ZERO and v01 != Vector2.ZERO and v11 != Vector2.ZERO:
-		var top = lerp(v00, v10, tx)
-		var bottom = lerp(v01, v11, tx)
-		base_dir = lerp(top, bottom, ty)
-	else:
-		var gx = clampi(int(floor((world_pos.x - world_origin.x) / cell_size.x)), 0, w - 1)
-		var gy = clampi(int(floor((world_pos.y - world_origin.y) / cell_size.y)), 0, h - 1)
-		base_dir = flow_vectors[gy * w + gx]
-		if base_dir == Vector2.ZERO:
-			if v00 != Vector2.ZERO: base_dir = v00
-			elif v10 != Vector2.ZERO: base_dir = v10
-			elif v01 != Vector2.ZERO: base_dir = v01
-			elif v11 != Vector2.ZERO: base_dir = v11
+	var w00 = (1.0 - tx) * (1.0 - ty)
+	var w10 = tx * (1.0 - ty)
+	var w01 = (1.0 - tx) * ty
+	var w11 = tx * ty
 
-	if base_dir.length_squared() < 0.0001:
-		return Vector2.ZERO
+	var blended_dir = Vector2.ZERO
+	var total_weight = 0.0
 
-	return base_dir.normalized()
+	if v00.length_squared() > 0.0001:
+		blended_dir += v00 * w00
+		total_weight += w00
+	if v10.length_squared() > 0.0001:
+		blended_dir += v10 * w10
+		total_weight += w10
+	if v01.length_squared() > 0.0001:
+		blended_dir += v01 * w01
+		total_weight += w01
+	if v11.length_squared() > 0.0001:
+		blended_dir += v11 * w11
+		total_weight += w11
 
-## Traces a continuous path streamline from start_pos to the closest exit.
-func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 150, exit_nodes: Array[Node2D] = []) -> PackedVector2Array:
+	if total_weight > 0.0001 and blended_dir.length_squared() > 0.0001:
+		return (blended_dir / total_weight).normalized()
+
+	# Fallback to nearest valid cell vector
+	var gx = clampi(int(floor((world_pos.x - world_origin.x) / cell_size.x)), 0, w - 1)
+	var gy = clampi(int(floor((world_pos.y - world_origin.y) / cell_size.y)), 0, h - 1)
+	var base_dir = flow_vectors[gy * w + gx]
+	if base_dir.length_squared() > 0.0001:
+		return base_dir.normalized()
+
+	return Vector2.ZERO
+
+## Traces a continuous path streamline from start_pos to the closest exit using RK2 integration.
+func trace_path(start_pos: Vector2, step_size: float = 8.0, max_steps: int = 400, exit_nodes: Array[Node2D] = []) -> PackedVector2Array:
 	var pts = PackedVector2Array([start_pos])
 	var curr_pos = start_pos
-	var exit_reach_radius_sq = (cell_size.x * 2.0) * (cell_size.x * 2.0)
+	const EXIT_REACH_RADIUS_SQ: float = 54.0 * 54.0 ## Covers 64x64 exit area
 
 	var last_grid = Vector2i(-999, -999)
 	var same_cell_steps = 0
 
 	for _step in range(max_steps):
 		for exit in exit_nodes:
-			if is_instance_valid(exit) and curr_pos.distance_squared_to(exit.global_position) <= exit_reach_radius_sq:
+			if is_instance_valid(exit) and curr_pos.distance_squared_to(exit.global_position) <= EXIT_REACH_RADIUS_SQ:
 				pts.append(exit.global_position)
 				return pts
 
-		var dir = sample_direction(curr_pos)
-		if dir == Vector2.ZERO:
+		var k1 = sample_direction(curr_pos)
+		if k1 == Vector2.ZERO:
+			# If flow vector reached terminal zero near an exit, connect directly to closest exit
+			for exit in exit_nodes:
+				if is_instance_valid(exit) and curr_pos.distance_squared_to(exit.global_position) <= 80.0 * 80.0:
+					pts.append(exit.global_position)
+					return pts
 			break
 
-		var next_pos = curr_pos + dir * step_size
+		# 2nd-order Runge-Kutta (RK2 midpoint) integration for smooth curvature
+		var mid_pos = curr_pos + k1 * (step_size * 0.5)
+		var k2 = sample_direction(mid_pos)
+		var step_dir = k2 if k2 != Vector2.ZERO else k1
 
-		# If stepping into a blocked cell, project to nearest open cell
+		var next_pos = curr_pos + step_dir * step_size
+
+		# If stepping into a permanent wall, slide along valid direction
 		var g = global_to_grid(next_pos)
 		if is_valid_cell(g.x, g.y):
 			if base_cost[grid_to_index(g.x, g.y)] >= BLOCKED_COST:
-				var open_found: bool = false
-				const OFFSETS = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
-				for off in OFFSETS:
-					var test_g = global_to_grid(curr_pos) + off
-					if is_valid_cell(test_g.x, test_g.y) and base_cost[grid_to_index(test_g.x, test_g.y)] < BLOCKED_COST:
-						next_pos = grid_to_global(test_g)
-						open_found = true
+				var slide_dir = sample_direction(curr_pos)
+				if slide_dir != Vector2.ZERO:
+					next_pos = curr_pos + slide_dir * (step_size * 0.5)
+					var g_slide = global_to_grid(next_pos)
+					if is_valid_cell(g_slide.x, g_slide.y) and base_cost[grid_to_index(g_slide.x, g_slide.y)] >= BLOCKED_COST:
 						break
-				if not open_found:
+				else:
 					break
 		else:
 			break
 
 		if g == last_grid:
 			same_cell_steps += 1
-			if same_cell_steps > 4: # Stuck or oscillating in place
+			if same_cell_steps > 8: # Stuck or oscillating in place
 				break
 		else:
 			same_cell_steps = 0
@@ -474,5 +528,11 @@ func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 15
 
 		curr_pos = next_pos
 		pts.append(curr_pos)
+
+	# End of steps fallback: if ended close to an exit, connect to it
+	for exit in exit_nodes:
+		if is_instance_valid(exit) and curr_pos.distance_squared_to(exit.global_position) <= EXIT_REACH_RADIUS_SQ:
+			pts.append(exit.global_position)
+			break
 
 	return pts

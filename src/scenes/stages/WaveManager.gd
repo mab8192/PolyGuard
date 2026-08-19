@@ -8,12 +8,16 @@ var stage_time: float = 0.0
 var is_stage_active: bool = true
 var wave_is_active: bool = false
 var spawners: Array[Spawner] = []
+var pending_enemies: int = 0
 
 func setup(p_stage: Stage) -> void:
 	stage = p_stage
+	pending_enemies = 0
 	
 	SignalBus.enemy_died.connect(_on_enemy_died)
 	SignalBus.enemy_exit.connect(_on_enemy_exit)
+	SignalBus.enemy_spawned.connect(_on_enemy_spawned)
+	SignalBus.enemy_split_pending.connect(_on_enemy_split_pending)
 	SignalBus.wave_started.connect(_on_wave_started)
 	
 	# 1. Collect all spawners in the stage
@@ -101,6 +105,7 @@ func start_next_wave() -> void:
 	var wave_data: WaveData = stage.data.get_wave(wave)
 	if wave_data:
 		wave_is_active = true
+		pending_enemies = 0
 		current_wave = wave_data
 		
 		_refresh_spawners()
@@ -174,7 +179,7 @@ func _on_wave_started() -> void:
 	pass
 
 func _check_wave_completion() -> void:
-	var enemies_remaining: int = 0
+	var enemies_remaining: int = pending_enemies
 	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.enemies):
 		for e in GameManager.stage_root.enemies.get_children():
 			if is_instance_valid(e) and !e.is_queued_for_deletion():
@@ -182,6 +187,7 @@ func _check_wave_completion() -> void:
 	
 	if wave_is_active and spawners.all(func(x: Spawner): return !x.is_spawning()) and enemies_remaining == 0:
 		wave_is_active = false
+		pending_enemies = 0
 		SignalBus.wave_completed.emit()
 		
 		if stage:
@@ -199,6 +205,13 @@ func _check_wave_completion() -> void:
 		else:
 			# Preview upcoming indicators for the next wave during build phase
 			update_upcoming_wave_preview()
+
+func _on_enemy_split_pending(count: int) -> void:
+	pending_enemies += count
+
+func _on_enemy_spawned(_enemy: Enemy) -> void:
+	if pending_enemies > 0:
+		pending_enemies -= 1
 
 func _on_enemy_died(enemy: Enemy) -> void:
 	if stage:

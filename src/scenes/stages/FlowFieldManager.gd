@@ -6,7 +6,7 @@ class_name FlowFieldManager extends Node
 
 signal flow_fields_updated()
 
-const CELL_SIZE: Vector2 = Vector2(24.0, 24.0)
+const CELL_SIZE: Vector2 = Vector2(16.0, 16.0)
 const CONGESTION_UPDATE_INTERVAL: float = 0.35 ## Dynamic congestion update interval
 
 # Congestion Strength Knobs
@@ -339,11 +339,11 @@ func rebuild_tower_fields() -> void:
 				var tower = child as Tower
 				var tower_rect = _get_tower_rect(tower)
 				if tower.collision_layer == 16: # Layer 5: Spectral Towers
-					physical_field.set_rect_blocked(tower_rect, true, 0.25)
-					ghost_field.set_rect_blocked(tower_rect, true, 0.25)
+					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
+					ghost_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
 					has_spectral_towers = true
 				elif tower.collision_layer > 0: # Physical Towers / Barricades
-					physical_field.set_rect_blocked(tower_rect, true, 0.25)
+					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
 
 	# Recalculate integration fields
 	physical_field.calculate_integration_field(_cached_exit_positions)
@@ -365,8 +365,10 @@ func rebuild_tower_fields() -> void:
 	for gy in range(h):
 		var row_offset = gy * w
 		for gx in range(w):
-			if physical_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
+			if walls_only_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
 				_astar_full.set_point_solid(Vector2i(gx, gy), true)
+			elif physical_field.base_cost[row_offset + gx] >= FlowField.TOWER_COST:
+				_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
 
 	# Sync background worker base costs and base fields
 	_bg_physical_field.base_cost = physical_field.base_cost.duplicate()
@@ -381,10 +383,7 @@ func rebuild_tower_fields() -> void:
 	SignalBus.flow_fields_updated.emit()
 
 func _recalculate_all_integrations() -> void:
-	physical_field.calculate_integration_field(_cached_exit_positions)
-	walls_only_field.calculate_integration_field(_cached_exit_positions)
-	ghost_field.flow_vectors = walls_only_field.flow_vectors.duplicate()
-	ghost_field.integration_cost = walls_only_field.integration_cost.duplicate()
+	rebuild_tower_fields()
 
 func get_field(nav_layer: int) -> FlowField:
 	if (nav_layer & 4) != 0:

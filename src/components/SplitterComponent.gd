@@ -28,6 +28,7 @@ func split() -> void:
 	var split_data: SplitterData = data.duplicate(true)
 	var parent_node: Node = GameManager.stage_root.enemies if (GameManager.stage_root and GameManager.stage_root.enemies) else owner.get_parent()
 
+	SignalBus.enemy_split_pending.emit(split_data.number_of_copies)
 	_spawn_copies.call_deferred(spawn_pos, spawn_scale, enemy_data, split_data, parent_node)
 
 func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyData, split_data: SplitterData, parent_node: Node) -> void:

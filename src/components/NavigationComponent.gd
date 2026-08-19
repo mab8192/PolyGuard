@@ -133,11 +133,19 @@ func _physics_process(delta: float) -> void:
 		var nav_layer = data.nav_layer if data else 1
 		var field = fm.get_field(nav_layer)
 		var g = field.global_to_grid(_actor.global_position)
-		var has_valid_cost = field.is_valid_cell(g.x, g.y) and field.integration_cost[field.grid_to_index(g.x, g.y)] < FlowField.BLOCKED_COST
+		var has_valid_cell = field.is_valid_cell(g.x, g.y)
+		var cell_cost = field.integration_cost[field.grid_to_index(g.x, g.y)] if has_valid_cell else FlowField.BLOCKED_COST
 
-		if has_valid_cost:
-			_no_path = false
-			remaining_distance = field.integration_cost[field.grid_to_index(g.x, g.y)] * field.cell_size.x
+		if has_valid_cell and cell_cost < FlowField.BLOCKED_COST:
+			var is_blocked = cell_cost >= FlowField.TOWER_COST
+			if is_blocked:
+				if not _no_path:
+					no_path_available.emit()
+					_no_path = true
+			else:
+				_no_path = false
+
+			remaining_distance = cell_cost * field.cell_size.x
 			dir = field.sample_direction(_actor.global_position)
 		else:
 			var is_reach = fm.is_reachable(_actor.global_position, nav_layer)
@@ -145,7 +153,7 @@ func _physics_process(delta: float) -> void:
 				if not _no_path:
 					no_path_available.emit()
 					_no_path = true
-				# When blocked by barricades/towers, route along walls_only_field directly to the blocking barricade/tower
+				# When blocked by solid walls, fallback to walls_only_field
 				if fm.walls_only_field:
 					var wg = fm.walls_only_field.global_to_grid(_actor.global_position)
 					if fm.walls_only_field.is_valid_cell(wg.x, wg.y):

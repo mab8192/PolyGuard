@@ -12,12 +12,12 @@ const CORNER_OFFSETS: Array[Vector2] = [
 	Vector2(-26.0, 26.0),
 ]
 
-const MOVE_SPEED: float = 75.0      ## Movement speed in pixels per second towards exit
-const PULSE_SPACING: float = 128.0   ## Distance between pulses in pixels
-const PULSE_LENGTH: float = 24.0    ## Length of each pulse segment in pixels
-const BASE_ALPHA: float = 0.12      ## Ambient continuous route alpha
-const PULSE_ALPHA: float = 0.45     ## Moving pulse peak alpha
-const FADE_DISTANCE: float = 32.0   ## Edge fade-in/out distance at ends of path
+const MOVE_SPEED: float = 75.0 ## Movement speed in pixels per second towards exit
+const PULSE_SPACING: float = 128.0 ## Distance between pulses in pixels
+const PULSE_LENGTH: float = 24.0 ## Length of each pulse segment in pixels
+const BASE_ALPHA: float = 0.12 ## Ambient continuous route alpha
+const PULSE_ALPHA: float = 0.45 ## Moving pulse peak alpha
+const FADE_DISTANCE: float = 32.0 ## Edge fade-in/out distance at ends of path
 
 const PREVIEW_SHADER = preload("res://src/scenes/utility/spawner_path_preview.gdshader")
 
@@ -177,7 +177,7 @@ func _recalculate_paths() -> void:
 			if i >= _lines.size():
 				break
 			var corner_global: Vector2 = spawner.global_position + CORNER_OFFSETS[i]
-			var path = field.trace_path(corner_global, 12.0, 150, target_exits)
+			var path = field.trace_path(corner_global, 8.0, 600, target_exits)
 			if path.size() >= 2:
 				var clean_pts = _clean_path(path)
 				var total_len = _calc_polyline_length(clean_pts)
@@ -190,10 +190,18 @@ func _recalculate_paths() -> void:
 	_clear_lines()
 
 func _clean_path(global_path: PackedVector2Array) -> PackedVector2Array:
-	var clean_pts: PackedVector2Array = []
-	for pt in global_path:
-		if clean_pts.is_empty() or clean_pts[-1].distance_to(pt) > 0.5:
+	if global_path.size() <= 2:
+		return global_path
+
+	var clean_pts: PackedVector2Array = [global_path[0]]
+	for i in range(1, global_path.size()):
+		var pt = global_path[i]
+		if clean_pts[-1].distance_squared_to(pt) >= 4.0: # At least 2px distance
 			clean_pts.append(pt)
+
+	if clean_pts[-1] != global_path[-1]:
+		clean_pts.append(global_path[-1])
+
 	return clean_pts
 
 func _calc_polyline_length(poly: PackedVector2Array) -> float:

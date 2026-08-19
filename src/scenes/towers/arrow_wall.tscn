@@ -32,6 +32,7 @@ metadata/_custom_type_script = "uid://ce03oldy8eqse"
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=2120966365]
 position = Vector2(72, 0)
 shape = SubResource("RectangleShape2D_2ptdd")
+debug_color = Color(0.6266425, 0.36031026, 0.9785176, 0.047058824)
 
 [node name="AttackComponent" type="Node" parent="." unique_id=635266676]
 script = ExtResource("4_qelov")
