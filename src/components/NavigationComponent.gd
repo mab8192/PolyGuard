@@ -7,7 +7,6 @@ signal no_path_available()
 @export var data: NavigationData
 
 var movement: MovementComponent
-var agent: NavigationAgent2D
 var _exits: Array[Node2D] = []
 
 var _actor: CharacterBody2D
@@ -32,23 +31,6 @@ func _ready() -> void:
 
 	if not movement:
 		movement = ComponentUtil.get_component(_actor, MovementComponent) as MovementComponent
-	if not agent:
-		agent = _actor.find_child("NavigationAgent2D", false, false) as NavigationAgent2D
-		if not agent:
-			agent = NavigationAgent2D.new()
-			agent.name = "NavigationAgent2D"
-			_actor.add_child(agent)
-
-	if agent:
-		agent.velocity_computed.connect(_on_velocity_computed)
-		agent.navigation_layers = data.nav_layer
-		agent.path_max_distance = 10
-		agent.avoidance_enabled = false
-		agent.neighbor_distance = 100
-		agent.radius = 8
-		agent.simplify_path = false
-		agent.path_desired_distance = 6.0
-		agent.target_desired_distance = 8.0
 	
 	SignalBus.tower_placed.connect(_on_towers_changed)
 	SignalBus.tower_destroyed.connect(_on_towers_changed)
@@ -211,15 +193,7 @@ func _physics_process(delta: float) -> void:
 
 	var max_speed = movement.get_speed() if movement else 0.0
 	var intended_vel = dir * max_speed
-	
-	if agent.avoidance_enabled:
-		agent.max_speed = max_speed
-		agent.velocity = intended_vel
-	else:
-		velocity_computed.emit(intended_vel)
-
-func _on_velocity_computed(safe_vel: Vector2) -> void:
-	velocity_computed.emit(safe_vel)
+	velocity_computed.emit(intended_vel)
 
 func _pick_target() -> void:
 	if not is_instance_valid(_actor) or not _actor.is_inside_tree():
@@ -283,22 +257,7 @@ func get_shortest_path_to_exit_ignoring_towers() -> PackedVector2Array:
 		if path.size() >= 2:
 			return path
 
-	var map: RID = _actor.get_world_2d().navigation_map
-	var shortest_path: PackedVector2Array = PackedVector2Array()
-	var min_length: float = INF
-
-	for exit in _exits:
-		if not is_instance_valid(exit):
-			continue
-		var path: PackedVector2Array = NavigationServer2D.map_get_path(
-			map, _actor.global_position, exit.global_position, true, 4
-		)
-		var length: float = _calculate_path_length(path)
-		if length < min_length:
-			min_length = length
-			shortest_path = path
-
-	return shortest_path
+	return PackedVector2Array()
 
 
 

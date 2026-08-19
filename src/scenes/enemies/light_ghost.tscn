@@ -27,11 +27,5 @@ script = ExtResource("4_health")
 [node name="NavigationComponent" type="Node" parent="." unique_id=587399606]
 script = ExtResource("5_nav")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134391]
-navigation_layers = 4
-simplify_path = true
-avoidance_enabled = true
-max_speed = 500.0
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1457276719]
 shape = SubResource("CircleShape2D_qgbsg")

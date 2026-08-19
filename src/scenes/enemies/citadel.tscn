@@ -37,12 +37,6 @@ metadata/_custom_type_script = "uid://b25aa5trewubh"
 script = ExtResource("4_ay2dt")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1564134390]
-navigation_layers = 2
-simplify_path = true
-avoidance_enabled = true
-max_speed = 500.0
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=766904884]
 shape = SubResource("CircleShape2D_qgbsg")
 

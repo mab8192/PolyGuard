@@ -48,13 +48,9 @@ func _ready() -> void:
 	SignalBus.stage_loaded.connect(_on_stage_loaded)
 	SignalBus.stage_completed.connect(_on_stage_ended)
 	SignalBus.stage_failed.connect(_on_stage_ended)
-	SignalBus.navmesh_updated.connect(_on_navmesh_updated)
-	SignalBus.flow_fields_updated.connect(_on_navmesh_updated)
+	SignalBus.flow_fields_updated.connect(_on_flow_fields_updated)
 	SignalBus.spawners_updated.connect(_on_spawners_updated)
 	SignalBus.exits_updated.connect(_on_exits_updated)
-
-	if not NavigationServer2D.map_changed.is_connected(_on_navigation_map_changed):
-		NavigationServer2D.map_changed.connect(_on_navigation_map_changed)
 
 	_update_stage_wave_state()
 	_update_target_visibility()
@@ -88,8 +84,7 @@ func _setup_lines() -> void:
 		_materials.append(mat)
 
 func _exit_tree() -> void:
-	if NavigationServer2D.map_changed.is_connected(_on_navigation_map_changed):
-		NavigationServer2D.map_changed.disconnect(_on_navigation_map_changed)
+	pass
 
 func _process(delta: float) -> void:
 	_update_target_visibility()
@@ -192,53 +187,7 @@ func _recalculate_paths() -> void:
 				_lines[i].points = PackedVector2Array()
 		return
 
-	var world_2d = get_world_2d()
-	if not world_2d:
-		return
-
-	var map: RID = world_2d.navigation_map
-	if not map.is_valid() or NavigationServer2D.map_get_iteration_id(map) == 0:
-		return
-
-	for i in range(CORNER_OFFSETS.size()):
-		if i >= _lines.size():
-			break
-			
-		var offset = CORNER_OFFSETS[i]
-		var corner_global: Vector2 = spawner.global_position + offset
-		var best_path: PackedVector2Array = []
-		var min_length: float = INF
-
-		for exit in target_exits:
-			if not is_instance_valid(exit):
-				continue
-			var path = NavigationServer2D.map_get_path(map, corner_global, exit.global_position, true, 1)
-			if path.size() >= 2:
-				var length: float = _calc_polyline_length(path)
-				if length < min_length:
-					min_length = length
-					best_path = path
-
-		# If query didn't find path directly, project corner onto nearest navmesh point
-		if best_path.size() < 2:
-			var closest = NavigationServer2D.map_get_closest_point(map, corner_global)
-			for exit in target_exits:
-				if not is_instance_valid(exit):
-					continue
-				var path = NavigationServer2D.map_get_path(map, closest, exit.global_position, true, 1)
-				if path.size() >= 2:
-					var length: float = _calc_polyline_length(path)
-					if length < min_length:
-						min_length = length
-						best_path = path
-
-		if best_path.size() >= 2:
-			var clean_pts = _clean_path(best_path)
-			var total_len = _calc_polyline_length(clean_pts)
-			_lines[i].points = clean_pts
-			_materials[i].set_shader_parameter("total_length", maxf(total_len, 1.0))
-		else:
-			_lines[i].points = PackedVector2Array()
+	_clear_lines()
 
 func _clean_path(global_path: PackedVector2Array) -> PackedVector2Array:
 	var clean_pts: PackedVector2Array = []
@@ -258,13 +207,6 @@ func _clear_lines() -> void:
 		line.points = PackedVector2Array()
 
 # Signal Handlers
-func _on_navigation_map_changed(changed_map: RID) -> void:
-	if not is_inside_tree():
-		return
-	var world_2d = get_world_2d()
-	if world_2d and changed_map == world_2d.navigation_map:
-		_schedule_recalculate()
-
 func _on_wave_started() -> void:
 	_wave_is_active = true
 	_update_target_visibility()
@@ -286,7 +228,7 @@ func _on_stage_ended(_stage_id: String = "") -> void:
 	_stage_is_active = false
 	_update_target_visibility()
 
-func _on_navmesh_updated() -> void:
+func _on_flow_fields_updated() -> void:
 	_schedule_recalculate()
 
 func _on_spawners_updated() -> void:

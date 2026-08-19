@@ -29,9 +29,6 @@ script = ExtResource("4_health")
 [node name="NavigationComponent" type="Node" parent="." unique_id=587399608]
 script = ExtResource("5_nav")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065244]
-simplify_path = true
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879432684]
 visible = false
 shape = SubResource("CircleShape2D_body")

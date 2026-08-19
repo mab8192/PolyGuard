@@ -3,7 +3,6 @@ class_name Stage extends Node2D
 var data: StageData
 
 @onready var tiles: TileMapLayer = $NavigationRegion2D/Tiles
-@onready var navigation_region_2d: NavigationRegion2D = $NavigationRegion2D
 @onready var towers: Node2D = $NavigationRegion2D/Towers
 
 var wave_manager: WaveManager
@@ -250,6 +249,3 @@ func rotate_preview(clockwise: bool = true) -> void:
 func place_preview() -> void:
 	if placement_manager:
 		placement_manager.place_preview()
-
-func generate_navmesh() -> void:
-	NavMeshGenerator.generate_navmesh(self)

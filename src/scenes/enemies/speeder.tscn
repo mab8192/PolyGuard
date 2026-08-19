@@ -30,8 +30,5 @@ metadata/_custom_type_script = "uid://b25aa5trewubh"
 script = ExtResource("4_w1xt2")
 metadata/_custom_type_script = "uid://v8wb72hbi8fk"
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
-simplify_path = true
-
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="." unique_id=879432682]
 polygon = PackedVector2Array(-4, -4, 6, 0, -4, 4)

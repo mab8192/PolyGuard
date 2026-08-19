@@ -26,9 +26,6 @@ script = ExtResource("1_kvuks")
 scale = Vector2(0.6875, 0.6875)
 texture = ExtResource("2_tex")
 
-[node name="NavigationAgent2D" type="NavigationAgent2D" parent="." unique_id=1656065242]
-simplify_path = true
-
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=274486048]
 shape = SubResource("CircleShape2D_d56y3")
 

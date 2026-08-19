@@ -93,8 +93,6 @@ func _ready() -> void:
 	if nav:
 		nav.velocity_computed.connect(_on_velocity_computed)
 		nav.no_path_available.connect(_on_no_path_available)
-		if nav.agent:
-			nav.agent.velocity_computed.connect(_on_velocity_computed)
 		
 		if data and data.type == EnemyData.EnemyType.GHOST:
 			collision_layer = 8 # Layer 4: Ghost Enemies
@@ -143,15 +141,7 @@ func _on_velocity_computed(vel: Vector2):
 		look_at(global_position + velocity)
 
 func _on_no_path_available() -> void:
-	if not nav:
-		return
-
-	var path = nav.get_shortest_path_to_exit_ignoring_towers()
-	var tower = nav.find_first_obstructing_tower(path)
-
-	if is_instance_valid(tower) and not tower.is_queued_for_deletion():
-		if nav and nav.agent:
-			nav.agent.target_position = tower.global_position
+	pass
 
 func get_stats() -> Dictionary:
 	if data:
