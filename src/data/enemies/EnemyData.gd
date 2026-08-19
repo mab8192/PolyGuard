@@ -50,6 +50,8 @@ func apply_to(enemy: Enemy) -> void:
 		ComponentUtil.update_component(enemy, MovementComponent, enemy.data.movement)
 
 	if nav:
+		if nav_strategy != NavigationData.NavStrategy.CLOSEST and enemy.data.nav.strategy == NavigationData.NavStrategy.CLOSEST:
+			enemy.data.nav.strategy = nav_strategy
 		ComponentUtil.update_component(enemy, NavigationComponent, enemy.data.nav)
 		
 	if splitter:

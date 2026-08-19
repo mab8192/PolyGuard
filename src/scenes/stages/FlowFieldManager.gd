@@ -21,6 +21,14 @@ var physical_field: FlowField = FlowField.new()
 var ghost_field: FlowField = FlowField.new()
 var walls_only_field: FlowField = FlowField.new()
 
+# Per-Exit Flow Fields for multi-exit stages (NavStrategy.FIRST / FARTHEST)
+var per_exit_physical_fields: Array[FlowField] = []
+var per_exit_ghost_fields: Array[FlowField] = []
+
+# Static reachability masks (1 = open path without crossing towers, 0 = blocked by towers/walls)
+var _static_open_reachability: PackedByteArray = PackedByteArray()
+var _per_exit_open_reachability: Array[PackedByteArray] = []
+
 var _astar_walls: AStarGrid2D = AStarGrid2D.new()
 var _astar_full: AStarGrid2D = AStarGrid2D.new()
 
@@ -314,9 +322,10 @@ func full_rebuild() -> void:
 			walls_only_field.set_rect_blocked(wall_rect, true, 0.0)
 
 	_update_cached_exits()
+	walls_only_field.update_wall_clearance()
 	walls_only_field.calculate_integration_field(_cached_exit_positions)
 
-	# Initialize AStarGrid2D for walls-only pathfinding
+	# Initialize AStarGrid2D for walls-only and full pathfinding
 	var w = physical_field.grid_size.x
 	var h = physical_field.grid_size.y
 	_astar_walls.region = Rect2i(0, 0, w, h)
@@ -325,11 +334,18 @@ func full_rebuild() -> void:
 	_astar_walls.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	_astar_walls.update()
 
+	_astar_full.region = Rect2i(0, 0, w, h)
+	_astar_full.cell_size = CELL_SIZE
+	_astar_full.offset = physical_field.world_origin + (CELL_SIZE * 0.5)
+	_astar_full.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_full.update()
+
 	for gy in range(h):
 		var row_offset = gy * w
 		for gx in range(w):
 			if walls_only_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
 				_astar_walls.set_point_solid(Vector2i(gx, gy), true)
+				_astar_full.set_point_solid(Vector2i(gx, gy), true)
 
 	rebuild_tower_fields()
 
@@ -341,9 +357,11 @@ func rebuild_tower_fields() -> void:
 	if not stage or not is_instance_valid(stage):
 		return
 
-	# Instant C++ memory copy of base wall grid across fields
+	# Instant C++ memory copy of base wall grid and wall clearance across fields
 	physical_field.base_cost = walls_only_field.base_cost.duplicate()
 	ghost_field.base_cost = walls_only_field.base_cost.duplicate()
+	physical_field.clearance_cost = walls_only_field.clearance_cost.duplicate()
+	ghost_field.clearance_cost = walls_only_field.clearance_cost.duplicate()
 
 	var has_spectral_towers: bool = false
 
@@ -356,49 +374,172 @@ func rebuild_tower_fields() -> void:
 				if tower.collision_layer == 16: # Layer 5: Spectral Towers
 					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
 					ghost_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
+					physical_field.add_rect_clearance(tower_rect)
+					ghost_field.add_rect_clearance(tower_rect)
 					has_spectral_towers = true
 				elif tower.collision_layer > 0: # Physical Towers / Barricades
 					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
+					physical_field.add_rect_clearance(tower_rect)
 
-	# Recalculate integration fields
-	physical_field.calculate_integration_field(_cached_exit_positions)
+	# Recalculate integration fields in a single multi-source pass
+	var exit_count = _cached_exit_positions.size()
+	if exit_count > 1:
+		if per_exit_physical_fields.size() != exit_count:
+			per_exit_physical_fields.resize(exit_count)
+		var bounds = physical_field.bounds
+		for i in range(exit_count):
+			if per_exit_physical_fields[i] == null:
+				per_exit_physical_fields[i] = FlowField.new()
+				per_exit_physical_fields[i].init_grid(bounds, CELL_SIZE)
+			per_exit_physical_fields[i].base_cost = physical_field.base_cost.duplicate()
+			per_exit_physical_fields[i].clearance_cost = physical_field.clearance_cost.duplicate()
+	else:
+		per_exit_physical_fields.clear()
+
+	physical_field.calculate_multi_integration_fields(_cached_exit_positions, per_exit_physical_fields)
+
 	if has_spectral_towers:
-		ghost_field.calculate_integration_field(_cached_exit_positions)
+		if exit_count > 1:
+			if per_exit_ghost_fields.size() != exit_count:
+				per_exit_ghost_fields.resize(exit_count)
+			var bounds = ghost_field.bounds
+			for i in range(exit_count):
+				if per_exit_ghost_fields[i] == null:
+					per_exit_ghost_fields[i] = FlowField.new()
+					per_exit_ghost_fields[i].init_grid(bounds, CELL_SIZE)
+				per_exit_ghost_fields[i].base_cost = ghost_field.base_cost.duplicate()
+				per_exit_ghost_fields[i].clearance_cost = ghost_field.clearance_cost.duplicate()
+		else:
+			per_exit_ghost_fields.clear()
+
+		ghost_field.calculate_multi_integration_fields(_cached_exit_positions, per_exit_ghost_fields)
 	else:
 		ghost_field.flow_vectors = walls_only_field.flow_vectors.duplicate()
 		ghost_field.integration_cost = walls_only_field.integration_cost.duplicate()
+		if exit_count > 1:
+			if per_exit_ghost_fields.size() != exit_count:
+				per_exit_ghost_fields.resize(exit_count)
+			for i in range(exit_count):
+				if per_exit_ghost_fields[i] == null:
+					per_exit_ghost_fields[i] = FlowField.new()
+					per_exit_ghost_fields[i].init_grid(physical_field.bounds, CELL_SIZE)
+				per_exit_ghost_fields[i].flow_vectors = walls_only_field.flow_vectors.duplicate()
+				per_exit_ghost_fields[i].integration_cost = walls_only_field.integration_cost.duplicate()
+		else:
+			per_exit_ghost_fields.clear()
 
-	# Update AStarGrid2D for physical towers and walls
-	var w = physical_field.grid_size.x
-	var h = physical_field.grid_size.y
-	_astar_full.region = Rect2i(0, 0, w, h)
-	_astar_full.cell_size = CELL_SIZE
-	_astar_full.offset = physical_field.world_origin + (CELL_SIZE * 0.5)
-	_astar_full.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
-	_astar_full.update()
+	_rebuild_reachability_masks()
 
-	for gy in range(h):
-		var row_offset = gy * w
-		for gx in range(w):
-			if walls_only_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
-				_astar_full.set_point_solid(Vector2i(gx, gy), true)
-			elif physical_field.base_cost[row_offset + gx] >= FlowField.TOWER_COST:
-				_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
+	# Fast AStar weight update for placed towers
+	if stage.towers:
+		var w = physical_field.grid_size.x
+		for child in stage.towers.get_children():
+			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not child.is_preview:
+				var tower_rect = _get_tower_rect(child as Tower)
+				var min_cell = physical_field.global_to_grid(tower_rect.position)
+				var max_cell = physical_field.global_to_grid(tower_rect.end - Vector2(0.001, 0.001))
+				for gy in range(min_cell.y, max_cell.y + 1):
+					for gx in range(min_cell.x, max_cell.x + 1):
+						if physical_field.is_valid_cell(gx, gy) and walls_only_field.base_cost[gy * w + gx] < FlowField.BLOCKED_COST:
+							_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
 
 	# Sync background worker base costs and base fields
 	_bg_physical_field.base_cost = physical_field.base_cost.duplicate()
+	_bg_physical_field.clearance_cost = physical_field.clearance_cost.duplicate()
 	_bg_physical_field.flow_vectors = physical_field.flow_vectors
 	_bg_physical_field.integration_cost = physical_field.integration_cost
 
 	_bg_ghost_field.base_cost = ghost_field.base_cost.duplicate()
+	_bg_ghost_field.clearance_cost = ghost_field.clearance_cost.duplicate()
 	_bg_ghost_field.flow_vectors = ghost_field.flow_vectors
 	_bg_ghost_field.integration_cost = ghost_field.integration_cost
 
 	flow_fields_updated.emit()
 	SignalBus.flow_fields_updated.emit()
 
+func _rebuild_reachability_masks() -> void:
+	var total_cells = physical_field.total_cells
+	if total_cells == 0:
+		return
+
+	if _static_open_reachability.size() != total_cells:
+		_static_open_reachability.resize(total_cells)
+
+	var p_int = physical_field.integration_cost
+	for i in range(total_cells):
+		_static_open_reachability[i] = 1 if p_int[i] < FlowField.TOWER_COST else 0
+
+	var exit_count = _cached_exit_positions.size()
+	if exit_count > 1:
+		if _per_exit_open_reachability.size() != exit_count:
+			_per_exit_open_reachability.resize(exit_count)
+
+		for e_i in range(exit_count):
+			if _per_exit_open_reachability[e_i].size() != total_cells:
+				_per_exit_open_reachability[e_i].resize(total_cells)
+			if e_i < per_exit_physical_fields.size() and per_exit_physical_fields[e_i] != null:
+				var e_int = per_exit_physical_fields[e_i].integration_cost
+				for i in range(total_cells):
+					_per_exit_open_reachability[e_i][i] = 1 if e_int[i] < FlowField.TOWER_COST else 0
+			else:
+				_per_exit_open_reachability[e_i] = _static_open_reachability.duplicate()
+	else:
+		_per_exit_open_reachability.clear()
+
 func _recalculate_all_integrations() -> void:
 	rebuild_tower_fields()
+
+func is_open_path_available(world_pos: Vector2, exit_idx: int = -1, nav_layer: int = 1) -> bool:
+	if (nav_layer & 4) != 0:
+		return walls_only_field.is_reachable(world_pos)
+
+	if _static_open_reachability.is_empty():
+		return true
+
+	var g = physical_field.global_to_grid(world_pos)
+	if not physical_field.is_valid_cell(g.x, g.y):
+		return false
+
+	var idx = physical_field.grid_to_index(g.x, g.y)
+	if exit_idx >= 0 and exit_idx < _per_exit_open_reachability.size():
+		return _per_exit_open_reachability[exit_idx][idx] == 1
+
+	return _static_open_reachability[idx] == 1
+
+func get_field_for_strategy(nav_layer: int, strategy: NavigationData.NavStrategy, world_pos: Vector2) -> FlowField:
+	var is_ghost = (nav_layer & 4) != 0
+	var base_field = ghost_field if is_ghost else physical_field
+	var per_exit_list = per_exit_ghost_fields if is_ghost else per_exit_physical_fields
+
+	if per_exit_list.is_empty() or _cached_exit_positions.size() <= 1:
+		return base_field
+
+	match strategy:
+		NavigationData.NavStrategy.CLOSEST:
+			return base_field
+
+		NavigationData.NavStrategy.FIRST:
+			if not per_exit_list.is_empty() and per_exit_list[0] != null:
+				return per_exit_list[0]
+			return base_field
+
+		NavigationData.NavStrategy.FARTHEST:
+			var g = base_field.global_to_grid(world_pos)
+			if not base_field.is_valid_cell(g.x, g.y):
+				return base_field
+			var idx = base_field.grid_to_index(g.x, g.y)
+
+			var max_dist: float = -1.0
+			var best_field: FlowField = base_field
+			for f in per_exit_list:
+				if f != null and f.is_valid_cell(g.x, g.y):
+					var cost = f.integration_cost[idx]
+					if cost < FlowField.BLOCKED_COST and cost > max_dist:
+						max_dist = cost
+						best_field = f
+			return best_field
+
+	return base_field
 
 func get_field(nav_layer: int) -> FlowField:
 	if (nav_layer & 4) != 0:

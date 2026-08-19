@@ -12,6 +12,8 @@ var world_origin: Vector2 = Vector2.ZERO
 var cell_size: Vector2 = Vector2(16.0, 16.0)
 var grid_size: Vector2i = Vector2i.ZERO
 var total_cells: int = 0
+var bounds: Rect2:
+	get: return Rect2(world_origin, Vector2(grid_size) * cell_size)
 
 var base_cost: PackedFloat32Array = PackedFloat32Array()
 var clearance_cost: PackedFloat32Array = PackedFloat32Array()
@@ -112,8 +114,8 @@ func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(16.0, 16.0)) -> voi
 
 	_heap.reset(total_cells * 2)
 
-## Computes a clearance cost penalty on cells directly adjacent to walls and towers
-func _update_clearance_field() -> void:
+## Computes a clearance cost penalty on cells directly adjacent to walls
+func update_wall_clearance() -> void:
 	if clearance_cost.size() != total_cells:
 		clearance_cost.resize(total_cells)
 	clearance_cost.fill(0.0)
@@ -128,14 +130,14 @@ func _update_clearance_field() -> void:
 		var row_offset = gy * w
 		for gx in range(w):
 			var idx = row_offset + gx
-			if base_cost[idx] >= TOWER_COST:
+			if base_cost[idx] >= BLOCKED_COST:
 				# Orthogonal neighbors get +1.5 clearance penalty
 				for off in OFFSETS_ORTHO:
 					var nx = gx + off.x
 					var ny = gy + off.y
 					if nx >= 0 and nx < w and ny >= 0 and ny < h:
 						var n_idx = ny * w + nx
-						if base_cost[n_idx] < TOWER_COST:
+						if base_cost[n_idx] < BLOCKED_COST:
 							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], 1.5)
 
 				# Diagonal neighbors get +0.8 clearance penalty
@@ -144,8 +146,41 @@ func _update_clearance_field() -> void:
 					var ny = gy + off.y
 					if nx >= 0 and nx < w and ny >= 0 and ny < h:
 						var n_idx = ny * w + nx
-						if base_cost[n_idx] < TOWER_COST:
+						if base_cost[n_idx] < BLOCKED_COST:
 							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], 0.8)
+
+## Fast local clearance update around a single placed tower rectangle (O(1))
+func add_rect_clearance(rect: Rect2, penalty_ortho: float = 1.5, penalty_diag: float = 0.8) -> void:
+	var min_cell = global_to_grid(rect.position)
+	var max_cell = global_to_grid(rect.end - Vector2(0.001, 0.001))
+	var w = grid_size.x
+	var h = grid_size.y
+
+	const OFFSETS_ORTHO = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	const OFFSETS_DIAG = [Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+
+	for gy in range(min_cell.y, max_cell.y + 1):
+		if gy < 0 or gy >= h:
+			continue
+		for gx in range(min_cell.x, max_cell.x + 1):
+			if gx < 0 or gx >= w:
+				continue
+			var idx = gy * w + gx
+			if base_cost[idx] >= TOWER_COST:
+				for off in OFFSETS_ORTHO:
+					var nx = gx + off.x
+					var ny = gy + off.y
+					if nx >= 0 and nx < w and ny >= 0 and ny < h:
+						var n_idx = ny * w + nx
+						if base_cost[n_idx] < TOWER_COST:
+							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], penalty_ortho)
+				for off in OFFSETS_DIAG:
+					var nx = gx + off.x
+					var ny = gy + off.y
+					if nx >= 0 and nx < w and ny >= 0 and ny < h:
+						var n_idx = ny * w + nx
+						if base_cost[n_idx] < TOWER_COST:
+							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], penalty_diag)
 
 func clear_congestion() -> void:
 	congestion_cost.fill(0.0)
@@ -287,6 +322,109 @@ func is_reachable(world_pos: Vector2) -> bool:
 					return true
 	return false
 
+## Calculates integration fields for unified and per-exit fields in ONE Dijkstra wavefront pass
+func calculate_multi_integration_fields(target_positions: Array[Vector2], out_per_exit_fields: Array[FlowField]) -> void:
+	var exit_count = target_positions.size()
+	cached_target_positions = target_positions
+	integration_cost.fill(BLOCKED_COST)
+
+	if exit_count == 0 or total_cells == 0:
+		flow_vectors.fill(Vector2.ZERO)
+		return
+
+	if exit_count == 1:
+		calculate_integration_field(target_positions)
+		if not out_per_exit_fields.is_empty() and out_per_exit_fields[0] != null:
+			out_per_exit_fields[0].integration_cost = integration_cost.duplicate()
+			out_per_exit_fields[0].flow_vectors = flow_vectors.duplicate()
+		return
+
+	for e in range(exit_count):
+		if e < out_per_exit_fields.size() and out_per_exit_fields[e] != null:
+			out_per_exit_fields[e].integration_cost.fill(BLOCKED_COST)
+
+	_heap.reset(total_cells * exit_count * 2)
+
+	var w = grid_size.x
+	var h = grid_size.y
+	var cs_x = cell_size.x
+	var cs_y = cell_size.y
+
+	for e in range(exit_count):
+		var target_pos = target_positions[e]
+		var exit_field = out_per_exit_fields[e] if e < out_per_exit_fields.size() else null
+		var local = target_pos - world_origin
+		var cx = int(floor(local.x / cs_x))
+		var cy = int(floor(local.y / cs_y))
+
+		for dy in range(-1, 2):
+			for dx in range(-1, 2):
+				var gx = cx + dx
+				var gy = cy + dy
+				if gx >= 0 and gx < w and gy >= 0 and gy < h:
+					var idx = gy * w + gx
+					if base_cost[idx] < BLOCKED_COST:
+						var cell_center = world_origin + Vector2((float(gx) + 0.5) * cs_x, (float(gy) + 0.5) * cs_y)
+						var initial_dist = target_pos.distance_to(cell_center) / cs_x
+						if exit_field != null and initial_dist < exit_field.integration_cost[idx]:
+							exit_field.integration_cost[idx] = initial_dist
+						if initial_dist < integration_cost[idx]:
+							integration_cost[idx] = initial_dist
+						_heap.push(initial_dist, (e << 18) | idx)
+
+	const NEIGHBORS = [
+		Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1),
+		Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)
+	]
+	const DIST_MULT = [1.0, 1.0, 1.0, 1.0, SQRT_2, SQRT_2, SQRT_2, SQRT_2]
+
+	var pop_out: Array = [0.0, 0]
+	while _heap.pop(pop_out):
+		var pop_cost: float = pop_out[0]
+		var item_id: int = pop_out[1]
+		var exit_idx: int = item_id >> 18
+		var curr_idx: int = item_id & 0x3FFFF
+
+		var exit_field = out_per_exit_fields[exit_idx] if exit_idx < out_per_exit_fields.size() else null
+		if exit_field != null and pop_cost > exit_field.integration_cost[curr_idx]:
+			continue
+
+		var gx = curr_idx % w
+		var gy = curr_idx / w
+
+		for i in range(8):
+			var nx = gx + NEIGHBORS[i].x
+			var ny = gy + NEIGHBORS[i].y
+
+			if nx < 0 or nx >= w or ny < 0 or ny >= h:
+				continue
+
+			var n_idx = ny * w + nx
+			var n_base = base_cost[n_idx]
+			if n_base >= BLOCKED_COST:
+				continue
+
+			# Diagonal corner-cutting safety check: prevent cutting across walls or towers
+			if i >= 4:
+				if base_cost[gy * w + nx] >= TOWER_COST or base_cost[ny * w + gx] >= TOWER_COST:
+					continue
+
+			# Effective cell cost includes wall clearance penalty + dynamic enemy congestion
+			var cell_cost = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
+			var tentative_dist = pop_cost + cell_cost * DIST_MULT[i]
+
+			if exit_field != null and tentative_dist < exit_field.integration_cost[n_idx]:
+				exit_field.integration_cost[n_idx] = tentative_dist
+				if tentative_dist < integration_cost[n_idx]:
+					integration_cost[n_idx] = tentative_dist
+				_heap.push(tentative_dist, (exit_idx << 18) | n_idx)
+
+	# Calculate continuous gradient vectors for unified and per-exit fields
+	_calculate_continuous_gradient_vectors()
+	for e in range(exit_count):
+		if e < out_per_exit_fields.size() and out_per_exit_fields[e] != null:
+			out_per_exit_fields[e]._calculate_continuous_gradient_vectors()
+
 ## Calculates integration field (Dijkstra) including base costs + dynamic swarm congestion
 func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 	cached_target_positions = target_positions
@@ -295,8 +433,6 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 	if target_positions.is_empty() or total_cells == 0:
 		flow_vectors.fill(Vector2.ZERO)
 		return
-
-	_update_clearance_field()
 
 	_heap.reset(total_cells * 2)
 

@@ -32,16 +32,12 @@ func _ready() -> void:
 	if not movement:
 		movement = ComponentUtil.get_component(_actor, MovementComponent) as MovementComponent
 	
-	SignalBus.tower_placed.connect(_on_towers_changed)
-	SignalBus.tower_destroyed.connect(_on_towers_changed)
 	SignalBus.flow_fields_updated.connect(_on_flow_fields_updated)
 	_pick_target()
 
-func _on_towers_changed() -> void:
-	_pick_target()
-
 func _on_flow_fields_updated() -> void:
-	_pick_target()
+	if data and data.targets_towers:
+		_pick_target()
 
 func set_exits(new_exits: Array[Node2D]) -> void:
 	_exits = new_exits
@@ -118,7 +114,8 @@ func _physics_process(delta: float) -> void:
 			# Fallback to exit flow field when no towers exist
 			if fm:
 				var nav_layer = data.nav_layer if data else 1
-				var field = fm.get_field(nav_layer)
+				var strat = data.strategy if data else NavigationData.NavStrategy.CLOSEST
+				var field = fm.get_field_for_strategy(nav_layer, strat, _actor.global_position)
 				var g = field.global_to_grid(_actor.global_position)
 				if field.is_valid_cell(g.x, g.y) and field.integration_cost[field.grid_to_index(g.x, g.y)] < FlowField.BLOCKED_COST:
 					_no_path = false
@@ -131,37 +128,34 @@ func _physics_process(delta: float) -> void:
 	# 2. Standard exit-targeting enemies
 	elif fm:
 		var nav_layer = data.nav_layer if data else 1
-		var field = fm.get_field(nav_layer)
+		var strat = data.strategy if data else NavigationData.NavStrategy.CLOSEST
+		var field = fm.get_field_for_strategy(nav_layer, strat, _actor.global_position)
 		var g = field.global_to_grid(_actor.global_position)
 		var has_valid_cell = field.is_valid_cell(g.x, g.y)
 		var cell_cost = field.integration_cost[field.grid_to_index(g.x, g.y)] if has_valid_cell else FlowField.BLOCKED_COST
 
-		if has_valid_cell and cell_cost < FlowField.BLOCKED_COST:
-			var is_blocked = cell_cost >= FlowField.TOWER_COST
-			if is_blocked:
-				if not _no_path:
-					no_path_available.emit()
-					_no_path = true
-			else:
-				_no_path = false
+		var exit_idx = 0 if strat == NavigationData.NavStrategy.FIRST else -1
+		var is_open = fm.is_open_path_available(_actor.global_position, exit_idx, nav_layer)
 
-			remaining_distance = cell_cost * field.cell_size.x
-			dir = field.sample_direction(_actor.global_position)
-		else:
-			var is_reach = fm.is_reachable(_actor.global_position, nav_layer)
-			if not is_reach:
-				if not _no_path:
-					no_path_available.emit()
-					_no_path = true
-				# When blocked by solid walls, fallback to walls_only_field
-				if fm.walls_only_field:
-					var wg = fm.walls_only_field.global_to_grid(_actor.global_position)
-					if fm.walls_only_field.is_valid_cell(wg.x, wg.y):
-						remaining_distance = fm.walls_only_field.integration_cost[fm.walls_only_field.grid_to_index(wg.x, wg.y)] * fm.walls_only_field.cell_size.x
-					dir = fm.walls_only_field.sample_direction(_actor.global_position)
-			else:
-				_no_path = false
+		if is_open:
+			_no_path = false
+			if has_valid_cell and cell_cost < FlowField.BLOCKED_COST:
+				remaining_distance = cell_cost * field.cell_size.x
 				dir = field.sample_direction(_actor.global_position)
+		else:
+			# Blocked by player towers or walls: follow flow field to attack the blocking tower
+			if not _no_path:
+				no_path_available.emit()
+				_no_path = true
+
+			if has_valid_cell and cell_cost < FlowField.BLOCKED_COST:
+				remaining_distance = cell_cost * field.cell_size.x
+				dir = field.sample_direction(_actor.global_position)
+			elif fm.walls_only_field:
+				var wg = fm.walls_only_field.global_to_grid(_actor.global_position)
+				if fm.walls_only_field.is_valid_cell(wg.x, wg.y):
+					remaining_distance = fm.walls_only_field.integration_cost[fm.walls_only_field.grid_to_index(wg.x, wg.y)] * fm.walls_only_field.cell_size.x
+				dir = fm.walls_only_field.sample_direction(_actor.global_position)
 
 		if dir == Vector2.ZERO and not _exits.is_empty():
 			var closest_exit: Node2D = null

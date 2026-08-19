@@ -19,7 +19,10 @@ How to scale up enemy difficulty over time?
 
 - [x] Tweak pathfinding so enemies only attack the minimum towers necessary to reopen the path (flow field Dijkstra using `TOWER_COST`)
 - [x] Drop flow field cell size to 16px to align with 32px towers and allow pathfinding through 32px gaps
+- [x] Disallow attacking towers during high congestion by adding a static reachability mask
+- [x] Per-exit flow field tracking supporting `NavStrategy.CLOSEST`, `FIRST`, and `FARTHEST`
 
 ## BUGS
 
 - [x] Wave completion when splitter is the last enemy (fixed via `pending_enemies` tracking)
+- [x] Prevent enemies from attacking towers when path is merely congested (fixed via static reachability mask)
