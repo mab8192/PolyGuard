@@ -23,7 +23,6 @@ script = ExtResource("2_choice")
 id = "soul_split"
 title = "Soul Split"
 description = "Refracts the spectral beam into multiple prongs, targeting an additional enemy simultaneously."
-damage_multiplier = 1.1
 extra_targets = 1
 icon = ExtResource("ext_var_soul_split")
 
@@ -31,9 +30,8 @@ icon = ExtResource("ext_var_soul_split")
 script = ExtResource("2_choice")
 id = "ethereal_focus"
 title = "Ethereal Focus"
-description = "Intensifies beam wattage by 35% and reduces attack interval by 20% to melt ghost escorts."
-damage_multiplier = 1.35
-cooldown_multiplier = 0.8
+description = "Focuses the beam's power to deal an increased 20% damage."
+damage_multiplier = 1.2
 icon = ExtResource("ext_var_ethereal_focus")
 
 [sub_resource type="Resource" id="Resource_health"]

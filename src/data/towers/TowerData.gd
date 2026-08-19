@@ -10,7 +10,7 @@ class_name TowerData extends Resource
 @export_category("Meta Progression")
 @export var unlock_cost: int = 0 ## 0 = starter tower, >0 = Credit cost to unlock
 @export var required_stage_id: String = "" ## Stage ID (e.g. stage_01) required to be cleared before this tower becomes available to unlock
-@export var max_level: int = 5 ## Maximum upgrade level
+@export var max_level: int = 3 ## Maximum upgrade level
 @export var choices: Array[TowerChoiceUpgrade] = [] ## Branching / Choice specializations
 
 @export_category("Level Upgrade Scaling")
@@ -50,12 +50,7 @@ func get_requirement_description() -> String:
 	return "Requires Stage Clear"
 
 func get_upgrade_cost(target_level: int) -> int:
-	match target_level:
-		2: return 150
-		3: return 300
-		4: return 500
-		5: return 750
-		_: return 200 * (target_level - 1)
+	return 300 * (target_level - 1)
 
 func get_choice(choice_id: String) -> TowerChoiceUpgrade:
 	for c in choices:

@@ -23,10 +23,9 @@ projectile_speed = 800.0
 script = ExtResource("1_choice")
 id = "arcane_infusion"
 title = "Arcane Infusion"
-description = "Converts arrows to Magic Damage with +20% bonus power."
+description = "Converts arrows to Magic damage and allows the tower to target ghost-class enemies."
 has_damage_type_override = true
 damage_type_override = 1
-damage_multiplier = 1.2
 has_targeting_mask_override = true
 icon = ExtResource("ext_var_arcane_infusion")
 
@@ -34,15 +33,15 @@ icon = ExtResource("ext_var_arcane_infusion")
 script = ExtResource("1_choice")
 id = "true_piercer"
 title = "True Piercer"
-description = "Converts arrows to True Damage (bypasses all armor and resistance) with +20% attack speed."
+description = "Converts arrows to True Damage (bypasses armor) with an additional +10% attack speed."
 has_damage_type_override = true
 damage_type_override = 2
-cooldown_multiplier = 0.8
+cooldown_multiplier = 0.9
 icon = ExtResource("ext_var_true_piercer")
 
 [sub_resource type="Resource" id="Resource_rcoxi"]
 script = ExtResource("4_health")
-armor = 20.0
+max_health = 400.0
 
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("6_targeting")
@@ -55,7 +54,7 @@ icon = ExtResource("3_icon")
 scene = ExtResource("2_scene")
 description = "Ranged single-target tower. Solid structure that blocks enemy movement."
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
-damage_upgrade_per_level = 0.2
+damage_upgrade_per_level = 0.15
 can_rotate = false
 health = SubResource("Resource_rcoxi")
 attack = SubResource("Resource_k6tlf")

@@ -19,7 +19,6 @@ metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("1_74qf7")
 max_health = 150.0
-armor = 0.0
 
 [sub_resource type="Resource" id="SubResource_movement"]
 script = ExtResource("3_0qo1k")

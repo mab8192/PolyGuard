@@ -21,19 +21,23 @@ func _on_stage_failed() -> void:
 		var total_waves = GameManager.current_stage.data.get_waves().size()
 		var score = GameManager.current_stage.score
 		desc_label.text = "Overwhelmed on Wave %d of %d\nScore: %d" % [wave, total_waves, score]
-	else:
-		desc_label.text = "Your defenses failed!"
 	show()
+	
+	get_tree().paused = true
 
 func _on_retry_pressed() -> void:
+	get_tree().paused = false
 	get_tree().reload_current_scene()
 
 func _on_loadout_pressed() -> void:
+	get_tree().paused = false
 	GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_inventory_pressed() -> void:
+	get_tree().paused = false
 	GameManager.target_main_menu_tab = 1 # NavBar.Tab.INVENTORY
 	GameManager.load_view(GameManager.View.MAIN_MENU)
 
 func _on_main_menu_pressed() -> void:
+	get_tree().paused = false
 	GameManager.load_view(GameManager.View.MAIN_MENU)

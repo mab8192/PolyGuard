@@ -2,6 +2,8 @@ class_name DamageComponent extends Area2D
 
 signal hit(target: Node2D)
 
+@export var collides_with_walls: bool = true
+
 var damage: float
 var damage_type: AttackData.DamageType:
 	set(val):
@@ -21,7 +23,9 @@ func _ready() -> void:
 	_update_collision_mask()
 
 func _update_collision_mask() -> void:
-	var mask: int = targeting_mask | 1 # Layer 1: Level Colliders / Walls
+	var mask: int = targeting_mask
+	if collides_with_walls:
+		mask |= 1 # Layer 1: Level Colliders / Walls
 	if damage_type == AttackData.DamageType.MAGIC or damage_type == AttackData.DamageType.TRUE:
 		mask |= 8 # Physics Layer 4 (Ghost Enemies)
 	collision_mask = mask

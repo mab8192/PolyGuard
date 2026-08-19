@@ -56,7 +56,6 @@ icon = ExtResource("4_icon")
 scene = ExtResource("5_scene")
 description = "Arcane rapid-fire tower that launches spark projectiles at up to two enemies simultaneously. Can target and damage ghosts."
 required_stage_id = "stage_02"
-max_level = 3
 choices = Array[ExtResource("2_choice")]([SubResource("Resource_choice_prismatic"), SubResource("Resource_choice_overcharge")])
 health_upgrade_per_level = 0.0
 can_rotate = false

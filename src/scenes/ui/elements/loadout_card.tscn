@@ -97,7 +97,6 @@ size_flags_horizontal = 3
 theme_type_variation = &"SmallText"
 text = "Archer Tower"
 horizontal_alignment = 1
-clip_text = true
 
 [node name="StatusBadge" type="PanelContainer" parent="BottomMargin/BottomBox" unique_id=14612]
 unique_name_in_owner = true

@@ -10,7 +10,6 @@
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
 max_health = 140.0
-armor = 0.0
 
 [sub_resource type="Resource" id="SubResource_movement"]
 script = ExtResource("5_move")

@@ -16,6 +16,8 @@ var _exploded: bool = false
 func _ready() -> void:
 	super._ready()
 	if damage_component:
+		damage_component.collides_with_walls = false
+		damage_component._update_collision_mask()
 		damage_component.hit.connect(_on_damage_hit)
 
 func _process(delta: float) -> void:
@@ -30,9 +32,12 @@ func _process(delta: float) -> void:
 		_trail.direction = -direction
 		
 	# Check if passed/reached target position
-	if _has_target_pos and global_position.distance_squared_to(_target_pos) <= (projectile_speed * delta * 2.0) ** 2:
-		explode(null)
-		return
+	if _has_target_pos:
+		var step: float = projectile_speed * delta
+		var dist_sq: float = global_position.distance_squared_to(_target_pos)
+		if dist_sq <= (step * 2.0) ** 2 or (direction != Vector2.ZERO and (global_position - _target_pos).dot(direction) >= 0.0):
+			explode(null)
+			return
 		
 	super._process(delta)
 
@@ -110,5 +115,5 @@ func _spawn_burning_ground() -> void:
 	for offset in offsets:
 		var patch = BURNING_GROUND_SCENE.instantiate() as Node2D
 		if patch:
-			effects_parent.add_child(patch)
-			patch.global_position = global_position + fwd * offset
+			patch.position = global_position + fwd * offset
+			effects_parent.call_deferred("add_child", patch)

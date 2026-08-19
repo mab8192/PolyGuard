@@ -251,5 +251,3 @@ func place_preview() -> void:
 
 func generate_navmesh() -> void:
 	NavMeshGenerator.generate_navmesh(self)
-
-

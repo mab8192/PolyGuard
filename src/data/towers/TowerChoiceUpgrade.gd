@@ -16,6 +16,7 @@ class_name TowerChoiceUpgrade extends Resource
 @export var damage_type_override: AttackData.DamageType = AttackData.DamageType.PHYSICAL
 @export var damage_multiplier: float = 1.0
 @export var cooldown_multiplier: float = 1.0
+@export var projectile_speed_multiplier: float = 1.0
 
 @export_group("Defensive & Targets")
 @export var health_multiplier: float = 1.0
@@ -54,6 +55,12 @@ func get_upgrade_details() -> Array[String]:
 			details.append("Attack Speed: +%d%% faster" % pct)
 		else:
 			details.append("Attack Speed: %d%% slower" % -pct)
+	if not is_equal_approx(projectile_speed_multiplier, 1.0):
+		var pct := int(round((projectile_speed_multiplier - 1.0) * 100.0))
+		if pct > 0:
+			details.append("Projectile Speed: +%d%% faster" % pct)
+		else:
+			details.append("Projectile Speed: %d%% slower" % -pct)
 	if not is_equal_approx(health_multiplier, 1.0):
 		var pct = int(round((health_multiplier - 1.0) * 100.0))
 		details.append("Structure Health: %+d%%" % pct)

@@ -1,4 +1,4 @@
-extends CanvasLayer
+class_name HUD extends CanvasLayer
 
 @onready var pause_menu: PauseMenu = $PauseMenu
 @onready var victory = $Victory

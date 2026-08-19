@@ -16,7 +16,6 @@ id = "permafrost_seal"
 title = "Supercooling"
 description = "Supercooled cryo matrix that reduces trap construction cost."
 cost_reduction = 100
-cooldown_multiplier = 0.8
 icon = ExtResource("ext_var_permafrost_seal")
 
 [sub_resource type="Resource" id="Resource_choice_glaze"]
