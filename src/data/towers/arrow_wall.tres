@@ -58,6 +58,7 @@ description = "Ranged multi-target arrow wall. Solid structure that blocks enemy
 unlock_cost = 250
 required_stage_id = "stage_01"
 choices = Array[ExtResource("3_77e18")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
+cooldown_reduction_per_level = 0.0
 cost = 300
 health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")

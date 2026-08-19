@@ -49,6 +49,7 @@ display_name = "Splitter"
 description = "Volatile cluster construct. Fractures into multiple swift sub-units upon catastrophic structural defeat, overwhelming unprepared choke points."
 scene = ExtResource("5_an1m1")
 icon = ExtResource("2_chacc")
+lives_penalty = 3
 energy_reward = 20
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")

@@ -16,6 +16,9 @@ var _last_path_calc: float = 0
 var _path_calc_timer: float = 0
 const PATH_RECALC_TIMER: float = 1
 
+var _separation_shape: CircleShape2D
+var _separation_query: PhysicsShapeQueryParameters2D
+
 func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"NavigationComponent", self)
@@ -43,7 +46,7 @@ func _ready() -> void:
 		# Apply common settings shared by all enemies
 		agent.navigation_layers = data.nav_layer
 		agent.path_max_distance = 10
-		agent.avoidance_enabled = true
+		agent.avoidance_enabled = false
 		agent.neighbor_distance = 100
 		agent.radius = 8
 		agent.simplify_path = false
@@ -83,6 +86,47 @@ func distance_to_goal() -> float:
 
 	return total_distance
 
+func _compute_separation_vector() -> Vector2:
+	if not data or not data.enable_separation or data.separation_radius <= 0.0 or not is_instance_valid(_actor):
+		return Vector2.ZERO
+
+	var space_state = _actor.get_world_2d().direct_space_state
+	if not space_state:
+		return Vector2.ZERO
+
+	if not _separation_query:
+		_separation_shape = CircleShape2D.new()
+		_separation_query = PhysicsShapeQueryParameters2D.new()
+		_separation_query.shape = _separation_shape
+		_separation_query.collision_mask = 4 | 8 # Layer 3: Physical Enemies, Layer 4: Ghost Enemies
+		_separation_query.collide_with_bodies = true
+		_separation_query.collide_with_areas = false
+
+	_separation_shape.radius = data.separation_radius
+	_separation_query.transform = _actor.global_transform
+	_separation_query.exclude = [_actor.get_rid()]
+
+	var results: Array[Dictionary] = space_state.intersect_shape(_separation_query, 8)
+	if results.is_empty():
+		return Vector2.ZERO
+
+	var sep_vector: Vector2 = Vector2.ZERO
+	var actor_pos: Vector2 = _actor.global_position
+	var sep_radius: float = data.separation_radius
+
+	for res in results:
+		var collider = res.get("collider")
+		if is_instance_valid(collider) and collider is Node2D and collider != _actor:
+			var diff: Vector2 = actor_pos - collider.global_position
+			var dist: float = diff.length()
+			if dist < 0.001:
+				sep_vector += Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)).normalized()
+			elif dist < sep_radius:
+				var strength: float = 1.0 - (dist / sep_radius)
+				sep_vector += (diff / dist) * strength
+
+	return sep_vector
+
 func _physics_process(delta: float) -> void:
 	if agent.is_navigation_finished():
 		return
@@ -101,6 +145,12 @@ func _physics_process(delta: float) -> void:
 
 	var next_pos = agent.get_next_path_position()
 	var dir = _actor.global_position.direction_to(next_pos)
+
+	if data and data.enable_separation:
+		var sep = _compute_separation_vector()
+		if sep != Vector2.ZERO:
+			dir = (dir + sep * data.separation_weight).normalized()
+
 	var max_speed = movement.get_speed() if movement else 0.0
 	var intended_vel = dir * max_speed
 	

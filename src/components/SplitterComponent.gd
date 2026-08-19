@@ -70,5 +70,5 @@ func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyDa
 		parent_node.add_child(copy)
 
 		if copy is Enemy:
-			copy.data.lives_penalty = 1
+			copy.data.lives_penalty = split_data.lives_penalty_override
 			SignalBus.enemy_spawned.emit(copy)

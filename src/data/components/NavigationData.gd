@@ -6,6 +6,11 @@ enum NavStrategy {
 	FIRST, # First in the _exits array
 }
 
-@export var strategy: NavStrategy = NavStrategy.CLOSEST
-@export_flags_2d_navigation var nav_layer: int = 1
-@export var targets_towers: bool = false
+@export var strategy: NavStrategy = NavStrategy.CLOSEST ## Strategy for selecting which destination/exit to navigate toward
+@export_flags_2d_navigation var nav_layer: int = 1 ## Godot navigation layers bitmask used for pathfinding
+@export var targets_towers: bool = false ## If true, entity navigates toward and prioritizes attacking player towers over exits
+
+@export_group("Boid Separation")
+@export var enable_separation: bool = true ## Enables local boid separation steering force to prevent clustering
+@export var separation_radius: float = 32.0 ## Detection radius in pixels around the entity for finding neighboring enemies to repel
+@export var separation_weight: float = 0.6 ## Blend weight of the separation repulsion force relative to the goal path heading
