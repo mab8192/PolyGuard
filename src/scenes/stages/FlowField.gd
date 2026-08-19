@@ -14,6 +14,7 @@ var grid_size: Vector2i = Vector2i.ZERO
 var total_cells: int = 0
 
 var base_cost: PackedFloat32Array = PackedFloat32Array()
+var clearance_cost: PackedFloat32Array = PackedFloat32Array()
 var congestion_cost: PackedFloat32Array = PackedFloat32Array()
 var integration_cost: PackedFloat32Array = PackedFloat32Array()
 var flow_vectors: PackedVector2Array = PackedVector2Array()
@@ -97,6 +98,9 @@ func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(16.0, 16.0)) -> voi
 	base_cost.resize(total_cells)
 	base_cost.fill(1.0)
 
+	clearance_cost.resize(total_cells)
+	clearance_cost.fill(0.0)
+
 	congestion_cost.resize(total_cells)
 	congestion_cost.fill(0.0)
 
@@ -107,6 +111,41 @@ func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(16.0, 16.0)) -> voi
 	flow_vectors.fill(Vector2.ZERO)
 
 	_heap.reset(total_cells * 2)
+
+## Computes a clearance cost penalty on cells directly adjacent to walls and towers
+func _update_clearance_field() -> void:
+	if clearance_cost.size() != total_cells:
+		clearance_cost.resize(total_cells)
+	clearance_cost.fill(0.0)
+
+	var w = grid_size.x
+	var h = grid_size.y
+
+	const OFFSETS_ORTHO = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+	const OFFSETS_DIAG = [Vector2i(1, 1), Vector2i(-1, 1), Vector2i(1, -1), Vector2i(-1, -1)]
+
+	for gy in range(h):
+		var row_offset = gy * w
+		for gx in range(w):
+			var idx = row_offset + gx
+			if base_cost[idx] >= TOWER_COST:
+				# Orthogonal neighbors get +1.5 clearance penalty
+				for off in OFFSETS_ORTHO:
+					var nx = gx + off.x
+					var ny = gy + off.y
+					if nx >= 0 and nx < w and ny >= 0 and ny < h:
+						var n_idx = ny * w + nx
+						if base_cost[n_idx] < TOWER_COST:
+							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], 1.5)
+
+				# Diagonal neighbors get +0.8 clearance penalty
+				for off in OFFSETS_DIAG:
+					var nx = gx + off.x
+					var ny = gy + off.y
+					if nx >= 0 and nx < w and ny >= 0 and ny < h:
+						var n_idx = ny * w + nx
+						if base_cost[n_idx] < TOWER_COST:
+							clearance_cost[n_idx] = maxf(clearance_cost[n_idx], 0.8)
 
 func clear_congestion() -> void:
 	congestion_cost.fill(0.0)
@@ -257,6 +296,8 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 		flow_vectors.fill(Vector2.ZERO)
 		return
 
+	_update_clearance_field()
+
 	_heap.reset(total_cells * 2)
 
 	var w = grid_size.x
@@ -317,8 +358,8 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 				if base_cost[gy * w + nx] >= TOWER_COST or base_cost[ny * w + gx] >= TOWER_COST:
 					continue
 
-			# Effective cell cost includes dynamic enemy congestion
-			var cell_cost = n_base + congestion_cost[n_idx]
+			# Effective cell cost includes wall clearance penalty + dynamic enemy congestion
+			var cell_cost = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
 			var tentative_dist = pop_cost + cell_cost * DIST_MULT[i]
 
 			if tentative_dist < integration_cost[n_idx]:
