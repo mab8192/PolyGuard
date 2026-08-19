@@ -180,7 +180,7 @@ theme_override_constants/separation = 16
 
 [node name="ChoiceCardA" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870027]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 310)
+custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardPanel"
@@ -194,7 +194,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="VBoxA" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA" unique_id=9870029]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderA" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=1194671147]
 layout_mode = 2
@@ -214,25 +214,21 @@ size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "Arcane Infusion"
 
-[node name="ChoiceTypeBadgeA" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870031]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"TypeBadge"
-
-[node name="ChoiceTypeLabelA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA/ChoiceTypeBadgeA" unique_id=9870032]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"BadgeText"
-text = "MAGIC DAMAGE"
-
 [node name="ChoiceDescA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870033]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-size_flags_vertical = 3
 theme_type_variation = &"SmallText"
 text = "Converts damage to Magic (+20% bonus)."
+autowrap_mode = 2
+
+[node name="ChoiceDetailsLabelA" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870051]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"StatText"
+text = "• +20% Damage
+• Magic Damage"
 autowrap_mode = 2
 
 [node name="ChoiceSelectBtnA" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardA/MarginA/VBoxA" unique_id=9870034]
@@ -245,7 +241,7 @@ text = "ACTIVATE"
 
 [node name="ChoiceCardB" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox" unique_id=9870035]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 310)
+custom_minimum_size = Vector2(0, 340)
 layout_mode = 2
 size_flags_horizontal = 3
 theme_type_variation = &"CardPanel"
@@ -259,7 +255,7 @@ theme_override_constants/margin_bottom = 16
 
 [node name="VBoxB" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB" unique_id=9870037]
 layout_mode = 2
-theme_override_constants/separation = 10
+theme_override_constants/separation = 8
 
 [node name="HeaderB" type="HBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=1486269155]
 layout_mode = 2
@@ -279,25 +275,21 @@ size_flags_horizontal = 3
 theme_type_variation = &"TitleText"
 text = "True Piercer"
 
-[node name="ChoiceTypeBadgeB" type="PanelContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870039]
-unique_name_in_owner = true
-layout_mode = 2
-size_flags_horizontal = 0
-theme_type_variation = &"TypeBadge"
-
-[node name="ChoiceTypeLabelB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB/ChoiceTypeBadgeB" unique_id=9870040]
-unique_name_in_owner = true
-layout_mode = 2
-theme_type_variation = &"BadgeText"
-text = "TRUE DAMAGE"
-
 [node name="ChoiceDescB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870041]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 90)
+custom_minimum_size = Vector2(0, 60)
 layout_mode = 2
-size_flags_vertical = 3
 theme_type_variation = &"SmallText"
 text = "Converts damage to True Damage."
+autowrap_mode = 2
+
+[node name="ChoiceDetailsLabelB" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870052]
+unique_name_in_owner = true
+layout_mode = 2
+size_flags_vertical = 3
+theme_type_variation = &"StatText"
+text = "• +20% Attack Speed
+• True Damage"
 autowrap_mode = 2
 
 [node name="ChoiceSelectBtnB" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ChoicesSectionVBox/ChoicesHBox/ChoiceCardB/MarginB/VBoxB" unique_id=9870042]

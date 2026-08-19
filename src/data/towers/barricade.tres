@@ -30,7 +30,7 @@ icon = ExtResource("ext_var_spectral_barrier")
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("4_health")
-max_health = 600.0
+max_health = 800.0
 armor = 30.0
 
 [resource]

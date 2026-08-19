@@ -15,17 +15,15 @@ var tower_data: TowerData = null
 @onready var choice_card_a: PanelContainer = %ChoiceCardA
 @onready var choice_icon_a: TextureRect = %ChoiceIconA
 @onready var choice_title_a: Label = %ChoiceTitleA
-@onready var choice_type_badge_a: PanelContainer = %ChoiceTypeBadgeA
-@onready var choice_type_label_a: Label = %ChoiceTypeLabelA
 @onready var choice_desc_a: Label = %ChoiceDescA
+@onready var choice_details_label_a: Label = %ChoiceDetailsLabelA
 @onready var choice_select_btn_a: Button = %ChoiceSelectBtnA
 
 @onready var choice_card_b: PanelContainer = %ChoiceCardB
 @onready var choice_icon_b: TextureRect = %ChoiceIconB
 @onready var choice_title_b: Label = %ChoiceTitleB
-@onready var choice_type_badge_b: PanelContainer = %ChoiceTypeBadgeB
-@onready var choice_type_label_b: Label = %ChoiceTypeLabelB
 @onready var choice_desc_b: Label = %ChoiceDescB
+@onready var choice_details_label_b: Label = %ChoiceDetailsLabelB
 @onready var choice_select_btn_b: Button = %ChoiceSelectBtnB
 
 @onready var upgrade_action_button: Button = %UpgradeActionButton
@@ -130,6 +128,11 @@ func _render() -> void:
 	elif tower_data.tower_id == "tar_trap":
 		stat_lines.append("Effect: Reduces Enemy Movement Speed by 50%")
 		
+	if not active_choice.is_empty():
+		var active_spec = tower_data.get_choice(active_choice)
+		if active_spec:
+			stat_lines.append("Active Specialization: %s" % active_spec.title)
+
 	if stat_lines.is_empty():
 		stat_lines.append("Defensive Tactical Installation")
 		
@@ -142,13 +145,10 @@ func _render() -> void:
 		var choice_b = tower_data.choices[1]
 		
 		choice_title_a.text = choice_a.title
-		choice_desc_a.text = choice_a.description
-		
 		choice_title_b.text = choice_b.title
-		choice_desc_b.text = choice_b.description
 		
-		_render_choice_card(choice_a, choice_card_a, choice_icon_a, choice_type_badge_a, choice_type_label_a, choice_select_btn_a, tower_id, level, active_choice, credits, is_unlocked)
-		_render_choice_card(choice_b, choice_card_b, choice_icon_b, choice_type_badge_b, choice_type_label_b, choice_select_btn_b, tower_id, level, active_choice, credits, is_unlocked)
+		_render_choice_card(choice_a, choice_card_a, choice_icon_a, choice_desc_a, choice_details_label_a, choice_select_btn_a, tower_id, level, active_choice, credits, is_unlocked)
+		_render_choice_card(choice_b, choice_card_b, choice_icon_b, choice_desc_b, choice_details_label_b, choice_select_btn_b, tower_id, level, active_choice, credits, is_unlocked)
 	else:
 		choices_section.hide()
 		
@@ -191,8 +191,8 @@ func _render_choice_card(
 	choice: TowerChoiceUpgrade,
 	card_panel: PanelContainer,
 	icon_rect: TextureRect,
-	type_badge: PanelContainer,
-	type_label: Label,
+	desc_label: Label,
+	details_label: Label,
 	select_btn: Button,
 	tower_id: String,
 	tower_level: int,
@@ -208,19 +208,26 @@ func _render_choice_card(
 	if icon_rect:
 		icon_rect.texture = choice.icon if choice.icon else tower_data.icon
 	
+	if desc_label:
+		desc_label.text = choice.description
+		
+	if details_label:
+		var details = choice.get_upgrade_details()
+		if not details.is_empty():
+			details_label.text = "• " + "\n• ".join(details)
+			details_label.show()
+		else:
+			details_label.hide()
+
 	if not is_level_met:
 		card_panel.theme_type_variation = &"CardPanel"
 		card_panel.self_modulate = Color(0.7, 0.7, 0.7, 0.6)
-		type_badge.theme_type_variation = &"LockedBadge"
-		type_label.text = "REQUIRES LEVEL %d" % req_level
 		select_btn.text = "LOCKED (LV %d REQ)" % req_level
 		select_btn.disabled = true
 		select_btn.theme_type_variation = &"SecondaryButton"
 	elif not is_bought:
 		card_panel.theme_type_variation = &"CardPanel"
 		card_panel.self_modulate = Color(1.0, 1.0, 1.0, 1.0)
-		type_badge.theme_type_variation = &"TypeBadge"
-		type_label.text = _get_damage_type_label(choice)
 		if credits >= choice.unlock_cost:
 			select_btn.text = "UNLOCK (%d CREDITS)" % choice.unlock_cost
 			select_btn.disabled = false
@@ -232,8 +239,6 @@ func _render_choice_card(
 	else:
 		# Unlocked / Purchased
 		card_panel.self_modulate = Color(1.0, 1.0, 1.0, 1.0)
-		type_badge.theme_type_variation = &"TypeBadge"
-		type_label.text = _get_damage_type_label(choice)
 		if is_active:
 			card_panel.theme_type_variation = &"CardSelectedPanel"
 			select_btn.text = "DEACTIVATE"
@@ -244,23 +249,6 @@ func _render_choice_card(
 			select_btn.text = "ACTIVATE"
 			select_btn.disabled = false
 			select_btn.theme_type_variation = &"SecondaryButton"
-
-func _get_damage_type_label(choice: TowerChoiceUpgrade) -> String:
-	if choice.has_collision_layer_override and (choice.collision_layer_override & 16) != 0:
-		return "GHOST BLOCKER"
-	if choice.has_targeting_mask_override and (choice.targeting_mask_override & 8) != 0:
-		return "TARGETS GHOSTS"
-	if choice.has_damage_type_override:
-		match choice.damage_type_override:
-			AttackData.DamageType.PHYSICAL: return "PHYSICAL DAMAGE"
-			AttackData.DamageType.MAGIC: return "MAGIC DAMAGE"
-			AttackData.DamageType.TRUE: return "TRUE DAMAGE"
-	for eff in choice.added_effects:
-		if eff is ArmorReductionEffectData:
-			return "ARMOR SHRED"
-		elif eff is MagicResistanceReductionEffectData:
-			return "MAGIC SHRED"
-	return "SPECIALIZATION"
 
 func _on_choice_selected(index: int) -> void:
 	if not tower_data or index >= tower_data.choices.size():

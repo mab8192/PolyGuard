@@ -33,15 +33,15 @@ icon = ExtResource("ext_var_prismatic_array")
 script = ExtResource("2_choice")
 id = "arcane_overcharge"
 title = "Arcane Overcharge"
-description = "Overcharges sparking crystal cores, increasing Magic Damage by +35% and attack rate by 10%."
-damage_multiplier = 1.35
+description = "Overcharges sparking crystal cores, increasing Magic Damage by +10% and attack rate by 10%."
+damage_multiplier = 1.1
 cooldown_multiplier = 0.9
 icon = ExtResource("ext_var_arcane_overcharge")
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("3_health")
-max_health = 350.0
-armor = 15.0
+max_health = 200.0
+armor = 5.0
 
 [sub_resource type="Resource" id="Resource_target"]
 script = ExtResource("7_target")
@@ -56,10 +56,9 @@ icon = ExtResource("4_icon")
 scene = ExtResource("5_scene")
 description = "Arcane rapid-fire tower that launches spark projectiles at up to two enemies simultaneously. Can target and damage ghosts."
 required_stage_id = "stage_02"
+max_level = 3
 choices = Array[ExtResource("2_choice")]([SubResource("Resource_choice_prismatic"), SubResource("Resource_choice_overcharge")])
-damage_upgrade_per_level = 0.15
-cooldown_reduction_per_level = 0.08
-cost = 200
+health_upgrade_per_level = 0.0
 can_rotate = false
 health = SubResource("Resource_health")
 attack = SubResource("Resource_attack")

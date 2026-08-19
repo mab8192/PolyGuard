@@ -243,10 +243,15 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Trait: Continuous Thermal Cone")
 	elif tower_id == "tar_trap":
 		lines.append("Effect: Reduces Enemy Speed by 50%")
-		if choice_id == "acid_tar":
-			lines.append("Specialization: Strips 20 Armor")
-		elif choice_id == "hex_pitch":
-			lines.append("Specialization: Strips 20 Magic Resistance")
+		
+	if not choice_id.is_empty():
+		var choice = get_choice(choice_id)
+		if choice:
+			var spec_details = choice.get_upgrade_details()
+			if not spec_details.is_empty():
+				lines.append("Spec (%s): %s" % [choice.title, ", ".join(spec_details)])
+			else:
+				lines.append("Spec: %s" % choice.title)
 		
 	if lines.is_empty():
 		lines.append("Defensive Tactical Installation")
