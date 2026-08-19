@@ -112,6 +112,14 @@ focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "CHANGE LOADOUT"
 
+[node name="DevCheatsButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180020]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 84)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "DEV CHEATS (F1)"
+
 [node name="MainMenuButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2180019]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 84)

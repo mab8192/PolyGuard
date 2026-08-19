@@ -42,12 +42,24 @@ var _enemy_weights: PackedFloat32Array = PackedFloat32Array()
 var _cell_head: PackedInt32Array = PackedInt32Array()
 var _enemy_next: PackedInt32Array = PackedInt32Array()
 
+var visualizer: FlowFieldVisualizer = null
+
 func setup(p_stage: Stage) -> void:
 	stage = p_stage
 	SignalBus.tower_placed.connect(rebuild_tower_fields)
 	SignalBus.tower_destroyed.connect(rebuild_tower_fields)
 	SignalBus.exits_updated.connect(_on_exits_changed)
 	SignalBus.wave_completed.connect(_on_wave_completed)
+
+	visualizer = FlowFieldVisualizer.new()
+	visualizer.name = "FlowFieldVisualizer"
+	visualizer.setup(self)
+	add_child(visualizer)
+	flow_fields_updated.connect(func():
+		if visualizer and visualizer.visible:
+			visualizer.queue_redraw()
+	)
+
 	full_rebuild()
 
 func _notification(what: int) -> void:
@@ -83,6 +95,9 @@ func _apply_background_results() -> void:
 
 	ghost_field.flow_vectors = _bg_ghost_field.flow_vectors
 	ghost_field.integration_cost = _bg_ghost_field.integration_cost
+
+	if visualizer and visualizer.visible:
+		visualizer.queue_redraw()
 
 func _update_enemy_spatial_grid() -> void:
 	var enemies = get_tree().get_nodes_in_group("enemies")

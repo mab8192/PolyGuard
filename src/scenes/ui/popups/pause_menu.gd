@@ -3,6 +3,7 @@ class_name PauseMenu extends CanvasLayer
 @onready var resume_button: Button = %ResumeButton
 @onready var restart_button: Button = %RestartButton
 @onready var loadout_button: Button = %LoadoutButton
+@onready var dev_cheats_button: Button = %DevCheatsButton
 @onready var main_menu_button: Button = %MainMenuButton
 
 @onready var bgm_slider: HSlider = %BGMSlider
@@ -15,6 +16,8 @@ func _ready() -> void:
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	loadout_button.pressed.connect(_on_loadout_pressed)
+	if dev_cheats_button:
+		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 
 	_setup_audio_sliders()
@@ -49,6 +52,12 @@ func _on_restart_pressed() -> void:
 func _on_loadout_pressed() -> void:
 	close()
 	GameManager.load_view(GameManager.View.LOADOUT)
+
+func _on_dev_cheats_pressed() -> void:
+	if DevCheatMenu.instance and is_instance_valid(DevCheatMenu.instance):
+		DevCheatMenu.instance.open()
+	elif GameManager and GameManager.dev_cheat_menu and is_instance_valid(GameManager.dev_cheat_menu):
+		GameManager.dev_cheat_menu.open()
 
 func _on_main_menu_pressed() -> void:
 	close()

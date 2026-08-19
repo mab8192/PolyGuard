@@ -275,6 +275,24 @@ focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "Toggle Godmode"
 
+[node name="ToggleFlowFieldButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700044]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Flow Field (F2/F3): OFF"
+
+[node name="CycleFlowLayerButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/BattleSection/Grid" unique_id=7700045]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "Layer (F4): PHYSICAL"
+
 [node name="ResetSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700041]
 layout_mode = 2
 theme_override_constants/separation = 10

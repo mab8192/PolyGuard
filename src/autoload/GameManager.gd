@@ -21,6 +21,21 @@ enum View { MAIN_MENU, LOADOUT, GAME }
 const MAIN_MENU: PackedScene = preload("res://src/scenes/main_menu.tscn")
 const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
 const GAME: PackedScene = preload("res://src/scenes/game.tscn")
+const DEV_CHEAT_MENU_SCENE: PackedScene = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
+
+var dev_cheat_menu: DevCheatMenu = null
+
+func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	dev_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
+	add_child(dev_cheat_menu)
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event is InputEventKey and event.is_pressed() and not event.is_echo():
+		if event.keycode == KEY_F1 or event.keycode == KEY_QUOTELEFT:
+			if dev_cheat_menu:
+				dev_cheat_menu.toggle()
+				get_viewport().set_input_as_handled()
 
 func load_view(view: View) -> void:
 	Engine.time_scale = 1.0

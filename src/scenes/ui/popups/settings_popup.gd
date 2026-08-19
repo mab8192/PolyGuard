@@ -24,10 +24,15 @@ func _ready() -> void:
 	_setup_sliders()
 
 func _on_dev_cheats_pressed() -> void:
-	if not _cheat_menu:
-		_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
-		add_child(_cheat_menu)
-	_cheat_menu.open()
+	if DevCheatMenu.instance and is_instance_valid(DevCheatMenu.instance):
+		DevCheatMenu.instance.open()
+	elif GameManager and GameManager.dev_cheat_menu and is_instance_valid(GameManager.dev_cheat_menu):
+		GameManager.dev_cheat_menu.open()
+	else:
+		if not _cheat_menu:
+			_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
+			add_child(_cheat_menu)
+		_cheat_menu.open()
 
 func _on_credits_pressed() -> void:
 	if not _credits_popup:
