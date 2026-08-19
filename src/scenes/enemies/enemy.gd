@@ -78,7 +78,14 @@ func remove_effect(effect: ActiveEffect) -> void:
 		effect_receiver.remove_effect(effect)
 
 func _ready() -> void:
+	_health = ComponentUtil.get_component(self, HealthComponent) as HealthComponent
+	_movement = ComponentUtil.get_component(self, MovementComponent) as MovementComponent
+	_nav = ComponentUtil.get_component(self, NavigationComponent) as NavigationComponent
+	_splitter = ComponentUtil.get_component(self, SplitterComponent) as SplitterComponent
+	_attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
+	_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
 	var _er = effect_receiver
+
 	position_history.append(global_position)
 	if health:
 		health.died.connect(_on_died)
@@ -86,26 +93,26 @@ func _ready() -> void:
 	if nav:
 		nav.velocity_computed.connect(_on_velocity_computed)
 		nav.no_path_available.connect(_on_no_path_available)
+		if nav.agent:
+			nav.agent.velocity_computed.connect(_on_velocity_computed)
 		
-		if data.type == EnemyData.EnemyType.GHOST:
+		if data and data.type == EnemyData.EnemyType.GHOST:
 			collision_layer = 8 # Layer 4: Ghost Enemies
-			collision_mask = 25  # Collides with Layer 1 Walls (1), Layer 4 Ghost Enemies (8), and Layer 5 Spectral Towers (16)
+			collision_mask = 25 # Collides with Layer 1 Walls (1), Layer 4 Ghost Enemies (8), and Layer 5 Spectral Towers (16)
 		else:
 			collision_layer = 4 # Layer 3: Physical Enemies
-			collision_mask = 23  # Collides with Layer 1 Walls (1), Layer 2 Towers (2), Layer 3 Physical Enemies (4), and Layer 5 Spectral Towers (16)
+			collision_mask = 23 # Collides with Layer 1 Walls (1), Layer 2 Towers (2), Layer 3 Physical Enemies (4), and Layer 5 Spectral Towers (16)
 
-		# Assign targets from the stage
 		SignalBus.exits_updated.connect(_on_exits_updated)
 		_on_exits_updated()
-	
+
 func _on_exits_updated() -> void:
 	if not nav:
 		return
 	var targets: Array[Node2D] = []
 	for exit in get_tree().get_nodes_in_group("exits"):
-		if exit is Exit:
-			if exit.is_active:
-				targets.append(exit)
+		if exit is Exit and exit.is_active:
+			targets.append(exit)
 		elif exit is Node2D:
 			targets.append(exit)
 	nav.set_exits(targets)
@@ -114,9 +121,9 @@ func _physics_process(_delta: float) -> void:
 	if position_history.is_empty():
 		position_history.append(global_position)
 	elif global_position.distance_squared_to(position_history.back()) >= HISTORY_SAMPLE_DIST_SQ:
+		if position_history.size() >= MAX_HISTORY_POINTS:
+			position_history.remove_at(0)
 		position_history.append(global_position)
-		if position_history.size() > MAX_HISTORY_POINTS:
-			position_history.pop_front()
 
 	var should_attack: bool = (nav and nav.data and nav.data.targets_towers) or (nav and not nav.can_reach_exit())
 	if should_attack and targeting and attack and targeting.get_targets().size() > 0:

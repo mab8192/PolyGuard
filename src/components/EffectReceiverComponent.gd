@@ -11,8 +11,11 @@ func _ready() -> void:
 		get_parent().set_meta(&"EffectReceiverComponent", self)
 
 func _process(delta: float) -> void:
-	for effect in _active_effects.duplicate():
-		effect.tick(delta)
+	if _active_effects.is_empty():
+		return
+	for i in range(_active_effects.size() - 1, -1, -1):
+		if i < _active_effects.size():
+			_active_effects[i].tick(delta)
 
 func apply_effect(effect: ActiveEffect) -> void:
 	if not effect:

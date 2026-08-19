@@ -39,8 +39,14 @@ func _ready() -> void:
 	if data:
 		collision_mask = data.targeting_mask
 
-func _process(_delta: float) -> void:
-	_update_targets()
+var _target_update_timer: float = 0.0
+const TARGET_UPDATE_INTERVAL: float = 0.05 ## 20 Hz targeting scans
+
+func _process(delta: float) -> void:
+	_target_update_timer += delta
+	if _target_update_timer >= TARGET_UPDATE_INTERVAL:
+		_target_update_timer = 0.0
+		_update_targets()
 
 func _update_targets() -> void:
 	_targets = _targets.filter(func(node): return is_instance_valid(node))
@@ -53,6 +59,7 @@ func _update_targets() -> void:
 			_rays.erase(target)
 
 	if _targets.is_empty():
+		_active_targets.clear()
 		return
 
 	# Sort candidates according to the selected strategy
@@ -65,47 +72,43 @@ func _update_targets() -> void:
 	match data.strategy:
 		TargetingData.Strategy.FIRST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var a_nav = ComponentUtil.get_component(a, NavigationComponent) as NavigationComponent
-				var b_nav = ComponentUtil.get_component(b, NavigationComponent) as NavigationComponent
-				var dist_a = a_nav.distance_to_goal() if a_nav else global_position.distance_squared_to(a.global_position)
-				var dist_b = b_nav.distance_to_goal() if b_nav else global_position.distance_squared_to(b.global_position)
-				return dist_a < dist_b
+				var a_e = a as Enemy
+				var b_e = b as Enemy
+				if a_e and b_e and a_e.nav and b_e.nav:
+					return a_e.nav.remaining_distance < b_e.nav.remaining_distance
+				return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
 			)
 		TargetingData.Strategy.LAST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var a_nav = ComponentUtil.get_component(a, NavigationComponent) as NavigationComponent
-				var b_nav = ComponentUtil.get_component(b, NavigationComponent) as NavigationComponent
-				var dist_a = a_nav.distance_to_goal() if a_nav else global_position.distance_squared_to(a.global_position)
-				var dist_b = b_nav.distance_to_goal() if b_nav else global_position.distance_squared_to(b.global_position)
-				return dist_a > dist_b
+				var a_e = a as Enemy
+				var b_e = b as Enemy
+				if a_e and b_e and a_e.nav and b_e.nav:
+					return a_e.nav.remaining_distance > b_e.nav.remaining_distance
+				return global_position.distance_squared_to(a.global_position) > global_position.distance_squared_to(b.global_position)
 			)
 		TargetingData.Strategy.CLOSEST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var dist_a = global_position.distance_squared_to(a.global_position)
-				var dist_b = global_position.distance_squared_to(b.global_position)
-				return dist_a < dist_b
+				return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
 			)
 		TargetingData.Strategy.FARTHEST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var dist_a = global_position.distance_squared_to(a.global_position)
-				var dist_b = global_position.distance_squared_to(b.global_position)
-				return dist_a > dist_b
+				return global_position.distance_squared_to(a.global_position) > global_position.distance_squared_to(b.global_position)
 			)
 		TargetingData.Strategy.STRONGEST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var a_hp = ComponentUtil.get_component(a, HealthComponent) as HealthComponent
-				var b_hp = ComponentUtil.get_component(b, HealthComponent) as HealthComponent
-				var hp_a = a_hp.get_health() if a_hp else 0.0
-				var hp_b = b_hp.get_health() if b_hp else 0.0
-				return hp_a > hp_b
+				var a_e = a as Enemy
+				var b_e = b as Enemy
+				if a_e and b_e and a_e.health and b_e.health:
+					return a_e.health.get_health() > b_e.health.get_health()
+				return false
 			)
 		TargetingData.Strategy.WEAKEST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
-				var a_hp = ComponentUtil.get_component(a, HealthComponent) as HealthComponent
-				var b_hp = ComponentUtil.get_component(b, HealthComponent) as HealthComponent
-				var hp_a = a_hp.get_health() if a_hp else 0.0
-				var hp_b = b_hp.get_health() if b_hp else 0.0
-				return hp_a < hp_b
+				var a_e = a as Enemy
+				var b_e = b as Enemy
+				if a_e and b_e and a_e.health and b_e.health:
+					return a_e.health.get_health() < b_e.health.get_health()
+				return false
 			)
 
 	var limit: int = candidates.size()

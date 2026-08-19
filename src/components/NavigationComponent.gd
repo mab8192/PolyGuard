@@ -72,33 +72,14 @@ func is_finished() -> bool:
 		return true
 	return false
 	
+var remaining_distance: float = 0.0
+
 func can_reach_exit() -> bool:
 	return not _no_path
 	
 ## Returns the path distance to the current goal
 func distance_to_goal() -> float:
-	var stage = GameManager.current_stage
-	if stage and stage.flow_field_manager and is_instance_valid(_actor):
-		var field = stage.flow_field_manager.get_field(data.nav_layer if data else 1)
-		var g = field.global_to_grid(_actor.global_position)
-		if field.is_valid_cell(g.x, g.y):
-			var idx = field.grid_to_index(g.x, g.y)
-			var dist = field.integration_cost[idx]
-			if dist < FlowField.BLOCKED_COST:
-				return dist * field.cell_size.x
-
-	var path: PackedVector2Array = agent.get_current_navigation_path()
-	var current_index: int = agent.get_current_navigation_path_index()
-
-	if path.is_empty() or current_index >= path.size():
-		return 0.0
-
-	var total_distance: float = _actor.global_position.distance_to(path[current_index])
-
-	for i in range(current_index, path.size() - 1):
-		total_distance += path[i].distance_to(path[i + 1])
-
-	return total_distance
+	return remaining_distance
 
 var _flow_manager: FlowFieldManager = null
 
@@ -141,7 +122,12 @@ func _physics_process(delta: float) -> void:
 		else:
 			_no_path = false
 
-		dir = fm.get_flow_direction(_actor.global_position, nav_layer)
+			var field = fm.get_field(nav_layer)
+			var g = field.global_to_grid(_actor.global_position)
+			if field.is_valid_cell(g.x, g.y):
+				remaining_distance = field.integration_cost[g.y * field.grid_size.x + g.x] * field.cell_size.x
+
+			dir = field.sample_direction(_actor.global_position)
 		if dir == Vector2.ZERO and not _exits.is_empty():
 			var closest_exit: Node2D = null
 			var min_d_sq: float = INF
