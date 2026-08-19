@@ -85,6 +85,15 @@ func get_wave(index: int) -> WaveData:
 	printerr("StageData (%s): Wave index %d out of bounds." % [stage_name, index])
 	return null
 
+## Does this stage have any ghosts?
+func has_ghosts() -> bool:
+	var waves := get_waves()
+	for wave in waves:
+		for spawn in wave.spawns:
+			if spawn.enemy_type.contains("ghost"): return true
+	
+	return false
+
 ## Returns the 0-based wave index when the spawner activates (0 = Wave 1).
 func get_spawner_activation_wave(spawner_id: String) -> int:
 	get_waves()

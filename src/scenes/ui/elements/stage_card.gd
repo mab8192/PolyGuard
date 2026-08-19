@@ -15,6 +15,7 @@ var stage_data: StageData
 @onready var star_3: TextureRect = %Star3
 @onready var stats_label: Label = %StatsLabel
 @onready var record_label: Label = %RecordLabel
+@onready var ghosts_badge_container: PanelContainer = %GhostsBadgeContainer
 @onready var status_badge_container: PanelContainer = %StatusBadgeContainer
 @onready var status_badge_label: Label = %StatusBadgeLabel
 @onready var start_button: Button = %StartButton
@@ -51,6 +52,8 @@ func _render() -> void:
 
 		stats_label.text = str(wave_count) + " waves"
 
+	ghosts_badge_container.visible = stage_data.has_ghosts()
+
 	if is_unlocked:
 		self_modulate = Color(1.0, 1.0, 1.0, 1.0)
 		start_button.disabled = false
@@ -81,9 +84,8 @@ func _render() -> void:
 		if stars_container:
 			stars_container.hide()
 		if status_badge_container:
-			status_badge_container.show()
-			status_badge_container.theme_type_variation = &"LockedBadge"
-			status_badge_label.text = "LOCKED"
+			status_badge_container.hide()
+
 		record_label.text = "Clear previous stage to unlock"
 		start_button.disabled = true
 		start_button.text = "LOCKED"

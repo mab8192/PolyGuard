@@ -29,7 +29,14 @@ size_flags_vertical = 4
 mouse_filter = 2
 theme_type_variation = &"CardPanel"
 
-[node name="PreviewTexture" type="TextureRect" parent="HBoxContainer/ImageFrame" unique_id=741004]
+[node name="MarginContainer" type="MarginContainer" parent="HBoxContainer/ImageFrame" unique_id=1456845640]
+layout_mode = 2
+theme_override_constants/margin_left = 6
+theme_override_constants/margin_top = 6
+theme_override_constants/margin_right = 6
+theme_override_constants/margin_bottom = 6
+
+[node name="PreviewTexture" type="TextureRect" parent="HBoxContainer/ImageFrame/MarginContainer" unique_id=741004]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(250, 150)
 layout_mode = 2
@@ -45,7 +52,7 @@ theme_override_constants/margin_top = 16
 theme_override_constants/margin_bottom = 16
 
 [node name="InfoVBox" type="VBoxContainer" parent="HBoxContainer/MarginContainer" unique_id=741005]
-custom_minimum_size = Vector2(1, 0)
+custom_minimum_size = Vector2(0, 160)
 layout_mode = 2
 size_flags_horizontal = 3
 mouse_filter = 2
@@ -68,7 +75,6 @@ clip_text = true
 
 [node name="StarsContainer" type="HBoxContainer" parent="HBoxContainer/MarginContainer/InfoVBox/TitleRowHBox" unique_id=741014]
 unique_name_in_owner = true
-visible = false
 layout_mode = 2
 mouse_filter = 2
 theme_override_constants/separation = 4
@@ -119,11 +125,24 @@ text = "UNLOCKED"
 [node name="StatsLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=741007]
 unique_name_in_owner = true
 layout_mode = 2
-size_flags_horizontal = 3
-size_flags_vertical = 3
+size_flags_horizontal = 2
+size_flags_vertical = 2
 theme_type_variation = &"BodyText"
 text = "5 waves"
-autowrap_mode = 2
+
+[node name="GhostsBadgeContainer" type="PanelContainer" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=1345532645]
+unique_name_in_owner = true
+visible = false
+layout_mode = 2
+size_flags_horizontal = 0
+size_flags_vertical = 4
+mouse_filter = 2
+theme_type_variation = &"TypeBadge"
+
+[node name="GhostsBadgeLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox/GhostsBadgeContainer" unique_id=1336954703]
+layout_mode = 2
+theme_type_variation = &"BadgeText"
+text = "GHOSTS"
 
 [node name="RecordLabel" type="Label" parent="HBoxContainer/MarginContainer/InfoVBox" unique_id=741013]
 unique_name_in_owner = true
@@ -143,7 +162,7 @@ mouse_filter = 2
 
 [node name="StartButton" type="Button" parent="HBoxContainer/ActionCenter" unique_id=741009]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(170, 76)
+custom_minimum_size = Vector2(200, 100)
 layout_mode = 2
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
