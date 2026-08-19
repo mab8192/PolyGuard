@@ -49,6 +49,7 @@ func _ready() -> void:
 	SignalBus.stage_completed.connect(_on_stage_ended)
 	SignalBus.stage_failed.connect(_on_stage_ended)
 	SignalBus.navmesh_updated.connect(_on_navmesh_updated)
+	SignalBus.flow_fields_updated.connect(_on_navmesh_updated)
 	SignalBus.spawners_updated.connect(_on_spawners_updated)
 	SignalBus.exits_updated.connect(_on_exits_updated)
 
@@ -172,6 +173,23 @@ func _recalculate_paths() -> void:
 	var target_exits = _get_target_exits()
 	if target_exits.is_empty():
 		_clear_lines()
+		return
+
+	var stage = GameManager.current_stage
+	if stage and stage.flow_field_manager:
+		var field = stage.flow_field_manager.get_field(1)
+		for i in range(CORNER_OFFSETS.size()):
+			if i >= _lines.size():
+				break
+			var corner_global: Vector2 = spawner.global_position + CORNER_OFFSETS[i]
+			var path = field.trace_path(corner_global, 12.0, 500, target_exits)
+			if path.size() >= 2:
+				var clean_pts = _clean_path(path)
+				var total_len = _calc_polyline_length(clean_pts)
+				_lines[i].points = clean_pts
+				_materials[i].set_shader_parameter("total_length", maxf(total_len, 1.0))
+			else:
+				_lines[i].points = PackedVector2Array()
 		return
 
 	var world_2d = get_world_2d()

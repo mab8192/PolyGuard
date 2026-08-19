@@ -9,6 +9,7 @@ var data: StageData
 var wave_manager: WaveManager
 var placement_manager: TowerPlacementManager
 var effect_manager: EffectManager
+var flow_field_manager: FlowFieldManager
 
 # Stage economy and life tracking state
 var lives: int
@@ -57,11 +58,16 @@ func _ready() -> void:
 	placement_manager.name = "TowerPlacementManager"
 	add_child(placement_manager)
 	
+	flow_field_manager = FlowFieldManager.new()
+	flow_field_manager.name = "FlowFieldManager"
+	add_child(flow_field_manager)
+
 	effect_manager = EffectManager.new()
 	
 	effect_manager.setup()
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
+	flow_field_manager.setup(self)
 	
 	SignalBus.tower_placed.connect(generate_navmesh)
 	SignalBus.tower_destroyed.connect(generate_navmesh)

@@ -16,9 +16,6 @@ var _last_path_calc: float = 0
 var _path_calc_timer: float = 0
 const PATH_RECALC_TIMER: float = 1
 
-var _separation_shape: CircleShape2D
-var _separation_query: PhysicsShapeQueryParameters2D
-
 func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"NavigationComponent", self)
@@ -66,13 +63,30 @@ func set_exits(new_exits: Array[Node2D]) -> void:
 	_pick_target()
 
 func is_finished() -> bool:
-	return agent.is_navigation_finished()
+	if _exits.is_empty():
+		return false
+	for exit in _exits:
+		if is_instance_valid(exit) and _actor.global_position.distance_squared_to(exit.global_position) <= 256.0:
+			return true
+	if agent and agent.is_navigation_finished():
+		return true
+	return false
 	
 func can_reach_exit() -> bool:
 	return not _no_path
 	
 ## Returns the path distance to the current goal
 func distance_to_goal() -> float:
+	var stage = GameManager.current_stage
+	if stage and stage.flow_field_manager and is_instance_valid(_actor):
+		var field = stage.flow_field_manager.get_field(data.nav_layer if data else 1)
+		var g = field.global_to_grid(_actor.global_position)
+		if field.is_valid_cell(g.x, g.y):
+			var idx = field.grid_to_index(g.x, g.y)
+			var dist = field.integration_cost[idx]
+			if dist < FlowField.BLOCKED_COST:
+				return dist * field.cell_size.x
+
 	var path: PackedVector2Array = agent.get_current_navigation_path()
 	var current_index: int = agent.get_current_navigation_path_index()
 
@@ -86,70 +100,104 @@ func distance_to_goal() -> float:
 
 	return total_distance
 
+var _flow_manager: FlowFieldManager = null
+
+func _get_flow_manager() -> FlowFieldManager:
+	if _flow_manager and is_instance_valid(_flow_manager):
+		return _flow_manager
+	var stage = GameManager.current_stage
+	if stage and is_instance_valid(stage):
+		_flow_manager = stage.flow_field_manager
+	return _flow_manager
+
+var _stuck_timer: float = 0.0
+var _last_sample_pos: Vector2 = Vector2.ZERO
+var _sample_timer: float = 0.0
+
 func _compute_separation_vector() -> Vector2:
 	if not data or not data.enable_separation or data.separation_radius <= 0.0 or not is_instance_valid(_actor):
 		return Vector2.ZERO
 
-	var space_state = _actor.get_world_2d().direct_space_state
-	if not space_state:
+	var fm = _get_flow_manager()
+	if not fm:
 		return Vector2.ZERO
 
-	if not _separation_query:
-		_separation_shape = CircleShape2D.new()
-		_separation_query = PhysicsShapeQueryParameters2D.new()
-		_separation_query.shape = _separation_shape
-		_separation_query.collision_mask = 4 | 8 # Layer 3: Physical Enemies, Layer 4: Ghost Enemies
-		_separation_query.collide_with_bodies = true
-		_separation_query.collide_with_areas = false
-
-	_separation_shape.radius = data.separation_radius
-	_separation_query.transform = _actor.global_transform
-	_separation_query.exclude = [_actor.get_rid()]
-
-	var results: Array[Dictionary] = space_state.intersect_shape(_separation_query, 8)
-	if results.is_empty():
-		return Vector2.ZERO
-
-	var sep_vector: Vector2 = Vector2.ZERO
-	var actor_pos: Vector2 = _actor.global_position
-	var sep_radius: float = data.separation_radius
-
-	for res in results:
-		var collider = res.get("collider")
-		if is_instance_valid(collider) and collider is Node2D and collider != _actor:
-			var diff: Vector2 = actor_pos - collider.global_position
-			var dist: float = diff.length()
-			if dist < 0.001:
-				sep_vector += Vector2(randf_range(-1.0, 1.0), randf_range(-1.0, 1.0)).normalized()
-			elif dist < sep_radius:
-				var strength: float = 1.0 - (dist / sep_radius)
-				sep_vector += (diff / dist) * strength
-
-	return sep_vector
+	return fm.get_separation_vector(_actor.global_position, data.separation_radius, _actor.get_instance_id())
 
 func _physics_process(delta: float) -> void:
-	if agent.is_navigation_finished():
+	if is_finished():
 		return
-	
-	_path_calc_timer += delta
-	if _path_calc_timer - _last_path_calc >= PATH_RECALC_TIMER:
-		_last_path_calc = _path_calc_timer
-		agent.target_position = agent.target_position
-	
-	if !agent.is_target_reachable():
-		if !_no_path:
-			no_path_available.emit()
-			_no_path = true
-	else:
-		_no_path = false
 
-	var next_pos = agent.get_next_path_position()
-	var dir = _actor.global_position.direction_to(next_pos)
+	var fm = _get_flow_manager()
+	var dir: Vector2 = Vector2.ZERO
+
+	if fm and not (data and data.targets_towers):
+		var nav_layer = data.nav_layer if data else 1
+		var is_reach = fm.is_reachable(_actor.global_position, nav_layer)
+		if not is_reach:
+			if not _no_path:
+				no_path_available.emit()
+				_no_path = true
+		else:
+			_no_path = false
+
+		dir = fm.get_flow_direction(_actor.global_position, nav_layer)
+		if dir == Vector2.ZERO and not _exits.is_empty():
+			var closest_exit: Node2D = null
+			var min_d_sq: float = INF
+			for ex in _exits:
+				if is_instance_valid(ex):
+					var d = _actor.global_position.distance_squared_to(ex.global_position)
+					if d < min_d_sq:
+						min_d_sq = d
+						closest_exit = ex
+			if closest_exit:
+				dir = _actor.global_position.direction_to(closest_exit.global_position)
+	else:
+		_path_calc_timer += delta
+		if _path_calc_timer - _last_path_calc >= PATH_RECALC_TIMER:
+			_last_path_calc = _path_calc_timer
+			agent.target_position = agent.target_position
+		
+		if !agent.is_target_reachable():
+			if !_no_path:
+				no_path_available.emit()
+				_no_path = true
+		else:
+			_no_path = false
+
+		var next_pos = agent.get_next_path_position()
+		dir = _actor.global_position.direction_to(next_pos)
 
 	if data and data.enable_separation:
 		var sep = _compute_separation_vector()
 		if sep != Vector2.ZERO:
 			dir = (dir + sep * data.separation_weight).normalized()
+
+	# Dynamic Stuck / Crowd Jam Detection
+	if is_instance_valid(_actor):
+		_sample_timer += delta
+		if _sample_timer >= 0.2:
+			var dist_moved = _actor.global_position.distance_to(_last_sample_pos)
+			_last_sample_pos = _actor.global_position
+			_sample_timer = 0.0
+
+			if dir != Vector2.ZERO and dist_moved < 3.0:
+				_stuck_timer += 0.2
+			else:
+				_stuck_timer = maxf(0.0, _stuck_timer - 0.4)
+
+		# If jammed in an arch against another unit, apply lateral unstuck torque
+		if _stuck_timer >= 0.3:
+			var unstuck_side = 1.0 if (_actor.get_instance_id() % 2 == 0) else -1.0
+			var perp = Vector2(-dir.y, dir.x) * unstuck_side
+			dir = (dir * 0.4 + perp * 0.8).normalized()
+
+		# If hard-trapped for > 1.5s (e.g. wall/tower blocked physical path), trigger attack fallback
+		if _stuck_timer >= 1.5:
+			if not _no_path:
+				no_path_available.emit()
+				_no_path = true
 
 	var max_speed = movement.get_speed() if movement else 0.0
 	var intended_vel = dir * max_speed
@@ -247,6 +295,12 @@ func get_shortest_path_to_exit_ignoring_towers() -> PackedVector2Array:
 	if _exits.is_empty() or not is_instance_valid(_actor):
 		return PackedVector2Array()
 
+	var stage = GameManager.current_stage
+	if stage and stage.flow_field_manager and stage.flow_field_manager.walls_only_field:
+		var path = stage.flow_field_manager.walls_only_field.trace_path(_actor.global_position, 16.0, 300, _exits)
+		if path.size() >= 2:
+			return path
+
 	var map: RID = _actor.get_world_2d().navigation_map
 	var shortest_path: PackedVector2Array = PackedVector2Array()
 	var min_length: float = INF
@@ -254,7 +308,6 @@ func get_shortest_path_to_exit_ignoring_towers() -> PackedVector2Array:
 	for exit in _exits:
 		if not is_instance_valid(exit):
 			continue
-		# Layer 4 in NavMeshGenerator is navigation layer that ignores towers and only respects stage walls
 		var path: PackedVector2Array = NavigationServer2D.map_get_path(
 			map, _actor.global_position, exit.global_position, true, 4
 		)

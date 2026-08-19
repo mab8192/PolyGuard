@@ -14,3 +14,4 @@ enum NavStrategy {
 @export var enable_separation: bool = true ## Enables local boid separation steering force to prevent clustering
 @export var separation_radius: float = 32.0 ## Detection radius in pixels around the entity for finding neighboring enemies to repel
 @export var separation_weight: float = 0.6 ## Blend weight of the separation repulsion force relative to the goal path heading
+@export var congestion_weight: float = 1.0 ## Multiplier for traffic congestion penalty deposited by this enemy onto the flow field
