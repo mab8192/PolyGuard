@@ -80,6 +80,10 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 				copy.targeting.targeting_mask = choice.targeting_mask_override
 			if copy.effect_applier:
 				copy.effect_applier.targeting_mask = choice.targeting_mask_override
+				if copy.effect_applier.max_targets > 0:
+					copy.effect_applier.max_targets += choice.extra_targets
+				else:
+					push_error("Attempted to increase max targets on a trap that has no limit!")
 		if choice.has_collision_layer_override:
 			copy.collision_layer = choice.collision_layer_override
 		if choice.has_collision_mask_override:

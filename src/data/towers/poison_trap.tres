@@ -20,17 +20,17 @@ icon = ExtResource("ext_var_rapid_dispersion")
 
 [sub_resource type="Resource" id="Resource_choice_cloud"]
 script = ExtResource("1_choice")
-id = "broad_plume"
-title = "Broad Plume"
-description = "Expanded toxin cloud catching +3 additional enemies per eruption."
-extra_targets = 3
+id = "efficient_brew"
+title = "Efficient Brew"
+description = "Streamlined recipe allows for cheaper construction"
+cost_reduction = 50
 icon = ExtResource("ext_var_broad_plume")
 
 [sub_resource type="Resource" id="Resource_gconv"]
 script = ExtResource("3_ydhdu")
 mode = 2
 delay = 0.5
-cooldown = 6.0
+cooldown = 4.0
 effects = Array[ExtResource("1_7rdgg")]([ExtResource("2_1grd6")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 

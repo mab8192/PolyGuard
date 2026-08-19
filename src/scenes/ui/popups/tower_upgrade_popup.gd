@@ -2,6 +2,7 @@ class_name TowerUpgradePopup extends CanvasLayer
 
 var tower_data: TowerData = null
 
+@onready var center_container: CenterContainer = %CenterContainer
 @onready var close_button: Button = %CloseButton
 @onready var tower_icon: TextureRect = %TowerIcon
 @onready var tower_name_label: Label = %TowerNameLabel
@@ -30,8 +31,14 @@ var tower_data: TowerData = null
 @onready var upgrade_action_button: Button = %UpgradeActionButton
 @onready var credits_balance_label: Label = %CreditsBalanceLabel
 
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		close()
+
 func _ready() -> void:
 	hide()
+
+	center_container.gui_input.connect(_on_background_click)
 	close_button.pressed.connect(close)
 	choice_select_btn_a.pressed.connect(func(): _on_choice_selected(0))
 	choice_select_btn_b.pressed.connect(func(): _on_choice_selected(1))
@@ -50,6 +57,10 @@ func open(p_tower: TowerData) -> void:
 
 func close() -> void:
 	hide()
+
+func _on_background_click(event: InputEvent) -> void:
+	if event.is_pressed():
+		close()
 
 func _render() -> void:
 	if not tower_data:

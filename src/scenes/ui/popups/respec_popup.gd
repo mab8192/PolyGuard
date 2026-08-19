@@ -70,10 +70,10 @@ func _update_ui() -> void:
 	var is_paid: bool = AdManager.is_paid_version()
 	
 	if is_paid:
-		status_badge_label.text = "★ PREMIUM STATUS: 100% FREE RESPEC"
+		status_badge_label.hide()
 		paid_vbox.visible = true
 		free_vbox.visible = false
-		paid_confirm_button.text = "CONFIRM RESPEC (+%d CREDITS)" % _spent_credits
+		paid_confirm_button.text = "CONFIRM"
 	else:
 		status_badge_label.text = "CHOOSE RESPEC METHOD"
 		paid_vbox.visible = false

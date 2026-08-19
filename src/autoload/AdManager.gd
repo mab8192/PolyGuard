@@ -76,16 +76,6 @@ func are_ads_enabled() -> bool:
 	return not is_paid_version()
 
 
-func set_ads_enabled(p_enabled: bool) -> void:
-	if ads_enabled == p_enabled:
-		return
-	ads_enabled = p_enabled
-	ads_enabled_changed.emit(are_ads_enabled())
-	if not is_paid_version() and not _is_initialized:
-		if is_mobile() or OS.has_feature("editor"):
-			_initialize_mobile_ads()
-
-
 func _initialize_mobile_ads() -> void:
 	var on_init_listener := OnInitializationCompleteListener.new()
 	on_init_listener.on_initialization_complete = _on_initialization_complete
