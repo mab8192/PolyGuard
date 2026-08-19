@@ -23,6 +23,7 @@ const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
 const GAME: PackedScene = preload("res://src/scenes/game.tscn")
 
 func load_view(view: View) -> void:
+	Engine.time_scale = 1.0
 	match view:
 		View.MAIN_MENU:
 			get_tree().change_scene_to_packed(MAIN_MENU)

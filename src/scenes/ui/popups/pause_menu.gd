@@ -42,6 +42,7 @@ func _on_resume_pressed() -> void:
 	close()
 
 func _on_restart_pressed() -> void:
+	Engine.time_scale = 1.0
 	close()
 	get_tree().reload_current_scene()
 

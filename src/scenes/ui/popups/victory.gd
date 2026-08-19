@@ -98,6 +98,7 @@ func _on_next_stage_pressed() -> void:
 		GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_retry_pressed() -> void:
+	Engine.time_scale = 1.0
 	get_tree().reload_current_scene()
 
 func _on_inventory_pressed() -> void:

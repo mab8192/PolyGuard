@@ -26,6 +26,7 @@ func _on_stage_failed() -> void:
 	get_tree().paused = true
 
 func _on_retry_pressed() -> void:
+	Engine.time_scale = 1.0
 	get_tree().paused = false
 	get_tree().reload_current_scene()
 

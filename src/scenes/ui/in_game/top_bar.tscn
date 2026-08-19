@@ -86,14 +86,20 @@ theme_override_constants/separation = 16
 unique_name_in_owner = true
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 toggle_mode = true
 icon = ExtResource("5_vktos")
+icon_alignment = 1
+expand_icon = true
 
 [node name="PauseButton" type="Button" parent="MarginContainer/HBoxContainer/ControlsContainer" unique_id=977434464]
 unique_name_in_owner = true
 process_mode = 3
 custom_minimum_size = Vector2(110, 110)
 layout_mode = 2
+focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 icon = ExtResource("6_47daa")
+icon_alignment = 1
+expand_icon = true
