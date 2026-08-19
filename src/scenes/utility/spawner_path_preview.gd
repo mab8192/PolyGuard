@@ -182,7 +182,7 @@ func _recalculate_paths() -> void:
 			if i >= _lines.size():
 				break
 			var corner_global: Vector2 = spawner.global_position + CORNER_OFFSETS[i]
-			var path = field.trace_path(corner_global, 12.0, 500, target_exits)
+			var path = field.trace_path(corner_global, 12.0, 150, target_exits)
 			if path.size() >= 2:
 				var clean_pts = _clean_path(path)
 				var total_len = _calc_polyline_length(clean_pts)

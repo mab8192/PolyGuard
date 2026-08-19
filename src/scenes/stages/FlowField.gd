@@ -8,7 +8,7 @@ const BLOCKED_COST: float = 100000.0
 const SQRT_2: float = 1.41421356
 
 var world_origin: Vector2 = Vector2.ZERO
-var cell_size: Vector2 = Vector2(32.0, 32.0)
+var cell_size: Vector2 = Vector2(24.0, 24.0)
 var grid_size: Vector2i = Vector2i.ZERO
 var total_cells: int = 0
 
@@ -35,62 +35,56 @@ class FlatMinHeap:
 			var new_cap = maxi(costs.size() * 2, 1024)
 			costs.resize(new_cap)
 			indices.resize(new_cap)
-		costs[size] = cost
-		indices[size] = idx
-		_up(size)
+		
+		var i = size
 		size += 1
+		# Sift up
+		while i > 0:
+			var parent = (i - 1) >> 1
+			if cost < costs[parent]:
+				costs[i] = costs[parent]
+				indices[i] = indices[parent]
+				i = parent
+			else:
+				break
+		costs[i] = cost
+		indices[i] = idx
 
-	func pop_index() -> int:
+	func pop(out: Array) -> bool:
 		if size == 0:
-			return -1
-		var top_idx = indices[0]
+			return false
+		out[0] = costs[0]
+		out[1] = indices[0]
 		size -= 1
 		if size > 0:
-			costs[0] = costs[size]
-			indices[0] = indices[size]
-			_down(0)
-		return top_idx
+			var last_cost = costs[size]
+			var last_idx = indices[size]
+			var i = 0
+			var half = size >> 1
+			while i < half:
+				var left = (i << 1) + 1
+				var right = left + 1
+				var best = left
+				var best_cost = costs[left]
+				if right < size and costs[right] < best_cost:
+					best = right
+					best_cost = costs[right]
+				if best_cost < last_cost:
+					costs[i] = best_cost
+					indices[i] = indices[best]
+					i = best
+				else:
+					break
+			costs[i] = last_cost
+			indices[i] = last_idx
+		return true
 
 	func is_empty() -> bool:
 		return size == 0
 
-	func _up(idx: int) -> void:
-		var c = costs[idx]
-		var item_idx = indices[idx]
-		while idx > 0:
-			var parent = (idx - 1) >> 1
-			if c < costs[parent]:
-				costs[idx] = costs[parent]
-				indices[idx] = indices[parent]
-				idx = parent
-			else:
-				break
-		costs[idx] = c
-		indices[idx] = item_idx
-
-	func _down(idx: int) -> void:
-		var c = costs[idx]
-		var item_idx = indices[idx]
-		while true:
-			var smallest = idx
-			var left = (idx << 1) + 1
-			var right = left + 1
-			if left < size and costs[left] < costs[smallest]:
-				smallest = left
-			if right < size and costs[right] < costs[smallest]:
-				smallest = right
-			if smallest != idx:
-				costs[idx] = costs[smallest]
-				indices[idx] = indices[smallest]
-				idx = smallest
-			else:
-				break
-		costs[idx] = c
-		indices[idx] = item_idx
-
 var _heap: FlatMinHeap = FlatMinHeap.new()
 
-func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(32.0, 32.0)) -> void:
+func init_grid(bounds: Rect2, p_cell_size: Vector2 = Vector2(24.0, 24.0)) -> void:
 	cell_size = p_cell_size
 	world_origin = bounds.position
 	grid_size = Vector2i(
@@ -146,13 +140,38 @@ func set_cell_blocked(gx: int, gy: int, blocked: bool) -> void:
 		var idx = gy * grid_size.x + gx
 		base_cost[idx] = BLOCKED_COST if blocked else 1.0
 
-func set_rect_blocked(rect: Rect2, blocked: bool) -> void:
+func set_rect_blocked(rect: Rect2, blocked: bool, min_overlap_ratio: float = 0.0) -> void:
 	var min_cell = global_to_grid(rect.position)
-	var max_cell = global_to_grid(rect.end - Vector2(0.1, 0.1))
+	var max_cell = global_to_grid(rect.end - Vector2(0.001, 0.001))
+	var cell_area = cell_size.x * cell_size.y
 
 	for gy in range(min_cell.y, max_cell.y + 1):
+		if gy < 0 or gy >= grid_size.y:
+			continue
+		var cell_y0 = world_origin.y + float(gy) * cell_size.y
+		var cell_y1 = cell_y0 + cell_size.y
+		var overlap_y0 = maxf(rect.position.y, cell_y0)
+		var overlap_y1 = minf(rect.end.y, cell_y1)
+		var overlap_h = maxf(0.0, overlap_y1 - overlap_y0)
+		if overlap_h <= 0.0:
+			continue
+
+		var row_offset = gy * grid_size.x
 		for gx in range(min_cell.x, max_cell.x + 1):
-			set_cell_blocked(gx, gy, blocked)
+			if gx < 0 or gx >= grid_size.x:
+				continue
+			var cell_x0 = world_origin.x + float(gx) * cell_size.x
+			var cell_x1 = cell_x0 + cell_size.x
+			var overlap_x0 = maxf(rect.position.x, cell_x0)
+			var overlap_x1 = minf(rect.end.x, cell_x1)
+			var overlap_w = maxf(0.0, overlap_x1 - overlap_x0)
+
+			if overlap_w > 0.0:
+				if min_overlap_ratio > 0.0:
+					var ratio = (overlap_w * overlap_h) / cell_area
+					if ratio < min_overlap_ratio:
+						continue
+				base_cost[row_offset + gx] = BLOCKED_COST if blocked else 1.0
 
 func global_to_grid(pos: Vector2) -> Vector2i:
 	var local = pos - world_origin
@@ -174,22 +193,26 @@ func is_valid_cell(gx: int, gy: int) -> bool:
 	return gx >= 0 and gx < grid_size.x and gy >= 0 and gy < grid_size.y
 
 func is_reachable(world_pos: Vector2) -> bool:
+	if total_cells == 0:
+		return false
 	var local = world_pos - world_origin
 	var gx = int(floor(local.x / cell_size.x))
 	var gy = int(floor(local.y / cell_size.y))
-	if gx < 0 or gx >= grid_size.x or gy < 0 or gy >= grid_size.y:
-		return false
-	var idx = gy * grid_size.x + gx
-	if integration_cost[idx] < BLOCKED_COST:
-		return true
+	if gx >= 0 and gx < grid_size.x and gy >= 0 and gy < grid_size.y:
+		var idx = gy * grid_size.x + gx
+		if integration_cost[idx] < BLOCKED_COST:
+			return true
 
-	const OFFSETS = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
-	for off in OFFSETS:
-		var nx = gx + off.x
-		var ny = gy + off.y
-		if nx >= 0 and nx < grid_size.x and ny >= 0 and ny < grid_size.y:
-			if integration_cost[ny * grid_size.x + nx] < BLOCKED_COST:
-				return true
+	# Check a 1-cell neighborhood around world_pos to prevent false unreachability near boundary hitboxes
+	for dy in range(-1, 2):
+		for dx in range(-1, 2):
+			if dx == 0 and dy == 0:
+				continue
+			var nx = gx + dx
+			var ny = gy + dy
+			if nx >= 0 and nx < grid_size.x and ny >= 0 and ny < grid_size.y:
+				if integration_cost[ny * grid_size.x + nx] < BLOCKED_COST:
+					return true
 	return false
 
 ## Calculates integration field (Dijkstra) including base costs + dynamic swarm congestion
@@ -205,11 +228,13 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 
 	var w = grid_size.x
 	var h = grid_size.y
+	var cs_x = cell_size.x
+	var cs_y = cell_size.y
 
 	for target_pos in target_positions:
 		var local = target_pos - world_origin
-		var cx = int(floor(local.x / cell_size.x))
-		var cy = int(floor(local.y / cell_size.y))
+		var cx = int(floor(local.x / cs_x))
+		var cy = int(floor(local.y / cs_y))
 
 		for dy in range(-1, 2):
 			for dx in range(-1, 2):
@@ -218,8 +243,8 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 				if gx >= 0 and gx < w and gy >= 0 and gy < h:
 					var idx = gy * w + gx
 					if base_cost[idx] < BLOCKED_COST:
-						var cell_center = world_origin + (Vector2(gx, gy) + Vector2(0.5, 0.5)) * cell_size
-						var initial_dist = target_pos.distance_to(cell_center) / cell_size.x
+						var cell_center = world_origin + Vector2((float(gx) + 0.5) * cs_x, (float(gy) + 0.5) * cs_y)
+						var initial_dist = target_pos.distance_to(cell_center) / cs_x
 						if initial_dist < integration_cost[idx]:
 							integration_cost[idx] = initial_dist
 							_heap.push(initial_dist, idx)
@@ -230,12 +255,13 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 	]
 	const DIST_MULT = [1.0, 1.0, 1.0, 1.0, SQRT_2, SQRT_2, SQRT_2, SQRT_2]
 
-	while not _heap.is_empty():
-		var curr_idx: int = _heap.pop_index()
-		if curr_idx < 0:
-			break
-		var curr_dist: float = integration_cost[curr_idx]
-		if curr_dist >= BLOCKED_COST:
+	var pop_out: Array = [0.0, 0]
+	while _heap.pop(pop_out):
+		var pop_cost: float = pop_out[0]
+		var curr_idx: int = pop_out[1]
+
+		# Stale entry pruning
+		if pop_cost > integration_cost[curr_idx]:
 			continue
 
 		var gx = curr_idx % w
@@ -260,7 +286,7 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 
 			# Effective cell cost includes dynamic enemy congestion
 			var cell_cost = n_base + congestion_cost[n_idx]
-			var tentative_dist = curr_dist + cell_cost * DIST_MULT[i]
+			var tentative_dist = pop_cost + cell_cost * DIST_MULT[i]
 
 			if tentative_dist < integration_cost[n_idx]:
 				integration_cost[n_idx] = tentative_dist
@@ -302,13 +328,9 @@ func _calculate_continuous_gradient_vectors() -> void:
 			elif has_left and not has_right:
 				if integration_cost[idx - 1] < curr_cost:
 					grad_x = integration_cost[idx - 1] - curr_cost
-				else:
-					grad_x = 0.0
 			elif has_right and not has_left:
 				if integration_cost[idx + 1] < curr_cost:
 					grad_x = curr_cost - integration_cost[idx + 1]
-				else:
-					grad_x = 0.0
 
 			# Y-axis gradient: points downhill (cost(up) - cost(down))
 			if has_up and has_down:
@@ -316,16 +338,13 @@ func _calculate_continuous_gradient_vectors() -> void:
 			elif has_up and not has_down:
 				if integration_cost[idx - w] < curr_cost:
 					grad_y = integration_cost[idx - w] - curr_cost
-				else:
-					grad_y = 0.0
 			elif has_down and not has_up:
 				if integration_cost[idx + w] < curr_cost:
 					grad_y = curr_cost - integration_cost[idx + w]
-				else:
-					grad_y = 0.0
 
-			if absf(grad_x) > 0.001 or absf(grad_y) > 0.001:
-				var inv_l = 1.0 / sqrt(grad_x * grad_x + grad_y * grad_y)
+			var grad_len_sq = grad_x * grad_x + grad_y * grad_y
+			if grad_len_sq > 0.000001:
+				var inv_l = 1.0 / sqrt(grad_len_sq)
 				flow_vectors[idx] = Vector2(grad_x * inv_l, grad_y * inv_l)
 				continue
 
@@ -408,10 +427,13 @@ func sample_direction(world_pos: Vector2) -> Vector2:
 	return base_dir.normalized()
 
 ## Traces a continuous path streamline from start_pos to the closest exit.
-func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 500, exit_nodes: Array[Node2D] = []) -> PackedVector2Array:
+func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 150, exit_nodes: Array[Node2D] = []) -> PackedVector2Array:
 	var pts = PackedVector2Array([start_pos])
 	var curr_pos = start_pos
 	var exit_reach_radius_sq = (cell_size.x * 2.0) * (cell_size.x * 2.0)
+
+	var last_grid = Vector2i(-999, -999)
+	var same_cell_steps = 0
 
 	for _step in range(max_steps):
 		for exit in exit_nodes:
@@ -427,17 +449,28 @@ func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 50
 
 		# If stepping into a blocked cell, project to nearest open cell
 		var g = global_to_grid(next_pos)
-		if is_valid_cell(g.x, g.y) and base_cost[grid_to_index(g.x, g.y)] >= BLOCKED_COST:
-			var open_found: bool = false
-			const OFFSETS = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
-			for off in OFFSETS:
-				var test_g = global_to_grid(curr_pos) + off
-				if is_valid_cell(test_g.x, test_g.y) and base_cost[grid_to_index(test_g.x, test_g.y)] < BLOCKED_COST:
-					next_pos = grid_to_global(test_g)
-					open_found = true
+		if is_valid_cell(g.x, g.y):
+			if base_cost[grid_to_index(g.x, g.y)] >= BLOCKED_COST:
+				var open_found: bool = false
+				const OFFSETS = [Vector2i(1, 0), Vector2i(-1, 0), Vector2i(0, 1), Vector2i(0, -1)]
+				for off in OFFSETS:
+					var test_g = global_to_grid(curr_pos) + off
+					if is_valid_cell(test_g.x, test_g.y) and base_cost[grid_to_index(test_g.x, test_g.y)] < BLOCKED_COST:
+						next_pos = grid_to_global(test_g)
+						open_found = true
+						break
+				if not open_found:
 					break
-			if not open_found:
+		else:
+			break
+
+		if g == last_grid:
+			same_cell_steps += 1
+			if same_cell_steps > 4: # Stuck or oscillating in place
 				break
+		else:
+			same_cell_steps = 0
+			last_grid = g
 
 		curr_pos = next_pos
 		pts.append(curr_pos)

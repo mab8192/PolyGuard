@@ -12,9 +12,11 @@ var _exits: Array[Node2D] = []
 
 var _actor: CharacterBody2D
 var _no_path: bool = false
-var _last_path_calc: float = 0
-var _path_calc_timer: float = 0
-const PATH_RECALC_TIMER: float = 1
+var _target_tower: Tower = null
+var _tower_path: PackedVector2Array = PackedVector2Array()
+var _tower_path_idx: int = 0
+var _target_recalc_timer: float = 0.0
+const TARGET_RECALC_INTERVAL: float = 0.4
 
 func _ready() -> void:
 	if get_parent():
@@ -39,8 +41,6 @@ func _ready() -> void:
 
 	if agent:
 		agent.velocity_computed.connect(_on_velocity_computed)
-		
-		# Apply common settings shared by all enemies
 		agent.navigation_layers = data.nav_layer
 		agent.path_max_distance = 10
 		agent.avoidance_enabled = false
@@ -50,13 +50,16 @@ func _ready() -> void:
 		agent.path_desired_distance = 6.0
 		agent.target_desired_distance = 8.0
 	
-	SignalBus.navmesh_updated.connect(_pick_target)
 	SignalBus.tower_placed.connect(_on_towers_changed)
 	SignalBus.tower_destroyed.connect(_on_towers_changed)
+	SignalBus.flow_fields_updated.connect(_on_flow_fields_updated)
+	_pick_target()
 
 func _on_towers_changed() -> void:
-	if data and data.targets_towers:
-		_pick_target()
+	_pick_target()
+
+func _on_flow_fields_updated() -> void:
+	_pick_target()
 
 func set_exits(new_exits: Array[Node2D]) -> void:
 	_exits = new_exits
@@ -68,8 +71,6 @@ func is_finished() -> bool:
 	for exit in _exits:
 		if is_instance_valid(exit) and _actor.global_position.distance_squared_to(exit.global_position) <= 256.0:
 			return true
-	if agent and agent.is_navigation_finished():
-		return true
 	return false
 	
 var remaining_distance: float = 0.0
@@ -112,22 +113,66 @@ func _physics_process(delta: float) -> void:
 	var fm = _get_flow_manager()
 	var dir: Vector2 = Vector2.ZERO
 
-	if fm and not (data and data.targets_towers):
-		var nav_layer = data.nav_layer if data else 1
-		var is_reach = fm.is_reachable(_actor.global_position, nav_layer)
-		if not is_reach:
-			if not _no_path:
-				no_path_available.emit()
-				_no_path = true
-		else:
+	# 1. Tower-targeting enemies (Snipers, Bombers)
+	if data and data.targets_towers:
+		_target_recalc_timer += delta
+		if _target_recalc_timer >= TARGET_RECALC_INTERVAL or not is_instance_valid(_target_tower) or _target_tower.is_queued_for_deletion():
+			_target_recalc_timer = 0.0
+			_pick_target()
+
+		if is_instance_valid(_target_tower) and not _target_tower.is_queued_for_deletion():
 			_no_path = false
+			remaining_distance = _actor.global_position.distance_to(_target_tower.global_position)
 
-			var field = fm.get_field(nav_layer)
-			var g = field.global_to_grid(_actor.global_position)
-			if field.is_valid_cell(g.x, g.y):
-				remaining_distance = field.integration_cost[g.y * field.grid_size.x + g.x] * field.cell_size.x
+			# Advance waypoints
+			while _tower_path_idx < _tower_path.size() and _actor.global_position.distance_squared_to(_tower_path[_tower_path_idx]) < 256.0:
+				_tower_path_idx += 1
 
+			if _tower_path_idx < _tower_path.size():
+				dir = _actor.global_position.direction_to(_tower_path[_tower_path_idx])
+			else:
+				dir = _actor.global_position.direction_to(_target_tower.global_position)
+		else:
+			# Fallback to exit flow field when no towers exist
+			if fm:
+				var nav_layer = data.nav_layer if data else 1
+				var field = fm.get_field(nav_layer)
+				var g = field.global_to_grid(_actor.global_position)
+				if field.is_valid_cell(g.x, g.y) and field.integration_cost[field.grid_to_index(g.x, g.y)] < FlowField.BLOCKED_COST:
+					_no_path = false
+					remaining_distance = field.integration_cost[field.grid_to_index(g.x, g.y)] * field.cell_size.x
+					dir = field.sample_direction(_actor.global_position)
+				elif fm.walls_only_field:
+					_no_path = false
+					dir = fm.walls_only_field.sample_direction(_actor.global_position)
+
+	# 2. Standard exit-targeting enemies
+	elif fm:
+		var nav_layer = data.nav_layer if data else 1
+		var field = fm.get_field(nav_layer)
+		var g = field.global_to_grid(_actor.global_position)
+		var has_valid_cost = field.is_valid_cell(g.x, g.y) and field.integration_cost[field.grid_to_index(g.x, g.y)] < FlowField.BLOCKED_COST
+
+		if has_valid_cost:
+			_no_path = false
+			remaining_distance = field.integration_cost[field.grid_to_index(g.x, g.y)] * field.cell_size.x
 			dir = field.sample_direction(_actor.global_position)
+		else:
+			var is_reach = fm.is_reachable(_actor.global_position, nav_layer)
+			if not is_reach:
+				if not _no_path:
+					no_path_available.emit()
+					_no_path = true
+				# When blocked by barricades/towers, route along walls_only_field directly to the blocking barricade/tower
+				if fm.walls_only_field:
+					var wg = fm.walls_only_field.global_to_grid(_actor.global_position)
+					if fm.walls_only_field.is_valid_cell(wg.x, wg.y):
+						remaining_distance = fm.walls_only_field.integration_cost[fm.walls_only_field.grid_to_index(wg.x, wg.y)] * fm.walls_only_field.cell_size.x
+					dir = fm.walls_only_field.sample_direction(_actor.global_position)
+			else:
+				_no_path = false
+				dir = field.sample_direction(_actor.global_position)
+
 		if dir == Vector2.ZERO and not _exits.is_empty():
 			var closest_exit: Node2D = null
 			var min_d_sq: float = INF
@@ -139,21 +184,6 @@ func _physics_process(delta: float) -> void:
 						closest_exit = ex
 			if closest_exit:
 				dir = _actor.global_position.direction_to(closest_exit.global_position)
-	else:
-		_path_calc_timer += delta
-		if _path_calc_timer - _last_path_calc >= PATH_RECALC_TIMER:
-			_last_path_calc = _path_calc_timer
-			agent.target_position = agent.target_position
-		
-		if !agent.is_target_reachable():
-			if !_no_path:
-				no_path_available.emit()
-				_no_path = true
-		else:
-			_no_path = false
-
-		var next_pos = agent.get_next_path_position()
-		dir = _actor.global_position.direction_to(next_pos)
 
 	if data and data.enable_separation:
 		var sep = _compute_separation_vector()
@@ -179,12 +209,6 @@ func _physics_process(delta: float) -> void:
 			var perp = Vector2(-dir.y, dir.x) * unstuck_side
 			dir = (dir * 0.4 + perp * 0.8).normalized()
 
-		# If hard-trapped for > 1.5s (e.g. wall/tower blocked physical path), trigger attack fallback
-		if _stuck_timer >= 1.5:
-			if not _no_path:
-				no_path_available.emit()
-				_no_path = true
-
 	var max_speed = movement.get_speed() if movement else 0.0
 	var intended_vel = dir * max_speed
 	
@@ -198,47 +222,19 @@ func _on_velocity_computed(safe_vel: Vector2) -> void:
 	velocity_computed.emit(safe_vel)
 
 func _pick_target() -> void:
-	_no_path = false
-	agent.target_position = _actor.global_position
+	if not is_instance_valid(_actor) or not _actor.is_inside_tree():
+		return
 
 	if data and data.targets_towers:
-		var target_tower = _find_target_tower()
-		if target_tower:
-			agent.target_position = target_tower.global_position
-			return
-
-	if _exits.is_empty():
-		return
-
-	if data and data.strategy == NavigationData.NavStrategy.FIRST:
-		agent.target_position = _exits[0].global_position
-		return
-	
-	var map: RID = _actor.get_world_2d().navigation_map
-	var distances = []
-
-	for target in _exits:
-		var path: PackedVector2Array = NavigationServer2D.map_get_path(
-			map, _actor.global_position, target.global_position, true, agent.navigation_layers
-		)
-		var length: float = _calculate_path_length(path)
-		distances.append(length)
-
-	if distances.is_empty():
-		return
-
-	match data.strategy if data else NavigationData.NavStrategy.CLOSEST:
-		NavigationData.NavStrategy.CLOSEST:
-			var min_dist: float = distances.min()
-			var target_index: int = distances.find(min_dist)
-			if target_index >= 0 and target_index < _exits.size():
-				agent.target_position = _exits[target_index].global_position
-			
-		NavigationData.NavStrategy.FARTHEST:
-			var max_dist: float = distances.max()
-			var target_index: int = distances.find(max_dist)
-			if target_index >= 0 and target_index < _exits.size():
-				agent.target_position = _exits[target_index].global_position
+		_target_tower = _find_target_tower()
+		if _target_tower and is_instance_valid(_target_tower):
+			var fm = _get_flow_manager()
+			if fm:
+				_tower_path = fm.find_grid_path(_actor.global_position, _target_tower.global_position)
+				_tower_path_idx = 0
+		else:
+			_tower_path.clear()
+			_tower_path_idx = 0
 
 func _find_target_tower() -> Tower:
 	if not is_instance_valid(_actor) or not _actor.is_inside_tree():
@@ -346,7 +342,7 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 				else:
 					break
 
-	# Fallback: find closest solid tower along the path
+	# Fallback: find closest solid tower directly on the path
 	var first_tower: Tower = null
 	var min_dist_from_actor: float = INF
 
@@ -356,7 +352,7 @@ func find_first_obstructing_tower(path: PackedVector2Array) -> Tower:
 		if is_instance_valid(tower) and tower.collision_layer > 0 and not tower.is_queued_for_deletion() and not tower.is_preview:
 			for i in range(path.size() - 1):
 				var dist_sq = _dist_to_segment_squared(tower.global_position, path[i], path[i + 1])
-				if dist_sq < 36.0 * 36.0:
+				if dist_sq < 16.0 * 16.0:
 					var dist_from_actor = _actor.global_position.distance_squared_to(tower.global_position)
 					if dist_from_actor < min_dist_from_actor:
 						min_dist_from_actor = dist_from_actor

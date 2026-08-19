@@ -22,4 +22,5 @@ func _spawn_initial_sample_tower() -> void:
 		if initial_tower:
 			towers.add_child(initial_tower)
 			initial_tower.global_position = Vector2(0, 160)
-			generate_navmesh()
+			if flow_field_manager:
+				flow_field_manager.rebuild_tower_fields()

@@ -68,10 +68,6 @@ func _ready() -> void:
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
 	flow_field_manager.setup(self)
-	
-	SignalBus.tower_placed.connect(generate_navmesh)
-	SignalBus.tower_destroyed.connect(generate_navmesh)
-	generate_navmesh()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if placement_manager and placement_manager.handle_unhandled_input(event):

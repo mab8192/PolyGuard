@@ -6,7 +6,7 @@ class_name FlowFieldManager extends Node
 
 signal flow_fields_updated()
 
-const CELL_SIZE: Vector2 = Vector2(32.0, 32.0)
+const CELL_SIZE: Vector2 = Vector2(24.0, 24.0)
 const CONGESTION_UPDATE_INTERVAL: float = 0.35 ## Dynamic congestion update interval
 
 # Congestion Strength Knobs
@@ -20,6 +20,9 @@ var stage: Stage = null
 var physical_field: FlowField = FlowField.new()
 var ghost_field: FlowField = FlowField.new()
 var walls_only_field: FlowField = FlowField.new()
+
+var _astar_walls: AStarGrid2D = AStarGrid2D.new()
+var _astar_full: AStarGrid2D = AStarGrid2D.new()
 
 # Background thread worker fields (isolated to prevent race conditions)
 var _bg_physical_field: FlowField = FlowField.new()
@@ -41,11 +44,11 @@ var _enemy_next: PackedInt32Array = PackedInt32Array()
 
 func setup(p_stage: Stage) -> void:
 	stage = p_stage
-	SignalBus.tower_placed.connect(rebuild_base_fields)
-	SignalBus.tower_destroyed.connect(rebuild_base_fields)
+	SignalBus.tower_placed.connect(rebuild_tower_fields)
+	SignalBus.tower_destroyed.connect(rebuild_tower_fields)
 	SignalBus.exits_updated.connect(_on_exits_changed)
 	SignalBus.wave_completed.connect(_on_wave_completed)
-	rebuild_base_fields()
+	full_rebuild()
 
 func _notification(what: int) -> void:
 	if what == NOTIFICATION_PREDELETE:
@@ -226,7 +229,7 @@ func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, instance_id
 
 func _on_exits_changed() -> void:
 	_update_cached_exits()
-	rebuild_base_fields()
+	full_rebuild()
 
 func _on_wave_completed() -> void:
 	if _thread and _thread.is_alive():
@@ -258,7 +261,7 @@ func _update_cached_exits() -> void:
 				_cached_exit_positions.append(exit_obj.global_position)
 				_cached_exit_nodes.append(exit_obj)
 
-func rebuild_base_fields() -> void:
+func full_rebuild() -> void:
 	if _thread and _thread.is_alive():
 		_thread.wait_to_finish()
 		_is_thread_running = false
@@ -284,42 +287,93 @@ func rebuild_base_fields() -> void:
 
 	var tiles = stage.tiles
 	var used_cells = tiles.get_used_cells()
+	var tile_size: Vector2 = Vector2(tiles.tile_set.tile_size) * tiles.scale
+	var half_tile: Vector2 = tile_size / 2.0
 
-	# 1. Mark TileMap Wall Colliders
+	# 1. Mark TileMap Wall Colliders once on walls_only_field
 	for cell_pos in used_cells:
 		var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
 		if tile_data and tile_data.get_collision_polygons_count(0) > 0:
 			var global_center: Vector2 = tiles.to_global(tiles.map_to_local(cell_pos))
-			var half_tile = (Vector2(tiles.tile_set.tile_size) * tiles.scale) / 2.0
-			var wall_rect = Rect2(global_center - half_tile, half_tile * 2.0)
+			var wall_rect = Rect2(global_center - half_tile, tile_size)
+			walls_only_field.set_rect_blocked(wall_rect, true, 0.0)
 
-			physical_field.set_rect_blocked(wall_rect, true)
-			ghost_field.set_rect_blocked(wall_rect, true)
-			walls_only_field.set_rect_blocked(wall_rect, true)
-			_bg_physical_field.set_rect_blocked(wall_rect, true)
-			_bg_ghost_field.set_rect_blocked(wall_rect, true)
+	_update_cached_exits()
+	walls_only_field.calculate_integration_field(_cached_exit_positions)
 
-	# 2. Mark Towers and Barricades
+	# Initialize AStarGrid2D for walls-only pathfinding
+	var w = physical_field.grid_size.x
+	var h = physical_field.grid_size.y
+	_astar_walls.region = Rect2i(0, 0, w, h)
+	_astar_walls.cell_size = CELL_SIZE
+	_astar_walls.offset = physical_field.world_origin + (CELL_SIZE * 0.5)
+	_astar_walls.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_walls.update()
+
+	for gy in range(h):
+		var row_offset = gy * w
+		for gx in range(w):
+			if walls_only_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
+				_astar_walls.set_point_solid(Vector2i(gx, gy), true)
+
+	rebuild_tower_fields()
+
+func rebuild_tower_fields() -> void:
+	if _thread and _thread.is_alive():
+		_thread.wait_to_finish()
+		_is_thread_running = false
+
+	if not stage or not is_instance_valid(stage):
+		return
+
+	# Instant C++ memory copy of base wall grid across fields
+	physical_field.base_cost = walls_only_field.base_cost.duplicate()
+	ghost_field.base_cost = walls_only_field.base_cost.duplicate()
+
+	var has_spectral_towers: bool = false
+
+	# 2. Mark Towers and Barricades (using 25% min overlap so skinny towers don't over-block neighbor cells)
 	if stage.towers:
 		for child in stage.towers.get_children():
 			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not child.is_preview:
 				var tower = child as Tower
 				var tower_rect = _get_tower_rect(tower)
 				if tower.collision_layer == 16: # Layer 5: Spectral Towers
-					physical_field.set_rect_blocked(tower_rect, true)
-					ghost_field.set_rect_blocked(tower_rect, true)
-					_bg_physical_field.set_rect_blocked(tower_rect, true)
-					_bg_ghost_field.set_rect_blocked(tower_rect, true)
+					physical_field.set_rect_blocked(tower_rect, true, 0.25)
+					ghost_field.set_rect_blocked(tower_rect, true, 0.25)
+					has_spectral_towers = true
 				elif tower.collision_layer > 0: # Physical Towers / Barricades
-					physical_field.set_rect_blocked(tower_rect, true)
-					_bg_physical_field.set_rect_blocked(tower_rect, true)
+					physical_field.set_rect_blocked(tower_rect, true, 0.25)
 
-	_update_cached_exits()
-	_recalculate_all_integrations()
+	# Recalculate integration fields
+	physical_field.calculate_integration_field(_cached_exit_positions)
+	if has_spectral_towers:
+		ghost_field.calculate_integration_field(_cached_exit_positions)
+	else:
+		ghost_field.flow_vectors = walls_only_field.flow_vectors.duplicate()
+		ghost_field.integration_cost = walls_only_field.integration_cost.duplicate()
 
-	# Sync background worker fields with base integrations
+	# Update AStarGrid2D for physical towers and walls
+	var w = physical_field.grid_size.x
+	var h = physical_field.grid_size.y
+	_astar_full.region = Rect2i(0, 0, w, h)
+	_astar_full.cell_size = CELL_SIZE
+	_astar_full.offset = physical_field.world_origin + (CELL_SIZE * 0.5)
+	_astar_full.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
+	_astar_full.update()
+
+	for gy in range(h):
+		var row_offset = gy * w
+		for gx in range(w):
+			if physical_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
+				_astar_full.set_point_solid(Vector2i(gx, gy), true)
+
+	# Sync background worker base costs and base fields
+	_bg_physical_field.base_cost = physical_field.base_cost.duplicate()
 	_bg_physical_field.flow_vectors = physical_field.flow_vectors
 	_bg_physical_field.integration_cost = physical_field.integration_cost
+
+	_bg_ghost_field.base_cost = ghost_field.base_cost.duplicate()
 	_bg_ghost_field.flow_vectors = ghost_field.flow_vectors
 	_bg_ghost_field.integration_cost = ghost_field.integration_cost
 
@@ -328,8 +382,9 @@ func rebuild_base_fields() -> void:
 
 func _recalculate_all_integrations() -> void:
 	physical_field.calculate_integration_field(_cached_exit_positions)
-	ghost_field.calculate_integration_field(_cached_exit_positions)
 	walls_only_field.calculate_integration_field(_cached_exit_positions)
+	ghost_field.flow_vectors = walls_only_field.flow_vectors.duplicate()
+	ghost_field.integration_cost = walls_only_field.integration_cost.duplicate()
 
 func get_field(nav_layer: int) -> FlowField:
 	if (nav_layer & 4) != 0:
@@ -343,6 +398,33 @@ func get_flow_direction(world_pos: Vector2, nav_layer: int) -> Vector2:
 func is_reachable(world_pos: Vector2, nav_layer: int) -> bool:
 	var field = get_field(nav_layer)
 	return field.is_reachable(world_pos)
+
+func find_grid_path(from_pos: Vector2, to_pos: Vector2) -> PackedVector2Array:
+	if not physical_field or physical_field.total_cells == 0:
+		return PackedVector2Array()
+
+	var w = physical_field.grid_size.x
+	var h = physical_field.grid_size.y
+
+	var from_grid = physical_field.global_to_grid(from_pos)
+	var to_grid = physical_field.global_to_grid(to_pos)
+
+	from_grid.x = clampi(from_grid.x, 0, w - 1)
+	from_grid.y = clampi(from_grid.y, 0, h - 1)
+	to_grid.x = clampi(to_grid.x, 0, w - 1)
+	to_grid.y = clampi(to_grid.y, 0, h - 1)
+
+	# 1. Try finding path avoiding physical towers and walls
+	var path = _astar_full.get_point_path(from_grid, to_grid, true)
+	if path.size() >= 2:
+		return path
+
+	# 2. Fallback: find path avoiding walls only (passing through towers/barricades)
+	path = _astar_walls.get_point_path(from_grid, to_grid, true)
+	if path.size() >= 2:
+		return path
+
+	return PackedVector2Array([to_pos])
 
 func get_exit_nodes() -> Array[Node2D]:
 	return _cached_exit_nodes
