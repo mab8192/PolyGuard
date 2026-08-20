@@ -423,15 +423,12 @@ func calculate_multi_integration_fields(target_positions: Array[Vector2], out_pe
 		if exit_field != null and exit_field.has_method("_calculate_continuous_gradient_vectors"):
 			exit_field._calculate_continuous_gradient_vectors()
 
-	var end = Time.get_ticks_usec()
-	print("usec = ", end - start)
-
 func _relax_multi_neighbor(n_idx: int, pop_cost: float, mult: float, exit_field: RefCounted, exit_idx: int) -> void:
 	var n_base: float = base_cost[n_idx]
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
+	var cell_cost: float = n_base + clearance_cost[n_idx]
 	var tentative_dist: float = pop_cost + cell_cost * mult
 
 	if exit_field != null and tentative_dist < exit_field.integration_cost[n_idx]:
@@ -517,7 +514,7 @@ func _relax_single_neighbor(n_idx: int, pop_cost: float, mult: float) -> void:
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
+	var cell_cost: float = n_base + clearance_cost[n_idx]
 	var tentative_dist: float = pop_cost + cell_cost * mult
 
 	if tentative_dist < integration_cost[n_idx]:

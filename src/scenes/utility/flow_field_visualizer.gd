@@ -150,8 +150,9 @@ func _draw() -> void:
 
 	var max_congestion: float = 1.0
 	if mode == DisplayMode.CONGESTION:
-		for idx: int in range(field.total_cells):
-			var cong: float = field.congestion_cost[idx]
+		var cong_data: PackedFloat32Array = manager.congestion_density if (manager and not manager.congestion_density.is_empty()) else field.congestion_cost
+		for idx: int in range(mini(field.total_cells, cong_data.size())):
+			var cong: float = cong_data[idx]
 			if cong > max_congestion:
 				max_congestion = cong
 
@@ -178,6 +179,8 @@ func _draw() -> void:
 						draw_rect(cell_rect, col, true)
 
 	elif mode == DisplayMode.CONGESTION:
+		var cong_data: PackedFloat32Array = manager.congestion_density if (manager and not manager.congestion_density.is_empty()) else field.congestion_cost
+		var cong_size: int = cong_data.size()
 		for gy: int in range(h):
 			var row: int = gy * w
 			var cell_y: float = origin.y + float(gy) * cs.y
@@ -186,7 +189,7 @@ func _draw() -> void:
 				var cell_x: float = origin.x + float(gx) * cs.x
 				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs)
 
-				var cong: float = field.congestion_cost[idx]
+				var cong: float = cong_data[idx] if idx < cong_size else 0.0
 				if cong > 0.01:
 					var t: float = clampf(cong / maxf(max_congestion, 1.0), 0.0, 1.0)
 					var col: Color = Color(1.0, 0.2, 0.1, lerp(0.2, 0.7, t))
