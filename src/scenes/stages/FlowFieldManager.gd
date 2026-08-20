@@ -7,6 +7,8 @@ class_name FlowFieldManager extends Node
 signal flow_fields_updated()
 
 const CELL_SIZE: Vector2 = Vector2(16.0, 16.0)
+const CONGESTION_UPDATE_INTERVAL: float = 0.35 ## Dynamic background congestion update interval
+const CONGESTION_RADIUS: float = 24.0
 
 # Congestion Strength Knobs
 const LIGHT_ENEMY_CONGESTION: float = 0.5
@@ -20,7 +22,7 @@ var heavy_physical_field: FlowField = FlowField.new()
 var ghost_field: FlowField = FlowField.new()
 var walls_only_field: FlowField = FlowField.new()
 
-# Dynamic Congestion Density Overlay Grid (pure O(N) accumulation, no Dijkstra integration)
+# Dynamic Congestion Density Overlay Grid (pure O(N) accumulation)
 var congestion_density: PackedFloat32Array = PackedFloat32Array()
 
 # Per-Exit Flow Fields for multi-exit stages (NavStrategy.FIRST / FARTHEST)
@@ -53,6 +55,7 @@ var _bg_per_exit_heavy_open_reachability: Array[PackedByteArray] = []
 var _thread: Thread = null
 var _is_thread_running: bool = false
 var _rebuild_pending: bool = false
+var _congestion_timer: float = 0.0
 
 var _cached_exit_positions: Array[Vector2] = []
 var _cached_exit_nodes: Array[Node2D] = []
@@ -92,7 +95,7 @@ func _notification(what: int) -> void:
 		if _thread and _thread.is_alive():
 			_thread.wait_to_finish()
 
-func _physics_process(_delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if not stage or not is_instance_valid(stage):
 		return
 
@@ -109,6 +112,12 @@ func _physics_process(_delta: float) -> void:
 	# 2. Local spatial grid and dynamic congestion density update (fast O(N))
 	if stage.wave_is_active:
 		_update_enemy_spatial_grid()
+
+		if not _is_thread_running:
+			_congestion_timer += delta
+			if _congestion_timer >= CONGESTION_UPDATE_INTERVAL:
+				_congestion_timer = 0.0
+				_launch_background_congestion_update()
 
 func _update_enemy_spatial_grid() -> void:
 	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
@@ -173,8 +182,66 @@ func _update_enemy_spatial_grid() -> void:
 	if visualizer and visualizer.visible and visualizer.mode == FlowFieldVisualizer.DisplayMode.CONGESTION:
 		visualizer.queue_redraw()
 
+func _launch_background_congestion_update() -> void:
+	if _enemy_positions.is_empty() or _cached_exit_positions.is_empty():
+		return
+
+	var snapshot: Dictionary = {
+		"positions": _enemy_positions.duplicate(),
+		"layers": _enemy_layers.duplicate(),
+		"weights": _enemy_weights.duplicate(),
+		"exits": _cached_exit_positions.duplicate()
+	}
+
+	_is_thread_running = true
+	_thread = Thread.new()
+	_thread.start(_bg_thread_task.bind(snapshot))
+
+## Runs purely in background thread (0.0ms main thread cost)
+func _bg_thread_task(snapshot: Dictionary) -> void:
+	var positions: PackedVector2Array = snapshot["positions"]
+	var layers: PackedInt32Array = snapshot["layers"]
+	var weights: PackedFloat32Array = snapshot["weights"]
+	var exits: Array[Vector2] = snapshot["exits"]
+
+	_bg_physical_field.clear_congestion()
+	_bg_heavy_field.clear_congestion()
+	_bg_ghost_field.clear_congestion()
+
+	for exit_f: FlowField in _bg_per_exit_physical_fields:
+		if exit_f: exit_f.clear_congestion()
+	for exit_f: FlowField in _bg_per_exit_heavy_fields:
+		if exit_f: exit_f.clear_congestion()
+	for exit_f: FlowField in _bg_per_exit_ghost_fields:
+		if exit_f: exit_f.clear_congestion()
+
+	var count: int = positions.size()
+	var has_ghosts: bool = false
+
+	for i: int in range(count):
+		var pos: Vector2 = positions[i]
+		var layer: int = layers[i]
+		var weight: float = weights[i]
+
+		if (layer & 4) != 0:
+			_bg_ghost_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+			has_ghosts = true
+		elif (layer & 2) != 0:
+			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+		else:
+			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+
+	_bg_physical_field.calculate_multi_integration_fields(exits, _bg_per_exit_physical_fields)
+	_bg_heavy_field.calculate_multi_integration_fields(exits, _bg_per_exit_heavy_fields)
+	if has_ghosts:
+		_bg_ghost_field.calculate_multi_integration_fields(exits, _bg_per_exit_ghost_fields)
+
+	_bg_rebuild_reachability_masks(exits.size())
+
 ## Calculates a localized Danger / Repulsion vector from the dynamic congestion overlay grid
-func get_congestion_avoidance_vector(actor_pos: Vector2, _radius: float = 24.0) -> Vector2:
+func get_congestion_avoidance_vector(actor_pos: Vector2, desire_dir: Vector2 = Vector2.ZERO, radius: float = 24.0) -> Vector2:
 	if _enemy_positions.size() <= 1 or congestion_density.is_empty():
 		return Vector2.ZERO
 
@@ -184,8 +251,13 @@ func get_congestion_avoidance_vector(actor_pos: Vector2, _radius: float = 24.0) 
 	var cs_x: float = physical_field.cell_size.x
 	var cs_y: float = physical_field.cell_size.y
 
-	var gx: int = int(floor((actor_pos.x - origin.x) / cs_x))
-	var gy: int = int(floor((actor_pos.y - origin.y) / cs_y))
+	# Probe lookahead position along movement heading
+	var probe_pos: Vector2 = actor_pos
+	if desire_dir != Vector2.ZERO:
+		probe_pos = actor_pos + desire_dir * minf(radius, 24.0)
+
+	var gx: int = int(floor((probe_pos.x - origin.x) / cs_x))
+	var gy: int = int(floor((probe_pos.y - origin.y) / cs_y))
 
 	if gx <= 0 or gx >= w - 1 or gy <= 0 or gy >= h - 1:
 		return Vector2.ZERO
@@ -226,6 +298,19 @@ func get_congestion_avoidance_vector(actor_pos: Vector2, _radius: float = 24.0) 
 	if grad_len_sq > 0.0001:
 		var inv_len: float = 1.0 / sqrt(grad_len_sq)
 		var repulse_dir: Vector2 = Vector2(-grad_x * inv_len, -grad_y * inv_len)
+
+		# If repulse_dir is directly opposite to desire_dir, deflect tangentially into the open flank
+		if desire_dir != Vector2.ZERO:
+			var dot: float = repulse_dir.dot(desire_dir)
+			if dot < -0.6:
+				var perp_l: Vector2 = Vector2(-desire_dir.y, desire_dir.x)
+				var perp_r: Vector2 = Vector2(desire_dir.y, -desire_dir.x)
+				var gl: Vector2i = physical_field.global_to_grid(actor_pos + perp_l * 16.0)
+				var gr: Vector2i = physical_field.global_to_grid(actor_pos + perp_r * 16.0)
+				var cost_l: float = physical_field.base_cost[physical_field.grid_to_index(gl.x, gl.y)] if physical_field.is_valid_cell(gl.x, gl.y) else FlowField.BLOCKED_COST
+				var cost_r: float = physical_field.base_cost[physical_field.grid_to_index(gr.x, gr.y)] if physical_field.is_valid_cell(gr.x, gr.y) else FlowField.BLOCKED_COST
+				repulse_dir = perp_l if cost_l < cost_r else perp_r
+
 		var max_d: float = maxf(maxf(d_l, d_r), maxf(d_u, d_d))
 		var strength: float = clampf(max_d / 2.5, 0.0, 1.0)
 		return repulse_dir * strength
@@ -287,6 +372,30 @@ func _on_wave_completed() -> void:
 		_is_thread_running = false
 
 	_rebuild_pending = false
+	_congestion_timer = 0.0
+
+	physical_field.clear_congestion()
+	heavy_physical_field.clear_congestion()
+	ghost_field.clear_congestion()
+	_bg_physical_field.clear_congestion()
+	_bg_heavy_field.clear_congestion()
+	_bg_ghost_field.clear_congestion()
+
+	for f in per_exit_physical_fields:
+		if f: f.clear_congestion()
+	for f in per_exit_heavy_fields:
+		if f: f.clear_congestion()
+	for f in per_exit_ghost_fields:
+		if f: f.clear_congestion()
+
+	for f in _bg_per_exit_physical_fields:
+		if f: f.clear_congestion()
+	for f in _bg_per_exit_heavy_fields:
+		if f: f.clear_congestion()
+	for f in _bg_per_exit_ghost_fields:
+		if f: f.clear_congestion()
+
+	_recalculate_all_integrations()
 	congestion_density.fill(0.0)
 	_enemy_positions.resize(0)
 	_enemy_layers.resize(0)

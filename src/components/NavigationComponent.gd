@@ -171,7 +171,7 @@ func _physics_process(delta: float) -> void:
 
 	# Congestion Avoidance (Context Steering)
 	if fm and data and data.congestion_weight > 0.0 and dir != Vector2.ZERO:
-		var cong_avoid: Vector2 = fm.get_congestion_avoidance_vector(_actor.global_position, data.separation_radius)
+		var cong_avoid: Vector2 = fm.get_congestion_avoidance_vector(_actor.global_position, dir, data.separation_radius)
 		if cong_avoid != Vector2.ZERO:
 			# Blend desire direction with congestion repulsion vector
 			var blend_weight: float = data.congestion_weight * 0.75

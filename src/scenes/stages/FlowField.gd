@@ -428,7 +428,7 @@ func _relax_multi_neighbor(n_idx: int, pop_cost: float, mult: float, exit_field:
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx]
+	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
 	var tentative_dist: float = pop_cost + cell_cost * mult
 
 	if exit_field != null and tentative_dist < exit_field.integration_cost[n_idx]:
@@ -514,7 +514,7 @@ func _relax_single_neighbor(n_idx: int, pop_cost: float, mult: float) -> void:
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx]
+	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
 	var tentative_dist: float = pop_cost + cell_cost * mult
 
 	if tentative_dist < integration_cost[n_idx]:
