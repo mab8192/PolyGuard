@@ -19,6 +19,8 @@ static var instance: DevCheatMenu = null
 # Stage buttons
 @onready var unlock_all_stages_button: Button = %UnlockAllStagesButton
 @onready var complete_all_stages_button: Button = %CompleteAllStagesButton
+@onready var complete_all_stages_button_2: Button = %CompleteAllStagesButton2
+@onready var complete_next_stage_button: Button = %CompleteNextStageButton
 
 # In-Game battle buttons
 @onready var add_1k_energy_button: Button = %Add1kEnergyButton
@@ -29,9 +31,6 @@ static var instance: DevCheatMenu = null
 @onready var godmode_button: Button = %GodmodeButton
 @onready var toggle_flow_field_button: Button = %ToggleFlowFieldButton
 @onready var cycle_flow_layer_button: Button = %CycleFlowLayerButton
-
-# Reset button
-@onready var reset_save_button: Button = %ResetSaveButton
 
 var is_godmode_active: bool = false
 var _previous_pause_state: bool = false
@@ -80,6 +79,18 @@ func _ready() -> void:
 		SaveManager.cheat_complete_all_stages(3)
 		_notify("Completed all campaign stages with 3 Stars & High Scores!")
 	)
+	complete_all_stages_button_2.pressed.connect(func():
+		SaveManager.cheat_complete_all_stages(1)
+		_notify("Completed all campaign stages with 1 star")
+	)
+	complete_next_stage_button.pressed.connect(func():
+		var stages := Registry.get_all_stages()
+		for stage in stages:
+			var stage_id := stage.stage_id
+			if SaveManager.is_stage_completed(stage_id): continue
+			SaveManager.record_stage_clear(stage_id, 10000, stage.starting_lives, stage.starting_lives)
+			break
+	)
 	
 	# In-game battle connections
 	add_1k_energy_button.pressed.connect(func(): _cheat_add_energy(1000))
@@ -90,12 +101,6 @@ func _ready() -> void:
 	godmode_button.pressed.connect(_cheat_toggle_godmode)
 	toggle_flow_field_button.pressed.connect(_cheat_toggle_flow_field)
 	cycle_flow_layer_button.pressed.connect(_cheat_cycle_flow_layer)
-	
-	# Reset save connection
-	reset_save_button.pressed.connect(func():
-		SaveManager.cheat_reset_save()
-		_notify("Save data reset to factory defaults.")
-	)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():

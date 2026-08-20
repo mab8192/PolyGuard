@@ -1,8 +1,8 @@
 [gd_scene format=3 uid="uid://b5m3k1cheatu"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/popups/dev_cheat_menu.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b7375c10yco8i" path="res://src/scenes/ui/popups/dev_cheat_menu.gd" id="1_script"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
-[ext_resource type="Script" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="3_drag_scroll"]
+[ext_resource type="Script" uid="uid://djnudry8xsxvq" path="res://src/scenes/ui/elements/drag_scroll_container.gd" id="3_drag_scroll"]
 
 [node name="DevCheatMenu" type="CanvasLayer" unique_id=7700001]
 process_mode = 3
@@ -206,6 +206,24 @@ focus_mode = 0
 theme_type_variation = &"PrimaryButton"
 text = "Complete All (3-Star)"
 
+[node name="CompleteAllStagesButton2" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection/Grid" unique_id=220610231]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Complete All (1-Star)"
+
+[node name="CompleteNextStageButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/CampaignSection/Grid" unique_id=263449379]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 68)
+layout_mode = 2
+size_flags_horizontal = 3
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "Complete Next (3-star)"
+
 [node name="BattleSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700032]
 layout_mode = 2
 theme_override_constants/separation = 10
@@ -292,20 +310,3 @@ size_flags_horizontal = 3
 focus_mode = 0
 theme_type_variation = &"SecondaryButton"
 text = "Layer (F4): PHYSICAL"
-
-[node name="ResetSection" type="VBoxContainer" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox" unique_id=7700041]
-layout_mode = 2
-theme_override_constants/separation = 10
-
-[node name="Label" type="Label" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/ResetSection" unique_id=7700042]
-layout_mode = 2
-theme_type_variation = &"SubHeaderText"
-text = "🔄 DANGER ZONE"
-
-[node name="ResetSaveButton" type="Button" parent="CenterContainer/ModalPanel/MarginContainer/VBox/ScrollContainer/ScrollVBox/ResetSection" unique_id=7700043]
-unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 72)
-layout_mode = 2
-focus_mode = 0
-theme_type_variation = &"DangerButton"
-text = "RESET SAVE PROGRESS"
