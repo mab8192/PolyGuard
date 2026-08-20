@@ -26,3 +26,6 @@ How to scale up enemy difficulty over time?
 
 - [x] Wave completion when splitter is the last enemy (fixed via `pending_enemies` tracking)
 - [x] Prevent enemies from attacking towers when path is merely congested (fixed via static reachability mask)
+- [ ] Update build menu dynamically when you collect energy
+
+## Lock certain tower levels behind stage completions

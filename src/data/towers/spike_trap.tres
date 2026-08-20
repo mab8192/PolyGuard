@@ -34,7 +34,7 @@ duration = 0.0
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")
 mode = 1
-delay = 0.35
+delay = 0.3
 cooldown = 2.8
 effects = Array[ExtResource("1_eff_base")]([SubResource("Resource_spike_damage")])
 
