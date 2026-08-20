@@ -417,6 +417,11 @@ func calculate_multi_integration_fields(target_positions: Array[Vector2], out_pe
 	# Calculate continuous gradient vectors for unified field
 	_calculate_continuous_gradient_vectors()
 
+	# Precompute smooth continuous gradient vectors for each per-exit field
+	for exit_field: RefCounted in out_per_exit_fields:
+		if exit_field != null and exit_field.has_method("_calculate_continuous_gradient_vectors"):
+			exit_field._calculate_continuous_gradient_vectors()
+
 func _relax_multi_neighbor(n_idx: int, pop_cost: float, mult: float, exit_field: RefCounted, exit_idx: int) -> void:
 	var n_base: float = base_cost[n_idx]
 	if n_base >= BLOCKED_COST:
@@ -534,15 +539,18 @@ func _calculate_continuous_gradient_vectors() -> void:
 				flow_vectors[idx] = Vector2.ZERO
 				continue
 
+			var is_open: bool = curr_cost < TOWER_COST
+			var max_valid_cost: float = TOWER_COST if is_open else BLOCKED_COST
+
 			var c_l: float = integration_cost[idx - 1]
 			var c_r: float = integration_cost[idx + 1]
 			var c_u: float = integration_cost[idx - w]
 			var c_d: float = integration_cost[idx + w]
 
-			var b_l: bool = base_cost[idx - 1] < BLOCKED_COST and c_l < BLOCKED_COST
-			var b_r: bool = base_cost[idx + 1] < BLOCKED_COST and c_r < BLOCKED_COST
-			var b_u: bool = base_cost[idx - w] < BLOCKED_COST and c_u < BLOCKED_COST
-			var b_d: bool = base_cost[idx + w] < BLOCKED_COST and c_d < BLOCKED_COST
+			var b_l: bool = base_cost[idx - 1] < max_valid_cost and c_l < max_valid_cost
+			var b_r: bool = base_cost[idx + 1] < max_valid_cost and c_r < max_valid_cost
+			var b_u: bool = base_cost[idx - w] < max_valid_cost and c_u < max_valid_cost
+			var b_d: bool = base_cost[idx + w] < max_valid_cost and c_d < max_valid_cost
 
 			var grad_x: float = 0.0
 			var grad_y: float = 0.0
@@ -578,16 +586,16 @@ func _calculate_continuous_gradient_vectors() -> void:
 			if b_u and c_u < lowest_cost: lowest_cost = c_u; best_dx = 0.0; best_dy = -1.0
 
 			var c_dr: float = integration_cost[idx + w + 1]
-			if c_dr < lowest_cost and base_cost[idx + w + 1] < BLOCKED_COST and base_cost[idx + 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
+			if c_dr < lowest_cost and base_cost[idx + w + 1] < max_valid_cost and base_cost[idx + 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
 				lowest_cost = c_dr; best_dx = 1.0; best_dy = 1.0
 			var c_dl: float = integration_cost[idx + w - 1]
-			if c_dl < lowest_cost and base_cost[idx + w - 1] < BLOCKED_COST and base_cost[idx - 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
+			if c_dl < lowest_cost and base_cost[idx + w - 1] < max_valid_cost and base_cost[idx - 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
 				lowest_cost = c_dl; best_dx = -1.0; best_dy = 1.0
 			var c_ur: float = integration_cost[idx - w + 1]
-			if c_ur < lowest_cost and base_cost[idx - w + 1] < BLOCKED_COST and base_cost[idx + 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
+			if c_ur < lowest_cost and base_cost[idx - w + 1] < max_valid_cost and base_cost[idx + 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
 				lowest_cost = c_ur; best_dx = 1.0; best_dy = -1.0
 			var c_ul: float = integration_cost[idx - w - 1]
-			if c_ul < lowest_cost and base_cost[idx - w - 1] < BLOCKED_COST and base_cost[idx - 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
+			if c_ul < lowest_cost and base_cost[idx - w - 1] < max_valid_cost and base_cost[idx - 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
 				lowest_cost = c_ul; best_dx = -1.0; best_dy = -1.0
 
 			if best_dx != 0.0 or best_dy != 0.0:
@@ -614,10 +622,13 @@ func _calc_cell_gradient(gx: int, gy: int) -> void:
 		flow_vectors[idx] = Vector2.ZERO
 		return
 
-	var has_left: bool = gx > 0 and base_cost[idx - 1] < BLOCKED_COST and integration_cost[idx - 1] < BLOCKED_COST
-	var has_right: bool = gx < w - 1 and base_cost[idx + 1] < BLOCKED_COST and integration_cost[idx + 1] < BLOCKED_COST
-	var has_up: bool = gy > 0 and base_cost[idx - w] < BLOCKED_COST and integration_cost[idx - w] < BLOCKED_COST
-	var has_down: bool = gy < h - 1 and base_cost[idx + w] < BLOCKED_COST and integration_cost[idx + w] < BLOCKED_COST
+	var is_open: bool = curr_cost < TOWER_COST
+	var max_valid_cost: float = TOWER_COST if is_open else BLOCKED_COST
+
+	var has_left: bool = gx > 0 and base_cost[idx - 1] < max_valid_cost and integration_cost[idx - 1] < max_valid_cost
+	var has_right: bool = gx < w - 1 and base_cost[idx + 1] < max_valid_cost and integration_cost[idx + 1] < max_valid_cost
+	var has_up: bool = gy > 0 and base_cost[idx - w] < max_valid_cost and integration_cost[idx - w] < max_valid_cost
+	var has_down: bool = gy < h - 1 and base_cost[idx + w] < max_valid_cost and integration_cost[idx + w] < max_valid_cost
 
 	var grad_x: float = 0.0
 	var grad_y: float = 0.0
@@ -657,8 +668,31 @@ func sample_direction(world_pos: Vector2) -> Vector2:
 		var gx: int = clampi(int(floor(local.x)), 1, w - 2)
 		var gy: int = clampi(int(floor(local.y)), 1, h - 2)
 		var idx: int = gy * w + gx
-		var grad_x: float = integration_cost[idx - 1] - integration_cost[idx + 1]
-		var grad_y: float = integration_cost[idx - w] - integration_cost[idx + w]
+		var curr_cost: float = integration_cost[idx]
+		var is_open: bool = curr_cost < TOWER_COST
+		var max_valid_cost: float = TOWER_COST if is_open else BLOCKED_COST
+
+		var c_l: float = integration_cost[idx - 1]
+		var c_r: float = integration_cost[idx + 1]
+		var c_u: float = integration_cost[idx - w]
+		var c_d: float = integration_cost[idx + w]
+
+		var b_l: bool = base_cost[idx - 1] < max_valid_cost and c_l < max_valid_cost
+		var b_r: bool = base_cost[idx + 1] < max_valid_cost and c_r < max_valid_cost
+		var b_u: bool = base_cost[idx - w] < max_valid_cost and c_u < max_valid_cost
+		var b_d: bool = base_cost[idx + w] < max_valid_cost and c_d < max_valid_cost
+
+		var grad_x: float = 0.0
+		var grad_y: float = 0.0
+
+		if b_l and b_r: grad_x = c_l - c_r
+		elif b_l and c_l < curr_cost: grad_x = c_l - curr_cost
+		elif b_r and c_r < curr_cost: grad_x = curr_cost - c_r
+
+		if b_u and b_d: grad_y = c_u - c_d
+		elif b_u and c_u < curr_cost: grad_y = c_u - curr_cost
+		elif b_d and c_d < curr_cost: grad_y = curr_cost - c_d
+
 		var l2: float = grad_x * grad_x + grad_y * grad_y
 		if l2 > 0.0001:
 			return Vector2(grad_x / sqrt(l2), grad_y / sqrt(l2))
