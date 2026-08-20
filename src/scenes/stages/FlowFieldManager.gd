@@ -18,22 +18,27 @@ const CONGESTION_RADIUS: float = 24.0
 var stage: Stage = null
 
 var physical_field: FlowField = FlowField.new()
+var heavy_physical_field: FlowField = FlowField.new()
 var ghost_field: FlowField = FlowField.new()
 var walls_only_field: FlowField = FlowField.new()
 
 # Per-Exit Flow Fields for multi-exit stages (NavStrategy.FIRST / FARTHEST)
 var per_exit_physical_fields: Array[FlowField] = []
+var per_exit_heavy_fields: Array[FlowField] = []
 var per_exit_ghost_fields: Array[FlowField] = []
 
 # Static reachability masks (1 = open path without crossing towers, 0 = blocked by towers/walls)
 var _static_open_reachability: PackedByteArray = PackedByteArray()
+var _static_heavy_open_reachability: PackedByteArray = PackedByteArray()
 var _per_exit_open_reachability: Array[PackedByteArray] = []
+var _per_exit_heavy_open_reachability: Array[PackedByteArray] = []
 
 var _astar_walls: AStarGrid2D = AStarGrid2D.new()
 var _astar_full: AStarGrid2D = AStarGrid2D.new()
 
 # Background thread worker fields (isolated to prevent race conditions)
 var _bg_physical_field: FlowField = FlowField.new()
+var _bg_heavy_field: FlowField = FlowField.new()
 var _bg_ghost_field: FlowField = FlowField.new()
 
 var _thread: Thread = null
@@ -100,6 +105,9 @@ func _apply_background_results() -> void:
 	# Atomically swap thread calculated vectors and integration costs
 	physical_field.flow_vectors = _bg_physical_field.flow_vectors
 	physical_field.integration_cost = _bg_physical_field.integration_cost
+
+	heavy_physical_field.flow_vectors = _bg_heavy_field.flow_vectors
+	heavy_physical_field.integration_cost = _bg_heavy_field.integration_cost
 
 	ghost_field.flow_vectors = _bg_ghost_field.flow_vectors
 	ghost_field.integration_cost = _bg_ghost_field.integration_cost
@@ -185,6 +193,7 @@ func _bg_thread_task(snapshot: Dictionary) -> void:
 	var exits: Array[Vector2] = snapshot["exits"]
 
 	_bg_physical_field.clear_congestion()
+	_bg_heavy_field.clear_congestion()
 	_bg_ghost_field.clear_congestion()
 
 	var count: int = positions.size()
@@ -198,10 +207,15 @@ func _bg_thread_task(snapshot: Dictionary) -> void:
 		if (layer & 4) != 0:
 			_bg_ghost_field.add_congestion(pos, weight, CONGESTION_RADIUS)
 			has_ghosts = true
+		elif (layer & 2) != 0:
+			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
 		else:
 			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
+			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
 
 	_bg_physical_field.calculate_integration_field(exits)
+	_bg_heavy_field.calculate_integration_field(exits)
 	if has_ghosts:
 		_bg_ghost_field.calculate_integration_field(exits)
 
@@ -260,8 +274,10 @@ func _on_wave_completed() -> void:
 		_is_thread_running = false
 
 	physical_field.clear_congestion()
+	heavy_physical_field.clear_congestion()
 	ghost_field.clear_congestion()
 	_bg_physical_field.clear_congestion()
+	_bg_heavy_field.clear_congestion()
 	_bg_ghost_field.clear_congestion()
 
 	_recalculate_all_integrations()
@@ -299,10 +315,12 @@ func full_rebuild() -> void:
 	var bounds: Rect2 = map_rect.grow(CELL_SIZE.x)
 
 	physical_field.init_grid(bounds, CELL_SIZE)
+	heavy_physical_field.init_grid(bounds, CELL_SIZE)
 	ghost_field.init_grid(bounds, CELL_SIZE)
 	walls_only_field.init_grid(bounds, CELL_SIZE)
 
 	_bg_physical_field.init_grid(bounds, CELL_SIZE)
+	_bg_heavy_field.init_grid(bounds, CELL_SIZE)
 	_bg_ghost_field.init_grid(bounds, CELL_SIZE)
 
 	_cell_head.resize(physical_field.total_cells)
@@ -390,11 +408,44 @@ func rebuild_tower_fields() -> void:
 						if physical_field.is_valid_cell(gx, gy) and walls_only_field.base_cost[gy * w + gx] < FlowField.BLOCKED_COST:
 							_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
 
+	# Build heavy_physical_field by copying physical_field and filtering out 1-cell pinches (< 32px clearance)
+	heavy_physical_field.base_cost = physical_field.base_cost.duplicate()
+	heavy_physical_field.clearance_cost = physical_field.clearance_cost.duplicate()
+
+	var w: int = heavy_physical_field.grid_size.x
+	var h: int = heavy_physical_field.grid_size.y
+	for gy: int in range(h):
+		var row: int = gy * w
+		for gx: int in range(w):
+			var idx: int = row + gx
+			if heavy_physical_field.base_cost[idx] < FlowField.TOWER_COST:
+				# 1. Horizontal pinch: obstacle on both left and right (16px gap)
+				var blocked_l: bool = (gx == 0) or (physical_field.base_cost[idx - 1] >= FlowField.TOWER_COST)
+				var blocked_r: bool = (gx == w - 1) or (physical_field.base_cost[idx + 1] >= FlowField.TOWER_COST)
+				if blocked_l and blocked_r:
+					heavy_physical_field.base_cost[idx] = FlowField.TOWER_COST
+					continue
+
+				# 2. Vertical pinch: obstacle on both top and bottom (16px gap)
+				var blocked_u: bool = (gy == 0) or (physical_field.base_cost[idx - w] >= FlowField.TOWER_COST)
+				var blocked_d: bool = (gy == h - 1) or (physical_field.base_cost[idx + w] >= FlowField.TOWER_COST)
+				if blocked_u and blocked_d:
+					heavy_physical_field.base_cost[idx] = FlowField.TOWER_COST
+					continue
+
+				# 3. Diagonal squeeze (22.6px opening < 32px)
+				if (blocked_l and blocked_u) or (blocked_r and blocked_u) or (blocked_l and blocked_d) or (blocked_r and blocked_d):
+					heavy_physical_field.base_cost[idx] = FlowField.TOWER_COST
+					continue
+
 	# Recalculate integration fields in a single multi-source pass
 	var exit_count: int = _cached_exit_positions.size()
 	if exit_count > 1:
 		if per_exit_physical_fields.size() != exit_count:
 			per_exit_physical_fields.resize(exit_count)
+		if per_exit_heavy_fields.size() != exit_count:
+			per_exit_heavy_fields.resize(exit_count)
+
 		var bounds: Rect2 = physical_field.bounds
 		for i: int in range(exit_count):
 			if per_exit_physical_fields[i] == null:
@@ -402,10 +453,18 @@ func rebuild_tower_fields() -> void:
 				per_exit_physical_fields[i].init_grid(bounds, CELL_SIZE)
 			per_exit_physical_fields[i].base_cost = physical_field.base_cost.duplicate()
 			per_exit_physical_fields[i].clearance_cost = physical_field.clearance_cost.duplicate()
+
+			if per_exit_heavy_fields[i] == null:
+				per_exit_heavy_fields[i] = FlowField.new()
+				per_exit_heavy_fields[i].init_grid(bounds, CELL_SIZE)
+			per_exit_heavy_fields[i].base_cost = heavy_physical_field.base_cost.duplicate()
+			per_exit_heavy_fields[i].clearance_cost = heavy_physical_field.clearance_cost.duplicate()
 	else:
 		per_exit_physical_fields.clear()
+		per_exit_heavy_fields.clear()
 
 	physical_field.calculate_multi_integration_fields(_cached_exit_positions, per_exit_physical_fields)
+	heavy_physical_field.calculate_multi_integration_fields(_cached_exit_positions, per_exit_heavy_fields)
 
 	if has_spectral_towers:
 		if exit_count > 1:
@@ -445,6 +504,11 @@ func rebuild_tower_fields() -> void:
 	_bg_physical_field.flow_vectors = physical_field.flow_vectors
 	_bg_physical_field.integration_cost = physical_field.integration_cost
 
+	_bg_heavy_field.base_cost = heavy_physical_field.base_cost.duplicate()
+	_bg_heavy_field.clearance_cost = heavy_physical_field.clearance_cost.duplicate()
+	_bg_heavy_field.flow_vectors = heavy_physical_field.flow_vectors
+	_bg_heavy_field.integration_cost = heavy_physical_field.integration_cost
+
 	_bg_ghost_field.base_cost = ghost_field.base_cost.duplicate()
 	_bg_ghost_field.clearance_cost = ghost_field.clearance_cost.duplicate()
 	_bg_ghost_field.flow_vectors = ghost_field.flow_vectors
@@ -460,27 +524,44 @@ func _rebuild_reachability_masks() -> void:
 
 	if _static_open_reachability.size() != total_cells:
 		_static_open_reachability.resize(total_cells)
+	if _static_heavy_open_reachability.size() != total_cells:
+		_static_heavy_open_reachability.resize(total_cells)
 
 	var p_int: PackedFloat32Array = physical_field.integration_cost
+	var h_int: PackedFloat32Array = heavy_physical_field.integration_cost
 	for i: int in range(total_cells):
 		_static_open_reachability[i] = 1 if p_int[i] < FlowField.TOWER_COST else 0
+		_static_heavy_open_reachability[i] = 1 if h_int[i] < FlowField.TOWER_COST else 0
 
 	var exit_count: int = _cached_exit_positions.size()
 	if exit_count > 1:
 		if _per_exit_open_reachability.size() != exit_count:
 			_per_exit_open_reachability.resize(exit_count)
+		if _per_exit_heavy_open_reachability.size() != exit_count:
+			_per_exit_heavy_open_reachability.resize(exit_count)
 
 		for e_i: int in range(exit_count):
 			if _per_exit_open_reachability[e_i].size() != total_cells:
 				_per_exit_open_reachability[e_i].resize(total_cells)
+			if _per_exit_heavy_open_reachability[e_i].size() != total_cells:
+				_per_exit_heavy_open_reachability[e_i].resize(total_cells)
+
 			if e_i < per_exit_physical_fields.size() and per_exit_physical_fields[e_i] != null:
 				var e_int: PackedFloat32Array = per_exit_physical_fields[e_i].integration_cost
 				for i: int in range(total_cells):
 					_per_exit_open_reachability[e_i][i] = 1 if e_int[i] < FlowField.TOWER_COST else 0
 			else:
 				_per_exit_open_reachability[e_i] = _static_open_reachability.duplicate()
+
+			if e_i < per_exit_heavy_fields.size() and per_exit_heavy_fields[e_i] != null:
+				var eh_int: PackedFloat32Array = per_exit_heavy_fields[e_i].integration_cost
+				for i: int in range(total_cells):
+					_per_exit_heavy_open_reachability[e_i][i] = 1 if eh_int[i] < FlowField.TOWER_COST else 0
+			else:
+				_per_exit_heavy_open_reachability[e_i] = _static_heavy_open_reachability.duplicate()
 	else:
 		_per_exit_open_reachability.clear()
+		_per_exit_heavy_open_reachability.clear()
 
 func _recalculate_all_integrations() -> void:
 	rebuild_tower_fields()
@@ -489,23 +570,30 @@ func is_open_path_available(world_pos: Vector2, exit_idx: int = -1, nav_layer: i
 	if (nav_layer & 4) != 0:
 		return walls_only_field.is_reachable(world_pos)
 
-	if _static_open_reachability.is_empty():
+	var is_heavy: bool = (nav_layer & 2) != 0
+	var field: FlowField = heavy_physical_field if is_heavy else physical_field
+	var reach_mask: PackedByteArray = _static_heavy_open_reachability if is_heavy else _static_open_reachability
+	var per_exit_masks: Array[PackedByteArray] = _per_exit_heavy_open_reachability if is_heavy else _per_exit_open_reachability
+
+	if reach_mask.is_empty():
 		return true
 
-	var g: Vector2i = physical_field.global_to_grid(world_pos)
-	if not physical_field.is_valid_cell(g.x, g.y):
+	var g: Vector2i = field.global_to_grid(world_pos)
+	if not field.is_valid_cell(g.x, g.y):
 		return false
 
-	var idx: int = physical_field.grid_to_index(g.x, g.y)
-	if exit_idx >= 0 and exit_idx < _per_exit_open_reachability.size():
-		return _per_exit_open_reachability[exit_idx][idx] == 1
+	var idx: int = field.grid_to_index(g.x, g.y)
+	if exit_idx >= 0 and exit_idx < per_exit_masks.size():
+		return per_exit_masks[exit_idx][idx] == 1
 
-	return _static_open_reachability[idx] == 1
+	return reach_mask[idx] == 1
 
 func get_field_for_strategy(nav_layer: int = 1, strategy: int = 0, world_pos: Vector2 = Vector2.ZERO) -> FlowField:
 	var is_ghost: bool = (nav_layer & 4) != 0
-	var base_field: FlowField = ghost_field if is_ghost else physical_field
-	var per_exit_list: Array[FlowField] = per_exit_ghost_fields if is_ghost else per_exit_physical_fields
+	var is_heavy: bool = (nav_layer & 2) != 0
+
+	var base_field: FlowField = ghost_field if is_ghost else (heavy_physical_field if is_heavy else physical_field)
+	var per_exit_list: Array[FlowField] = per_exit_ghost_fields if is_ghost else (per_exit_heavy_fields if is_heavy else per_exit_physical_fields)
 
 	if per_exit_list.is_empty() or _cached_exit_positions.size() <= 1:
 		return base_field
@@ -540,6 +628,8 @@ func get_field_for_strategy(nav_layer: int = 1, strategy: int = 0, world_pos: Ve
 func get_field(nav_layer: int) -> FlowField:
 	if (nav_layer & 4) != 0:
 		return ghost_field
+	elif (nav_layer & 2) != 0:
+		return heavy_physical_field
 	return physical_field
 
 func get_flow_direction(world_pos: Vector2, nav_layer: int) -> Vector2:

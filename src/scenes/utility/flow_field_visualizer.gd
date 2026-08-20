@@ -15,6 +15,7 @@ enum DisplayMode {
 
 enum FieldLayer {
 	PHYSICAL,
+	HEAVY,
 	GHOST,
 	WALLS_ONLY
 }
@@ -89,21 +90,22 @@ func _update_badge_ui() -> void:
 
 	var layer_name: String = ""
 	match current_layer:
-		FieldLayer.PHYSICAL: layer_name = "PHYSICAL"
+		FieldLayer.PHYSICAL: layer_name = "PHYSICAL (LIGHT)"
+		FieldLayer.HEAVY: layer_name = "HEAVY (>= 16PX)"
 		FieldLayer.GHOST: layer_name = "GHOST"
 		FieldLayer.WALLS_ONLY: layer_name = "WALLS ONLY"
 
 	_badge_label.text = "FLOW FIELD: [%s] | MODE: %s (F2/F3: Mode, F4: Layer)" % [layer_name, mode_name]
 	_badge_panel.reset_size()
-	var sz = _badge_panel.get_combined_minimum_size()
+	var sz: Vector2 = _badge_panel.get_combined_minimum_size()
 	_badge_panel.position = Vector2((1080.0 - sz.x) * 0.5, 110.0)
 
 func cycle_mode() -> void:
-	var next_mode = (int(mode) + 1) % 6
+	var next_mode: int = (int(mode) + 1) % 6
 	mode = next_mode as DisplayMode
 
 func cycle_layer() -> void:
-	var next_layer = (int(current_layer) + 1) % 3
+	var next_layer: int = (int(current_layer) + 1) % 4
 	current_layer = next_layer as FieldLayer
 
 func _unhandled_input(event: InputEvent) -> void:
@@ -120,6 +122,7 @@ func _get_active_field() -> FlowField:
 		return null
 	match current_layer:
 		FieldLayer.PHYSICAL: return manager.physical_field
+		FieldLayer.HEAVY: return manager.heavy_physical_field
 		FieldLayer.GHOST: return manager.ghost_field
 		FieldLayer.WALLS_ONLY: return manager.walls_only_field
 	return manager.physical_field
