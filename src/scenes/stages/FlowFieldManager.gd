@@ -108,8 +108,8 @@ func _apply_background_results() -> void:
 		visualizer.queue_redraw()
 
 func _update_enemy_spatial_grid() -> void:
-	var enemies = get_tree().get_nodes_in_group("enemies")
-	var count = enemies.size()
+	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
+	var count: int = enemies.size()
 	if _enemy_positions.size() != count:
 		_enemy_positions.resize(count)
 		_enemy_layers.resize(count)
@@ -119,24 +119,24 @@ func _update_enemy_spatial_grid() -> void:
 	if count == 0:
 		return
 
-	var total_cells = physical_field.total_cells
+	var total_cells: int = physical_field.total_cells
 	if _cell_head.size() != total_cells:
 		_cell_head.resize(total_cells)
 	_cell_head.fill(-1)
 
-	var w = physical_field.grid_size.x
-	var h = physical_field.grid_size.y
-	var origin = physical_field.world_origin
-	var cs_x = physical_field.cell_size.x
-	var cs_y = physical_field.cell_size.y
+	var w: int = physical_field.grid_size.x
+	var h: int = physical_field.grid_size.y
+	var origin: Vector2 = physical_field.world_origin
+	var cs_x: float = physical_field.cell_size.x
+	var cs_y: float = physical_field.cell_size.y
 
-	for i in range(count):
-		var enemy = enemies[i] as Enemy
+	for i: int in range(count):
+		var enemy: Enemy = enemies[i] as Enemy
 		if is_instance_valid(enemy) and enemy.is_inside_tree():
-			var pos = enemy.global_position
+			var pos: Vector2 = enemy.global_position
 			_enemy_positions[i] = pos
 
-			var nav = enemy.nav
+			var nav: NavigationComponent = enemy.nav
 			var nav_layer: int = nav.data.nav_layer if (nav and nav.data) else 1
 			_enemy_layers[i] = nav_layer
 
@@ -150,11 +150,11 @@ func _update_enemy_spatial_grid() -> void:
 				base_weight *= nav.data.congestion_weight
 			_enemy_weights[i] = base_weight
 
-			var gx = int(floor((pos.x - origin.x) / cs_x))
-			var gy = int(floor((pos.y - origin.y) / cs_y))
+			var gx: int = int(floor((pos.x - origin.x) / cs_x))
+			var gy: int = int(floor((pos.y - origin.y) / cs_y))
 
 			if gx >= 0 and gx < w and gy >= 0 and gy < h:
-				var c_idx = gy * w + gx
+				var c_idx: int = gy * w + gx
 				_enemy_next[i] = _cell_head[c_idx]
 				_cell_head[c_idx] = i
 			else:
@@ -166,7 +166,7 @@ func _launch_background_congestion_update() -> void:
 	if _enemy_positions.is_empty() or _cached_exit_positions.is_empty():
 		return
 
-	var snapshot = {
+	var snapshot: Dictionary = {
 		"positions": _enemy_positions.duplicate(),
 		"layers": _enemy_layers.duplicate(),
 		"weights": _enemy_weights.duplicate(),
@@ -187,13 +187,13 @@ func _bg_thread_task(snapshot: Dictionary) -> void:
 	_bg_physical_field.clear_congestion()
 	_bg_ghost_field.clear_congestion()
 
-	var count = positions.size()
+	var count: int = positions.size()
 	var has_ghosts: bool = false
 
-	for i in range(count):
-		var pos = positions[i]
-		var layer = layers[i]
-		var weight = weights[i]
+	for i: int in range(count):
+		var pos: Vector2 = positions[i]
+		var layer: int = layers[i]
+		var weight: float = weights[i]
 
 		if (layer & 4) != 0:
 			_bg_ghost_field.add_congestion(pos, weight, CONGESTION_RADIUS)
@@ -210,41 +210,41 @@ func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, instance_id
 	if _enemy_positions.size() <= 1 or _cell_head.is_empty():
 		return Vector2.ZERO
 
-	var w = physical_field.grid_size.x
-	var h = physical_field.grid_size.y
-	var origin = physical_field.world_origin
-	var cs_x = physical_field.cell_size.x
-	var cs_y = physical_field.cell_size.y
+	var w: int = physical_field.grid_size.x
+	var h: int = physical_field.grid_size.y
+	var origin: Vector2 = physical_field.world_origin
+	var cs_x: float = physical_field.cell_size.x
+	var cs_y: float = physical_field.cell_size.y
 
-	var cx = int(floor((actor_pos.x - origin.x) / cs_x))
-	var cy = int(floor((actor_pos.y - origin.y) / cs_y))
-	var cell_rad = int(ceil(radius / cs_x))
+	var cx: int = int(floor((actor_pos.x - origin.x) / cs_x))
+	var cy: int = int(floor((actor_pos.y - origin.y) / cs_y))
+	var cell_rad: int = int(ceil(radius / cs_x))
 
 	var sep_vector: Vector2 = Vector2.ZERO
-	var rad_sq = radius * radius
+	var rad_sq: float = radius * radius
 	var spin_sign: float = 0.2 if (instance_id % 2 == 0) else -0.2
 
-	for dy in range(-cell_rad, cell_rad + 1):
-		var gy = cy + dy
+	for dy: int in range(-cell_rad, cell_rad + 1):
+		var gy: int = cy + dy
 		if gy < 0 or gy >= h:
 			continue
-		var row_offset = gy * w
-		for dx in range(-cell_rad, cell_rad + 1):
-			var gx = cx + dx
+		var row_offset: int = gy * w
+		for dx: int in range(-cell_rad, cell_rad + 1):
+			var gx: int = cx + dx
 			if gx < 0 or gx >= w:
 				continue
-			var c_idx = row_offset + gx
-			var curr_enemy = _cell_head[c_idx]
+			var c_idx: int = row_offset + gx
+			var curr_enemy: int = _cell_head[c_idx]
 
 			while curr_enemy != -1:
-				var other_pos = _enemy_positions[curr_enemy]
-				var diff = actor_pos - other_pos
-				var d2 = diff.length_squared()
+				var other_pos: Vector2 = _enemy_positions[curr_enemy]
+				var diff: Vector2 = actor_pos - other_pos
+				var d2: float = diff.length_squared()
 				if d2 > 0.01 and d2 < rad_sq:
-					var dist = sqrt(d2)
-					var strength = 1.0 - (dist / radius)
-					var push_dir = diff / dist
-					var tangent = Vector2(-push_dir.y, push_dir.x) * spin_sign
+					var dist: float = sqrt(d2)
+					var strength: float = 1.0 - (dist / radius)
+					var push_dir: Vector2 = diff / dist
+					var tangent: Vector2 = Vector2(-push_dir.y, push_dir.x) * spin_sign
 					sep_vector += (push_dir + tangent) * strength
 				curr_enemy = _enemy_next[curr_enemy]
 
@@ -274,12 +274,12 @@ func _on_wave_completed() -> void:
 func _update_cached_exits() -> void:
 	_cached_exit_positions.clear()
 	_cached_exit_nodes.clear()
-	var exit_nodes = get_tree().get_nodes_in_group("exits")
-	for node in exit_nodes:
+	var exit_nodes: Array[Node] = get_tree().get_nodes_in_group("exits")
+	for node: Node in exit_nodes:
 		if is_instance_valid(node):
-			var exit_obj = node as Node2D
+			var exit_obj: Node2D = node as Node2D
 			if exit_obj:
-				if exit_obj is Exit and not exit_obj.is_active:
+				if exit_obj is Exit and not (exit_obj as Exit).is_active:
 					continue
 				_cached_exit_positions.append(exit_obj.global_position)
 				_cached_exit_nodes.append(exit_obj)
@@ -292,11 +292,11 @@ func full_rebuild() -> void:
 	if not stage or not is_instance_valid(stage) or not stage.tiles:
 		return
 
-	var map_rect = stage.get_map_pixel_rect()
+	var map_rect: Rect2 = stage.get_map_pixel_rect()
 	if not map_rect.has_area():
 		return
 
-	var bounds = map_rect.grow(CELL_SIZE.x)
+	var bounds: Rect2 = map_rect.grow(CELL_SIZE.x)
 
 	physical_field.init_grid(bounds, CELL_SIZE)
 	ghost_field.init_grid(bounds, CELL_SIZE)
@@ -308,17 +308,17 @@ func full_rebuild() -> void:
 	_cell_head.resize(physical_field.total_cells)
 	_cell_head.fill(-1)
 
-	var tiles = stage.tiles
-	var used_cells = tiles.get_used_cells()
+	var tiles: TileMapLayer = stage.tiles
+	var used_cells: Array[Vector2i] = tiles.get_used_cells()
 	var tile_size: Vector2 = Vector2(tiles.tile_set.tile_size) * tiles.scale
 	var half_tile: Vector2 = tile_size / 2.0
 
 	# 1. Mark TileMap Wall Colliders once on walls_only_field
-	for cell_pos in used_cells:
+	for cell_pos: Vector2i in used_cells:
 		var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
 		if tile_data and tile_data.get_collision_polygons_count(0) > 0:
 			var global_center: Vector2 = tiles.to_global(tiles.map_to_local(cell_pos))
-			var wall_rect = Rect2(global_center - half_tile, tile_size)
+			var wall_rect: Rect2 = Rect2(global_center - half_tile, tile_size)
 			walls_only_field.set_rect_blocked(wall_rect, true, 0.0)
 
 	_update_cached_exits()
@@ -326,8 +326,8 @@ func full_rebuild() -> void:
 	walls_only_field.calculate_integration_field(_cached_exit_positions)
 
 	# Initialize AStarGrid2D for walls-only and full pathfinding
-	var w = physical_field.grid_size.x
-	var h = physical_field.grid_size.y
+	var w: int = physical_field.grid_size.x
+	var h: int = physical_field.grid_size.y
 	_astar_walls.region = Rect2i(0, 0, w, h)
 	_astar_walls.cell_size = CELL_SIZE
 	_astar_walls.offset = physical_field.world_origin + (CELL_SIZE * 0.5)
@@ -340,9 +340,9 @@ func full_rebuild() -> void:
 	_astar_full.diagonal_mode = AStarGrid2D.DIAGONAL_MODE_ONLY_IF_NO_OBSTACLES
 	_astar_full.update()
 
-	for gy in range(h):
-		var row_offset = gy * w
-		for gx in range(w):
+	for gy: int in range(h):
+		var row_offset: int = gy * w
+		for gx: int in range(w):
 			if walls_only_field.base_cost[row_offset + gx] >= FlowField.BLOCKED_COST:
 				_astar_walls.set_point_solid(Vector2i(gx, gy), true)
 				_astar_full.set_point_solid(Vector2i(gx, gy), true)
@@ -367,10 +367,11 @@ func rebuild_tower_fields() -> void:
 
 	# 2. Mark Towers and Barricades (using 25% min overlap so skinny towers don't over-block neighbor cells)
 	if stage.towers:
-		for child in stage.towers.get_children():
-			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not child.is_preview:
-				var tower = child as Tower
-				var tower_rect = _get_tower_rect(tower)
+		var w: int = physical_field.grid_size.x
+		for child: Node in stage.towers.get_children():
+			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
+				var tower: Tower = child as Tower
+				var tower_rect: Rect2 = _get_tower_rect(tower)
 				if tower.collision_layer == 16: # Layer 5: Spectral Towers
 					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
 					ghost_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
@@ -381,13 +382,21 @@ func rebuild_tower_fields() -> void:
 					physical_field.set_rect_cost(tower_rect, FlowField.TOWER_COST, 0.25)
 					physical_field.add_rect_clearance(tower_rect)
 
+				# Fast AStar weight update for placed towers
+				var min_cell: Vector2i = physical_field.global_to_grid(tower_rect.position)
+				var max_cell: Vector2i = physical_field.global_to_grid(tower_rect.end - Vector2(0.001, 0.001))
+				for gy: int in range(min_cell.y, max_cell.y + 1):
+					for gx: int in range(min_cell.x, max_cell.x + 1):
+						if physical_field.is_valid_cell(gx, gy) and walls_only_field.base_cost[gy * w + gx] < FlowField.BLOCKED_COST:
+							_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
+
 	# Recalculate integration fields in a single multi-source pass
-	var exit_count = _cached_exit_positions.size()
+	var exit_count: int = _cached_exit_positions.size()
 	if exit_count > 1:
 		if per_exit_physical_fields.size() != exit_count:
 			per_exit_physical_fields.resize(exit_count)
-		var bounds = physical_field.bounds
-		for i in range(exit_count):
+		var bounds: Rect2 = physical_field.bounds
+		for i: int in range(exit_count):
 			if per_exit_physical_fields[i] == null:
 				per_exit_physical_fields[i] = FlowField.new()
 				per_exit_physical_fields[i].init_grid(bounds, CELL_SIZE)
@@ -402,8 +411,8 @@ func rebuild_tower_fields() -> void:
 		if exit_count > 1:
 			if per_exit_ghost_fields.size() != exit_count:
 				per_exit_ghost_fields.resize(exit_count)
-			var bounds = ghost_field.bounds
-			for i in range(exit_count):
+			var bounds: Rect2 = ghost_field.bounds
+			for i: int in range(exit_count):
 				if per_exit_ghost_fields[i] == null:
 					per_exit_ghost_fields[i] = FlowField.new()
 					per_exit_ghost_fields[i].init_grid(bounds, CELL_SIZE)
@@ -419,7 +428,7 @@ func rebuild_tower_fields() -> void:
 		if exit_count > 1:
 			if per_exit_ghost_fields.size() != exit_count:
 				per_exit_ghost_fields.resize(exit_count)
-			for i in range(exit_count):
+			for i: int in range(exit_count):
 				if per_exit_ghost_fields[i] == null:
 					per_exit_ghost_fields[i] = FlowField.new()
 					per_exit_ghost_fields[i].init_grid(physical_field.bounds, CELL_SIZE)
@@ -429,19 +438,6 @@ func rebuild_tower_fields() -> void:
 			per_exit_ghost_fields.clear()
 
 	_rebuild_reachability_masks()
-
-	# Fast AStar weight update for placed towers
-	if stage.towers:
-		var w = physical_field.grid_size.x
-		for child in stage.towers.get_children():
-			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not child.is_preview:
-				var tower_rect = _get_tower_rect(child as Tower)
-				var min_cell = physical_field.global_to_grid(tower_rect.position)
-				var max_cell = physical_field.global_to_grid(tower_rect.end - Vector2(0.001, 0.001))
-				for gy in range(min_cell.y, max_cell.y + 1):
-					for gx in range(min_cell.x, max_cell.x + 1):
-						if physical_field.is_valid_cell(gx, gy) and walls_only_field.base_cost[gy * w + gx] < FlowField.BLOCKED_COST:
-							_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
 
 	# Sync background worker base costs and base fields
 	_bg_physical_field.base_cost = physical_field.base_cost.duplicate()
@@ -458,28 +454,28 @@ func rebuild_tower_fields() -> void:
 	SignalBus.flow_fields_updated.emit()
 
 func _rebuild_reachability_masks() -> void:
-	var total_cells = physical_field.total_cells
+	var total_cells: int = physical_field.total_cells
 	if total_cells == 0:
 		return
 
 	if _static_open_reachability.size() != total_cells:
 		_static_open_reachability.resize(total_cells)
 
-	var p_int = physical_field.integration_cost
-	for i in range(total_cells):
+	var p_int: PackedFloat32Array = physical_field.integration_cost
+	for i: int in range(total_cells):
 		_static_open_reachability[i] = 1 if p_int[i] < FlowField.TOWER_COST else 0
 
-	var exit_count = _cached_exit_positions.size()
+	var exit_count: int = _cached_exit_positions.size()
 	if exit_count > 1:
 		if _per_exit_open_reachability.size() != exit_count:
 			_per_exit_open_reachability.resize(exit_count)
 
-		for e_i in range(exit_count):
+		for e_i: int in range(exit_count):
 			if _per_exit_open_reachability[e_i].size() != total_cells:
 				_per_exit_open_reachability[e_i].resize(total_cells)
 			if e_i < per_exit_physical_fields.size() and per_exit_physical_fields[e_i] != null:
-				var e_int = per_exit_physical_fields[e_i].integration_cost
-				for i in range(total_cells):
+				var e_int: PackedFloat32Array = per_exit_physical_fields[e_i].integration_cost
+				for i: int in range(total_cells):
 					_per_exit_open_reachability[e_i][i] = 1 if e_int[i] < FlowField.TOWER_COST else 0
 			else:
 				_per_exit_open_reachability[e_i] = _static_open_reachability.duplicate()
@@ -496,44 +492,44 @@ func is_open_path_available(world_pos: Vector2, exit_idx: int = -1, nav_layer: i
 	if _static_open_reachability.is_empty():
 		return true
 
-	var g = physical_field.global_to_grid(world_pos)
+	var g: Vector2i = physical_field.global_to_grid(world_pos)
 	if not physical_field.is_valid_cell(g.x, g.y):
 		return false
 
-	var idx = physical_field.grid_to_index(g.x, g.y)
+	var idx: int = physical_field.grid_to_index(g.x, g.y)
 	if exit_idx >= 0 and exit_idx < _per_exit_open_reachability.size():
 		return _per_exit_open_reachability[exit_idx][idx] == 1
 
 	return _static_open_reachability[idx] == 1
 
-func get_field_for_strategy(nav_layer: int, strategy: NavigationData.NavStrategy, world_pos: Vector2) -> FlowField:
-	var is_ghost = (nav_layer & 4) != 0
-	var base_field = ghost_field if is_ghost else physical_field
-	var per_exit_list = per_exit_ghost_fields if is_ghost else per_exit_physical_fields
+func get_field_for_strategy(nav_layer: int = 1, strategy: int = 0, world_pos: Vector2 = Vector2.ZERO) -> FlowField:
+	var is_ghost: bool = (nav_layer & 4) != 0
+	var base_field: FlowField = ghost_field if is_ghost else physical_field
+	var per_exit_list: Array[FlowField] = per_exit_ghost_fields if is_ghost else per_exit_physical_fields
 
 	if per_exit_list.is_empty() or _cached_exit_positions.size() <= 1:
 		return base_field
 
 	match strategy:
-		NavigationData.NavStrategy.CLOSEST:
+		0: # CLOSEST
 			return base_field
 
-		NavigationData.NavStrategy.FIRST:
+		2: # FIRST
 			if not per_exit_list.is_empty() and per_exit_list[0] != null:
 				return per_exit_list[0]
 			return base_field
 
-		NavigationData.NavStrategy.FARTHEST:
-			var g = base_field.global_to_grid(world_pos)
+		1: # FARTHEST
+			var g: Vector2i = base_field.global_to_grid(world_pos)
 			if not base_field.is_valid_cell(g.x, g.y):
 				return base_field
-			var idx = base_field.grid_to_index(g.x, g.y)
+			var idx: int = base_field.grid_to_index(g.x, g.y)
 
 			var max_dist: float = -1.0
 			var best_field: FlowField = base_field
-			for f in per_exit_list:
+			for f: FlowField in per_exit_list:
 				if f != null and f.is_valid_cell(g.x, g.y):
-					var cost = f.integration_cost[idx]
+					var cost: float = f.integration_cost[idx]
 					if cost < FlowField.BLOCKED_COST and cost > max_dist:
 						max_dist = cost
 						best_field = f
@@ -547,22 +543,22 @@ func get_field(nav_layer: int) -> FlowField:
 	return physical_field
 
 func get_flow_direction(world_pos: Vector2, nav_layer: int) -> Vector2:
-	var field = get_field(nav_layer)
+	var field: FlowField = get_field(nav_layer)
 	return field.sample_direction(world_pos)
 
 func is_reachable(world_pos: Vector2, nav_layer: int) -> bool:
-	var field = get_field(nav_layer)
+	var field: FlowField = get_field(nav_layer)
 	return field.is_reachable(world_pos)
 
 func find_grid_path(from_pos: Vector2, to_pos: Vector2) -> PackedVector2Array:
 	if not physical_field or physical_field.total_cells == 0:
 		return PackedVector2Array()
 
-	var w = physical_field.grid_size.x
-	var h = physical_field.grid_size.y
+	var w: int = physical_field.grid_size.x
+	var h: int = physical_field.grid_size.y
 
-	var from_grid = physical_field.global_to_grid(from_pos)
-	var to_grid = physical_field.global_to_grid(to_pos)
+	var from_grid: Vector2i = physical_field.global_to_grid(from_pos)
+	var to_grid: Vector2i = physical_field.global_to_grid(to_pos)
 
 	from_grid.x = clampi(from_grid.x, 0, w - 1)
 	from_grid.y = clampi(from_grid.y, 0, h - 1)
@@ -570,7 +566,7 @@ func find_grid_path(from_pos: Vector2, to_pos: Vector2) -> PackedVector2Array:
 	to_grid.y = clampi(to_grid.y, 0, h - 1)
 
 	# 1. Try finding path avoiding physical towers and walls
-	var path = _astar_full.get_point_path(from_grid, to_grid, true)
+	var path: PackedVector2Array = _astar_full.get_point_path(from_grid, to_grid, true)
 	if path.size() >= 2:
 		return path
 

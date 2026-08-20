@@ -74,8 +74,8 @@ func _unhandled_input(event: InputEvent) -> void:
 		return
 		
 	if event is InputEventMouseButton and event.button_index == MOUSE_BUTTON_LEFT and not event.is_pressed():
-		var click_pos = get_global_mouse_position()
-		var clicked_tower = _find_tower_at(click_pos)
+		var click_pos: Vector2 = get_global_mouse_position()
+		var clicked_tower: Tower = _find_tower_at(click_pos)
 		if clicked_tower:
 			select_tower(clicked_tower)
 			get_viewport().set_input_as_handled()
@@ -90,7 +90,7 @@ func _unhandled_input(event: InputEvent) -> void:
 			deselect_tower()
 			get_viewport().set_input_as_handled()
 			return
-		var hud = get_tree().current_scene.find_child("HUD", true, false)
+		var hud: Node = get_tree().current_scene.find_child("HUD", true, false)
 		if hud and hud.has_method("open_pause_menu"):
 			hud.open_pause_menu()
 			get_viewport().set_input_as_handled()
@@ -100,11 +100,11 @@ func _find_tower_at(pos: Vector2) -> Tower:
 		return null
 	
 	var candidates: Array[Tower] = []
-	for child in towers.get_children():
-		if child is Tower and is_instance_valid(child) and not child.is_preview and not child.is_queued_for_deletion():
-			var rect = _get_tower_global_rect(child).grow(8.0)
+	for child: Node in towers.get_children():
+		if child is Tower and is_instance_valid(child) and not (child as Tower).is_preview and not child.is_queued_for_deletion():
+			var rect: Rect2 = _get_tower_global_rect(child as Node2D).grow(8.0)
 			if rect.has_point(pos):
-				candidates.append(child)
+				candidates.append(child as Tower)
 	
 	if candidates.is_empty():
 		return null
@@ -150,8 +150,8 @@ func sell_selected_tower() -> void:
 	if not selected_tower or not is_instance_valid(selected_tower):
 		return
 	
-	var tower_to_sell = selected_tower
-	var sell_value = tower_to_sell.get_sell_value()
+	var tower_to_sell: Tower = selected_tower
+	var sell_value: int = tower_to_sell.get_sell_value()
 	
 	deselect_tower()
 	add_energy(sell_value)
@@ -161,11 +161,11 @@ func sell_selected_tower() -> void:
 func repair_selected_tower() -> bool:
 	if not selected_tower or not is_instance_valid(selected_tower):
 		return false
-	var cost = selected_tower.get_repair_cost()
+	var cost: int = selected_tower.get_repair_cost()
 	if cost <= 0 or energy < cost:
 		return false
 	deduct_energy(cost)
-	var success = selected_tower.repair()
+	var success: bool = selected_tower.repair()
 	return success
 
 func deduct_energy(amount: int) -> void:

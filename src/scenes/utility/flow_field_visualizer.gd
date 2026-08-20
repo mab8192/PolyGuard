@@ -128,83 +128,83 @@ func _draw() -> void:
 	if mode == DisplayMode.OFF:
 		return
 
-	var field = _get_active_field()
+	var field: FlowField = _get_active_field()
 	if not field or field.total_cells == 0:
 		return
 
-	var w = field.grid_size.x
-	var h = field.grid_size.y
-	var origin = field.world_origin
-	var cs = field.cell_size
+	var w: int = field.grid_size.x
+	var h: int = field.grid_size.y
+	var origin: Vector2 = field.world_origin
+	var cs: Vector2 = field.cell_size
 
 	# Find max integration cost for normalizing heatmaps
 	var max_cost: float = 1.0
 	if mode == DisplayMode.HEATMAP_AND_ARROWS or mode == DisplayMode.HEATMAP_ONLY:
-		for idx in range(field.total_cells):
-			var c = field.integration_cost[idx]
+		for idx: int in range(field.total_cells):
+			var c: float = field.integration_cost[idx]
 			if c < FlowField.TOWER_COST and c > max_cost:
 				max_cost = c
 
 	var max_congestion: float = 1.0
 	if mode == DisplayMode.CONGESTION:
-		for idx in range(field.total_cells):
-			var cong = field.congestion_cost[idx]
+		for idx: int in range(field.total_cells):
+			var cong: float = field.congestion_cost[idx]
 			if cong > max_congestion:
 				max_congestion = cong
 
 	# 1. Draw Heatmaps
 	if mode == DisplayMode.HEATMAP_AND_ARROWS or mode == DisplayMode.HEATMAP_ONLY:
-		for gy in range(h):
-			var row = gy * w
-			var cell_y = origin.y + float(gy) * cs.y
-			for gx in range(w):
-				var idx = row + gx
-				var cell_x = origin.x + float(gx) * cs.x
-				var cell_rect = Rect2(Vector2(cell_x, cell_y), cs)
+		for gy: int in range(h):
+			var row: int = gy * w
+			var cell_y: float = origin.y + float(gy) * cs.y
+			for gx: int in range(w):
+				var idx: int = row + gx
+				var cell_x: float = origin.x + float(gx) * cs.x
+				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs)
 
-				var base = field.base_cost[idx]
+				var base: float = field.base_cost[idx]
 				if base >= FlowField.BLOCKED_COST:
 					draw_rect(cell_rect, Color(0.06, 0.06, 0.1, 0.65), true)
 				elif base >= FlowField.TOWER_COST:
 					draw_rect(cell_rect, Color(0.9, 0.3, 0.1, 0.45), true)
 				else:
-					var cost = field.integration_cost[idx]
+					var cost: float = field.integration_cost[idx]
 					if cost < FlowField.TOWER_COST:
-						var t = clampf(cost / maxf(max_cost, 1.0), 0.0, 1.0)
+						var t: float = clampf(cost / maxf(max_cost, 1.0), 0.0, 1.0)
 						var col: Color = Color.from_hsv(lerp(0.5, 0.85, t), 0.75, 0.85, 0.35)
 						draw_rect(cell_rect, col, true)
 
 	elif mode == DisplayMode.CONGESTION:
-		for gy in range(h):
-			var row = gy * w
-			var cell_y = origin.y + float(gy) * cs.y
-			for gx in range(w):
-				var idx = row + gx
-				var cell_x = origin.x + float(gx) * cs.x
-				var cell_rect = Rect2(Vector2(cell_x, cell_y), cs)
+		for gy: int in range(h):
+			var row: int = gy * w
+			var cell_y: float = origin.y + float(gy) * cs.y
+			for gx: int in range(w):
+				var idx: int = row + gx
+				var cell_x: float = origin.x + float(gx) * cs.x
+				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs)
 
-				var cong = field.congestion_cost[idx]
+				var cong: float = field.congestion_cost[idx]
 				if cong > 0.01:
-					var t = clampf(cong / maxf(max_congestion, 1.0), 0.0, 1.0)
-					var col = Color(1.0, 0.2, 0.1, lerp(0.2, 0.7, t))
+					var t: float = clampf(cong / maxf(max_congestion, 1.0), 0.0, 1.0)
+					var col: Color = Color(1.0, 0.2, 0.1, lerp(0.2, 0.7, t))
 					draw_rect(cell_rect, col, true)
 
 	elif mode == DisplayMode.CLEARANCE:
-		for gy in range(h):
-			var row = gy * w
-			var cell_y = origin.y + float(gy) * cs.y
-			for gx in range(w):
-				var idx = row + gx
-				var cell_x = origin.x + float(gx) * cs.x
-				var cell_rect = Rect2(Vector2(cell_x, cell_y), cs)
+		for gy: int in range(h):
+			var row: int = gy * w
+			var cell_y: float = origin.y + float(gy) * cs.y
+			for gx: int in range(w):
+				var idx: int = row + gx
+				var cell_x: float = origin.x + float(gx) * cs.x
+				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs)
 
 				if field.base_cost[idx] >= FlowField.BLOCKED_COST:
 					draw_rect(cell_rect, Color(0.06, 0.06, 0.1, 0.65), true)
 				elif field.base_cost[idx] >= FlowField.TOWER_COST:
 					draw_rect(cell_rect, Color(0.9, 0.3, 0.1, 0.45), true)
 				elif field.clearance_cost[idx] > 0.0:
-					var t = clampf(field.clearance_cost[idx] / 1.5, 0.0, 1.0)
-					var col = Color(0.2, 0.6, 1.0, lerp(0.2, 0.55, t))
+					var t: float = clampf(field.clearance_cost[idx] / 1.5, 0.0, 1.0)
+					var col: Color = Color(0.2, 0.6, 1.0, lerp(0.2, 0.55, t))
 					draw_rect(cell_rect, col, true)
 
 	# 2. Draw Vector Arrows
@@ -215,24 +215,24 @@ func _draw() -> void:
 		var arrow_len: float = cs.x * 0.42
 		var head_size: float = 3.0
 
-		for gy in range(h):
-			var row = gy * w
-			var center_y = origin.y + (float(gy) + 0.5) * cs.y
-			for gx in range(w):
-				var idx = row + gx
-				var v = field.flow_vectors[idx]
+		for gy: int in range(h):
+			var row: int = gy * w
+			var center_y: float = origin.y + (float(gy) + 0.5) * cs.y
+			for gx: int in range(w):
+				var idx: int = row + gx
+				var v: Vector2 = field.flow_vectors[idx]
 				if v.length_squared() < 0.0001:
 					continue
 
-				var center_x = origin.x + (float(gx) + 0.5) * cs.x
-				var center = Vector2(center_x, center_y)
+				var center_x: float = origin.x + (float(gx) + 0.5) * cs.x
+				var center: Vector2 = Vector2(center_x, center_y)
 
-				var start = center - v * (arrow_len * 0.4)
-				var end = center + v * (arrow_len * 0.6)
-				var perp = Vector2(-v.y, v.x)
+				var start: Vector2 = center - v * (arrow_len * 0.4)
+				var end: Vector2 = center + v * (arrow_len * 0.6)
+				var perp: Vector2 = Vector2(-v.y, v.x)
 
-				var head_left = end - v * head_size + perp * (head_size * 0.75)
-				var head_right = end - v * head_size - perp * (head_size * 0.75)
+				var head_left: Vector2 = end - v * head_size + perp * (head_size * 0.75)
+				var head_right: Vector2 = end - v * head_size - perp * (head_size * 0.75)
 
 				var col: Color
 				if field.base_cost[idx] >= FlowField.TOWER_COST:

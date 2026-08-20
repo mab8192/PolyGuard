@@ -144,19 +144,19 @@ func _get_target_exits() -> Array[Node2D]:
 	if not spawner or not is_inside_tree():
 		return []
 
-	var active = spawner.get_active_exits()
+	var active: Array[Node2D] = spawner.get_active_exits()
 	if not active.is_empty():
 		return active
 
 	var fallback: Array[Node2D] = []
 	if not spawner.exits.is_empty():
-		for exit in spawner.exits:
+		for exit: Node2D in spawner.exits:
 			if is_instance_valid(exit):
 				fallback.append(exit)
 	else:
-		for node in get_tree().get_nodes_in_group("exits"):
+		for node: Node in get_tree().get_nodes_in_group("exits"):
 			if node is Node2D and is_instance_valid(node):
-				fallback.append(node)
+				fallback.append(node as Node2D)
 
 	return fallback
 
@@ -165,22 +165,22 @@ func _recalculate_paths() -> void:
 		_clear_lines()
 		return
 
-	var target_exits = _get_target_exits()
+	var target_exits: Array[Node2D] = _get_target_exits()
 	if target_exits.is_empty():
 		_clear_lines()
 		return
 
-	var stage = GameManager.current_stage
+	var stage: Stage = GameManager.current_stage
 	if stage and stage.flow_field_manager:
-		var field = stage.flow_field_manager.get_field(1)
-		for i in range(CORNER_OFFSETS.size()):
+		var field: FlowField = stage.flow_field_manager.get_field(1)
+		for i: int in range(CORNER_OFFSETS.size()):
 			if i >= _lines.size():
 				break
 			var corner_global: Vector2 = spawner.global_position + CORNER_OFFSETS[i]
-			var path = field.trace_path(corner_global, 8.0, 600, target_exits)
+			var path: PackedVector2Array = field.trace_path(corner_global, 8.0, 600, target_exits)
 			if path.size() >= 2:
-				var clean_pts = _clean_path(path)
-				var total_len = _calc_polyline_length(clean_pts)
+				var clean_pts: PackedVector2Array = _clean_path(path)
+				var total_len: float = _calc_polyline_length(clean_pts)
 				_lines[i].points = clean_pts
 				_materials[i].set_shader_parameter("total_length", maxf(total_len, 1.0))
 			else:
@@ -194,8 +194,8 @@ func _clean_path(global_path: PackedVector2Array) -> PackedVector2Array:
 		return global_path
 
 	var clean_pts: PackedVector2Array = [global_path[0]]
-	for i in range(1, global_path.size()):
-		var pt = global_path[i]
+	for i: int in range(1, global_path.size()):
+		var pt: Vector2 = global_path[i]
 		if clean_pts[-1].distance_squared_to(pt) >= 4.0: # At least 2px distance
 			clean_pts.append(pt)
 
@@ -206,12 +206,12 @@ func _clean_path(global_path: PackedVector2Array) -> PackedVector2Array:
 
 func _calc_polyline_length(poly: PackedVector2Array) -> float:
 	var total: float = 0.0
-	for i in range(poly.size() - 1):
+	for i: int in range(poly.size() - 1):
 		total += poly[i].distance_to(poly[i + 1])
 	return total
 
 func _clear_lines() -> void:
-	for line in _lines:
+	for line: Line2D in _lines:
 		line.points = PackedVector2Array()
 
 # Signal Handlers
