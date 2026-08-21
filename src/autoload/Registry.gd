@@ -133,7 +133,7 @@ func _load_registry() -> void:
 		"brimstone": load("res://src/data/towers/brimstone.tres"),
 		"tar_trap": load("res://src/data/towers/tar_trap.tres"),
 		"displacer": load("res://src/data/towers/displacer.tres"),
-		"ice_trap": load("res://src/data/towers/ice_trap.tres"),
+		"freeze_trap": load("res://src/data/towers/freeze_trap.tres"),
 		"corrosive_vapor": load("res://src/data/towers/corrosive_vapor.tres"),
 		"artillery": load("res://src/data/towers/artillery.tres"),
 		"spike_trap": load("res://src/data/towers/spike_trap.tres"),

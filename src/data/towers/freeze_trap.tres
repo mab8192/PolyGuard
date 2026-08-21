@@ -3,9 +3,8 @@
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
-[ext_resource type="Script" uid="uid://bcash4hy6q0f" path="res://src/data/effects/types/IceEffectData.gd" id="3_4rdip"]
-[ext_resource type="Texture2D" uid="uid://cv1hbp3cgss0y" path="res://src/textures/towers/ice_trap.png" id="3_icon"]
-[ext_resource type="PackedScene" uid="uid://bvj5t0y7wiin" path="res://src/scenes/towers/ice_trap.tscn" id="4_scene"]
+[ext_resource type="PackedScene" uid="uid://bvj5t0y7wiin" path="res://src/scenes/towers/freeze_trap.tscn" id="4_scene"]
+[ext_resource type="Script" uid="uid://b23dpq14r00rt" path="res://src/data/effects/types/FreezeEffectData.gd" id="5_0tg5o"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
 [ext_resource type="Texture2D" uid="uid://dbj5rtj5rtews" path="res://src/textures/towers/variants/ice_trap_permafrost.png" id="ext_var_permafrost_seal"]
 [ext_resource type="Texture2D" uid="uid://dbrud1s6285it" path="res://src/textures/towers/variants/ice_trap_glaze.png" id="ext_var_sub_zero_glaze"]
@@ -15,40 +14,46 @@ script = ExtResource("1_choice")
 id = "permafrost_seal"
 title = "Supercooling"
 description = "Supercooled cryo matrix that reduces trap construction cost."
-cost_reduction = 100
+cost_reduction = 75
 icon = ExtResource("ext_var_permafrost_seal")
 
 [sub_resource type="Resource" id="Resource_choice_glaze"]
 script = ExtResource("1_choice")
 id = "sub_zero_glaze"
-title = "Sub-Zero Glaze"
-description = "Extremely low friction glaze increasing target slide instability."
-strength_multiplier = 1.2
+title = "Sub-Zero Freeze"
+description = "Sub-zero flash freezing increases freeze duration on caught enemies."
+strength_multiplier = 1.4
 icon = ExtResource("ext_var_sub_zero_glaze")
 
-[sub_resource type="Resource" id="Resource_mxbel"]
-script = ExtResource("3_4rdip")
-acceleration_multiplier = 0.1
-name = "ice"
-duration = 1.0
-metadata/_custom_type_script = "uid://bcash4hy6q0f"
+[sub_resource type="Resource" id="Resource_behwj"]
+script = ExtResource("5_0tg5o")
+duration = 2.0
+remove_on_exit = false
+speed_multiplier = 0.0
+armor_reduction = 10.0
+metadata/_custom_type_script = "uid://b23dpq14r00rt"
 
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")
-effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_mxbel")])
+mode = 1
+delay = 0.2
+cooldown = 4.5
+effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_behwj")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
 [resource]
 script = ExtResource("5_tower")
-tower_id = "ice_trap"
-display_name = "Ice Trap"
-icon = ExtResource("3_icon")
+tower_id = "freeze_trap"
+display_name = "Freeze Trap"
+icon = ExtResource("ext_var_permafrost_seal")
 scene = ExtResource("4_scene")
-description = "Non-solid cryo plate that reduces enemy acceleration, making them slide and drift uncontrollably."
+description = "Non-solid cryo plate that releases a burst of sub-zero air, freezing all enemies standing on it for a short time."
 unlock_cost = 350
 required_stage_id = "stage_08"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_permafrost"), SubResource("Resource_choice_glaze")])
-cost = 275
+damage_upgrade_per_level = 0.0
+health_upgrade_per_level = 0.0
+cost = 225
 can_rotate = false
 collision_layer = 0
 effect_applier = SubResource("Resource_applier")

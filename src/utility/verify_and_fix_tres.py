@@ -45,7 +45,7 @@ MAPPINGS = {
         "napalm_catalyst": "res://src/textures/towers/variants/flamethrower_napalm.png",
         "turbo_compressor": "res://src/textures/towers/variants/flamethrower_turbo.png"
     },
-    "ice_trap.tres": {
+    "freeze_trap.tres": {
         "permafrost_seal": "res://src/textures/towers/variants/ice_trap_permafrost.png",
         "sub_zero_glaze": "res://src/textures/towers/variants/ice_trap_glaze.png"
     },

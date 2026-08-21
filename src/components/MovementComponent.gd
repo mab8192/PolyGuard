@@ -49,6 +49,10 @@ func handle_movement(direction: Vector2, delta: float) -> void:
 		return
 
 	var current_max_speed = get_speed()
+	if current_max_speed <= 0.0:
+		_body.velocity = Vector2.ZERO
+		return
+
 	var current_accel = get_acceleration()
 	if direction != Vector2.ZERO:
 		var dir_norm: Vector2 = direction.normalized()

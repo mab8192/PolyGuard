@@ -57,27 +57,27 @@ func get_active_effects() -> Array[ActiveEffect]:
 func get_speed_multiplier() -> float:
 	var mult: float = 1.0
 	for effect in _active_effects:
-		if effect is SlowEffect and effect.data:
-			mult = minf(mult, (effect.data as SlowEffectData).speed_multiplier)
+		if effect and effect.data:
+			mult = minf(mult, effect.data.speed_multiplier)
 	return mult
 
 func get_acceleration_multiplier() -> float:
 	var mult: float = 1.0
 	for effect in _active_effects:
-		if effect is IceEffect and effect.data:
-			mult = minf(mult, (effect.data as IceEffectData).acceleration_multiplier)
+		if effect and effect.data:
+			mult = minf(mult, effect.data.acceleration_multiplier)
 	return mult
 
 func get_armor_reduction() -> float:
 	var reduction: float = 0.0
 	for effect in _active_effects:
-		if effect is ArmorReductionEffect and effect.data:
-			reduction = maxf(reduction, (effect.data as ArmorReductionEffectData).armor_reduction)
+		if effect and effect.data:
+			reduction = maxf(reduction, effect.data.armor_reduction)
 	return reduction
 
 func get_magic_resistance_reduction() -> float:
 	var reduction: float = 0.0
 	for effect in _active_effects:
-		if effect is MagicResistanceReductionEffect and effect.data:
-			reduction = maxf(reduction, (effect.data as MagicResistanceReductionEffectData).magic_resistance_reduction)
+		if effect and effect.data:
+			reduction = maxf(reduction, effect.data.magic_resistance_reduction)
 	return reduction

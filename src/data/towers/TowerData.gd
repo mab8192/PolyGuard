@@ -111,17 +111,19 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 				eff.initial_damage *= strength_mult
 			if "damage_per_second" in eff:
 				eff.damage_per_second *= strength_mult
-			if "armor_reduction" in eff:
+			if "armor_reduction" in eff and eff.armor_reduction > 0.0:
 				eff.armor_reduction *= strength_mult
-			if "magic_resistance_reduction" in eff:
+			if "magic_resistance_reduction" in eff and eff.magic_resistance_reduction > 0.0:
 				eff.magic_resistance_reduction *= strength_mult
 			if "displace_distance" in eff:
 				eff.displace_distance *= strength_mult
-			if "speed_multiplier" in eff:
+			if "speed_multiplier" in eff and eff.speed_multiplier < 1.0:
 				var slow_pct = (1.0 - eff.speed_multiplier) * strength_mult
-				eff.speed_multiplier = clampf(1.0 - slow_pct, 0.05, 0.95)
-			if "acceleration_multiplier" in eff:
+				eff.speed_multiplier = clampf(1.0 - slow_pct, 0.0, 0.95)
+			if "acceleration_multiplier" in eff and eff.acceleration_multiplier < 1.0:
 				eff.acceleration_multiplier = clampf(eff.acceleration_multiplier / maxf(strength_mult, 0.01), 0.01, 1.0)
+			if "duration" in eff and eff.duration != INF:
+				eff.duration *= strength_mult
 
 	return copy
 
@@ -249,6 +251,8 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Trait: Continuous Thermal Cone")
 	elif tower_id == "tar_trap":
 		lines.append("Effect: Reduces Enemy Speed by 50%")
+	elif tower_id == "freeze_trap":
+		lines.append("Trait: Freezes Enemies in Place (Burst)")
 		
 	if not choice_id.is_empty():
 		var choice = get_choice(choice_id)
