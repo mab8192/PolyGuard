@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
 [ext_resource type="Texture2D" uid="uid://ciyhiruwg6oux" path="res://src/textures/towers/displacer.png" id="3_icon"]
-[ext_resource type="Script" uid="uid://cp3ky35b2v3kf" path="res://src/data/effects/types/DisplaceEffectData.gd" id="3_mxbel"]
 [ext_resource type="PackedScene" uid="uid://fhhw3ab7itav" path="res://src/scenes/towers/displacer.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
 [ext_resource type="Texture2D" uid="uid://bvm21j0d6m8a6" path="res://src/textures/towers/variants/displacer_mass.png" id="ext_var_mass_displacement"]
@@ -27,9 +26,10 @@ extra_targets = 2
 icon = ExtResource("ext_var_mass_displacement")
 
 [sub_resource type="Resource" id="Resource_rnurd"]
-script = ExtResource("3_mxbel")
+script = ExtResource("1_eff_data")
 name = "displaced"
-metadata/_custom_type_script = "uid://cp3ky35b2v3kf"
+duration = 0.0
+displace_distance = 200.0
 
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")

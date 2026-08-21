@@ -1,11 +1,14 @@
-[gd_resource type="Resource" script_class="PoisonEffectData" format=3 uid="uid://cpoison12345"]
+[gd_resource type="Resource" script_class="EffectData" format=3 uid="uid://cpoison12345"]
 
-[ext_resource type="Script" uid="uid://d3o4x5p8qkb54" path="res://src/data/effects/types/PoisonEffectData.gd" id="1_poison_data"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/poison_particles.tscn" id="2_vfx"]
 
 [resource]
-script = ExtResource("1_poison_data")
-damage_per_second = 50.0
-lambda = 0.7
+script = ExtResource("1_eff")
 name = "Poison"
 duration = 5.0
 remove_on_exit = false
+damage_per_second = 50.0
+lambda = 0.7
+damage_type = 1
+active_vfx = ExtResource("2_vfx")

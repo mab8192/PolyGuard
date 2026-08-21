@@ -1,12 +1,13 @@
-[gd_resource type="Resource" script_class="BurnEffectData" format=3 uid="uid://q64vqcamr8f4"]
+[gd_resource type="Resource" script_class="EffectData" format=3 uid="uid://q64vqcamr8f4"]
 
-[ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="1_5fefu"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/burn_particles.tscn" id="2_vfx"]
 
 [resource]
-script = ExtResource("1_5fefu")
-damage_per_second = 50.0
-damage_type = 0
+script = ExtResource("1_eff")
 name = "Brimstone Fire"
 duration = 5.0
 remove_on_exit = false
-metadata/_custom_type_script = "uid://dsor16spgwgow"
+damage_per_second = 50.0
+damage_type = 0
+active_vfx = ExtResource("2_vfx")

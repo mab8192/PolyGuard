@@ -62,13 +62,41 @@ func _update_targets() -> void:
 		_active_targets.clear()
 		return
 
-	# Sort candidates according to the selected strategy
 	var candidates: Array[Node2D] = _targets.duplicate()
 
 	# Filter out candidates we can't see (blocked by walls)
 	if data and not data.can_target_through_walls:
 		candidates = candidates.filter(_has_line_of_sight)
 
+	var max_allowed: int = data.max_targets if (data and data.max_targets > 0) else 1
+
+	if data and data.lock_on and not _active_targets.is_empty():
+		var retained: Array[Node2D] = []
+		for t in _active_targets:
+			if is_instance_valid(t) and not t.is_queued_for_deletion() and candidates.has(t):
+				if t is Enemy and t.health and t.health.get_health() <= 0:
+					continue
+				retained.append(t)
+
+		if retained.size() >= max_allowed:
+			_active_targets = retained.slice(0, max_allowed)
+			return
+
+		var needed = max_allowed - retained.size()
+		var available = candidates.filter(func(c): return not retained.has(c))
+		_sort_candidates(available)
+		retained.append_array(available.slice(0, needed))
+		_active_targets = retained
+		return
+
+	_sort_candidates(candidates)
+
+	var limit: int = min(max_allowed, candidates.size())
+	_active_targets = candidates.slice(0, limit)
+
+func _sort_candidates(candidates: Array[Node2D]) -> void:
+	if not data:
+		return
 	match data.strategy:
 		TargetingData.Strategy.FIRST:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
@@ -110,12 +138,6 @@ func _update_targets() -> void:
 					return a_e.health.get_health() < b_e.health.get_health()
 				return false
 			)
-
-	var limit: int = candidates.size()
-	if data.max_targets > 0:
-		limit = min(data.max_targets, candidates.size())
-
-	_active_targets = candidates.slice(0, limit)
 
 func get_strategy() -> TargetingData.Strategy:
 	return data.strategy if data else TargetingData.Strategy.FIRST

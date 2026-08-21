@@ -3,7 +3,7 @@ class_name EffectData extends Resource
 @export_category("Info")
 @export var name: String = "" ## Name of the effect
 @export var duration: float = INF ## How long the effect lasts
-@export var remove_on_exit: bool = true
+@export var remove_on_exit: bool = true ## Should this effect be removed when the receiver exits the applier area?
 @export var icon: Texture2D ## Icon to show
 
 @export_category("Damage")
@@ -21,6 +21,11 @@ class_name EffectData extends Resource
 
 @export_category("Displacement")
 @export var displace_distance: float = 0.0 ## Path displacement distance along recorded travel history
+
+@export_category("Visuals")
+@export var active_vfx: PackedScene ## Persistent particle/visual effect attached to target while active
+@export var impact_vfx: PackedScene ## One-shot burst spawned at target location upon hit
+@export var target_tint: Color = Color.WHITE ## Visual modulate color applied to target while active
 
 func create_instance() -> ActiveEffect:
 	return ActiveEffect.new(self.duplicate())

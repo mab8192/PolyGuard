@@ -3,8 +3,8 @@
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_data"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/corrosive_particles.tscn" id="2_corrosive_vfx"]
 [ext_resource type="Texture2D" uid="uid://bkqje2mkufpnu" path="res://src/textures/towers/corrosive_vapor.png" id="3_icon"]
-[ext_resource type="Script" uid="uid://1377k7q587j4" path="res://src/data/effects/types/ArmorReductionEffectData.gd" id="3_tcoeq"]
 [ext_resource type="PackedScene" uid="uid://b6x336krcls3r" path="res://src/scenes/towers/corrosive_vapor.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
 [ext_resource type="Texture2D" uid="uid://d1b4hy2wblmfr" path="res://src/textures/towers/variants/corrosive_vapor_acid.png" id="ext_var_concentrated_acid"]
@@ -27,14 +27,18 @@ cooldown_multiplier = 0.8
 icon = ExtResource("ext_var_volatile_dispersion")
 
 [sub_resource type="Resource" id="Resource_18qce"]
-script = ExtResource("3_tcoeq")
+script = ExtResource("1_eff_data")
 name = "corrosive_vapor"
 duration = 10.0
 remove_on_exit = false
-metadata/_custom_type_script = "uid://1377k7q587j4"
+armor_reduction = 20.0
+active_vfx = ExtResource("2_corrosive_vfx")
 
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")
+mode = 2
+active_duration = 5.0
+cooldown = 3.0
 effects = Array[ExtResource("1_eff_data")]([SubResource("Resource_18qce")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 

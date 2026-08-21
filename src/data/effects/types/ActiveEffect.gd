@@ -5,6 +5,7 @@ signal expired()
 var data: EffectData
 var _target: Node2D
 var _visual_node: Node2D = null
+var _original_modulate: Color = Color.WHITE
 
 var _counting_time: bool = false
 var _elapsed_time_counted: float = 0.0 ## Elapsed time since _counting_time was set
@@ -42,6 +43,17 @@ func apply(target: Node2D) -> void:
 	if not is_instance_valid(target) or not data:
 		return
 
+	# Tint target if specified
+	if data.target_tint != Color.WHITE:
+		_original_modulate = target.modulate
+		target.modulate = data.target_tint
+
+	# If speed multiplier is zero (freeze/root), immediately halt movement
+	if data.speed_multiplier <= 0.0:
+		var movement = ComponentUtil.get_component(target, MovementComponent) as MovementComponent
+		if movement:
+			movement.stop()
+
 	# Instant / Initial Damage
 	var total_initial: float = data.damage + data.initial_damage
 	if total_initial > 0.0 and target is Enemy and target.health:
@@ -50,6 +62,34 @@ func apply(target: Node2D) -> void:
 	# Displacement along recorded path history
 	if data.displace_distance > 0.0 and target is Enemy:
 		_displace_enemy_along_path(target as Enemy, data.displace_distance)
+
+	# Impact VFX
+	if data.impact_vfx:
+		var imp = data.impact_vfx.instantiate()
+		if imp:
+			if target.get_parent():
+				target.get_parent().add_child(imp)
+			else:
+				target.add_child(imp)
+			if imp is Node2D:
+				(imp as Node2D).global_position = target.global_position
+			if imp is CPUParticles2D:
+				(imp as CPUParticles2D).emitting = true
+				if (imp as CPUParticles2D).one_shot:
+					imp.finished.connect(func(): if is_instance_valid(imp): imp.queue_free())
+
+	# Active VFX
+	if data.active_vfx:
+		var vfx = data.active_vfx.instantiate()
+		if vfx:
+			target.add_child(vfx)
+			_visual_node = vfx
+			if vfx is CPUParticles2D:
+				(vfx as CPUParticles2D).emitting = true
+
+	# If effect has no duration and is instantaneous, expire immediately
+	if data.duration == 0.0 or (data.duration != INF and data.duration <= 0.001 and not data.active_vfx and data.damage_per_second == 0.0 and data.speed_multiplier == 1.0 and data.armor_reduction == 0.0 and data.magic_resistance_reduction == 0.0):
+		expired.emit()
 
 func tick(delta: float) -> void:
 	if _counting_time:
@@ -69,6 +109,8 @@ func tick(delta: float) -> void:
 		expired.emit()
 
 func remove() -> void:
+	if is_instance_valid(_target) and data and data.target_tint != Color.WHITE:
+		_target.modulate = _original_modulate
 	if is_instance_valid(_visual_node):
 		_visual_node.queue_free()
 		_visual_node = null

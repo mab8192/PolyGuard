@@ -1,12 +1,14 @@
-[gd_resource type="Resource" script_class="BurnEffectData" format=3]
+[gd_resource type="Resource" script_class="EffectData" format=3]
 
-[ext_resource type="Script" path="res://src/data/effects/types/BurnEffectData.gd" id="1_burn"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/burn_particles.tscn" id="2_vfx"]
 
 [resource]
-script = ExtResource("1_burn")
-initial_damage = 0.0
-damage_per_second = 35.0
-damage_type = 0
+script = ExtResource("1_eff")
 name = "Artillery Fire"
 duration = 4.0
 remove_on_exit = false
+initial_damage = 0.0
+damage_per_second = 35.0
+damage_type = 0
+active_vfx = ExtResource("2_vfx")

@@ -2,11 +2,11 @@
 
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_eff_base"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/spike_impact.tscn" id="2_impact_vfx"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="2_applier_data"]
 [ext_resource type="Texture2D" uid="uid://ot83c6rr6hnf" path="res://src/textures/towers/spike_trap.png" id="3_icon"]
 [ext_resource type="PackedScene" uid="uid://b2am6x5reya4e" path="res://src/scenes/towers/spike_trap.tscn" id="4_scene"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
-[ext_resource type="Script" uid="uid://cnsx7jdjk7wsg" path="res://src/data/effects/types/DamageEffectData.gd" id="6_dmg_data"]
 [ext_resource type="Texture2D" uid="uid://bsk2l6afvsevd" path="res://src/textures/towers/variants/spike_trap_hydraulic.png" id="ext_var_hydraulic_spring"]
 [ext_resource type="Texture2D" uid="uid://cwwniddajgynu" path="res://src/textures/towers/variants/spike_trap_serrated.png" id="ext_var_serrated_spikes"]
 
@@ -27,9 +27,12 @@ cooldown_multiplier = 0.7
 icon = ExtResource("ext_var_hydraulic_spring")
 
 [sub_resource type="Resource" id="Resource_spike_damage"]
-script = ExtResource("6_dmg_data")
+script = ExtResource("1_eff_base")
 name = "Spike Impale"
 duration = 0.0
+damage = 140.0
+damage_type = 0
+impact_vfx = ExtResource("2_impact_vfx")
 
 [sub_resource type="Resource" id="Resource_applier"]
 script = ExtResource("2_applier_data")

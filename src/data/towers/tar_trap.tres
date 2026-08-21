@@ -6,15 +6,16 @@
 [ext_resource type="PackedScene" uid="uid://dsd0rgrdxnjps" path="res://src/scenes/towers/tar_trap.tscn" id="2_wdlj1"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="3_bigwe"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_di8xt"]
-[ext_resource type="Script" uid="uid://br4nwkh0b8psj" path="res://src/data/effects/types/SlowEffectData.gd" id="3_il3ue"]
-[ext_resource type="Script" uid="uid://1377k7q587j4" path="res://src/data/effects/types/ArmorReductionEffectData.gd" id="4_armor"]
-[ext_resource type="Script" uid="uid://btf2akhqmbc8g" path="res://src/data/effects/types/MagicResistanceReductionEffectData.gd" id="5_magic_res"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/magic_vulnerability_particles.tscn" id="4_magic_vfx"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/corrosive_particles.tscn" id="5_corrosive_vfx"]
 [ext_resource type="Texture2D" uid="uid://dskobkxmvrprp" path="res://src/textures/towers/variants/tar_trap_acid.png" id="ext_var_acid_tar"]
 [ext_resource type="Texture2D" uid="uid://c23x0h0umjlnd" path="res://src/textures/towers/variants/tar_trap_hex.png" id="ext_var_hex_pitch"]
 
 [sub_resource type="Resource" id="Resource_eff_mr"]
-script = ExtResource("5_magic_res")
+script = ExtResource("1_il3ue")
 name = "tar_magic_vulnerability"
+magic_resistance_reduction = 20.0
+active_vfx = ExtResource("4_magic_vfx")
 
 [sub_resource type="Resource" id="Resource_choice_hex"]
 script = ExtResource("1_choice")
@@ -28,8 +29,10 @@ added_effects = Array[ExtResource("1_il3ue")]([SubResource("Resource_eff_mr")])
 icon = ExtResource("ext_var_hex_pitch")
 
 [sub_resource type="Resource" id="Resource_eff_armor"]
-script = ExtResource("4_armor")
+script = ExtResource("1_il3ue")
 name = "tar_acid"
+armor_reduction = 20.0
+active_vfx = ExtResource("5_corrosive_vfx")
 
 [sub_resource type="Resource" id="Resource_choice_acid"]
 script = ExtResource("1_choice")
@@ -42,10 +45,9 @@ added_effects = Array[ExtResource("1_il3ue")]([SubResource("Resource_eff_armor")
 icon = ExtResource("ext_var_acid_tar")
 
 [sub_resource type="Resource" id="Resource_gconv"]
-script = ExtResource("3_il3ue")
-speed_multiplier = 0.5
+script = ExtResource("1_il3ue")
 name = "tar"
-metadata/_custom_type_script = "uid://br4nwkh0b8psj"
+speed_multiplier = 0.5
 
 [sub_resource type="Resource" id="Resource_x5pvt"]
 script = ExtResource("3_di8xt")

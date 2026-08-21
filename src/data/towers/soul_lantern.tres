@@ -41,6 +41,7 @@ script = ExtResource("3_health")
 script = ExtResource("7_target")
 targeting_mask = 12
 can_target_through_walls = true
+lock_on = true
 
 [resource]
 script = ExtResource("6_tower")

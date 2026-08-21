@@ -1,8 +1,9 @@
 [gd_scene format=3 uid="uid://bvj5t0y7wiin"]
 
-[ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_ice"]
+[ext_resource type="Script" uid="uid://ce4hf1f10w7g0" path="res://src/scenes/towers/freeze_trap.gd" id="1_b47wl"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_applier"]
 [ext_resource type="Texture2D" uid="uid://dbj5rtj5rtews" path="res://src/textures/towers/variants/ice_trap_permafrost.png" id="3_5wrxw"]
+[ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="4_b47wl"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ice_body"]
 size = Vector2(64, 64)
@@ -10,10 +11,40 @@ size = Vector2(64, 64)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_ice_area"]
 size = Vector2(64, 64)
 
+[sub_resource type="Gradient" id="Gradient_hg1o3"]
+colors = PackedColorArray(0.58574504, 0.89704496, 0.99999994, 0.85, 1, 1, 1, 0)
+
+[sub_resource type="GradientTexture1D" id="GradientTexture1D_corrosive"]
+gradient = SubResource("Gradient_hg1o3")
+
+[sub_resource type="Curve" id="Curve_d78xk"]
+_limits = [0.0, 3.0, 0.0, 1.0]
+_data = [Vector2(0, 0.35), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
+point_count = 2
+
+[sub_resource type="CurveTexture" id="CurveTexture_corrosive"]
+curve = SubResource("Curve_d78xk")
+
+[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_evbuk"]
+particle_flag_disable_z = true
+emission_shape = 3
+emission_box_extents = Vector3(20, 20, 1)
+spread = 180.0
+initial_velocity_min = 12.0
+initial_velocity_max = 35.0
+gravity = Vector3(0, -14, 0)
+damping_min = 5.0
+damping_max = 12.0
+scale_min = 1.5
+scale_max = 4.0
+scale_over_velocity_max = 30.0
+scale_over_velocity_curve = SubResource("CurveTexture_corrosive")
+color_ramp = SubResource("GradientTexture1D_corrosive")
+
 [node name="FreezeTrap" type="StaticBody2D" unique_id=1776499201]
 collision_layer = 0
 collision_mask = 0
-script = ExtResource("1_ice")
+script = ExtResource("1_b47wl")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1151499202]
 shape = SubResource("RectangleShape2D_ice_body")
@@ -27,3 +58,13 @@ shape = SubResource("RectangleShape2D_ice_area")
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764199205]
 texture = ExtResource("3_5wrxw")
+
+[node name="Freeze Effect" type="GPUParticles2D" parent="." unique_id=387394181]
+z_index = 1
+emitting = false
+amount = 22
+texture = ExtResource("4_b47wl")
+lifetime = 1.5
+one_shot = true
+explosiveness = 0.88
+process_material = SubResource("ParticleProcessMaterial_evbuk")

@@ -1,6 +1,6 @@
 [gd_scene format=3 uid="uid://mpjhedk6kvu"]
 
-[ext_resource type="Script" path="res://src/scenes/towers/soul_lantern.gd" id="1_tower"]
+[ext_resource type="Script" uid="uid://d2d546equpbu0" path="res://src/scenes/towers/soul_lantern.gd" id="1_tower"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_target"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_attack"]

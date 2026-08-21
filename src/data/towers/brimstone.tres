@@ -2,7 +2,7 @@
 
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="1_onxbk"]
-[ext_resource type="Script" uid="uid://dsor16spgwgow" path="res://src/data/effects/types/BurnEffectData.gd" id="2_onxbk"]
+[ext_resource type="PackedScene" path="res://src/scenes/effects/particles/burn_particles.tscn" id="2_burn_vfx"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_xuunk"]
 [ext_resource type="Texture2D" uid="uid://dybeb7xv2w4i4" path="res://src/textures/towers/brimstone.png" id="4_onxbk"]
 [ext_resource type="PackedScene" uid="uid://b2k4xt3p0yf8i" path="res://src/scenes/towers/brimstone.tscn" id="5_8mal4"]
@@ -27,13 +27,13 @@ extra_targets = 3
 icon = ExtResource("ext_var_nether_void")
 
 [sub_resource type="Resource" id="Resource_xi70r"]
-script = ExtResource("2_onxbk")
-damage_per_second = 50.0
-damage_type = 0
+script = ExtResource("1_onxbk")
 name = "Brimstone Fire"
 duration = 5.0
 remove_on_exit = false
-metadata/_custom_type_script = "uid://dsor16spgwgow"
+damage_per_second = 50.0
+damage_type = 0
+active_vfx = ExtResource("2_burn_vfx")
 
 [sub_resource type="Resource" id="Resource_x5pvt"]
 script = ExtResource("3_xuunk")
