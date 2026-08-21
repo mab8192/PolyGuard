@@ -3,7 +3,7 @@ class_name Tower extends StaticBody2D
 signal state_changed(is_active: bool)
 
 ## Gets assigned by the TowerData type
-var data: TowerData
+@export var data: TowerData
 
 ## Visual modulations for active vs inactive/recharging states
 const ACTIVE_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
@@ -136,9 +136,22 @@ func deactivate() -> void:
 func set_active(val: bool) -> void:
 	is_active = val
 
+func _enter_tree() -> void:
+	if not data:
+		var scene_name := scene_file_path.get_file().get_basename()
+		var tower_data := Registry.get_tower_data(scene_name)
+		if tower_data:
+			var level := SaveManager.get_tower_level(scene_name)
+			var choice := SaveManager.get_tower_choice(scene_name)
+			data = tower_data.get_scaled_copy(level, choice)
+			data.apply_to(self)
+		else:
+			push_error("No TowerData!")
+
 func _ready() -> void:
 	if not data:
-		push_error("Missing TowerData! %s" % get_path())
+		push_error("No TowerData!")
+		return
 	
 	if not is_in_group("towers"):
 		add_to_group("towers")

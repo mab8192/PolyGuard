@@ -4,6 +4,7 @@
 [ext_resource type="PackedScene" uid="uid://c3o5j8cdgdxmc" path="res://src/scenes/tiles/tiles.tscn" id="2_8mlp2"]
 [ext_resource type="PackedScene" uid="uid://xyww0xmxe1ss" path="res://src/scenes/utility/exit.tscn" id="3_hbfhy"]
 [ext_resource type="PackedScene" uid="uid://cq3ofdmp8sxea" path="res://src/scenes/utility/spawner.tscn" id="4_oq6n6"]
+[ext_resource type="PackedScene" uid="uid://b4p76fbmsemt4" path="res://src/scenes/towers/barricade.tscn" id="5_8mlp2"]
 
 [node name="Stage7" type="Node2D" unique_id=1225741288]
 script = ExtResource("1_ccnl1")
@@ -28,3 +29,15 @@ position = Vector2(480, 0)
 exits = [NodePath("../Exit")]
 
 [node name="Towers" type="Node2D" parent="NavigationRegion2D" unique_id=769812410]
+
+[node name="Barricade" parent="NavigationRegion2D/Towers" unique_id=887214604 instance=ExtResource("5_8mlp2")]
+position = Vector2(-160, -224)
+
+[node name="Barricade2" parent="NavigationRegion2D/Towers" unique_id=781417244 instance=ExtResource("5_8mlp2")]
+position = Vector2(-160, -288)
+
+[node name="Barricade3" parent="NavigationRegion2D/Towers" unique_id=1384243889 instance=ExtResource("5_8mlp2")]
+position = Vector2(-160, -352)
+
+[node name="Barricade4" parent="NavigationRegion2D/Towers" unique_id=411060353 instance=ExtResource("5_8mlp2")]
+position = Vector2(-160, -416)
