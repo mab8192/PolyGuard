@@ -62,7 +62,7 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 	var copy: TowerData = self.duplicate(true)
 	
 	var lvl = clampi(level, 1, max_level)
-	var dmg_mult = 1.0 + (lvl - 1) * damage_upgrade_per_level
+	var strength_mult = 1.0 + (lvl - 1) * damage_upgrade_per_level
 	var cd_mult = maxf(min_cooldown_multiplier, 1.0 - (lvl - 1) * cooldown_reduction_per_level)
 	var hp_mult = 1.0 + (lvl - 1) * health_upgrade_per_level
 	
@@ -89,14 +89,14 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 			for eff in choice.added_effects:
 				if eff:
 					copy.effect_applier.effects.append(eff.duplicate(true))
-		dmg_mult *= choice.damage_multiplier
+		strength_mult *= choice.strength_multiplier
 		cd_mult *= choice.cooldown_multiplier
 		hp_mult *= choice.health_multiplier
 		if copy.targeting:
 			copy.targeting.max_targets += choice.extra_targets
 	
 	if copy.attack:
-		copy.attack.damage *= dmg_mult
+		copy.attack.damage *= strength_mult
 		copy.attack.cooldown *= cd_mult
 	
 	if copy.health:
@@ -106,11 +106,22 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 		copy.effect_applier.cooldown *= cd_mult
 		for eff in copy.effect_applier.effects:
 			if "damage" in eff:
-				eff.damage *= dmg_mult
+				eff.damage *= strength_mult
 			if "initial_damage" in eff:
-				eff.initial_damage *= dmg_mult
+				eff.initial_damage *= strength_mult
 			if "damage_per_second" in eff:
-				eff.damage_per_second *= dmg_mult
+				eff.damage_per_second *= strength_mult
+			if "armor_reduction" in eff:
+				eff.armor_reduction *= strength_mult
+			if "magic_resistance_reduction" in eff:
+				eff.magic_resistance_reduction *= strength_mult
+			if "displace_distance" in eff:
+				eff.displace_distance *= strength_mult
+			if "speed_multiplier" in eff:
+				var slow_pct = (1.0 - eff.speed_multiplier) * strength_mult
+				eff.speed_multiplier = clampf(1.0 - slow_pct, 0.05, 0.95)
+			if "acceleration_multiplier" in eff:
+				eff.acceleration_multiplier = clampf(eff.acceleration_multiplier / maxf(strength_mult, 0.01), 0.01, 1.0)
 
 	return copy
 

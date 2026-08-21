@@ -14,7 +14,7 @@ class_name TowerChoiceUpgrade extends Resource
 @export_group("Damage Type & Attack")
 @export var has_damage_type_override: bool = false
 @export var damage_type_override: AttackData.DamageType = AttackData.DamageType.PHYSICAL
-@export var damage_multiplier: float = 1.0
+@export var strength_multiplier: float = 1.0
 @export var cooldown_multiplier: float = 1.0
 @export var projectile_speed_multiplier: float = 1.0
 
@@ -46,9 +46,9 @@ func get_upgrade_details() -> Array[String]:
 				details.append("Damage Type: Magic")
 			AttackData.DamageType.TRUE:
 				details.append("Damage Type: True (Bypasses Armor/Resist)")
-	if not is_equal_approx(damage_multiplier, 1.0):
-		var pct = int(round((damage_multiplier - 1.0) * 100.0))
-		details.append("Damage: %+d%%" % pct)
+	if not is_equal_approx(strength_multiplier, 1.0):
+		var pct = int(round((strength_multiplier - 1.0) * 100.0))
+		details.append("Strength: %+d%%" % pct)
 	if not is_equal_approx(cooldown_multiplier, 1.0):
 		var pct = int(round((1.0 - cooldown_multiplier) * 100.0))
 		if pct > 0:

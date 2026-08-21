@@ -27,7 +27,7 @@ title = "Incendiary Shells"
 description = "Converts bomb blast to Magic Damage dealing +30% explosive damage."
 has_damage_type_override = true
 damage_type_override = 1
-damage_multiplier = 1.3
+strength_multiplier = 1.3
 icon = ExtResource("ext_var_incendiary_shells")
 
 [sub_resource type="Resource" id="Resource_choice_true_bomb"]
@@ -37,7 +37,7 @@ title = "Heavy Concussion"
 description = "Shockwave shells inflicting True Damage directly ignoring armored plating."
 has_damage_type_override = true
 damage_type_override = 2
-damage_multiplier = 0.85
+strength_multiplier = 0.85
 cooldown_multiplier = 0.9
 icon = ExtResource("ext_var_heavy_concussion")
 

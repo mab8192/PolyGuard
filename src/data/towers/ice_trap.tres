@@ -23,7 +23,7 @@ script = ExtResource("1_choice")
 id = "sub_zero_glaze"
 title = "Sub-Zero Glaze"
 description = "Extremely low friction glaze increasing target slide instability."
-damage_multiplier = 1.2
+strength_multiplier = 1.2
 icon = ExtResource("ext_var_sub_zero_glaze")
 
 [sub_resource type="Resource" id="Resource_mxbel"]

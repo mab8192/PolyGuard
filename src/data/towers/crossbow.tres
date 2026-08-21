@@ -25,7 +25,7 @@ script = ExtResource("3_choice")
 id = "spectral_bolt"
 title = "Spectral Bolt"
 description = "Phased kinetic bolts that can detect and target Ghost-type enemies with +25% bonus damage."
-damage_multiplier = 1.25
+strength_multiplier = 1.25
 has_targeting_mask_override = true
 icon = ExtResource("ext_var_spectral_bolt")
 

@@ -24,7 +24,7 @@ title = "Superconductor"
 description = "Converts lightning to True Damage, piercing all resistances and arcing to +1 extra target."
 has_damage_type_override = true
 damage_type_override = 2
-damage_multiplier = 0.85
+strength_multiplier = 0.85
 extra_targets = 1
 icon = ExtResource("ext_var_superconductor")
 
@@ -35,7 +35,7 @@ title = "Overcharge Volt"
 description = "High-voltage surge dealing +40% Magic Damage in devastating bursts."
 has_damage_type_override = true
 damage_type_override = 1
-damage_multiplier = 1.4
+strength_multiplier = 1.4
 cooldown_multiplier = 1.1
 icon = ExtResource("ext_var_overcharge_volt")
 

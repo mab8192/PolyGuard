@@ -16,7 +16,7 @@ script = ExtResource("1_choice")
 id = "napalm_catalyst"
 title = "Napalm Catalyst"
 description = "High-temperature chemical booster increasing burn DPS by 30%."
-damage_multiplier = 1.3
+strength_multiplier = 1.3
 icon = ExtResource("ext_var_napalm_catalyst")
 
 [sub_resource type="Resource" id="Resource_choice_pressure"]
