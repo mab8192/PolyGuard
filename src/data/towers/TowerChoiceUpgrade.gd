@@ -14,8 +14,8 @@ class_name TowerChoiceUpgrade extends Resource
 @export_group("Damage Type & Attack")
 @export var has_damage_type_override: bool = false
 @export var damage_type_override: AttackData.DamageType = AttackData.DamageType.PHYSICAL
-@export var strength_multiplier: float = 1.0
-@export var cooldown_multiplier: float = 1.0
+@export var strength_multiplier: float = 1.0 ## Generic multiplier used to tweak burst damage, damage-over-time, durations, distances, etc.
+@export var cooldown_multiplier: float = 1.0 ## Reduces the cooldown between attack triggers or effect activations for burst-type appliers
 @export var projectile_speed_multiplier: float = 1.0
 
 @export_group("Defensive & Targets")
