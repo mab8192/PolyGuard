@@ -74,14 +74,16 @@ func get_upgrade_details() -> Array[String]:
 		details.append("Barrier: Physically blocks Ghosts")
 	for eff in added_effects:
 		if eff:
-			if eff is ArmorReductionEffectData:
+			if eff.armor_reduction > 0.0:
 				details.append("Effect: Strips %d Armor" % int(eff.armor_reduction))
-			elif eff is MagicResistanceReductionEffectData:
+			elif eff.magic_resistance_reduction > 0.0:
 				details.append("Effect: Strips %d Magic Resist" % int(eff.magic_resistance_reduction))
-			elif eff is SlowEffectData:
+			elif eff.speed_multiplier < 1.0:
 				details.append("Effect: Slows enemies by %d%%" % int((1.0 - eff.speed_multiplier) * 100))
-			elif eff is BurnEffectData:
-				details.append("Effect: Thermal Burn (%.0f DPS)" % eff.damage_per_second)
+			elif eff.damage_per_second > 0.0:
+				details.append("Effect: DoT Damage (%.0f DPS)" % eff.damage_per_second)
+			elif eff.displace_distance > 0.0:
+				details.append("Effect: Displaces Enemies (%d px)" % int(eff.displace_distance))
 			elif not eff.name.is_empty():
 				details.append("Effect: %s" % eff.name)
 	return details

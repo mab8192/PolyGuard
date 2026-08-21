@@ -5,8 +5,6 @@ var _original_modulate: Color = Color.WHITE
 
 func _init(effect_data: EffectData = null):
 	super._init(effect_data)
-	if effect_data:
-		data = effect_data as FreezeEffectData
 
 func apply(target: Node2D) -> void:
 	super.apply(target)
