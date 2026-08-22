@@ -1,11 +1,19 @@
 [gd_resource type="Resource" script_class="EnemyData" format=3 uid="uid://dp6b0w41n7w2k"]
 
+[ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="1_rvc0e"]
 [ext_resource type="Script" uid="uid://cpa80jxan5i6p" path="res://src/data/enemies/EnemyData.gd" id="1_script"]
 [ext_resource type="Texture2D" uid="uid://bluplgjq55i1e" path="res://src/textures/enemies/bomber.png" id="2_icon"]
 [ext_resource type="PackedScene" uid="uid://c7k0xmq2v4e5g" path="res://src/scenes/enemies/bomber.tscn" id="2_scene"]
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_nav"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="5_move"]
+[ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_g77ar"]
+
+[sub_resource type="Resource" id="Resource_g77ar"]
+script = ExtResource("1_rvc0e")
+damage = 400.0
+attack_mode = 1
+metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
@@ -20,6 +28,11 @@ acceleration = 600.0
 script = ExtResource("4_nav")
 targets_towers = true
 
+[sub_resource type="Resource" id="Resource_jannp"]
+script = ExtResource("7_g77ar")
+targeting_mask = 2
+metadata/_custom_type_script = "uid://cqd3is7v2mbn2"
+
 [resource]
 script = ExtResource("1_script")
 display_name = "Bomber"
@@ -30,3 +43,5 @@ energy_reward = 5
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_nav")
+attack = SubResource("Resource_g77ar")
+targeting = SubResource("Resource_jannp")

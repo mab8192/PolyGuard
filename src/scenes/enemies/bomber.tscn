@@ -1,13 +1,18 @@
 [gd_scene format=3 uid="uid://c7k0xmq2v4e5g"]
 
-[ext_resource type="Script" path="res://src/scenes/enemies/bomber.gd" id="1_script"]
-[ext_resource type="Texture2D" path="res://src/textures/enemies/bomber.png" id="2_tex"]
-[ext_resource type="Script" path="res://src/components/MovementComponent.gd" id="3_move"]
-[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="4_health"]
-[ext_resource type="Script" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://b3wx48bn6uwr5" path="res://src/scenes/enemies/bomber.gd" id="1_script"]
+[ext_resource type="Texture2D" uid="uid://bluplgjq55i1e" path="res://src/textures/enemies/bomber.png" id="2_tex"]
+[ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="3_move"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="4_health"]
+[ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="6_jannp"]
+[ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="7_sas6n"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
-radius = 10.0
+radius = 8.0
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qgbsg"]
+size = Vector2(16, 20)
 
 [node name="Bomber" type="CharacterBody2D" unique_id=1825300401 groups=["enemies"]]
 collision_layer = 4
@@ -31,3 +36,15 @@ script = ExtResource("5_nav")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879432683]
 shape = SubResource("CircleShape2D_body")
+
+[node name="TargetingComponent" type="Area2D" parent="." unique_id=1060827087]
+script = ExtResource("6_jannp")
+metadata/_custom_type_script = "uid://ce03oldy8eqse"
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="TargetingComponent" unique_id=2109408010]
+position = Vector2(8, 0)
+shape = SubResource("RectangleShape2D_qgbsg")
+
+[node name="AttackComponent" type="Node" parent="." unique_id=2072950470]
+script = ExtResource("7_sas6n")
+metadata/_custom_type_script = "uid://cvs3f0a1ee8do"
