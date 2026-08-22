@@ -18,6 +18,7 @@ class_name EffectData extends Resource
 @export var acceleration_multiplier: float = 1.0
 @export var armor_reduction: float = 0.0
 @export var magic_resistance_reduction: float = 0.0
+@export var energy_reward_multiplier: float = 1.0 ## Multiplier applied to energy reward if enemy dies while this effect is active (e.g. 1.5 = +50% energy)
 
 @export_category("Displacement")
 @export var displace_distance: float = 0.0 ## Path displacement distance along recorded travel history

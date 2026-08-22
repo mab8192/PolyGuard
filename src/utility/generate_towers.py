@@ -822,6 +822,80 @@ def generate_spike_trap_texture(output_path: str = None) -> str:
 
     return save_cropped_sprite(img, (64, 64), output_path, "spike_trap")
 
+def generate_siphon_texture(output_path: str = None) -> str:
+    """Ancient Runic Siphon Floor Trap.
+    A dark runestone slab inscribed with a graceful 3-fold arcane vortex spiral (triskelion)
+    that channels the residual energetic soul-essence of slain enemies into the central well."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "siphon.png")
+
+    img, draw, f, sw, sh = create_canvas(64, 64, 4)
+    cx, cy = sw / 2.0, sh / 2.0
+
+    # Color Palette: Ancient Obsidian Slate & Luminous Ethereal Cyan Runes
+    c_stone_dark   = (16, 18, 26, 255)
+    c_stone_mid    = (26, 30, 44, 255)
+    c_shadow       = (10, 11, 16, 255)
+
+    c_rune_dim     = (0, 95, 140, 255)
+    c_rune_glow    = (0, 160, 215, 255)
+    c_rune_bright  = (0, 235, 255, 255)
+    c_rune_pale    = (195, 250, 255, 255)
+    c_pure_white   = (255, 255, 255, 255)
+
+    # 1. Dark weathered stone slab base (Clean square tile with rounded corners)
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=c_shadow, width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+
+    # 4 Corner Carved Rune Nodes (subtle runic bind-dots)
+    for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
+        draw.ellipse([cx + ox - 2.2 * f, cy + oy - 2.2 * f, cx + ox + 2.2 * f, cy + oy + 2.2 * f], fill=c_stone_dark, outline=c_rune_glow, width=int(1.0 * f))
+        draw.ellipse([cx + ox - 1.0 * f, cy + oy - 1.0 * f, cx + ox + 1.0 * f, cy + oy + 1.0 * f], fill=c_rune_bright)
+
+    # 2. Outer Arcane Ritual Circles
+    r_outer = 23.0 * f
+    r_inner = 18.0 * f
+    draw.ellipse([cx - r_outer, cy - r_outer, cx + r_outer, cy + r_outer], outline=c_rune_bright, width=int(1.8 * f))
+    draw.ellipse([cx - r_inner, cy - r_inner, cx + r_inner, cy + r_inner], outline=c_rune_dim, width=int(1.0 * f))
+
+    # 3. Three Inward-Channeling Arcane Vortex Spiral Arms (Triskelion Siphon Flow)
+    num_arms = 3
+    for i in range(num_arms):
+        start_ang = i * (2.0 * math.pi / num_arms) - (math.pi / 2.0)
+        
+        # Outer anchor glyph node on the ritual ring
+        p_outer_x = cx + math.cos(start_ang) * (r_outer - 0.5 * f)
+        p_outer_y = cy + math.sin(start_ang) * (r_outer - 0.5 * f)
+        draw.ellipse([p_outer_x - 2.8 * f, p_outer_y - 2.8 * f, p_outer_x + 2.8 * f, p_outer_y + 2.8 * f], fill=c_stone_dark, outline=c_rune_bright, width=int(1.2 * f))
+        draw.ellipse([p_outer_x - 1.2 * f, p_outer_y - 1.2 * f, p_outer_x + 1.2 * f, p_outer_y + 1.2 * f], fill=c_pure_white)
+
+        # Inward spiral points calculation
+        pts = []
+        steps = 28
+        spiral_turn = math.pi * 0.88  # ~160 degrees sweep inward
+        for step in range(steps + 1):
+            t = step / float(steps)
+            cur_r = (1.0 - t) * (r_outer - 2.0 * f) + t * (4.5 * f)
+            cur_ang = start_ang + t * spiral_turn
+            pts.append((cx + math.cos(cur_ang) * cur_r, cy + math.sin(cur_ang) * cur_r))
+
+        # Draw glowing spiral body (tapering width from outer to inner)
+        for k in range(len(pts) - 1):
+            w = int(max(1.0, 2.4 * f * (1.0 - (k / len(pts)) * 0.4)))
+            draw.line([pts[k], pts[k + 1]], fill=c_rune_bright, width=w)
+        
+        # Draw central white soul filament spine
+        for k in range(len(pts) - 1):
+            draw.line([pts[k], pts[k + 1]], fill=c_pure_white, width=int(0.9 * f))
+
+    # 4. Central Siphon Soul Well & Singularity Core
+    r_well = 5.8 * f
+    draw.ellipse([cx - r_well, cy - r_well, cx + r_well, cy + r_well], fill=c_stone_dark, outline=c_rune_bright, width=int(1.6 * f))
+    draw.ellipse([cx - 3.2 * f, cy - 3.2 * f, cx + 3.2 * f, cy + 3.2 * f], fill=c_rune_bright)
+    draw.ellipse([cx - 1.8 * f, cy - 1.8 * f, cx + 1.8 * f, cy + 1.8 * f], fill=c_pure_white)
+
+    return save_cropped_sprite(img, (64, 64), output_path, "siphon")
+
 def generate_soul_lantern_texture(output_path: str = None) -> str:
     """Full 64x64 solid arcane Soul Lantern tower with ornate brass frame and glowing ethereal soul core."""
     if output_path is None:
@@ -943,6 +1017,7 @@ def generate_all_towers():
     generate_ice_trap_texture()
     generate_corrosive_vapor_texture()
     generate_spike_trap_texture()
+    generate_siphon_texture()
     generate_soul_lantern_texture()
     generate_sparkler_texture()
 

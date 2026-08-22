@@ -1,0 +1,37 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://b0iusskit6y05"]
+
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_ie57w"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="2_la87r"]
+[ext_resource type="Texture2D" uid="uid://dp0yvnhvx33vx" path="res://src/textures/towers/siphon.png" id="4_tqr16"]
+[ext_resource type="PackedScene" uid="uid://xi4koe2vcsrk" path="res://src/scenes/towers/siphon.tscn" id="5_wcb14"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="7_1hvq7"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="10_o26x3"]
+
+[sub_resource type="Resource" id="Resource_gconv"]
+script = ExtResource("2_la87r")
+name = "tar"
+speed_multiplier = 0.5
+
+[sub_resource type="Resource" id="Resource_x5pvt"]
+script = ExtResource("7_1hvq7")
+effects = Array[ExtResource("2_la87r")]([SubResource("Resource_gconv")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[resource]
+script = ExtResource("10_o26x3")
+tower_id = "siphon"
+display_name = "Siphon"
+icon = ExtResource("4_tqr16")
+scene = ExtResource("5_wcb14")
+description = "Non-solid area that grants additional energy when enemies die on top of it"
+unlock_cost = 600
+required_stage_id = "stage_10"
+max_level = 1
+damage_upgrade_per_level = 0.0
+cooldown_reduction_per_level = 0.0
+health_upgrade_per_level = 0.0
+min_cooldown_multiplier = 0.0
+cost = 300
+can_rotate = false
+collision_layer = 0
+effect_applier = SubResource("Resource_x5pvt")
