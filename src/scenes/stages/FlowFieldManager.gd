@@ -95,7 +95,7 @@ func _notification(what: int) -> void:
 		if _thread and _thread.is_alive():
 			_thread.wait_to_finish()
 
-func _physics_process(delta: float) -> void:
+func _physics_process(_delta: float) -> void:
 	if not stage or not is_instance_valid(stage):
 		return
 
@@ -112,12 +112,6 @@ func _physics_process(delta: float) -> void:
 	# 2. Local spatial grid and dynamic congestion density update (fast O(N))
 	if stage.wave_is_active:
 		_update_enemy_spatial_grid()
-
-		if not _is_thread_running:
-			_congestion_timer += delta
-			if _congestion_timer >= CONGESTION_UPDATE_INTERVAL:
-				_congestion_timer = 0.0
-				_launch_background_congestion_update()
 
 func _update_enemy_spatial_grid() -> void:
 	var enemies: Array[Node] = get_tree().get_nodes_in_group("enemies")
@@ -182,64 +176,6 @@ func _update_enemy_spatial_grid() -> void:
 	if visualizer and visualizer.visible and visualizer.mode == FlowFieldVisualizer.DisplayMode.CONGESTION:
 		visualizer.queue_redraw()
 
-func _launch_background_congestion_update() -> void:
-	if _enemy_positions.is_empty() or _cached_exit_positions.is_empty():
-		return
-
-	var snapshot: Dictionary = {
-		"positions": _enemy_positions.duplicate(),
-		"layers": _enemy_layers.duplicate(),
-		"weights": _enemy_weights.duplicate(),
-		"exits": _cached_exit_positions.duplicate()
-	}
-
-	_is_thread_running = true
-	_thread = Thread.new()
-	_thread.start(_bg_thread_task.bind(snapshot))
-
-## Runs purely in background thread (0.0ms main thread cost)
-func _bg_thread_task(snapshot: Dictionary) -> void:
-	var positions: PackedVector2Array = snapshot["positions"]
-	var layers: PackedInt32Array = snapshot["layers"]
-	var weights: PackedFloat32Array = snapshot["weights"]
-	var exits: Array[Vector2] = snapshot["exits"]
-
-	_bg_physical_field.clear_congestion()
-	_bg_heavy_field.clear_congestion()
-	_bg_ghost_field.clear_congestion()
-
-	for exit_f: FlowField in _bg_per_exit_physical_fields:
-		if exit_f: exit_f.clear_congestion()
-	for exit_f: FlowField in _bg_per_exit_heavy_fields:
-		if exit_f: exit_f.clear_congestion()
-	for exit_f: FlowField in _bg_per_exit_ghost_fields:
-		if exit_f: exit_f.clear_congestion()
-
-	var count: int = positions.size()
-	var has_ghosts: bool = false
-
-	for i: int in range(count):
-		var pos: Vector2 = positions[i]
-		var layer: int = layers[i]
-		var weight: float = weights[i]
-
-		if (layer & 4) != 0:
-			_bg_ghost_field.add_congestion(pos, weight, CONGESTION_RADIUS)
-			has_ghosts = true
-		elif (layer & 2) != 0:
-			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
-			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
-		else:
-			_bg_physical_field.add_congestion(pos, weight, CONGESTION_RADIUS)
-			_bg_heavy_field.add_congestion(pos, weight, CONGESTION_RADIUS)
-
-	_bg_physical_field.calculate_multi_integration_fields(exits, _bg_per_exit_physical_fields)
-	_bg_heavy_field.calculate_multi_integration_fields(exits, _bg_per_exit_heavy_fields)
-	if has_ghosts:
-		_bg_ghost_field.calculate_multi_integration_fields(exits, _bg_per_exit_ghost_fields)
-
-	_bg_rebuild_reachability_masks(exits.size())
-
 ## Calculates a localized Danger / Repulsion vector from the dynamic congestion overlay grid
 func get_congestion_avoidance_vector(actor_pos: Vector2, desire_dir: Vector2 = Vector2.ZERO, radius: float = 24.0) -> Vector2:
 	if _enemy_positions.size() <= 1 or congestion_density.is_empty():
@@ -264,7 +200,7 @@ func get_congestion_avoidance_vector(actor_pos: Vector2, desire_dir: Vector2 = V
 
 	var idx: int = gy * w + gx
 
-	# Sample 8 neighbor densities
+	# Sample 8 neighbor densities (purely from other enemies)
 	var d_l: float = congestion_density[idx - 1]
 	var d_r: float = congestion_density[idx + 1]
 	var d_u: float = congestion_density[idx - w]
@@ -274,17 +210,6 @@ func get_congestion_avoidance_vector(actor_pos: Vector2, desire_dir: Vector2 = V
 	var d_ur: float = congestion_density[idx - w + 1]
 	var d_dl: float = congestion_density[idx + w - 1]
 	var d_dr: float = congestion_density[idx + w + 1]
-
-	# Obstacles and towers provide natural barrier repulsion so units don't steer into walls
-	if physical_field.base_cost[idx - 1] >= FlowField.TOWER_COST: d_l = maxf(d_l, 4.0)
-	if physical_field.base_cost[idx + 1] >= FlowField.TOWER_COST: d_r = maxf(d_r, 4.0)
-	if physical_field.base_cost[idx - w] >= FlowField.TOWER_COST: d_u = maxf(d_u, 4.0)
-	if physical_field.base_cost[idx + w] >= FlowField.TOWER_COST: d_d = maxf(d_d, 4.0)
-
-	if physical_field.base_cost[idx - w - 1] >= FlowField.TOWER_COST: d_ul = maxf(d_ul, 4.0)
-	if physical_field.base_cost[idx - w + 1] >= FlowField.TOWER_COST: d_ur = maxf(d_ur, 4.0)
-	if physical_field.base_cost[idx + w - 1] >= FlowField.TOWER_COST: d_dl = maxf(d_dl, 4.0)
-	if physical_field.base_cost[idx + w + 1] >= FlowField.TOWER_COST: d_dr = maxf(d_dr, 4.0)
 
 	var total_density: float = d_l + d_r + d_u + d_d + d_ul + d_ur + d_dl + d_dr
 	if total_density <= 0.05:
@@ -318,7 +243,7 @@ func get_congestion_avoidance_vector(actor_pos: Vector2, desire_dir: Vector2 = V
 	return Vector2.ZERO
 
 ## O(1) Local Neighbor Query using Spatial Buckets
-func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, instance_id: int = 0) -> Vector2:
+func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, _instance_id: int = 0) -> Vector2:
 	if _enemy_positions.size() <= 1 or _cell_head.is_empty():
 		return Vector2.ZERO
 
@@ -334,7 +259,6 @@ func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, instance_id
 
 	var sep_vector: Vector2 = Vector2.ZERO
 	var rad_sq: float = radius * radius
-	var spin_sign: float = 0.2 if (instance_id % 2 == 0) else -0.2
 
 	for dy: int in range(-cell_rad, cell_rad + 1):
 		var gy: int = cy + dy
@@ -356,8 +280,7 @@ func get_separation_vector(actor_pos: Vector2, radius: float = 24.0, instance_id
 					var dist: float = sqrt(d2)
 					var strength: float = 1.0 - (dist / radius)
 					var push_dir: Vector2 = diff / dist
-					var tangent: Vector2 = Vector2(-push_dir.y, push_dir.x) * spin_sign
-					sep_vector += (push_dir + tangent) * strength
+					sep_vector += push_dir * strength
 				curr_enemy = _enemy_next[curr_enemy]
 
 	return sep_vector
@@ -374,28 +297,6 @@ func _on_wave_completed() -> void:
 	_rebuild_pending = false
 	_congestion_timer = 0.0
 
-	physical_field.clear_congestion()
-	heavy_physical_field.clear_congestion()
-	ghost_field.clear_congestion()
-	_bg_physical_field.clear_congestion()
-	_bg_heavy_field.clear_congestion()
-	_bg_ghost_field.clear_congestion()
-
-	for f in per_exit_physical_fields:
-		if f: f.clear_congestion()
-	for f in per_exit_heavy_fields:
-		if f: f.clear_congestion()
-	for f in per_exit_ghost_fields:
-		if f: f.clear_congestion()
-
-	for f in _bg_per_exit_physical_fields:
-		if f: f.clear_congestion()
-	for f in _bg_per_exit_heavy_fields:
-		if f: f.clear_congestion()
-	for f in _bg_per_exit_ghost_fields:
-		if f: f.clear_congestion()
-
-	_recalculate_all_integrations()
 	congestion_density.fill(0.0)
 	_enemy_positions.resize(0)
 	_enemy_layers.resize(0)
@@ -507,11 +408,19 @@ func rebuild_tower_fields(is_sync: bool = false) -> void:
 	_bg_physical_field.clearance_cost = walls_only_field.clearance_cost.duplicate()
 	_bg_ghost_field.clearance_cost = walls_only_field.clearance_cost.duplicate()
 
+	# Reset AStar weights before setting current placed tower weights
+	var w: int = physical_field.grid_size.x
+	var h: int = physical_field.grid_size.y
+	for gy: int in range(h):
+		var row_offset: int = gy * w
+		for gx: int in range(w):
+			if walls_only_field.base_cost[row_offset + gx] < FlowField.BLOCKED_COST:
+				_astar_full.set_point_weight_scale(Vector2i(gx, gy), 1.0)
+
 	var has_spectral_towers: bool = false
 
 	# 2. Mark Towers and Barricades (using 25% min overlap so skinny towers don't over-block neighbor cells)
 	if stage.towers:
-		var w: int = physical_field.grid_size.x
 		for child: Node in stage.towers.get_children():
 			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
 				var tower: Tower = child as Tower
@@ -529,40 +438,47 @@ func rebuild_tower_fields(is_sync: bool = false) -> void:
 				# Fast AStar weight update for placed towers
 				var min_cell: Vector2i = physical_field.global_to_grid(tower_rect.position)
 				var max_cell: Vector2i = physical_field.global_to_grid(tower_rect.end - Vector2(0.001, 0.001))
-				for gy: int in range(min_cell.y, max_cell.y + 1):
-					for gx: int in range(min_cell.x, max_cell.x + 1):
-						if physical_field.is_valid_cell(gx, gy) and walls_only_field.base_cost[gy * w + gx] < FlowField.BLOCKED_COST:
-							_astar_full.set_point_weight_scale(Vector2i(gx, gy), 50.0)
+				for tgy: int in range(min_cell.y, max_cell.y + 1):
+					for tgx: int in range(min_cell.x, max_cell.x + 1):
+						if physical_field.is_valid_cell(tgx, tgy) and walls_only_field.base_cost[tgy * w + tgx] < FlowField.BLOCKED_COST:
+							_astar_full.set_point_weight_scale(Vector2i(tgx, tgy), 50.0)
 
 	# Build _bg_heavy_field by copying _bg_physical_field and filtering out 1-cell pinches (< 32px clearance)
+	# Uses a 2x2 footprint test: a cell is walkable for heavy enemies if it is part of at least ONE walkable 2x2 cell block.
 	_bg_heavy_field.base_cost = _bg_physical_field.base_cost.duplicate()
 	_bg_heavy_field.clearance_cost = _bg_physical_field.clearance_cost.duplicate()
 
-	var w: int = _bg_heavy_field.grid_size.x
-	var h: int = _bg_heavy_field.grid_size.y
+	var p_base: PackedFloat32Array = _bg_physical_field.base_cost
 	for gy: int in range(h):
 		var row: int = gy * w
 		for gx: int in range(w):
 			var idx: int = row + gx
 			if _bg_heavy_field.base_cost[idx] < FlowField.TOWER_COST:
-				# 1. Horizontal pinch: obstacle on both left and right (16px gap)
-				var blocked_l: bool = (gx == 0) or (_bg_physical_field.base_cost[idx - 1] >= FlowField.TOWER_COST)
-				var blocked_r: bool = (gx == w - 1) or (_bg_physical_field.base_cost[idx + 1] >= FlowField.TOWER_COST)
-				if blocked_l and blocked_r:
-					_bg_heavy_field.base_cost[idx] = FlowField.TOWER_COST
-					continue
+				var has_walkable_2x2: bool = false
 
-				# 2. Vertical pinch: obstacle on both top and bottom (16px gap)
-				var blocked_u: bool = (gy == 0) or (_bg_physical_field.base_cost[idx - w] >= FlowField.TOWER_COST)
-				var blocked_d: bool = (gy == h - 1) or (_bg_physical_field.base_cost[idx + w] >= FlowField.TOWER_COST)
-				if blocked_u and blocked_d:
-					_bg_heavy_field.base_cost[idx] = FlowField.TOWER_COST
-					continue
+				# Test 4 possible 2x2 blocks containing (gx, gy):
+				# 1. Top-Left: (gx-1, gy-1)
+				if gx > 0 and gy > 0:
+					if p_base[idx - w - 1] < FlowField.TOWER_COST and p_base[idx - w] < FlowField.TOWER_COST and p_base[idx - 1] < FlowField.TOWER_COST:
+						has_walkable_2x2 = true
 
-				# 3. Diagonal squeeze (22.6px opening < 32px)
-				if (blocked_l and blocked_u) or (blocked_r and blocked_u) or (blocked_l and blocked_d) or (blocked_r and blocked_d):
+				# 2. Top-Right: (gx, gy-1)
+				if not has_walkable_2x2 and gx < w - 1 and gy > 0:
+					if p_base[idx - w] < FlowField.TOWER_COST and p_base[idx - w + 1] < FlowField.TOWER_COST and p_base[idx + 1] < FlowField.TOWER_COST:
+						has_walkable_2x2 = true
+
+				# 3. Bottom-Left: (gx-1, gy)
+				if not has_walkable_2x2 and gx > 0 and gy < h - 1:
+					if p_base[idx - 1] < FlowField.TOWER_COST and p_base[idx + w - 1] < FlowField.TOWER_COST and p_base[idx + w] < FlowField.TOWER_COST:
+						has_walkable_2x2 = true
+
+				# 4. Bottom-Right: (gx, gy)
+				if not has_walkable_2x2 and gx < w - 1 and gy < h - 1:
+					if p_base[idx + 1] < FlowField.TOWER_COST and p_base[idx + w] < FlowField.TOWER_COST and p_base[idx + w + 1] < FlowField.TOWER_COST:
+						has_walkable_2x2 = true
+
+				if not has_walkable_2x2:
 					_bg_heavy_field.base_cost[idx] = FlowField.TOWER_COST
-					continue
 
 	# Prepare per-exit background fields
 	var exit_count: int = _cached_exit_positions.size()
@@ -720,24 +636,25 @@ func _recalculate_all_integrations() -> void:
 	rebuild_tower_fields(true)
 
 func is_open_path_available(world_pos: Vector2, exit_idx: int = -1, nav_layer: int = 1) -> bool:
-	if (nav_layer & 4) != 0:
-		return walls_only_field.is_reachable(world_pos)
-
+	var is_ghost: bool = (nav_layer & 4) != 0
 	var is_heavy: bool = (nav_layer & 2) != 0
-	var field: FlowField = heavy_physical_field if is_heavy else physical_field
+	var field: FlowField = ghost_field if is_ghost else (heavy_physical_field if is_heavy else physical_field)
 	var reach_mask: PackedByteArray = _static_heavy_open_reachability if is_heavy else _static_open_reachability
 	var per_exit_masks: Array[PackedByteArray] = _per_exit_heavy_open_reachability if is_heavy else _per_exit_open_reachability
-
-	if reach_mask.is_empty():
-		return true
 
 	var g: Vector2i = field.global_to_grid(world_pos)
 	if not field.is_valid_cell(g.x, g.y):
 		return false
 
 	var idx: int = field.grid_to_index(g.x, g.y)
+	if is_ghost:
+		return ghost_field.integration_cost[idx] < FlowField.TOWER_COST
+
 	if exit_idx >= 0 and exit_idx < per_exit_masks.size():
 		return per_exit_masks[exit_idx][idx] == 1
+
+	if reach_mask.is_empty():
+		return field.integration_cost[idx] < FlowField.TOWER_COST
 
 	return reach_mask[idx] == 1
 

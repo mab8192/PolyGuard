@@ -326,7 +326,6 @@ func is_reachable(world_pos: Vector2) -> bool:
 
 ## Calculates integration fields for unified and per-exit fields in ONE Dijkstra wavefront pass
 func calculate_multi_integration_fields(target_positions: Array[Vector2], out_per_exit_fields: Array) -> void:
-	var start := Time.get_ticks_usec()
 	var exit_count: int = target_positions.size()
 	cached_target_positions = target_positions
 	integration_cost.fill(BLOCKED_COST)
@@ -375,7 +374,6 @@ func calculate_multi_integration_fields(target_positions: Array[Vector2], out_pe
 							integration_cost[idx] = initial_dist
 						_heap.push(initial_dist, (e << 18) | idx)
 
-	# Precomputed 1D neighbor offsets: 0..3 ortho (E, W, S, N), 4..7 diag (SE, SW, NE, NW)
 	var d_mult: Array[float] = [1.0, 1.0, 1.0, 1.0, SQRT_2, SQRT_2, SQRT_2, SQRT_2]
 
 	while _heap.pop():
@@ -392,27 +390,23 @@ func calculate_multi_integration_fields(target_positions: Array[Vector2], out_pe
 		var gy: int = curr_idx / w
 
 		# 1. Orthogonal neighbors
-		if gx < w - 1: # East (+1)
-			_relax_multi_neighbor(curr_idx + 1, pop_cost, d_mult[0], exit_field, exit_idx)
-		if gx > 0: # West (-1)
-			_relax_multi_neighbor(curr_idx - 1, pop_cost, d_mult[1], exit_field, exit_idx)
-		if gy < h - 1: # South (+w)
-			_relax_multi_neighbor(curr_idx + w, pop_cost, d_mult[2], exit_field, exit_idx)
-		if gy > 0: # North (-w)
-			_relax_multi_neighbor(curr_idx - w, pop_cost, d_mult[3], exit_field, exit_idx)
+		if gx < w - 1: _relax_multi_neighbor(curr_idx + 1, pop_cost, d_mult[0], exit_field, exit_idx)
+		if gx > 0: _relax_multi_neighbor(curr_idx - 1, pop_cost, d_mult[1], exit_field, exit_idx)
+		if gy < h - 1: _relax_multi_neighbor(curr_idx + w, pop_cost, d_mult[2], exit_field, exit_idx)
+		if gy > 0: _relax_multi_neighbor(curr_idx - w, pop_cost, d_mult[3], exit_field, exit_idx)
 
-		# 2. Diagonal neighbors (with corner-cutting protection)
-		if gx < w - 1 and gy < h - 1: # SE (+w+1)
-			if base_cost[curr_idx + 1] < TOWER_COST and base_cost[curr_idx + w] < TOWER_COST:
+		# 2. Diagonal neighbors (allow diagonals along open faces; only block closed corner pinches)
+		if gx < w - 1 and gy < h - 1:
+			if not (base_cost[curr_idx + 1] >= TOWER_COST and base_cost[curr_idx + w] >= TOWER_COST):
 				_relax_multi_neighbor(curr_idx + w + 1, pop_cost, d_mult[4], exit_field, exit_idx)
-		if gx > 0 and gy < h - 1: # SW (+w-1)
-			if base_cost[curr_idx - 1] < TOWER_COST and base_cost[curr_idx + w] < TOWER_COST:
+		if gx > 0 and gy < h - 1:
+			if not (base_cost[curr_idx - 1] >= TOWER_COST and base_cost[curr_idx + w] >= TOWER_COST):
 				_relax_multi_neighbor(curr_idx + w - 1, pop_cost, d_mult[5], exit_field, exit_idx)
-		if gx < w - 1 and gy > 0: # NE (-w+1)
-			if base_cost[curr_idx + 1] < TOWER_COST and base_cost[curr_idx - w] < TOWER_COST:
+		if gx < w - 1 and gy > 0:
+			if not (base_cost[curr_idx + 1] >= TOWER_COST and base_cost[curr_idx - w] >= TOWER_COST):
 				_relax_multi_neighbor(curr_idx - w + 1, pop_cost, d_mult[6], exit_field, exit_idx)
-		if gx > 0 and gy > 0: # NW (-w-1)
-			if base_cost[curr_idx - 1] < TOWER_COST and base_cost[curr_idx - w] < TOWER_COST:
+		if gx > 0 and gy > 0:
+			if not (base_cost[curr_idx - 1] >= TOWER_COST and base_cost[curr_idx - w] >= TOWER_COST):
 				_relax_multi_neighbor(curr_idx - w - 1, pop_cost, d_mult[7], exit_field, exit_idx)
 
 	# Calculate continuous gradient vectors for unified field
@@ -428,16 +422,18 @@ func _relax_multi_neighbor(n_idx: int, pop_cost: float, mult: float, exit_field:
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
-	var tentative_dist: float = pop_cost + cell_cost * mult
+	var tentative_dist: float = pop_cost + n_base * mult
 
 	if exit_field != null and tentative_dist < exit_field.integration_cost[n_idx]:
 		exit_field.integration_cost[n_idx] = tentative_dist
 		if tentative_dist < integration_cost[n_idx]:
 			integration_cost[n_idx] = tentative_dist
 		_heap.push(tentative_dist, (exit_idx << 18) | n_idx)
+	elif exit_field == null and tentative_dist < integration_cost[n_idx]:
+		integration_cost[n_idx] = tentative_dist
+		_heap.push(tentative_dist, (exit_idx << 18) | n_idx)
 
-## Calculates integration field (Dijkstra) including base costs + dynamic swarm congestion
+## Calculates integration field (Dijkstra) including base costs
 func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 	cached_target_positions = target_positions
 	integration_cost.fill(BLOCKED_COST)
@@ -484,27 +480,23 @@ func calculate_integration_field(target_positions: Array[Vector2]) -> void:
 		var gy: int = curr_idx / w
 
 		# 1. Orthogonal neighbors
-		if gx < w - 1:
-			_relax_single_neighbor(curr_idx + 1, pop_cost, d_mult[0])
-		if gx > 0:
-			_relax_single_neighbor(curr_idx - 1, pop_cost, d_mult[1])
-		if gy < h - 1:
-			_relax_single_neighbor(curr_idx + w, pop_cost, d_mult[2])
-		if gy > 0:
-			_relax_single_neighbor(curr_idx - w, pop_cost, d_mult[3])
+		if gx < w - 1: _relax_single_neighbor(curr_idx + 1, pop_cost, d_mult[0])
+		if gx > 0: _relax_single_neighbor(curr_idx - 1, pop_cost, d_mult[1])
+		if gy < h - 1: _relax_single_neighbor(curr_idx + w, pop_cost, d_mult[2])
+		if gy > 0: _relax_single_neighbor(curr_idx - w, pop_cost, d_mult[3])
 
-		# 2. Diagonal neighbors (with corner-cutting protection)
+		# 2. Diagonal neighbors (allow diagonals along open faces; only block closed corner pinches)
 		if gx < w - 1 and gy < h - 1:
-			if base_cost[curr_idx + 1] < TOWER_COST and base_cost[curr_idx + w] < TOWER_COST:
+			if not (base_cost[curr_idx + 1] >= TOWER_COST and base_cost[curr_idx + w] >= TOWER_COST):
 				_relax_single_neighbor(curr_idx + w + 1, pop_cost, d_mult[4])
 		if gx > 0 and gy < h - 1:
-			if base_cost[curr_idx - 1] < TOWER_COST and base_cost[curr_idx + w] < TOWER_COST:
+			if not (base_cost[curr_idx - 1] >= TOWER_COST and base_cost[curr_idx + w] >= TOWER_COST):
 				_relax_single_neighbor(curr_idx + w - 1, pop_cost, d_mult[5])
 		if gx < w - 1 and gy > 0:
-			if base_cost[curr_idx + 1] < TOWER_COST and base_cost[curr_idx - w] < TOWER_COST:
+			if not (base_cost[curr_idx + 1] >= TOWER_COST and base_cost[curr_idx - w] >= TOWER_COST):
 				_relax_single_neighbor(curr_idx - w + 1, pop_cost, d_mult[6])
 		if gx > 0 and gy > 0:
-			if base_cost[curr_idx - 1] < TOWER_COST and base_cost[curr_idx - w] < TOWER_COST:
+			if not (base_cost[curr_idx - 1] >= TOWER_COST and base_cost[curr_idx - w] >= TOWER_COST):
 				_relax_single_neighbor(curr_idx - w - 1, pop_cost, d_mult[7])
 
 	_calculate_continuous_gradient_vectors()
@@ -514,9 +506,7 @@ func _relax_single_neighbor(n_idx: int, pop_cost: float, mult: float) -> void:
 	if n_base >= BLOCKED_COST:
 		return
 
-	var cell_cost: float = n_base + clearance_cost[n_idx] + congestion_cost[n_idx]
-	var tentative_dist: float = pop_cost + cell_cost * mult
-
+	var tentative_dist: float = pop_cost + n_base * mult
 	if tentative_dist < integration_cost[n_idx]:
 		integration_cost[n_idx] = tentative_dist
 		_heap.push(tentative_dist, n_idx)
@@ -529,7 +519,7 @@ func _calculate_continuous_gradient_vectors() -> void:
 	if flow_vectors.size() != total_cells:
 		flow_vectors.resize(total_cells)
 
-	# 1. Fast interior cells (95% of grid, zero boundary branching)
+	# 1. Fast interior cells (3x3 isotropic Sobel gradient with normalized spatial derivatives)
 	for gy: int in range(1, h - 1):
 		var row_offset: int = gy * w
 		for gx: int in range(1, w - 1):
@@ -548,27 +538,60 @@ func _calculate_continuous_gradient_vectors() -> void:
 			var c_u: float = integration_cost[idx - w]
 			var c_d: float = integration_cost[idx + w]
 
+			var c_ul: float = integration_cost[idx - w - 1]
+			var c_ur: float = integration_cost[idx - w + 1]
+			var c_dl: float = integration_cost[idx + w - 1]
+			var c_dr: float = integration_cost[idx + w + 1]
+
 			var b_l: bool = base_cost[idx - 1] < max_valid_cost and c_l < max_valid_cost
 			var b_r: bool = base_cost[idx + 1] < max_valid_cost and c_r < max_valid_cost
 			var b_u: bool = base_cost[idx - w] < max_valid_cost and c_u < max_valid_cost
 			var b_d: bool = base_cost[idx + w] < max_valid_cost and c_d < max_valid_cost
 
-			var grad_x: float = 0.0
-			var grad_y: float = 0.0
+			var b_ul: bool = base_cost[idx - w - 1] < max_valid_cost and c_ul < max_valid_cost
+			var b_ur: bool = base_cost[idx - w + 1] < max_valid_cost and c_ur < max_valid_cost
+			var b_dl: bool = base_cost[idx + w - 1] < max_valid_cost and c_dl < max_valid_cost
+			var b_dr: bool = base_cost[idx + w + 1] < max_valid_cost and c_dr < max_valid_cost
 
-			if b_l and b_r:
-				grad_x = c_l - c_r
-			elif b_l and c_l < curr_cost:
-				grad_x = c_l - curr_cost
-			elif b_r and c_r < curr_cost:
-				grad_x = curr_cost - c_r
+			# 3x3 isotropic spatial gradient with normalized derivative scaling (Δx = Δy = 1.0)
+			# Mid horizontal
+			var dx_mid: float = 0.0
+			if b_l and b_r: dx_mid = (c_l - c_r) * 0.5
+			elif b_l and c_l < curr_cost: dx_mid = c_l - curr_cost
+			elif b_r and c_r < curr_cost: dx_mid = curr_cost - c_r
 
-			if b_u and b_d:
-				grad_y = c_u - c_d
-			elif b_u and c_u < curr_cost:
-				grad_y = c_u - curr_cost
-			elif b_d and c_d < curr_cost:
-				grad_y = curr_cost - c_d
+			# Top horizontal
+			var dx_top: float = 0.0
+			if b_ul and b_ur: dx_top = (c_ul - c_ur) * 0.5
+			elif b_ul and c_ul < curr_cost: dx_top = c_ul - curr_cost
+			elif b_ur and c_ur < curr_cost: dx_top = curr_cost - c_ur
+
+			# Bottom horizontal
+			var dx_bot: float = 0.0
+			if b_dl and b_dr: dx_bot = (c_dl - c_dr) * 0.5
+			elif b_dl and c_dl < curr_cost: dx_bot = c_dl - curr_cost
+			elif b_dr and c_dr < curr_cost: dx_bot = curr_cost - c_dr
+
+			# Mid vertical
+			var dy_mid: float = 0.0
+			if b_u and b_d: dy_mid = (c_u - c_d) * 0.5
+			elif b_u and c_u < curr_cost: dy_mid = c_u - curr_cost
+			elif b_d and c_d < curr_cost: dy_mid = curr_cost - c_d
+
+			# Left vertical
+			var dy_left: float = 0.0
+			if b_ul and b_dl: dy_left = (c_ul - c_dl) * 0.5
+			elif b_ul and c_ul < curr_cost: dy_left = c_ul - curr_cost
+			elif b_dl and c_dl < curr_cost: dy_left = curr_cost - c_dl
+
+			# Right vertical
+			var dy_right: float = 0.0
+			if b_ur and b_dr: dy_right = (c_ur - c_dr) * 0.5
+			elif b_ur and c_ur < curr_cost: dy_right = c_ur - curr_cost
+			elif b_dr and c_dr < curr_cost: dy_right = curr_cost - c_dr
+
+			var grad_x: float = dx_mid * 2.0 + dx_top + dx_bot
+			var grad_y: float = dy_mid * 2.0 + dy_left + dy_right
 
 			var grad_len_sq: float = grad_x * grad_x + grad_y * grad_y
 			if grad_len_sq > 0.000001:
@@ -586,18 +609,18 @@ func _calculate_continuous_gradient_vectors() -> void:
 			if b_d and c_d < lowest_cost: lowest_cost = c_d; best_dx = 0.0; best_dy = 1.0
 			if b_u and c_u < lowest_cost: lowest_cost = c_u; best_dx = 0.0; best_dy = -1.0
 
-			var c_dr: float = integration_cost[idx + w + 1]
-			if c_dr < lowest_cost and base_cost[idx + w + 1] < max_valid_cost and base_cost[idx + 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
-				lowest_cost = c_dr; best_dx = 1.0; best_dy = 1.0
-			var c_dl: float = integration_cost[idx + w - 1]
-			if c_dl < lowest_cost and base_cost[idx + w - 1] < max_valid_cost and base_cost[idx - 1] < TOWER_COST and base_cost[idx + w] < TOWER_COST:
-				lowest_cost = c_dl; best_dx = -1.0; best_dy = 1.0
-			var c_ur: float = integration_cost[idx - w + 1]
-			if c_ur < lowest_cost and base_cost[idx - w + 1] < max_valid_cost and base_cost[idx + 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
-				lowest_cost = c_ur; best_dx = 1.0; best_dy = -1.0
-			var c_ul: float = integration_cost[idx - w - 1]
-			if c_ul < lowest_cost and base_cost[idx - w - 1] < max_valid_cost and base_cost[idx - 1] < TOWER_COST and base_cost[idx - w] < TOWER_COST:
-				lowest_cost = c_ul; best_dx = -1.0; best_dy = -1.0
+			var c_dr_val: float = integration_cost[idx + w + 1]
+			if b_dr and c_dr_val < lowest_cost and not (base_cost[idx + 1] >= TOWER_COST and base_cost[idx + w] >= TOWER_COST):
+				lowest_cost = c_dr_val; best_dx = 1.0; best_dy = 1.0
+			var c_dl_val: float = integration_cost[idx + w - 1]
+			if b_dl and c_dl_val < lowest_cost and not (base_cost[idx - 1] >= TOWER_COST and base_cost[idx + w] >= TOWER_COST):
+				lowest_cost = c_dl_val; best_dx = -1.0; best_dy = 1.0
+			var c_ur_val: float = integration_cost[idx - w + 1]
+			if b_ur and c_ur_val < lowest_cost and not (base_cost[idx + 1] >= TOWER_COST and base_cost[idx - w] >= TOWER_COST):
+				lowest_cost = c_ur_val; best_dx = 1.0; best_dy = -1.0
+			var c_ul_val: float = integration_cost[idx - w - 1]
+			if b_ul and c_ul_val < lowest_cost and not (base_cost[idx - 1] >= TOWER_COST and base_cost[idx - w] >= TOWER_COST):
+				lowest_cost = c_ul_val; best_dx = -1.0; best_dy = -1.0
 
 			if best_dx != 0.0 or best_dy != 0.0:
 				var inv_len: float = 1.0 / sqrt(best_dx * best_dx + best_dy * best_dy)
@@ -635,14 +658,14 @@ func _calc_cell_gradient(gx: int, gy: int) -> void:
 	var grad_y: float = 0.0
 
 	if has_left and has_right:
-		grad_x = integration_cost[idx - 1] - integration_cost[idx + 1]
+		grad_x = (integration_cost[idx - 1] - integration_cost[idx + 1]) * 0.5
 	elif has_left and integration_cost[idx - 1] < curr_cost:
 		grad_x = integration_cost[idx - 1] - curr_cost
 	elif has_right and integration_cost[idx + 1] < curr_cost:
 		grad_x = curr_cost - integration_cost[idx + 1]
 
 	if has_up and has_down:
-		grad_y = integration_cost[idx - w] - integration_cost[idx + w]
+		grad_y = (integration_cost[idx - w] - integration_cost[idx + w]) * 0.5
 	elif has_up and integration_cost[idx - w] < curr_cost:
 		grad_y = integration_cost[idx - w] - curr_cost
 	elif has_down and integration_cost[idx + w] < curr_cost:
@@ -686,11 +709,11 @@ func sample_direction(world_pos: Vector2) -> Vector2:
 		var grad_x: float = 0.0
 		var grad_y: float = 0.0
 
-		if b_l and b_r: grad_x = c_l - c_r
+		if b_l and b_r: grad_x = (c_l - c_r) * 0.5
 		elif b_l and c_l < curr_cost: grad_x = c_l - curr_cost
 		elif b_r and c_r < curr_cost: grad_x = curr_cost - c_r
 
-		if b_u and b_d: grad_y = c_u - c_d
+		if b_u and b_d: grad_y = (c_u - c_d) * 0.5
 		elif b_u and c_u < curr_cost: grad_y = c_u - curr_cost
 		elif b_d and c_d < curr_cost: grad_y = curr_cost - c_d
 

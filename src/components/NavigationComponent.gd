@@ -174,32 +174,42 @@ func _physics_process(delta: float) -> void:
 		var cong_avoid: Vector2 = fm.get_congestion_avoidance_vector(_actor.global_position, dir, data.separation_radius)
 		if cong_avoid != Vector2.ZERO:
 			# Blend desire direction with congestion repulsion vector
-			var blend_weight: float = data.congestion_weight * 0.75
+			var blend_weight: float = data.congestion_weight * 0.4
 			dir = (dir + cong_avoid * blend_weight).normalized()
 
+	# Soft Boid Separation (with Lateral Corridor Lane Spreading)
 	if data and data.enable_separation:
 		var sep: Vector2 = _compute_separation_vector()
 		if sep != Vector2.ZERO:
-			dir = (dir + sep * data.separation_weight).normalized()
+			if dir != Vector2.ZERO:
+				# Project separation primarily laterally (perpendicular to goal heading)
+				# to encourage lane spreading across the corridor rather than braking/speeding up
+				var flow_tangent: Vector2 = Vector2(-dir.y, dir.x)
+				var lateral_sep: float = sep.dot(flow_tangent)
+				var forward_sep: float = sep.dot(dir)
+				var blended_sep: Vector2 = flow_tangent * lateral_sep + dir * (forward_sep * 0.25)
+				dir = (dir + blended_sep * data.separation_weight).normalized()
+			else:
+				dir = sep.normalized()
 
-	# Dynamic Stuck / Crowd Jam Detection
+	# Dynamic Stuck / Crowd Jam Detection (gentle fallback for genuine total jams)
 	if is_instance_valid(_actor):
 		_sample_timer += delta
-		if _sample_timer >= 0.2:
+		if _sample_timer >= 0.25:
 			var dist_moved: float = _actor.global_position.distance_to(_last_sample_pos)
 			_last_sample_pos = _actor.global_position
 			_sample_timer = 0.0
 
-			if dir != Vector2.ZERO and dist_moved < 3.0:
-				_stuck_timer += 0.2
+			if dir != Vector2.ZERO and dist_moved < 1.0:
+				_stuck_timer += 0.25
 			else:
-				_stuck_timer = maxf(0.0, _stuck_timer - 0.4)
+				_stuck_timer = maxf(0.0, _stuck_timer - 0.5)
 
-		# If jammed in an arch against another unit, apply lateral unstuck torque
-		if _stuck_timer >= 0.3:
+		# If genuinely stuck in place for > 0.8s, apply a gentle lateral nudge
+		if _stuck_timer >= 0.8:
 			var unstuck_side: float = 1.0 if (_actor.get_instance_id() % 2 == 0) else -1.0
 			var perp: Vector2 = Vector2(-dir.y, dir.x) * unstuck_side
-			dir = (dir * 0.4 + perp * 0.8).normalized()
+			dir = (dir * 0.7 + perp * 0.3).normalized()
 
 	var max_speed: float = movement.get_speed() if movement else 0.0
 	var intended_vel: Vector2 = dir * max_speed
@@ -239,13 +249,24 @@ func _find_target_tower() -> Tower:
 	if candidates.is_empty():
 		return null
 
+	var fm: FlowFieldManager = _get_flow_manager()
 	var best_tower: Tower = null
-	var min_dist_sq: float = INF
+	var min_cost: float = INF
+
 	for t: Tower in candidates:
-		var d_sq: float = _actor.global_position.distance_squared_to(t.global_position)
-		if d_sq < min_dist_sq:
-			min_dist_sq = d_sq
-			best_tower = t
+		var direct_dist: float = _actor.global_position.distance_to(t.global_position)
+		if direct_dist >= min_cost:
+			continue
+		if fm:
+			var path: PackedVector2Array = fm.find_grid_path(_actor.global_position, t.global_position)
+			var path_len: float = _calculate_path_length(path)
+			if path_len < min_cost:
+				min_cost = path_len
+				best_tower = t
+		else:
+			if direct_dist < min_cost:
+				min_cost = direct_dist
+				best_tower = t
 
 	return best_tower
 

@@ -96,10 +96,10 @@ func _ready() -> void:
 		
 		if data and data.type == EnemyData.EnemyType.GHOST:
 			collision_layer = 8 # Layer 4: Ghost Enemies
-			collision_mask = 25 # Collides with Layer 1 Walls (1), Layer 4 Ghost Enemies (8), and Layer 5 Spectral Towers (16)
+			collision_mask = 17 # Collides with Layer 1 Walls (1) and Layer 5 Spectral Towers (16)
 		else:
 			collision_layer = 4 # Layer 3: Physical Enemies
-			collision_mask = 23 # Collides with Layer 1 Walls (1), Layer 2 Towers (2), Layer 3 Physical Enemies (4), and Layer 5 Spectral Towers (16)
+			collision_mask = 19 # Collides with Layer 1 Walls (1), Layer 2 Towers (2), and Layer 5 Spectral Towers (16)
 
 		SignalBus.exits_updated.connect(_on_exits_updated)
 		_on_exits_updated()
@@ -133,12 +133,13 @@ func _on_died() -> void:
 	queue_free()
 	SignalBus.enemy_died.emit(self)
 
-func _on_velocity_computed(vel: Vector2):
-	var dir = vel.normalized()
+func _on_velocity_computed(vel: Vector2) -> void:
+	var delta: float = get_physics_process_delta_time()
+	var dir: Vector2 = vel.normalized()
 	if movement:
-		movement.handle_movement(dir, get_physics_process_delta_time())
-	if velocity.length_squared() > 0.1:
-		look_at(global_position + velocity)
+		movement.handle_movement(dir, delta)
+	if vel.length_squared() > 0.1:
+		rotation = lerp_angle(rotation, vel.angle(), 16.0 * delta)
 
 func _on_no_path_available() -> void:
 	pass
