@@ -215,8 +215,12 @@ func _on_enemy_spawned(_enemy: Enemy) -> void:
 
 func _on_enemy_died(enemy: Enemy) -> void:
 	if stage:
-		stage.add_energy(enemy.data.energy_reward)
-		stage.add_score(enemy.data.energy_reward * 10)
+		var energy_mult: float = 1.0
+		if enemy.effect_receiver:
+			energy_mult = enemy.effect_receiver.get_energy_reward_multiplier()
+		var total_energy: int = int(round(enemy.data.energy_reward * energy_mult))
+		stage.add_energy(total_energy)
+		stage.add_score(total_energy * 10)
 	
 	_check_wave_completion()
 

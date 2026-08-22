@@ -81,3 +81,10 @@ func get_magic_resistance_reduction() -> float:
 		if effect and effect.data:
 			reduction = maxf(reduction, effect.data.magic_resistance_reduction)
 	return reduction
+
+func get_energy_reward_multiplier() -> float:
+	var mult: float = 1.0
+	for effect in _active_effects:
+		if effect and effect.data:
+			mult = maxf(mult, effect.data.energy_reward_multiplier)
+	return mult
