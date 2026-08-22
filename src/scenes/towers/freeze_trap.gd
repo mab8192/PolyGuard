@@ -1,6 +1,6 @@
 extends Tower
 
-@onready var freeze_effect: GPUParticles2D = $"Freeze Effect"
+@onready var freeze_effect: CPUParticles2D = $"Freeze Effect"
 
 func _ready() -> void:
 	super._ready()

@@ -1,6 +1,6 @@
 extends Tower
 
-@onready var gas_effect: GPUParticles2D = $"Gas Effect"
+@onready var gas_effect: CPUParticles2D = $"Gas Effect"
 
 func _ready() -> void:
 	super._ready()

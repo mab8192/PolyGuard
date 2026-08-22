@@ -1,6 +1,6 @@
 class_name FlamethrowerTower extends Tower
 
-@onready var flame_effect: GPUParticles2D = $"Flame Effect"
+@onready var flame_effect: CPUParticles2D = $"Flame Effect"
 
 func _ready() -> void:
 	super._ready()

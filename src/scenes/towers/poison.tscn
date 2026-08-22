@@ -25,30 +25,10 @@ size = Vector2(64, 64)
 [sub_resource type="Gradient" id="Gradient_gas"]
 colors = PackedColorArray(0.3, 0.95, 0.25, 0.85, 0.1, 0.6, 0.15, 0)
 
-[sub_resource type="GradientTexture1D" id="GradientTexture1D_gas"]
-gradient = SubResource("Gradient_gas")
-
 [sub_resource type="Curve" id="Curve_hg6e0"]
 _limits = [0.0, 3.0, 0.0, 1.0]
 _data = [Vector2(0, 0.28402376), 0.0, 0.0, 0, 0, Vector2(1, 0), 0.0, 0.0, 0, 0]
 point_count = 2
-
-[sub_resource type="CurveTexture" id="CurveTexture_0pr3y"]
-curve = SubResource("Curve_hg6e0")
-
-[sub_resource type="ParticleProcessMaterial" id="ParticleProcessMaterial_sg31k"]
-particle_flag_disable_z = true
-spread = 180.0
-initial_velocity_min = 20.0
-initial_velocity_max = 60.0
-gravity = Vector3(0, -10, 0)
-damping_min = 5.0
-damping_max = 15.0
-scale_min = 2.0
-scale_max = 5.0
-scale_over_velocity_max = 40.0
-scale_over_velocity_curve = SubResource("CurveTexture_0pr3y")
-color_ramp = SubResource("GradientTexture1D_gas")
 
 [node name="Poison Trap" type="StaticBody2D" unique_id=1776429960]
 collision_layer = 0
@@ -71,7 +51,7 @@ shape = SubResource("RectangleShape2D_qgbsg")
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=1764189137]
 texture = ExtResource("6_sg31k")
 
-[node name="Gas Effect" type="GPUParticles2D" parent="." unique_id=1731327836]
+[node name="Gas Effect" type="CPUParticles2D" parent="." unique_id=1731327836]
 z_index = 1
 emitting = false
 amount = 20
@@ -79,4 +59,13 @@ texture = ExtResource("7_0pr3y")
 lifetime = 1.5
 one_shot = true
 explosiveness = 0.2
-process_material = SubResource("ParticleProcessMaterial_sg31k")
+spread = 180.0
+gravity = Vector2(0, -10)
+initial_velocity_min = 20.0
+initial_velocity_max = 60.0
+damping_min = 5.0
+damping_max = 15.0
+scale_amount_min = 2.0
+scale_amount_max = 5.0
+scale_amount_curve = SubResource("Curve_hg6e0")
+color_ramp = SubResource("Gradient_gas")
