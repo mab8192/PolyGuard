@@ -204,9 +204,11 @@ func _update_preview_state() -> void:
 	
 	# Semi-transparent ghost look when previewing
 	if is_preview:
+		z_index = 15
 		modulate.a = 0.5
 		is_range_visible = true
 	else:
+		z_index = 0
 		_update_active_state(false)
 		is_range_visible = is_selected
 	

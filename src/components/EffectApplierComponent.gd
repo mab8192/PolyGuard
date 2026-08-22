@@ -62,6 +62,9 @@ func _exit_tree() -> void:
 	_applied_effects.clear()
 
 func _ready() -> void:
+	z_index = 12
+	z_as_relative = false
+
 	if get_parent():
 		get_parent().set_meta(&"EffectApplierComponent", self)
 	_update_collision_mask()

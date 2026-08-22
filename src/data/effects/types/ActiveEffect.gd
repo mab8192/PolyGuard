@@ -67,6 +67,9 @@ func apply(target: Node2D) -> void:
 	if data.impact_vfx:
 		var imp = data.impact_vfx.instantiate()
 		if imp:
+			if imp is CanvasItem:
+				(imp as CanvasItem).z_index = 30
+				(imp as CanvasItem).z_as_relative = false
 			if target.get_parent():
 				target.get_parent().add_child(imp)
 			else:
@@ -82,6 +85,9 @@ func apply(target: Node2D) -> void:
 	if data.active_vfx:
 		var vfx = data.active_vfx.instantiate()
 		if vfx:
+			if vfx is CanvasItem:
+				(vfx as CanvasItem).z_index = 30
+				(vfx as CanvasItem).z_as_relative = false
 			target.add_child(vfx)
 			_visual_node = vfx
 			if vfx is CPUParticles2D:

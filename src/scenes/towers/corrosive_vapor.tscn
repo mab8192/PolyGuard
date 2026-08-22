@@ -40,7 +40,8 @@ shape = SubResource("RectangleShape2D_corr_area")
 texture = ExtResource("3_tex")
 
 [node name="Gas Effect" type="CPUParticles2D" parent="." unique_id=1731327891]
-z_index = 1
+z_index = 30
+z_as_relative = false
 emitting = false
 amount = 22
 texture = ExtResource("4_particle")

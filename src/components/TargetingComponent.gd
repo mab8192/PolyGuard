@@ -27,6 +27,9 @@ func get_targets() -> Array[Node2D]:
 	return _active_targets
 
 func _ready() -> void:
+	z_index = 12
+	z_as_relative = false
+
 	if not data:
 		push_error("Missing TargetingData! %s" % get_path())
 

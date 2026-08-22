@@ -2,6 +2,10 @@ extends Node2D
 
 @onready var targeting_component: TargetingComponent = $"../TargetingComponent"
 
+func _ready() -> void:
+	z_index = 30
+	z_as_relative = false
+
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
 	queue_redraw()

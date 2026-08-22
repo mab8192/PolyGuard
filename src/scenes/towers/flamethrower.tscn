@@ -41,6 +41,8 @@ polygon = PackedVector2Array(0, 0, 160, -90, 220, -50, 240, 0, 220, 50, 160, 90)
 texture = ExtResource("4_tex")
 
 [node name="Flame Effect" type="CPUParticles2D" parent="." unique_id=1731327899]
+z_index = 30
+z_as_relative = false
 position = Vector2(28, 0)
 emitting = false
 amount = 30

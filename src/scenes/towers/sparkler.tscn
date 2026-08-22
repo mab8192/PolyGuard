@@ -53,6 +53,8 @@ position = Vector2(10, -10)
 texture = ExtResource("5_tex")
 
 [node name="SparkParticles" type="CPUParticles2D" parent="." unique_id=194820210]
+z_index = 30
+z_as_relative = false
 lifetime = 0.5
 emission_shape = 1
 emission_sphere_radius = 6.0

@@ -5,7 +5,7 @@
 			{
 				"count": 10.0,
 				"delay": 0.0,
-				"enemy_type": "grunt",
+				"enemy_type": "sniper",
 				"interval": 0.8,
 				"spawner_id": "Spawner"
 			}

@@ -4,6 +4,10 @@ class_name SpectralBeamVisualizer extends Node2D
 
 var _pulse_offset: float = 0.0
 
+func _ready() -> void:
+	z_index = 30
+	z_as_relative = false
+
 func _process(delta: float) -> void:
 	_pulse_offset = fmod(_pulse_offset + delta * 2.5, 1.0)
 	queue_redraw()
