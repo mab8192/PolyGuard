@@ -116,8 +116,18 @@ func _refresh_all() -> void:
 
 func _update_header() -> void:
 	if current_stage:
-		stage_title_label.text = current_stage.stage_name.to_upper()
-		stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_energy, current_stage.starting_lives]
+		if GameManager.is_endless_mode:
+			var stage_id = Registry.get_stage_id(current_stage)
+			var endless_rec = SaveManager.get_endless_record(stage_id)
+			var high_wave = endless_rec.get("highest_wave", 0)
+			stage_title_label.text = "ENDLESS • " + current_stage.stage_name.to_upper()
+			if high_wave > 0:
+				stage_subtitle_label.text = "Starting Energy: %d  •  Lives: %d  •  Best: Wave %d" % [current_stage.starting_energy, current_stage.starting_lives, high_wave]
+			else:
+				stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d  •  Endless Defense" % [current_stage.starting_energy, current_stage.starting_lives]
+		else:
+			stage_title_label.text = current_stage.stage_name.to_upper()
+			stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_energy, current_stage.starting_lives]
 	else:
 		stage_title_label.text = "CUSTOM LOADOUT"
 		stage_subtitle_label.text = "Select your defensive arsenal"

@@ -32,10 +32,16 @@ func _on_energy_changed(energy: int) -> void:
 	energy_label.text = str(energy)
 
 func _on_stage_loaded() -> void:
-	wave_label.text = "1 / " + str(GameManager.current_stage.data.get_waves().size())
+	if GameManager.is_endless_mode:
+		wave_label.text = "Wave 1"
+	elif GameManager.current_stage and GameManager.current_stage.data:
+		wave_label.text = "1 / " + str(GameManager.current_stage.data.get_waves().size())
 
 func _on_wave_changed(wave: int) -> void:
-	wave_label.text = str(wave) + " / " + str(GameManager.current_stage.data.get_waves().size())
+	if GameManager.is_endless_mode:
+		wave_label.text = "Wave %d" % wave
+	elif GameManager.current_stage and GameManager.current_stage.data:
+		wave_label.text = str(wave) + " / " + str(GameManager.current_stage.data.get_waves().size())
 
 func _on_pause_pressed() -> void:
 	var hud = find_parent("HUD") as HUD

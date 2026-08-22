@@ -102,11 +102,27 @@ func start_next_wave() -> void:
 	if not stage or not stage.data:
 		return
 		
-	var wave_data: WaveData = stage.data.get_wave(wave)
+	var wave_data: WaveData = null
+	var total_json_waves: int = stage.data.get_waves().size()
+	
+	if wave < total_json_waves:
+		wave_data = stage.data.get_wave(wave)
+	elif GameManager.is_endless_mode:
+		wave_data = EndlessWaveGenerator.generate_wave(stage, wave, spawners)
+	
 	if wave_data:
 		wave_is_active = true
 		pending_enemies = 0
 		current_wave = wave_data
+		
+		# Compute wave stat multipliers for endless mode
+		var hp_mult: float = 1.0
+		var speed_mult: float = 1.0
+		var bounty_mult: float = 1.0
+		if GameManager.is_endless_mode:
+			hp_mult = EndlessWaveGenerator.get_wave_hp_multiplier(wave + 1)
+			speed_mult = EndlessWaveGenerator.get_wave_speed_multiplier(wave + 1)
+			bounty_mult = EndlessWaveGenerator.get_wave_bounty_multiplier(wave + 1)
 		
 		_refresh_spawners()
 		
@@ -118,15 +134,24 @@ func start_next_wave() -> void:
 				node.set_indicator(Exit.IndicatorState.NONE)
 
 		# 2. Activate any spawners or exits scheduled for this wave (with animation)
-		var activating_spawners = stage.data.get_activating_spawners_for_wave(wave)
-		for spawner in spawners:
-			if activating_spawners.has(spawner.spawner_id) or activating_spawners.has(spawner.name):
-				spawner.activate(true)
+		if wave < total_json_waves:
+			var activating_spawners = stage.data.get_activating_spawners_for_wave(wave)
+			for spawner in spawners:
+				if activating_spawners.has(spawner.spawner_id) or activating_spawners.has(spawner.name):
+					spawner.activate(true)
 
-		var activating_exits = stage.data.get_activating_exits_for_wave(wave)
-		for node in get_tree().get_nodes_in_group("exits"):
-			if node is Exit:
-				if activating_exits.has(node.exit_id) or activating_exits.has(node.name):
+			var activating_exits = stage.data.get_activating_exits_for_wave(wave)
+			for node in get_tree().get_nodes_in_group("exits"):
+				if node is Exit:
+					if activating_exits.has(node.exit_id) or activating_exits.has(node.name):
+						node.activate(true)
+		elif GameManager.is_endless_mode:
+			# Ensure all spawners and exits are fully active in procedural endless waves
+			for spawner in spawners:
+				if not spawner.is_active:
+					spawner.activate(true)
+			for node in get_tree().get_nodes_in_group("exits"):
+				if node is Exit and not node.is_active:
 					node.activate(true)
 		
 		# 3. Collect active spawners
@@ -143,18 +168,18 @@ func start_next_wave() -> void:
 				if target:
 					if not target.is_active:
 						target.activate(true)
-					target.run(spawn_group)
+					target.run(spawn_group, hp_mult, speed_mult, bounty_mult)
 				else:
 					push_warning("WaveManager: Spawner ID '%s' not found, falling back to active spawners." % spawn_group.spawner_id)
 					if not active_spawners.is_empty():
-						active_spawners[unassigned_index % active_spawners.size()].run(spawn_group)
+						active_spawners[unassigned_index % active_spawners.size()].run(spawn_group, hp_mult, speed_mult, bounty_mult)
 						unassigned_index += 1
 			else:
 				if not active_spawners.is_empty():
-					active_spawners[unassigned_index % active_spawners.size()].run(spawn_group)
+					active_spawners[unassigned_index % active_spawners.size()].run(spawn_group, hp_mult, speed_mult, bounty_mult)
 					unassigned_index += 1
 				elif not spawners.is_empty():
-					spawners[unassigned_index % spawners.size()].run(spawn_group)
+					spawners[unassigned_index % spawners.size()].run(spawn_group, hp_mult, speed_mult, bounty_mult)
 					unassigned_index += 1
 		
 		wave += 1
@@ -195,7 +220,7 @@ func _check_wave_completion() -> void:
 			var wave_bonus = wave * 250
 			stage.add_score(wave_bonus)
 		
-		if stage and stage.data and wave == stage.data.get_waves().size():
+		if not GameManager.is_endless_mode and stage and stage.data and wave == stage.data.get_waves().size():
 			is_stage_active = false
 			var time_bonus = max(0, 5000 - int(stage_time) * 10)
 			var lives_bonus = stage.lives * 1000

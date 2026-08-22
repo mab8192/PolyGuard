@@ -8,6 +8,7 @@ const DEFAULT_UNLOCKED_TOWERS: Array[String] = ["archer_tower", "tar_trap", "spi
 var _credits: int = 0
 var _unlocked_stages: Array[String] = []
 var _stage_records: Dictionary = {} # stage_id -> { "completed": bool, "stars": int, "high_score": int, "cleared_once": bool }
+var _endless_records: Dictionary = {} # stage_id -> { "highest_wave": int, "high_score": int }
 var _unlocked_towers: Array[String] = []
 var _tower_levels: Dictionary = {} # tower_id -> int (1 to 5)
 var _tower_choices: Dictionary = {} # tower_id -> choice_id (String)
@@ -236,6 +237,61 @@ func _get_next_stage_id(current_stage_id: String) -> String:
 	return ""
 
 # =========================================================================
+# ENDLESS MODE API
+# =========================================================================
+
+func get_endless_record(stage_id: String) -> Dictionary:
+	return _endless_records.get(stage_id, {
+		"highest_wave": 0,
+		"high_score": 0
+	})
+
+func record_endless_run(stage_id: String, waves_cleared: int, score: int) -> Dictionary:
+	var record: Dictionary = get_endless_record(stage_id)
+	var prev_highest_wave: int = record.get("highest_wave", 0)
+	var prev_high_score: int = record.get("high_score", 0)
+	
+	var is_new_wave_record: bool = waves_cleared > prev_highest_wave
+	var is_new_score_record: bool = score > prev_high_score
+	
+	var new_highest_wave: int = maxi(prev_highest_wave, waves_cleared)
+	var new_high_score: int = maxi(prev_high_score, score)
+	
+	# Reward calculation:
+	# - Base: 5 credits per wave cleared
+	# - Wave record bonus: 15 credits per new wave record achieved
+	# - Milestone bonus: 50 credits for reaching wave 10, 20, 30, etc. for first time
+	var base_reward: int = waves_cleared * 5
+	var new_waves_diff: int = maxi(0, new_highest_wave - prev_highest_wave)
+	var wave_record_bonus: int = new_waves_diff * 15
+	var milestone_bonus: int = 0
+	
+	for m in range(10, new_highest_wave + 1, 10):
+		if prev_highest_wave < m and new_highest_wave >= m:
+			milestone_bonus += 50
+			
+	var total_reward: int = base_reward + wave_record_bonus + milestone_bonus
+	if total_reward > 0:
+		add_credits(total_reward)
+		
+	record["highest_wave"] = new_highest_wave
+	record["high_score"] = new_high_score
+	_endless_records[stage_id] = record
+	
+	save_to_disk()
+	
+	return {
+		"waves_cleared": waves_cleared,
+		"highest_wave": new_highest_wave,
+		"is_new_wave_record": is_new_wave_record,
+		"is_new_score_record": is_new_score_record,
+		"base_reward": base_reward,
+		"wave_record_bonus": wave_record_bonus,
+		"milestone_bonus": milestone_bonus,
+		"total_reward": total_reward
+	}
+
+# =========================================================================
 # RESPEC & SPENT CREDITS API
 # =========================================================================
 
@@ -368,7 +424,8 @@ func save_to_disk() -> void:
 		"tower_levels": _tower_levels,
 		"tower_choices": _tower_choices,
 		"unlocked_specializations": _unlocked_specializations,
-		"selected_loadout": _selected_loadout
+		"selected_loadout": _selected_loadout,
+		"endless_records": _endless_records
 	}
 	
 	var json_str = JSON.stringify(data, "\t")
@@ -447,6 +504,10 @@ func load_save() -> void:
 		for item in saved_loadout:
 			_selected_loadout.append(str(item))
 
+	var saved_endless = data.get("endless_records", {})
+	if saved_endless is Dictionary:
+		_endless_records = saved_endless
+
 func _init_defaults() -> void:
 	_credits = 0
 	_is_ad_free = false
@@ -459,6 +520,7 @@ func _init_defaults() -> void:
 	_tower_choices = {}
 	_unlocked_specializations = {}
 	_selected_loadout = DEFAULT_UNLOCKED_TOWERS.duplicate()
+	_endless_records = {}
 
 # =========================================================================
 # DEVELOPER CHEATS API
@@ -515,6 +577,13 @@ func cheat_max_all_towers() -> void:
 			if not specs.is_empty():
 				_tower_choices[tower_id] = specs[0]
 		SignalBus.tower_upgraded.emit(tower_id, 5)
+	save_to_disk()
+
+func cheat_set_endless_record(stage_id: String, wave: int = 50, score: int = 500000) -> void:
+	_endless_records[stage_id] = {
+		"highest_wave": wave,
+		"high_score": score
+	}
 	save_to_disk()
 
 func cheat_reset_save() -> void:

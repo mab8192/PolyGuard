@@ -20,9 +20,10 @@ func _populate_stages() -> void:
 		card.setup(stage)
 		card.stage_selected.connect(_on_stage_selected)
 
-func _on_stage_selected(stage: StageData) -> void:
+func _on_stage_selected(stage: StageData, is_endless: bool = false) -> void:
 	if stage:
 		var stage_id = Registry.get_stage_id(stage)
 		if SaveManager.is_stage_unlocked(stage_id):
+			GameManager.is_endless_mode = is_endless
 			GameManager.selected_stage = stage
 			GameManager.load_view(GameManager.View.LOADOUT)

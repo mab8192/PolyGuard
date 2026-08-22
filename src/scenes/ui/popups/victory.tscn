@@ -130,6 +130,14 @@ focus_mode = 0
 theme_type_variation = &"PrimaryButton"
 text = "NEXT STAGE"
 
+[node name="ContinueEndlessButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170024]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "CONTINUE IN ENDLESS"
+
 [node name="RetryButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/ButtonsVBox" unique_id=2170011]
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 80)

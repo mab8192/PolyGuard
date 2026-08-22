@@ -42,7 +42,8 @@ layout_mode = 2
 theme_override_constants/separation = 28
 alignment = 1
 
-[node name="Title" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2160007]
+[node name="TitleLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2160007]
+unique_name_in_owner = true
 layout_mode = 2
 theme_type_variation = &"DangerHeaderText"
 text = "DEFEAT"

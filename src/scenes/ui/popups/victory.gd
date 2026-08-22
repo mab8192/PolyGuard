@@ -11,6 +11,7 @@ const STAR_UNEARNED_COLOR := Color(0.28, 0.32, 0.42, 0.45)
 @onready var reward_breakdown_label: Label = %RewardBreakdownLabel
 @onready var next_unlock_label: Label = %NextUnlockLabel
 @onready var next_stage_button: Button = %NextStageButton
+@onready var continue_endless_button: Button = %ContinueEndlessButton
 @onready var retry_button: Button = %RetryButton
 @onready var inventory_button: Button = %InventoryButton
 @onready var main_menu_button: Button = %MainMenuButton
@@ -20,6 +21,7 @@ func _ready() -> void:
 	SignalBus.stage_completed.connect(_on_stage_completed)
 
 	next_stage_button.pressed.connect(_on_next_stage_pressed)
+	continue_endless_button.pressed.connect(_on_continue_endless_pressed)
 	retry_button.pressed.connect(_on_retry_pressed)
 	inventory_button.pressed.connect(_on_inventory_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
@@ -96,6 +98,17 @@ func _on_next_stage_pressed() -> void:
 	if next_stage:
 		GameManager.selected_stage = next_stage
 		GameManager.load_view(GameManager.View.LOADOUT)
+
+func _on_continue_endless_pressed() -> void:
+	GameManager.is_endless_mode = true
+	hide()
+	if GameManager.current_stage and GameManager.current_stage.wave_manager:
+		var wm = GameManager.current_stage.wave_manager
+		wm.is_stage_active = true
+		wm.wave_is_active = false
+		wm.update_upcoming_wave_preview()
+		SignalBus.wave_changed.emit(wm.wave)
+		SignalBus.wave_completed.emit()
 
 func _on_retry_pressed() -> void:
 	Engine.time_scale = 1.0

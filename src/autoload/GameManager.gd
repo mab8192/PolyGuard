@@ -3,12 +3,19 @@ extends Node
 var camera: Camera2D
 var stage_root: StageRoot
 
+enum GameMode { CAMPAIGN, ENDLESS }
+
 # Transition states
 var selected_stage: StageData
 var selected_loadout: Array[TowerData] = []
 var loadout_presets: Dictionary = {} # int -> Array[TowerData]
 var active_preset_index: int = 1
 var target_main_menu_tab: int = -1
+var current_game_mode: GameMode = GameMode.CAMPAIGN
+
+var is_endless_mode: bool:
+	get: return current_game_mode == GameMode.ENDLESS
+	set(v): current_game_mode = GameMode.ENDLESS if v else GameMode.CAMPAIGN
 
 var current_stage: Stage:
 	get:

@@ -1,5 +1,6 @@
 extends CanvasLayer
 
+@onready var title_label: Label = %TitleLabel
 @onready var desc_label: Label = %DescLabel
 @onready var retry_button: Button = %RetryButton
 @onready var loadout_button: Button = %LoadoutButton
@@ -18,9 +19,33 @@ func _ready() -> void:
 func _on_stage_failed() -> void:
 	if GameManager.current_stage:
 		var wave = GameManager.current_stage.wave
-		var total_waves = GameManager.current_stage.data.get_waves().size()
 		var score = GameManager.current_stage.score
-		desc_label.text = "Overwhelmed on Wave %d of %d\nScore: %d" % [wave, total_waves, score]
+		var stage_id = Registry.get_stage_id(GameManager.current_stage.data)
+		
+		if GameManager.is_endless_mode:
+			var waves_cleared: int = maxi(0, wave - 1)
+			var endless_res: Dictionary = SaveManager.record_endless_run(stage_id, waves_cleared, score)
+			
+			if title_label:
+				title_label.text = "ENDLESS CONCLUDED"
+			
+			var highest_wave: int = endless_res.get("highest_wave", waves_cleared)
+			var is_new: bool = endless_res.get("is_new_wave_record", false)
+			var earned: int = endless_res.get("total_reward", 0)
+			
+			var record_str: String = "NEW PERSONAL BEST!" if is_new else ("Personal Best: Wave %d" % highest_wave)
+			desc_label.text = "Waves Cleared: %d\n%s\nFinal Score: %d\nCredits Earned: +%d" % [
+				waves_cleared, record_str, score, earned
+			]
+			if retry_button:
+				retry_button.text = "RETRY ENDLESS"
+		else:
+			if title_label:
+				title_label.text = "DEFEAT"
+			var total_waves = GameManager.current_stage.data.get_waves().size()
+			desc_label.text = "Overwhelmed on Wave %d of %d\nScore: %d" % [wave, total_waves, score]
+			if retry_button:
+				retry_button.text = "RETRY"
 	show()
 	
 	get_tree().paused = true

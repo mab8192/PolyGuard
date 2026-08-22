@@ -177,7 +177,7 @@ func _update_visuals(animate: bool = false) -> void:
 		collision_shape_2d.set_deferred("disabled", !is_active)
 
 ## Spawns a full batch of enemies defined by a SpawnGroup object.
-func run(group: SpawnGroup) -> void:
+func run(group: SpawnGroup, hp_mult: float = 1.0, speed_mult: float = 1.0, bounty_mult: float = 1.0) -> void:
 	_active_groups += 1
 
 	# 1. Handle delay before group starts
@@ -197,7 +197,7 @@ func run(group: SpawnGroup) -> void:
 
 	# 3. Spawn loop
 	for i in range(group.count):
-		_instantiate_enemy(enemy_data)
+		_instantiate_enemy(enemy_data, hp_mult, speed_mult, bounty_mult)
 		
 		# Wait interval time between spawns (unless it's the last unit)
 		if i < group.count - 1 and group.interval > 0.0:
@@ -217,12 +217,16 @@ func _get_spawn_point() -> Vector2:
 	)
 
 ## Internal helper to instantiate and place the enemy in the scene.
-func _instantiate_enemy(enemy_data: EnemyData) -> void:
+func _instantiate_enemy(enemy_data: EnemyData, hp_mult: float = 1.0, speed_mult: float = 1.0, bounty_mult: float = 1.0) -> void:
 	var enemy := enemy_data.create()
 
 	if not enemy:
 		push_error("Spawner: Failed to instantiate enemy.")
 		return
+
+	# Apply Endless Mode scaling
+	if hp_mult != 1.0 or speed_mult != 1.0 or bounty_mult != 1.0:
+		enemy.apply_wave_scaling(hp_mult, speed_mult, bounty_mult)
 
 	# Set up required fields
 	enemy.global_position = _get_spawn_point()

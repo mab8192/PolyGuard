@@ -143,6 +143,18 @@ func _on_velocity_computed(vel: Vector2):
 func _on_no_path_available() -> void:
 	pass
 
+func apply_wave_scaling(hp_mult: float, speed_mult: float = 1.0, bounty_mult: float = 1.0) -> void:
+	if health and health.data:
+		health.data.max_health = round(health.data.max_health * hp_mult)
+		health._health = health.data.max_health
+		if health._health_bar:
+			health._health_bar.max_value = health.data.max_health
+			health._health_bar.value = health._health
+	if movement and movement.data and speed_mult != 1.0:
+		movement.data.max_speed *= speed_mult
+	if data:
+		data.energy_reward = maxi(1, int(round(float(data.energy_reward) * bounty_mult)))
+
 func get_stats() -> Dictionary:
 	if data:
 		return data.get_stats()
