@@ -253,6 +253,8 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Effect: Reduces Enemy Speed by 50%")
 	elif tower_id == "freeze_trap":
 		lines.append("Trait: Freezes Enemies in Place (Burst)")
+	elif tower_id == "siphon":
+		lines.append("Effect: Increase Enemy Energy Reward by 50%")
 		
 	if not choice_id.is_empty():
 		var choice = get_choice(choice_id)

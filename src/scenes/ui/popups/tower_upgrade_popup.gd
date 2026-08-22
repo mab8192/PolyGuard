@@ -119,6 +119,8 @@ func _render() -> void:
 		stat_lines.append("Ghost Detection: ENABLED")
 	if current_stats["blocks_ghosts"]:
 		stat_lines.append("Ghost Barrier: ACTIVE (Blocks Ghosts)")
+	
+	# Tower specific lines
 	if tower_data.tower_id == "soul_lantern":
 		stat_lines.append("Trait: Ramping Focus Damage (+35%/s)")
 	elif tower_data.tower_id == "tesla_tower":
@@ -127,6 +129,8 @@ func _render() -> void:
 		stat_lines.append("Trait: Continuous Thermal Cone")
 	elif tower_data.tower_id == "tar_trap":
 		stat_lines.append("Effect: Reduces Enemy Movement Speed by 50%")
+	elif tower_data.tower_id == "siphon":
+		stat_lines.append("Effect: Increases Enemy Energy Reward by 50%")
 		
 	if not active_choice.is_empty():
 		var active_spec = tower_data.get_choice(active_choice)
@@ -134,7 +138,7 @@ func _render() -> void:
 			stat_lines.append("Active Specialization: %s" % active_spec.title)
 
 	if stat_lines.is_empty():
-		stat_lines.append("Defensive Tactical Installation")
+		stat_lines.append("No stats available")
 		
 	stats_comparison_label.text = "\n".join(stat_lines)
 	

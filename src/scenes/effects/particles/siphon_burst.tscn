@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://bkg8poi0lrapm"]
+
+[sub_resource type="Gradient" id="Gradient_siphon_implosion"]
+offsets = PackedFloat32Array(0, 0.65, 1)
+colors = PackedColorArray(0, 0.94, 1, 1, 0.4, 0.98, 1, 0.85, 1, 1, 1, 0)
+
+[node name="SiphonBurst" type="CPUParticles2D" unique_id=257566666]
+emitting = false
+amount = 20
+lifetime = 0.4
+one_shot = true
+explosiveness = 1.0
+emission_shape = 1
+emission_sphere_radius = 26.0
+spread = 180.0
+gravity = Vector2(0, 0)
+radial_accel_min = -200.0
+radial_accel_max = -200.0
+scale_amount_min = 2.0
+scale_amount_max = 3.5
+color_ramp = SubResource("Gradient_siphon_implosion")
