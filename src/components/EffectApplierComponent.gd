@@ -210,10 +210,12 @@ func _apply_effects_to_target(receiver: EffectReceiverComponent, body: Node2D) -
 	for effect_data in data.effects:
 		var existing = receiver.get_effect(effect_data.name)
 		if existing:
+			existing.add_source(self)
 			existing.count_time()
 		else:
 			var ac = effect_data.create_instance()
 			if ac:
+				ac.add_source(self)
 				receiver.apply_effect(ac)
 				ac.count_time()
 				applied_effect.emit(body)

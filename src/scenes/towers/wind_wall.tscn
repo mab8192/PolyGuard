@@ -9,11 +9,7 @@
 size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
-size = Vector2(160, 64)
-
-[sub_resource type="Gradient" id="Gradient_wind"]
-offsets = PackedFloat32Array(0, 0.2, 0.7, 1)
-colors = PackedColorArray(0.8, 1, 1, 0.7, 0.4, 0.9, 1, 0.5, 0.2, 0.7, 0.9, 0.25, 0, 0.5, 0.8, 0)
+size = Vector2(144, 64)
 
 [sub_resource type="Gradient" id="Gradient_gust"]
 offsets = PackedFloat32Array(0, 0.3, 0.8, 1)
@@ -47,31 +43,13 @@ debug_color = Color(0.2, 0.8, 1, 0.08)
 position = Vector2(-24, 0)
 texture = ExtResource("4_texture")
 
-[node name="Wind Effect" type="CPUParticles2D" parent="." unique_id=173199107]
-z_index = 25
-z_as_relative = false
-position = Vector2(-16, 0)
-emitting = false
-amount = 20
-lifetime = 0.6
-emission_shape = 3
-emission_rect_extents = Vector2(4, 28)
-spread = 10.0
-gravity = Vector2(0, 0)
-initial_velocity_min = 200.0
-initial_velocity_max = 260.0
-scale_amount_min = 2.0
-scale_amount_max = 3.5
-color_ramp = SubResource("Gradient_wind")
-
 [node name="Gust Effect" type="CPUParticles2D" parent="." unique_id=173199108]
 z_index = 26
 z_as_relative = false
 position = Vector2(-16, 0)
 emitting = false
-amount = 35
-lifetime = 0.45
-one_shot = true
+amount = 50
+lifetime = 0.8
 emission_shape = 3
 emission_rect_extents = Vector2(4, 30)
 spread = 20.0

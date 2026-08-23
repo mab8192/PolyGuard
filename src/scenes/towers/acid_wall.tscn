@@ -1,24 +1,24 @@
 [gd_scene format=3 uid="uid://c0ac1dwa11scn"]
 
-[ext_resource type="Script" path="res://src/scenes/towers/acid_wall.gd" id="1_script"]
-[ext_resource type="Script" path="res://src/components/HealthComponent.gd" id="2_health"]
-[ext_resource type="Script" path="res://src/components/EffectApplierComponent.gd" id="3_applier"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/acid_wall.png" id="4_texture"]
-[ext_resource type="Texture2D" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="5_particle"]
+[ext_resource type="Script" uid="uid://cwtr8ohf6duv6" path="res://src/scenes/towers/acid_wall.gd" id="1_script"]
+[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
+[ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="3_applier"]
+[ext_resource type="Texture2D" uid="uid://ciqahfyi5mov0" path="res://src/textures/towers/acid_wall.png" id="4_texture"]
+[ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="5_particle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
 size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
-size = Vector2(160, 64)
-
-[sub_resource type="Gradient" id="Gradient_acid"]
-offsets = PackedFloat32Array(0, 0.25, 0.7, 1)
-colors = PackedColorArray(0.8, 1, 0.2, 0.9, 0.45, 0.95, 0.1, 0.75, 0.2, 0.7, 0.05, 0.4, 0.1, 0.4, 0.02, 0)
+size = Vector2(144, 64)
 
 [sub_resource type="Curve" id="Curve_acid"]
 _data = [Vector2(0, 0.4), 0.0, 0.0, 0, 0, Vector2(1, 0.1), 0.0, 0.0, 0, 0]
 point_count = 2
+
+[sub_resource type="Gradient" id="Gradient_acid"]
+offsets = PackedFloat32Array(0, 0.25, 0.7, 1)
+colors = PackedColorArray(0.8, 1, 0.2, 0.9, 0.45, 0.95, 0.1, 0.75, 0.2, 0.7, 0.05, 0.4, 0.1, 0.4, 0.02, 0)
 
 [node name="AcidWall" type="StaticBody2D" unique_id=887299201]
 collision_layer = 2
@@ -53,14 +53,15 @@ z_index = 28
 z_as_relative = false
 position = Vector2(-16, 0)
 emitting = false
-amount = 28
+amount = 40
 texture = ExtResource("5_particle")
 lifetime = 0.65
-emission_shape = 3
-emission_rect_extents = Vector2(4, 28)
-spread = 15.0
+emission_shape = 4
+emission_points = PackedVector2Array(0, -22, 0, -8, 0, 8, 0, 22)
+emission_colors = PackedColorArray()
+spread = 5.0
 gravity = Vector2(0, 0)
-initial_velocity_min = 210.0
+initial_velocity_min = 160.0
 initial_velocity_max = 290.0
 damping_min = 10.0
 damping_max = 25.0

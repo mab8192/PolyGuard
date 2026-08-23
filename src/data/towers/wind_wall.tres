@@ -14,7 +14,7 @@
 script = ExtResource("1_choice")
 id = "hurricane_force"
 title = "Hurricane Force"
-description = "Supercharged gale turbines increase continuous wind push force by +50% with +25% structure durability."
+description = "Supercharged gale turbines increase burst impulse force by +50% with +25% structure durability."
 strength_multiplier = 1.5
 health_multiplier = 1.25
 icon = ExtResource("ext_var_hurricane_force")
@@ -23,17 +23,23 @@ icon = ExtResource("ext_var_hurricane_force")
 script = ExtResource("1_choice")
 id = "gale_vortex"
 title = "Gale Vortex"
-description = "High-velocity vortex conduits increase wind push force by +25%."
+description = "High-velocity vortex conduits increase impulse force by +25% and reduce burst cooldown by 25%."
 strength_multiplier = 1.25
+cooldown_multiplier = 0.75
 icon = ExtResource("ext_var_gale_vortex")
 
 [sub_resource type="Resource" id="Resource_wind_force"]
 script = ExtResource("2_effect")
 name = "Aerodynamic Wind Thrust"
-push_force = 450.0
+duration = 0.0
+impulse_force = 350.0
 
 [sub_resource type="Resource" id="Resource_applier_data"]
 script = ExtResource("4_applier")
+mode = 2
+delay = 0.3
+active_duration = 2.0
+cooldown = 5.0
 effects = Array[ExtResource("2_effect")]([SubResource("Resource_wind_force")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 

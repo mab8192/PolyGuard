@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_im5y4"]
 [ext_resource type="Texture2D" uid="uid://ccfd3lujxywlq" path="res://src/textures/towers/variants/arrow_wall_arcane.png" id="ext_var_arcane_infusion"]
 [ext_resource type="Texture2D" uid="uid://cn6damlq645pv" path="res://src/textures/towers/variants/arrow_wall_piercer.png" id="ext_var_true_piercer"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/arrow_wall_arcane.png" id="ext_var_arcane_infusion"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/arrow_wall_piercer.png" id="ext_var_true_piercer"]
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_ik266")
