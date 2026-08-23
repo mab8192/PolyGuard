@@ -285,17 +285,22 @@ func _setup_flow_fields() -> void:
 	if map_rect.size.x <= 0 or map_rect.size.y <= 0:
 		return
 
-	# Grow bounds slightly for boundary clearance
-	var bounds: Rect2 = map_rect.grow(16.0)
-	var origin: Vector2 = bounds.position
-	var pixel_w: float = bounds.size.x
-	var pixel_h: float = bounds.size.y
+	const CELL_SIZE: float = 16.0
+	# Align grid origin and dimensions to exact multiples of 16px cell size for perfect tile alignment
+	var min_x: float = floor((map_rect.position.x - CELL_SIZE) / CELL_SIZE) * CELL_SIZE
+	var min_y: float = floor((map_rect.position.y - CELL_SIZE) / CELL_SIZE) * CELL_SIZE
+	var max_x: float = ceil((map_rect.end.x + CELL_SIZE) / CELL_SIZE) * CELL_SIZE
+	var max_y: float = ceil((map_rect.end.y + CELL_SIZE) / CELL_SIZE) * CELL_SIZE
 
-	# Multi-resolution sizes: Small (16px), Medium (32px), Large (64px)
-	var sizes := {
-		"small": 16.0,
-		"medium": 32.0,
-		"large": 64.0
+	var origin := Vector2(min_x, min_y)
+	var gw: int = maxi(1, int(round((max_x - min_x) / CELL_SIZE)))
+	var gh: int = maxi(1, int(round((max_y - min_y) / CELL_SIZE)))
+
+	# Unified 16px fields with tier-based obstacle clearance dilation
+	var tiers := {
+		"small": {"radius": 0, "added_cost": 0.0},
+		"medium": {"radius": 1, "added_cost": 4.0},
+		"large": {"radius": 2, "added_cost": 8.0}
 	}
 
 	var exit_nodes := _get_stage_exits()
@@ -303,20 +308,34 @@ func _setup_flow_fields() -> void:
 
 	FlowFieldManager.clear()
 
-	for size_name: String in sizes:
-		var cs: float = sizes[size_name]
-		var gw: int = maxi(1, int(ceil(pixel_w / cs)))
-		var gh: int = maxi(1, int(ceil(pixel_h / cs)))
+	for tier_name: String in tiers:
+		var cfg: Dictionary = tiers[tier_name]
+		var radius: int = int(cfg["radius"])
+		var added_cost: float = float(cfg["added_cost"])
 
 		# Unified multi-goal fields
-		FlowFieldManager.create_field("physical_%s" % size_name, gw, gh, cs, origin)
-		FlowFieldManager.create_field("ghost_%s" % size_name, gw, gh, cs, origin)
+		var p_field: FlowField = FlowFieldManager.create_field("physical_%s" % tier_name, gw, gh, CELL_SIZE, origin)
+		if p_field:
+			p_field.padding_radius = radius
+			p_field.padding_added_cost = added_cost
+
+		var g_field: FlowField = FlowFieldManager.create_field("ghost_%s" % tier_name, gw, gh, CELL_SIZE, origin)
+		if g_field:
+			g_field.padding_radius = radius
+			g_field.padding_added_cost = added_cost
 
 		# Per-exit fields if multi-exit stage
 		if exit_count > 1:
 			for e_i in range(exit_count):
-				FlowFieldManager.create_field("physical_%s_%d" % [size_name, e_i], gw, gh, cs, origin)
-				FlowFieldManager.create_field("ghost_%s_%d" % [size_name, e_i], gw, gh, cs, origin)
+				var p_e_field: FlowField = FlowFieldManager.create_field("physical_%s_%d" % [tier_name, e_i], gw, gh, CELL_SIZE, origin)
+				if p_e_field:
+					p_e_field.padding_radius = radius
+					p_e_field.padding_added_cost = added_cost
+
+				var g_e_field: FlowField = FlowFieldManager.create_field("ghost_%s_%d" % [tier_name, e_i], gw, gh, CELL_SIZE, origin)
+				if g_e_field:
+					g_e_field.padding_radius = radius
+					g_e_field.padding_added_cost = added_cost
 
 	_rebuild_flow_fields()
 

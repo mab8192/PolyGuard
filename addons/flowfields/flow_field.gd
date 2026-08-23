@@ -14,10 +14,6 @@ const COST_OBSTRUCTED: int = 1000 ## Cost to move through something breakable
 const COST_IMPASSABLE: int = 10000 ## "Cost" to move through an impassable cell (e.g. a wall)
 const INTEGRATION_MAX: int = 2147483647 # sentinel for "unreached" (int32 max)
 
-const PADDING_RADIUS: int = 1 ## Soft obstacle avoidance padding radius in cells
-const PADDING_ADDED_COST: float = 1.0 ## Penalty added to cells directly adjacent to obstacles
-const PADDING_MIN_OBSTACLE_COST: float = 10.0 ## Threshold at which a cell is considered an obstacle to pad
-
 const NEIGHBORS: Array[Vector2i] = [
 	Vector2i(0, -1),
 	Vector2i(-1, 0),
@@ -51,8 +47,11 @@ const NEIGHBOR_DIST: Array[float] = [
 
 var width: int
 var height: int
-var cell_size: int
+var cell_size: int = 16
 var origin: Vector2 ## The flow field is a rectangle centered at origin
+var padding_radius: int = 0 ## Soft obstacle avoidance padding radius in cells
+var padding_added_cost: float = 1.0 ## Penalty added to cells directly adjacent to obstacles
+var padding_min_obstacle_cost: float = 10.0 ## Threshold at which a cell is considered an obstacle to pad
 var cost_grid: PackedFloat32Array ## Cost to travel through a given cell
 var integration_grid: PackedFloat32Array ## Value of each cell (cost to exit)
 var field: PackedVector2Array ## Best direction to travel out of the given cell
@@ -72,12 +71,10 @@ func add_target(target: Variant) -> void:
 		if _is_in_bounds(target) and not targets.has(target):
 			targets.append(target)
 	elif target is Rect2:
-		var top_left := _world_to_grid(target.position)
-		var bottom_right := _world_to_grid(target.position + target.size)
-		var min_x := clampi(top_left.x, 0, width)
-		var max_x := clampi(bottom_right.x, 0, width)
-		var min_y := clampi(top_left.y, 0, height)
-		var max_y := clampi(bottom_right.y, 0, height)
+		var min_x := clampi(int(floor((target.position.x - origin.x) / float(cell_size))), 0, width)
+		var max_x := clampi(int(ceil((target.position.x + target.size.x - origin.x) / float(cell_size))), 0, width)
+		var min_y := clampi(int(floor((target.position.y - origin.y) / float(cell_size))), 0, height)
+		var max_y := clampi(int(ceil((target.position.y + target.size.y - origin.y) / float(cell_size))), 0, height)
 		for y in range(min_y, max_y):
 			for x in range(min_x, max_x):
 				var cell := Vector2i(x, y)
@@ -150,12 +147,10 @@ func set_cost(target: Variant, cost: float) -> void:
 		if _is_in_bounds(target):
 			cost_grid[_index(target)] = cost
 	elif target is Rect2:
-		var top_left := _world_to_grid(target.position)
-		var bottom_right := _world_to_grid(target.position + target.size)
-		var min_x := clampi(top_left.x, 0, width)
-		var max_x := clampi(bottom_right.x, 0, width)
-		var min_y := clampi(top_left.y, 0, height)
-		var max_y := clampi(bottom_right.y, 0, height)
+		var min_x := clampi(int(floor((target.position.x - origin.x) / float(cell_size))), 0, width)
+		var max_x := clampi(int(ceil((target.position.x + target.size.x - origin.x) / float(cell_size))), 0, width)
+		var min_y := clampi(int(floor((target.position.y - origin.y) / float(cell_size))), 0, height)
+		var max_y := clampi(int(ceil((target.position.y + target.size.y - origin.y) / float(cell_size))), 0, height)
 		for y in range(min_y, max_y):
 			for x in range(min_x, max_x):
 				cost_grid[_index(Vector2i(x, y))] = cost
@@ -309,23 +304,23 @@ func _integrate() -> void:
 
 	# Build effective costs locally with obstacle padding so cost_grid is never modified or accumulated
 	var effective_costs := cost_grid
-	if PADDING_RADIUS > 0 and PADDING_ADDED_COST > 0.0:
+	if padding_radius > 0 and padding_added_cost > 0.0:
 		var padded := cost_grid.duplicate()
 		for y in range(height):
 			for x in range(width):
 				var idx := _index(Vector2i(x, y))
-				if cost_grid[idx] >= PADDING_MIN_OBSTACLE_COST:
-					for dy in range(-PADDING_RADIUS, PADDING_RADIUS + 1):
-						for dx in range(-PADDING_RADIUS, PADDING_RADIUS + 1):
+				if cost_grid[idx] >= padding_min_obstacle_cost:
+					for dy in range(-padding_radius, padding_radius + 1):
+						for dx in range(-padding_radius, padding_radius + 1):
 							if dx == 0 and dy == 0:
 								continue
 							var nx := x + dx
 							var ny := y + dy
 							if nx >= 0 and nx < width and ny >= 0 and ny < height:
 								var n_idx := _index(Vector2i(nx, ny))
-								if cost_grid[n_idx] < PADDING_MIN_OBSTACLE_COST:
+								if cost_grid[n_idx] < padding_min_obstacle_cost:
 									var dist: float = Vector2(dx, dy).length()
-									var penalty: float = PADDING_ADDED_COST / dist
+									var penalty: float = padding_added_cost / dist
 									padded[n_idx] = maxf(padded[n_idx], float(COST_DEFAULT) + penalty)
 		effective_costs = padded
 	

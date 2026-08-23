@@ -93,12 +93,12 @@ func _update_badge_ui() -> void:
 
 	var layer_name: String = ""
 	match current_layer:
-		FieldLayer.PHYSICAL_SMALL: layer_name = "PHYSICAL (16PX - SMALL)"
-		FieldLayer.PHYSICAL_MEDIUM: layer_name = "PHYSICAL (32PX - MEDIUM)"
-		FieldLayer.PHYSICAL_LARGE: layer_name = "PHYSICAL (64PX - LARGE)"
-		FieldLayer.GHOST_SMALL: layer_name = "GHOST (16PX - SMALL)"
-		FieldLayer.GHOST_MEDIUM: layer_name = "GHOST (32PX - MEDIUM)"
-		FieldLayer.GHOST_LARGE: layer_name = "GHOST (64PX - LARGE)"
+		FieldLayer.PHYSICAL_SMALL: layer_name = "PHYSICAL (SMALL - 16PX)"
+		FieldLayer.PHYSICAL_MEDIUM: layer_name = "PHYSICAL (MEDIUM - 16PX + 1 CELL PAD)"
+		FieldLayer.PHYSICAL_LARGE: layer_name = "PHYSICAL (LARGE - 16PX + 2 CELL PAD)"
+		FieldLayer.GHOST_SMALL: layer_name = "GHOST (SMALL - 16PX)"
+		FieldLayer.GHOST_MEDIUM: layer_name = "GHOST (MEDIUM - 16PX + 1 CELL PAD)"
+		FieldLayer.GHOST_LARGE: layer_name = "GHOST (LARGE - 16PX + 2 CELL PAD)"
 
 	_badge_label.text = "FLOW FIELD: [%s] | MODE: %s (F2/F3: Mode, F4: Layer)" % [layer_name, mode_name]
 	_badge_panel.reset_size()

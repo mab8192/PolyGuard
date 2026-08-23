@@ -99,11 +99,22 @@ void FlowField::_bind_methods() {
 	ClassDB::bind_method(D_METHOD("trace_path", "start_pos", "step_size", "max_steps", "goal_targets"), &FlowField::trace_path, DEFVAL(16.0f), DEFVAL(300), DEFVAL(Array()));
 	ClassDB::bind_method(D_METHOD("rebuild"), &FlowField::rebuild);
 
+	ClassDB::bind_method(D_METHOD("get_padding_radius"), &FlowField::get_padding_radius);
+	ClassDB::bind_method(D_METHOD("set_padding_radius", "val"), &FlowField::set_padding_radius);
+	ADD_PROPERTY(PropertyInfo(Variant::INT, "padding_radius"), "set_padding_radius", "get_padding_radius");
+
+	ClassDB::bind_method(D_METHOD("get_padding_added_cost"), &FlowField::get_padding_added_cost);
+	ClassDB::bind_method(D_METHOD("set_padding_added_cost", "val"), &FlowField::set_padding_added_cost);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "padding_added_cost"), "set_padding_added_cost", "get_padding_added_cost");
+
+	ClassDB::bind_method(D_METHOD("get_padding_min_obstacle_cost"), &FlowField::get_padding_min_obstacle_cost);
+	ClassDB::bind_method(D_METHOD("set_padding_min_obstacle_cost", "val"), &FlowField::set_padding_min_obstacle_cost);
+	ADD_PROPERTY(PropertyInfo(Variant::FLOAT, "padding_min_obstacle_cost"), "set_padding_min_obstacle_cost", "get_padding_min_obstacle_cost");
+
 	BIND_CONSTANT(COST_DEFAULT);
 	BIND_CONSTANT(COST_OBSTRUCTED);
 	BIND_CONSTANT(COST_IMPASSABLE);
 	BIND_CONSTANT(INTEGRATION_MAX);
-	BIND_CONSTANT(PADDING_RADIUS);
 }
 
 void FlowField::init_grid(int p_width, int p_height, int p_cell_size, const Vector2 &p_origin) {
@@ -139,12 +150,10 @@ void FlowField::add_target(const Variant &p_target) {
 		}
 	} else if (p_target.get_type() == Variant::RECT2) {
 		Rect2 r = p_target;
-		Vector2i top_left = _world_to_grid(r.position);
-		Vector2i bottom_right = _world_to_grid(r.position + r.size);
-		int min_x = Math::clamp(top_left.x, 0, width);
-		int max_x = Math::clamp(bottom_right.x, 0, width);
-		int min_y = Math::clamp(top_left.y, 0, height);
-		int max_y = Math::clamp(bottom_right.y, 0, height);
+		int min_x = Math::clamp((int)Math::floor((r.position.x - origin.x) / (float)cell_size), 0, width);
+		int max_x = Math::clamp((int)Math::ceil((r.position.x + r.size.x - origin.x) / (float)cell_size), 0, width);
+		int min_y = Math::clamp((int)Math::floor((r.position.y - origin.y) / (float)cell_size), 0, height);
+		int max_y = Math::clamp((int)Math::ceil((r.position.y + r.size.y - origin.y) / (float)cell_size), 0, height);
 		for (int y = min_y; y < max_y; ++y) {
 			for (int x = min_x; x < max_x; ++x) {
 				Vector2i cell(x, y);
@@ -241,12 +250,10 @@ void FlowField::set_cost(const Variant &p_target, float p_cost) {
 		}
 	} else if (p_target.get_type() == Variant::RECT2) {
 		Rect2 r = p_target;
-		Vector2i top_left = _world_to_grid(r.position);
-		Vector2i bottom_right = _world_to_grid(r.position + r.size);
-		int min_x = Math::clamp(top_left.x, 0, width);
-		int max_x = Math::clamp(bottom_right.x, 0, width);
-		int min_y = Math::clamp(top_left.y, 0, height);
-		int max_y = Math::clamp(bottom_right.y, 0, height);
+		int min_x = Math::clamp((int)Math::floor((r.position.x - origin.x) / (float)cell_size), 0, width);
+		int max_x = Math::clamp((int)Math::ceil((r.position.x + r.size.x - origin.x) / (float)cell_size), 0, width);
+		int min_y = Math::clamp((int)Math::floor((r.position.y - origin.y) / (float)cell_size), 0, height);
+		int max_y = Math::clamp((int)Math::ceil((r.position.y + r.size.y - origin.y) / (float)cell_size), 0, height);
 		for (int y = min_y; y < max_y; ++y) {
 			for (int x = min_x; x < max_x; ++x) {
 				cost_ptr[y * width + x] = p_cost;
@@ -420,21 +427,21 @@ void FlowField::_integrate() {
 	std::vector<float> effective_costs(total_cells);
 	std::copy(cost_ptr, cost_ptr + total_cells, effective_costs.begin());
 
-	if (PADDING_RADIUS > 0 && PADDING_ADDED_COST > 0.0f) {
+	if (padding_radius > 0 && padding_added_cost > 0.0f) {
 		for (int y = 0; y < height; ++y) {
 			for (int x = 0; x < width; ++x) {
 				int idx = y * width + x;
-				if (cost_ptr[idx] >= PADDING_MIN_OBSTACLE_COST) {
-					for (int dy = -PADDING_RADIUS; dy <= PADDING_RADIUS; ++dy) {
-						for (int dx = -PADDING_RADIUS; dx <= PADDING_RADIUS; ++dx) {
+				if (cost_ptr[idx] >= padding_min_obstacle_cost) {
+					for (int dy = -padding_radius; dy <= padding_radius; ++dy) {
+						for (int dx = -padding_radius; dx <= padding_radius; ++dx) {
 							if (dx == 0 && dy == 0) continue;
 							int nx = x + dx;
 							int ny = y + dy;
 							if (nx >= 0 && nx < width && ny >= 0 && ny < height) {
 								int n_idx = ny * width + nx;
-								if (cost_ptr[n_idx] < PADDING_MIN_OBSTACLE_COST) {
+								if (cost_ptr[n_idx] < padding_min_obstacle_cost) {
 									float dist = std::sqrt((float)(dx * dx + dy * dy));
-									float penalty = PADDING_ADDED_COST / dist;
+									float penalty = padding_added_cost / dist;
 									effective_costs[n_idx] = std::max(effective_costs[n_idx], (float)COST_DEFAULT + penalty);
 								}
 							}

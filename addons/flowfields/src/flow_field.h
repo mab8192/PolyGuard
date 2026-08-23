@@ -25,15 +25,15 @@ public:
 	static constexpr int COST_IMPASSABLE = 10000;
 	static constexpr int INTEGRATION_MAX = 2147483647;
 
-	static constexpr int PADDING_RADIUS = 1;
-	static constexpr float PADDING_ADDED_COST = 1.0f;
-	static constexpr float PADDING_MIN_OBSTACLE_COST = 10.0f;
-
 private:
 	int width = 0;
 	int height = 0;
-	int cell_size = 32;
+	int cell_size = 16;
 	Vector2 origin = Vector2(0, 0);
+
+	int padding_radius = 0;
+	float padding_added_cost = 1.0f;
+	float padding_min_obstacle_cost = 10.0f;
 
 	PackedFloat32Array cost_grid;
 	PackedFloat32Array integration_grid;
@@ -77,6 +77,15 @@ public:
 
 	Vector2 get_origin() const { return origin; }
 	void set_origin(const Vector2 &p_val) { origin = p_val; }
+
+	int get_padding_radius() const { return padding_radius; }
+	void set_padding_radius(int p_val) { padding_radius = p_val; }
+
+	float get_padding_added_cost() const { return padding_added_cost; }
+	void set_padding_added_cost(float p_val) { padding_added_cost = p_val; }
+
+	float get_padding_min_obstacle_cost() const { return padding_min_obstacle_cost; }
+	void set_padding_min_obstacle_cost(float p_val) { padding_min_obstacle_cost = p_val; }
 
 	PackedFloat32Array get_cost_grid() const { return cost_grid; }
 	void set_cost_grid(const PackedFloat32Array &p_val) { cost_grid = p_val; }
