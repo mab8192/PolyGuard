@@ -97,49 +97,114 @@ func _render_stage_to_png(stage_data: StageData, res_path: String) -> String:
 		printerr("[StageThumbnailGenerator] Could not instantiate scene for: ", stage_data.stage_name)
 		return ""
 
-	# Create offscreen SubViewport with isolated 2D world
+	const SSAA_SCALE := 2
+	var render_w := THUMBNAIL_WIDTH * SSAA_SCALE
+	var render_h := THUMBNAIL_HEIGHT * SSAA_SCALE
+
 	var viewport := SubViewport.new()
-	viewport.size = Vector2i(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+	viewport.size = Vector2i(render_w, render_h)
 	viewport.world_2d = World2D.new()
 	viewport.render_target_update_mode = SubViewport.UPDATE_ALWAYS
 	viewport.render_target_clear_mode = SubViewport.CLEAR_MODE_ALWAYS
+	viewport.msaa_2d = Viewport.MSAA_4X
 
-	# Fixed screen-space dark background
+	# Color palettes for thumbnail schematic view
+	var biome_palettes = {
+		0: {"bg": Color(0.024, 0.035, 0.06), "floor": Color(0.055, 0.086, 0.14), "wall": Color(0.0, 0.96, 0.83)},    # Core Cyan
+		1: {"bg": Color(0.043, 0.027, 0.016), "floor": Color(0.125, 0.07, 0.04), "wall": Color(1.0, 0.62, 0.0)},      # Solar Amber
+		2: {"bg": Color(0.031, 0.016, 0.063), "floor": Color(0.1, 0.047, 0.157), "wall": Color(0.85, 0.27, 0.94)},   # Void Magenta
+		3: {"bg": Color(0.016, 0.039, 0.024), "floor": Color(0.047, 0.125, 0.078), "wall": Color(0.06, 0.73, 0.51)}, # Toxic Emerald
+		4: {"bg": Color(0.047, 0.016, 0.024), "floor": Color(0.133, 0.039, 0.059), "wall": Color(0.96, 0.25, 0.37)}, # Apex Crimson
+	}
+
+	var spawner_color := Color(1.0, 0.16, 0.43, 1.0) # Bright neon pink
+	var exit_color := Color(0.0, 0.9, 1.0, 1.0)      # Bright neon cyan
+
+	# Add stage_node to viewport to resolve any scene transforms
+	viewport.add_child(stage_node)
+
+	# Extract stage elements
+	var tilemaps = stage_node.find_children("*", "TileMapLayer", true, false)
+	var used_cells: Array[Vector2i] = []
+	var primary_tm: TileMapLayer = null
+	var biome_row: int = 0
+
+	for tm in tilemaps:
+		if tm is TileMapLayer and not tm.get_used_cells().is_empty():
+			primary_tm = tm
+			used_cells = tm.get_used_cells()
+			break
+
+	var min_pos := Vector2(INF, INF)
+	var max_pos := Vector2(-INF, -INF)
+	var tile_size := Vector2(64, 64)
+	var half_size := tile_size / 2.0
+
+	if primary_tm:
+		for cell in used_cells:
+			var g_pos = primary_tm.to_global(primary_tm.map_to_local(cell))
+			min_pos.x = minf(min_pos.x, g_pos.x - half_size.x)
+			min_pos.y = minf(min_pos.y, g_pos.y - half_size.y)
+			max_pos.x = maxf(max_pos.x, g_pos.x + half_size.x)
+			max_pos.y = maxf(max_pos.y, g_pos.y + half_size.y)
+			var atlas_coords = primary_tm.get_cell_atlas_coords(cell)
+			if atlas_coords.y >= 0 and atlas_coords.y <= 4:
+				biome_row = atlas_coords.y
+
+	var spawners: Array[Vector2] = []
+	var exits: Array[Vector2] = []
+	for child in stage_node.find_children("*", "Node2D", true, false):
+		if child.is_in_group("spawners") or "Spawner" in child.name:
+			var s_pos = child.global_position
+			spawners.append(s_pos)
+			min_pos.x = minf(min_pos.x, s_pos.x - half_size.x)
+			min_pos.y = minf(min_pos.y, s_pos.y - half_size.y)
+			max_pos.x = maxf(max_pos.x, s_pos.x + half_size.x)
+			max_pos.y = maxf(max_pos.y, s_pos.y + half_size.y)
+		elif child.is_in_group("exits") or "Exit" in child.name:
+			var e_pos = child.global_position
+			exits.append(e_pos)
+			min_pos.x = minf(min_pos.x, e_pos.x - half_size.x)
+			min_pos.y = minf(min_pos.y, e_pos.y - half_size.y)
+			max_pos.x = maxf(max_pos.x, e_pos.x + half_size.x)
+			max_pos.y = maxf(max_pos.y, e_pos.y + half_size.y)
+
+	var pal: Dictionary = biome_palettes.get(biome_row, biome_palettes[0])
+
+	# Hide default rendering of stage_node children so only schematic draws
+	stage_node.visible = false
+
+	# Create schematic drawing node
+	var schematic_canvas := Node2D.new()
+	schematic_canvas.draw.connect(func():
+		if primary_tm:
+			for cell in used_cells:
+				var g_pos = primary_tm.to_global(primary_tm.map_to_local(cell))
+				var atlas_coords = primary_tm.get_cell_atlas_coords(cell)
+				var rect := Rect2(g_pos - half_size, tile_size)
+				if atlas_coords.x == 1: # Wall
+					schematic_canvas.draw_rect(rect, pal["wall"], true)
+				else: # Floor
+					schematic_canvas.draw_rect(rect, pal["floor"], true)
+		
+		# Draw exact solid spawners and exits
+		for s_pos in spawners:
+			var s_rect := Rect2(s_pos - half_size + Vector2(8, 8), tile_size - Vector2(16, 16))
+			schematic_canvas.draw_rect(s_rect, spawner_color, true)
+		
+		for e_pos in exits:
+			var e_rect := Rect2(e_pos - half_size + Vector2(8, 8), tile_size - Vector2(16, 16))
+			schematic_canvas.draw_rect(e_rect, exit_color, true)
+	)
+
 	var canvas_layer := CanvasLayer.new()
 	canvas_layer.layer = -100
 	var bg := ColorRect.new()
-	bg.color = Color(0.035, 0.04, 0.08, 1.0)
-	bg.size = Vector2(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT)
+	bg.color = pal["bg"]
+	bg.size = Vector2(render_w, render_h)
 	canvas_layer.add_child(bg)
 	viewport.add_child(canvas_layer)
-
-	viewport.add_child(stage_node)
-
-	# Calculate bounding box across all tilemaps and placed elements
-	var min_pos = Vector2(INF, INF)
-	var max_pos = Vector2(-INF, -INF)
-
-	var tilemaps = stage_node.find_children("*", "TileMapLayer", true, false)
-	for tm in tilemaps:
-		if tm is TileMapLayer and not tm.get_used_cells().is_empty():
-			var used_cells = tm.get_used_cells()
-			var tile_size = Vector2(tm.tile_set.tile_size) * tm.scale if tm.tile_set else Vector2(64, 64)
-			var half_size = tile_size / 2.0
-			
-			for cell in used_cells:
-				var g_pos = tm.to_global(tm.map_to_local(cell))
-				min_pos.x = minf(min_pos.x, g_pos.x - half_size.x)
-				min_pos.y = minf(min_pos.y, g_pos.y - half_size.y)
-				max_pos.x = maxf(max_pos.x, g_pos.x + half_size.x)
-				max_pos.y = maxf(max_pos.y, g_pos.y + half_size.y)
-
-	for child in stage_node.find_children("*", "Node2D", true, false):
-		if child is Area2D or child is Marker2D or child.is_in_group("spawners") or child.is_in_group("exits"):
-			var g_pos = child.global_position
-			min_pos.x = minf(min_pos.x, g_pos.x - 48)
-			min_pos.y = minf(min_pos.y, g_pos.y - 48)
-			max_pos.x = maxf(max_pos.x, g_pos.x + 48)
-			max_pos.y = maxf(max_pos.y, g_pos.y + 48)
+	viewport.add_child(schematic_canvas)
 
 	var stage_rect: Rect2
 	if min_pos.x == INF:
@@ -147,27 +212,21 @@ func _render_stage_to_png(stage_data: StageData, res_path: String) -> String:
 	else:
 		stage_rect = Rect2(min_pos, max_pos - min_pos)
 
-	var center = stage_rect.get_center()
-
-	# Add Camera2D to frame stage
 	var camera := Camera2D.new()
-	camera.position = center
-	
+	camera.position = stage_rect.get_center()
+
 	var margin_ratio = 1.15
 	var target_w = maxf(stage_rect.size.x * margin_ratio, 200.0)
 	var target_h = maxf(stage_rect.size.y * margin_ratio, 200.0)
-	
-	var zoom_x = float(THUMBNAIL_WIDTH) / target_w
-	var zoom_y = float(THUMBNAIL_HEIGHT) / target_h
-	var zoom_val = minf(zoom_x, zoom_y)
-	camera.zoom = Vector2(zoom_val, zoom_val)
+
+	var zoom_x = float(render_w) / target_w
+	var zoom_y = float(render_h) / target_h
+	camera.zoom = Vector2(minf(zoom_x, zoom_y), minf(zoom_x, zoom_y))
 	viewport.add_child(camera)
 
-	# Attach to scene tree root
 	root.add_child(viewport)
 	camera.make_current()
 
-	# Await frames for TileMapLayer rendering and GPU composition
 	await tree.process_frame
 	await tree.process_frame
 	await RenderingServer.frame_post_draw
@@ -176,10 +235,13 @@ func _render_stage_to_png(stage_data: StageData, res_path: String) -> String:
 
 	root.remove_child(viewport)
 	viewport.queue_free()
+	stage_node.queue_free()
 
 	if not img or img.is_empty():
 		printerr("[StageThumbnailGenerator] Failed to capture image for: ", stage_data.stage_name)
 		return ""
+
+	img.resize(THUMBNAIL_WIDTH, THUMBNAIL_HEIGHT, Image.INTERPOLATE_LANCZOS)
 
 	# Save to PNG file matching the stage naming (e.g. Stage1.png, Stage5.png, etc.)
 	var scene_base = stage_data.scene.resource_path.get_file().get_basename()

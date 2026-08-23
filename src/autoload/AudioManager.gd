@@ -118,12 +118,22 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 				target_playlist.append(item)
 		if target_playlist.is_empty():
 			return
+		
+		# If currently playing this exact playlist and no specific different track was requested, do not interrupt
+		if _is_music_playing and _active_music_player and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist):
+			if start_index < 0 or start_index == _current_track_index:
+				return
+		
 		if start_index >= 0 and start_index < target_playlist.size():
 			target_index = start_index
 		else:
 			target_index = randi() % target_playlist.size()
 	elif music is AudioStream:
 		var stream: AudioStream = music
+		# If the active player is already playing this exact stream, do nothing
+		if _is_music_playing and _active_music_player and _active_music_player.playing and _active_music_player.stream == stream:
+			return
+
 		# Preserve full list looping if a single stream belongs to one of the predefined playlists
 		if music_combat.has(stream):
 			target_playlist = music_combat.duplicate()
@@ -134,13 +144,16 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 		else:
 			target_playlist = [stream]
 			target_index = 0
+
+		if _is_music_playing and _active_music_player and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist) and _current_track_index == target_index:
+			return
 	else:
 		return
 
 	var target_stream: AudioStream = target_playlist[target_index]
 	
 	# If already playing this playlist and the active track matches, do not interrupt
-	if _is_music_playing and _active_music_player.playing and _active_music_player.stream == target_stream and _are_playlists_equal(_current_playlist, target_playlist):
+	if _is_music_playing and _active_music_player and _active_music_player.playing and _active_music_player.stream == target_stream and _are_playlists_equal(_current_playlist, target_playlist):
 		_current_playlist = target_playlist
 		_current_track_index = target_index
 		return
