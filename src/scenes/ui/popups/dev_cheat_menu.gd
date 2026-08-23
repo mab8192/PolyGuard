@@ -160,8 +160,8 @@ func _update_in_game_button_states() -> void:
 		godmode_button.text = "GODMODE: %s" % ("ON (Infinite Lives)" if is_godmode_active else "OFF")
 		godmode_button.theme_type_variation = &"PrimaryButton" if is_godmode_active else &"SecondaryButton"
 
-		if stage.flow_field_manager and stage.flow_field_manager.visualizer:
-			var vis = stage.flow_field_manager.visualizer
+		if stage and "flow_field_visualizer" in stage and stage.flow_field_visualizer:
+			var vis: FlowFieldVisualizer = stage.flow_field_visualizer
 			var mode_str = "OFF"
 			match vis.mode:
 				FlowFieldVisualizer.DisplayMode.ARROWS: mode_str = "ARROWS"
@@ -170,11 +170,14 @@ func _update_in_game_button_states() -> void:
 				FlowFieldVisualizer.DisplayMode.CONGESTION: mode_str = "CONGESTION"
 				FlowFieldVisualizer.DisplayMode.CLEARANCE: mode_str = "CLEARANCE"
 
-			var layer_str = "PHYSICAL"
+			var layer_str = "PHYS (< 16PX)"
 			match vis.current_layer:
-				FlowFieldVisualizer.FieldLayer.PHYSICAL: layer_str = "PHYSICAL"
-				FlowFieldVisualizer.FieldLayer.GHOST: layer_str = "GHOST"
-				FlowFieldVisualizer.FieldLayer.WALLS_ONLY: layer_str = "WALLS ONLY"
+				FlowFieldVisualizer.FieldLayer.PHYSICAL_SMALL: layer_str = "PHYS (< 16PX)"
+				FlowFieldVisualizer.FieldLayer.PHYSICAL_MEDIUM: layer_str = "PHYS (16-32PX)"
+				FlowFieldVisualizer.FieldLayer.PHYSICAL_LARGE: layer_str = "PHYS (32-64PX)"
+				FlowFieldVisualizer.FieldLayer.GHOST_SMALL: layer_str = "GHOST (< 16PX)"
+				FlowFieldVisualizer.FieldLayer.GHOST_MEDIUM: layer_str = "GHOST (16-32PX)"
+				FlowFieldVisualizer.FieldLayer.GHOST_LARGE: layer_str = "GHOST (32-64PX)"
 
 			toggle_flow_field_button.text = "FLOW FIELD: %s" % mode_str
 			toggle_flow_field_button.theme_type_variation = &"PrimaryButton" if vis.mode != FlowFieldVisualizer.DisplayMode.OFF else &"SecondaryButton"
@@ -182,15 +185,15 @@ func _update_in_game_button_states() -> void:
 
 func _cheat_toggle_flow_field() -> void:
 	var stage = _get_current_stage()
-	if stage and stage.flow_field_manager and stage.flow_field_manager.visualizer:
-		stage.flow_field_manager.visualizer.cycle_mode()
+	if stage and "flow_field_visualizer" in stage and stage.flow_field_visualizer:
+		stage.flow_field_visualizer.cycle_mode()
 		_update_in_game_button_states()
 		_notify("Flow Field visualizer mode changed (F2/F3)")
 
 func _cheat_cycle_flow_layer() -> void:
 	var stage = _get_current_stage()
-	if stage and stage.flow_field_manager and stage.flow_field_manager.visualizer:
-		stage.flow_field_manager.visualizer.cycle_layer()
+	if stage and "flow_field_visualizer" in stage and stage.flow_field_visualizer:
+		stage.flow_field_visualizer.cycle_layer()
 		_update_in_game_button_states()
 		_notify("Flow Field layer changed (F4)")
 

@@ -8,7 +8,8 @@ var data: StageData
 var wave_manager: WaveManager
 var placement_manager: TowerPlacementManager
 var effect_manager: EffectManager
-var flow_field_manager: FlowFieldManager
+var pathfinding_manager: StagePathfinding
+var flow_field_visualizer: FlowFieldVisualizer
 
 # Stage economy and life tracking state
 var lives: int
@@ -57,16 +58,20 @@ func _ready() -> void:
 	placement_manager.name = "TowerPlacementManager"
 	add_child(placement_manager)
 	
-	flow_field_manager = FlowFieldManager.new()
-	flow_field_manager.name = "FlowFieldManager"
-	add_child(flow_field_manager)
+	pathfinding_manager = StagePathfinding.new()
+	pathfinding_manager.name = "StagePathfinding"
+	add_child(pathfinding_manager)
+
+	flow_field_visualizer = FlowFieldVisualizer.new()
+	flow_field_visualizer.name = "FlowFieldVisualizer"
+	add_child(flow_field_visualizer)
 
 	effect_manager = EffectManager.new()
 	
 	effect_manager.setup()
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
-	flow_field_manager.setup(self)
+	pathfinding_manager.setup(self)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if placement_manager and placement_manager.handle_unhandled_input(event):

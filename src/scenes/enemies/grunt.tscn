@@ -9,7 +9,7 @@
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="6_t5ldr"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_mg0rn"]
-radius = 8.0
+radius = 7.5
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_d56y3"]
 size = Vector2(18, 32)

@@ -170,9 +170,8 @@ func _recalculate_paths() -> void:
 		_clear_lines()
 		return
 
-	var stage: Stage = GameManager.current_stage
-	if stage and stage.flow_field_manager:
-		var field: FlowField = stage.flow_field_manager.get_field(1)
+	var field: FlowField = FlowFieldManager.get_field("physical_small")
+	if field:
 		for i: int in range(CORNER_OFFSETS.size()):
 			if i >= _lines.size():
 				break

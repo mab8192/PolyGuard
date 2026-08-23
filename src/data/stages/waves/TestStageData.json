@@ -5,7 +5,7 @@
 			{
 				"count": 10.0,
 				"delay": 0.0,
-				"enemy_type": "bomber",
+				"enemy_type": "ghost",
 				"interval": 0.8,
 				"spawner_id": "Spawner"
 			}
