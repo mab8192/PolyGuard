@@ -1,0 +1,57 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://bgf01geic3i4e"]
+
+[ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="2_effect"]
+[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="4_applier"]
+[ext_resource type="Texture2D" uid="uid://bd1gij6sv1r3h" path="res://src/textures/towers/wind_wall.png" id="5_icon"]
+[ext_resource type="PackedScene" uid="uid://b0w1ndwa11scn" path="res://src/scenes/towers/wind_wall.tscn" id="6_scene"]
+[ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_tower"]
+[ext_resource type="Texture2D" uid="uid://bt0km4k1hjumj" path="res://src/textures/towers/variants/wind_wall_vortex.png" id="ext_var_gale_vortex"]
+[ext_resource type="Texture2D" uid="uid://bv755k0ua2e5d" path="res://src/textures/towers/variants/wind_wall_tempest.png" id="ext_var_hurricane_force"]
+
+[sub_resource type="Resource" id="Resource_choice_tempest"]
+script = ExtResource("1_choice")
+id = "hurricane_force"
+title = "Hurricane Force"
+description = "Supercharged gale turbines increase continuous wind push force by +50% with +25% structure durability."
+strength_multiplier = 1.5
+health_multiplier = 1.25
+icon = ExtResource("ext_var_hurricane_force")
+
+[sub_resource type="Resource" id="Resource_choice_vortex"]
+script = ExtResource("1_choice")
+id = "gale_vortex"
+title = "Gale Vortex"
+description = "High-velocity vortex conduits increase wind push force by +25%."
+strength_multiplier = 1.25
+icon = ExtResource("ext_var_gale_vortex")
+
+[sub_resource type="Resource" id="Resource_wind_force"]
+script = ExtResource("2_effect")
+name = "Aerodynamic Wind Thrust"
+push_force = 450.0
+
+[sub_resource type="Resource" id="Resource_applier_data"]
+script = ExtResource("4_applier")
+effects = Array[ExtResource("2_effect")]([SubResource("Resource_wind_force")])
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[sub_resource type="Resource" id="Resource_health"]
+script = ExtResource("3_health")
+max_health = 950.0
+armor = 20.0
+
+[resource]
+script = ExtResource("7_tower")
+tower_id = "wind_wall"
+display_name = "Wind Wall"
+icon = ExtResource("5_icon")
+scene = ExtResource("6_scene")
+description = "Directional aerodynamic barrier that generates high-velocity wind currents, physically pushing physical enemies backward in the facing direction."
+unlock_cost = 400
+required_stage_id = "stage_04"
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_tempest"), SubResource("Resource_choice_vortex")])
+cost = 300
+health = SubResource("Resource_health")
+effect_applier = SubResource("Resource_applier_data")

@@ -11,6 +11,8 @@
 [ext_resource type="PackedScene" path="res://src/scenes/towers/projectiles/spark_projectile.tscn" id="8_proj"]
 [ext_resource type="Texture2D" uid="uid://b3o41rncw474v" path="res://src/textures/towers/variants/sparkler_overcharge.png" id="ext_var_arcane_overcharge"]
 [ext_resource type="Texture2D" uid="uid://dlwqyx6rd0cj7" path="res://src/textures/towers/variants/sparkler_prismatic.png" id="ext_var_prismatic_array"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/sparkler_prismatic.png" id="ext_var_prismatic_array"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/sparkler_overcharge.png" id="ext_var_arcane_overcharge"]
 
 [sub_resource type="Resource" id="Resource_attack"]
 script = ExtResource("1_attack")

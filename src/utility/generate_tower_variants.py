@@ -260,6 +260,220 @@ def gen_arrow_wall_piercer():
     return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "arrow_wall_piercer.png"), "arrow_wall_piercer")
 
 # =========================================================================
+# WIND WALL VARIANTS
+# =========================================================================
+
+def gen_wind_wall_tempest():
+    """16x64 Hurricane Force Wind Wall: reinforced gold/bronze housing, electric blue glow, oversized hurricane thrusters."""
+    width, height, s = 16, 64, 8
+    sw, sh = width * s, height * s
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    c_frame_dark = (26, 22, 14, 255)
+    c_frame_mid = (54, 44, 24, 255)
+    c_frame_light = (85, 70, 36, 255)
+    c_gold = (255, 200, 40, 255)
+    c_electric_blue = (0, 225, 255, 255)
+    c_lightning_bright = (220, 250, 255, 255)
+    c_copper = (210, 120, 45, 255)
+
+    # 1. Fortified gold-trimmed frame
+    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_frame_dark, outline=(18, 14, 8, 255), width=int(1.2*s))
+    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_frame_mid)
+
+    # Power conduits
+    draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_electric_blue, width=int(2.0*s))
+    draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_lightning_bright, width=int(0.8*s))
+
+    # Heavy gold brackets
+    for bky in [4*s, 32*s, 60*s]:
+        draw.rectangle([1.5*s, bky - 1.8*s, 14.5*s, bky + 1.8*s], fill=c_gold, outline=c_frame_dark, width=int(0.8*s))
+        draw.ellipse([2.5*s, bky - 0.8*s, 4.5*s, bky + 0.8*s], fill=c_lightning_bright)
+        draw.ellipse([12*s, bky - 0.8*s, 13.5*s, bky + 0.8*s], fill=c_copper)
+
+    # 2 Oversized Hurricane Thrusters pointing right (+X)
+    for ty in [19*s, 45*s]:
+        draw.ellipse([3.5*s, ty - 8.5*s, 14.5*s, ty + 8.5*s], fill=c_frame_dark, outline=c_gold, width=int(1.4*s))
+        draw.ellipse([5.5*s, ty - 6.5*s, 12.5*s, ty + 6.5*s], fill=c_frame_mid, outline=c_electric_blue, width=int(1.0*s))
+        
+        # Heavy turbine blades
+        for ang in [-45, 0, 45, 90]:
+            rad = math.radians(ang)
+            dx = math.cos(rad) * 4.5 * s
+            dy = math.sin(rad) * 4.5 * s
+            draw.line([(9.0*s - dx, ty - dy), (9.0*s + dx, ty + dy)], fill=c_lightning_bright, width=int(1.4*s))
+        draw.ellipse([7.5*s, ty - 1.5*s, 10.5*s, ty + 1.5*s], fill=c_gold)
+
+        # Flared nozzle
+        nozzle_pts = [
+            (12.0*s, ty - 6.5*s),
+            (15.5*s, ty - 4.0*s),
+            (15.5*s, ty + 4.0*s),
+            (12.0*s, ty + 6.5*s)
+        ]
+        draw.polygon(nozzle_pts, fill=c_frame_light, outline=c_gold, width=int(0.8*s))
+        draw.line([(12.5*s, ty), (15.5*s, ty)], fill=c_electric_blue, width=int(1.6*s))
+
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "wind_wall_tempest.png"), "wind_wall_tempest")
+
+def gen_wind_wall_vortex():
+    """16x64 Gale Vortex Wind Wall: dark titanium plating, aerodynamic vortex spirals, glowing teal vacuum conduits."""
+    width, height, s = 16, 64, 8
+    sw, sh = width * s, height * s
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    c_frame_dark = (16, 26, 24, 255)
+    c_frame_mid = (28, 48, 44, 255)
+    c_frame_light = (45, 80, 72, 255)
+    c_teal_glow = (0, 255, 200, 255)
+    c_teal_bright = (190, 255, 240, 255)
+    c_steel = (210, 230, 225, 255)
+
+    # 1. Frame
+    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_frame_dark, outline=(8, 16, 14, 255), width=int(1.2*s))
+    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_frame_mid)
+
+    # Vacuum lines
+    draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_teal_glow, width=int(1.6*s))
+    draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_teal_bright, width=int(0.6*s))
+
+    # Titanium bands
+    for bky in [4*s, 24*s, 40*s, 60*s]:
+        draw.rectangle([1.5*s, bky - 1.5*s, 14.5*s, bky + 1.5*s], fill=c_frame_light, outline=c_frame_dark, width=int(0.8*s))
+        draw.ellipse([2.5*s, bky - 0.8*s, 4.5*s, bky + 0.8*s], fill=c_teal_glow)
+        draw.ellipse([12*s, bky - 0.8*s, 13.5*s, bky + 0.8*s], fill=c_steel)
+
+    # 3 Vortex intakes
+    for ty in [14*s, 32*s, 50*s]:
+        draw.ellipse([4.5*s, ty - 6*s, 14.5*s, ty + 6*s], fill=c_frame_dark, outline=c_teal_glow, width=int(1.2*s))
+        draw.ellipse([6.5*s, ty - 4*s, 12.5*s, ty + 4*s], fill=c_frame_mid, outline=c_teal_bright, width=int(0.8*s))
+        
+        # Spiral swirl lines
+        for r_step in range(1, 4):
+            r = r_step * 1.3 * s
+            draw.arc([9.5*s - r, ty - r, 9.5*s + r, ty + r], start=r_step*60, end=r_step*60 + 160, fill=c_teal_bright, width=int(1.0*s))
+        draw.ellipse([8.5*s, ty - 1.0*s, 10.5*s, ty + 1.0*s], fill=c_teal_glow)
+
+        # Aerodynamic vanes
+        nozzle_pts = [
+            (12.5*s, ty - 4.5*s),
+            (15.2*s, ty - 2.0*s),
+            (15.2*s, ty + 2.0*s),
+            (12.5*s, ty + 4.5*s)
+        ]
+        draw.polygon(nozzle_pts, fill=c_frame_light, outline=c_teal_glow, width=int(0.6*s))
+
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "wind_wall_vortex.png"), "wind_wall_vortex")
+
+# =========================================================================
+# ACID WALL VARIANTS
+# =========================================================================
+
+def gen_acid_wall_vitriol():
+    """16x64 Vitriol Melter Acid Wall: acid-etched corroded brass chassis, boiling neon-amber/yellow acid core, high-pressure injectors."""
+    width, height, s = 16, 64, 8
+    sw, sh = width * s, height * s
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    c_dark_metal = (30, 26, 20, 255)
+    c_mid_metal = (55, 48, 36, 255)
+    c_brass_etched = (210, 160, 40, 255)
+    c_sulfur_yellow = (255, 225, 30, 255)
+    c_vitriol_bright = (255, 250, 160, 255)
+    c_hazard_orange = (255, 110, 20, 255)
+
+    # 1. Corroded brass casing
+    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_dark_metal, outline=(16, 14, 10, 255), width=int(1.2*s))
+    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_mid_metal)
+
+    # Amber hazard accents
+    for hy in [3*s, 6*s, 57*s, 60*s]:
+        draw.line([(2*s, hy), (7*s, hy)], fill=c_hazard_orange, width=int(1.2*s))
+
+    # Dual Superheated Vitriol Canisters
+    draw.rounded_rectangle([3*s, 8*s, 7*s, 30*s], radius=1*s, fill=c_hazard_orange, outline=c_brass_etched, width=int(0.8*s))
+    draw.rounded_rectangle([4*s, 10*s, 6*s, 28*s], radius=0.5*s, fill=c_sulfur_yellow)
+    draw.line([(5*s, 12*s), (5*s, 26*s)], fill=c_vitriol_bright, width=int(0.8*s))
+
+    draw.rounded_rectangle([3*s, 34*s, 7*s, 56*s], radius=1*s, fill=c_hazard_orange, outline=c_brass_etched, width=int(0.8*s))
+    draw.rounded_rectangle([4*s, 36*s, 6*s, 54*s], radius=0.5*s, fill=c_sulfur_yellow)
+    draw.line([(5*s, 38*s), (5*s, 52*s)], fill=c_vitriol_bright, width=int(0.8*s))
+
+    # Distribution pipe
+    draw.line([(7*s, 19*s), (9*s, 19*s)], fill=c_brass_etched, width=int(1.4*s))
+    draw.line([(7*s, 45*s), (9*s, 45*s)], fill=c_brass_etched, width=int(1.4*s))
+    draw.line([(9*s, 10*s), (9*s, 54*s)], fill=c_brass_etched, width=int(1.2*s))
+
+    # 4 Superheated injectors
+    for ny in [10*s, 24*s, 40*s, 54*s]:
+        nozzle_pts = [
+            (8.5*s, ny - 3.0*s),
+            (14.5*s, ny - 1.5*s),
+            (15.2*s, ny),
+            (14.5*s, ny + 1.5*s),
+            (8.5*s, ny + 3.0*s),
+        ]
+        draw.polygon(nozzle_pts, fill=c_dark_metal, outline=c_brass_etched, width=int(0.8*s))
+        draw.line([(9.5*s, ny), (14.5*s, ny)], fill=c_sulfur_yellow, width=int(1.4*s))
+        draw.ellipse([14.0*s, ny - 1.0*s, 15.5*s, ny + 1.0*s], fill=c_vitriol_bright)
+
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "acid_wall_vitriol.png"), "acid_wall_vitriol")
+
+def gen_acid_wall_sludge():
+    """16x64 Caustic Sludge Acid Wall: toxic purple & biohazard green sludge canisters, heavy distribution manifold."""
+    width, height, s = 16, 64, 8
+    sw, sh = width * s, height * s
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+
+    c_dark_metal = (24, 20, 30, 255)
+    c_mid_metal = (44, 34, 56, 255)
+    c_purple_toxic = (150, 45, 215, 255)
+    c_slime_green = (85, 245, 40, 255)
+    c_slime_bright = (185, 255, 130, 255)
+    c_hazard_magenta = (230, 60, 160, 255)
+
+    # 1. Dark purple/charcoal frame
+    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_dark_metal, outline=(14, 10, 18, 255), width=int(1.2*s))
+    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_mid_metal)
+
+    # Magenta warning stripes
+    for hy in [3*s, 6*s, 57*s, 60*s]:
+        draw.line([(2*s, hy), (7*s, hy)], fill=c_hazard_magenta, width=int(1.2*s))
+
+    # Toxic Sludge Canisters
+    draw.rounded_rectangle([3*s, 8*s, 7*s, 30*s], radius=1*s, fill=c_purple_toxic, outline=c_hazard_magenta, width=int(0.8*s))
+    draw.rounded_rectangle([4*s, 10*s, 6*s, 28*s], radius=0.5*s, fill=c_slime_green)
+    draw.line([(5*s, 12*s), (5*s, 26*s)], fill=c_slime_bright, width=int(0.8*s))
+
+    draw.rounded_rectangle([3*s, 34*s, 7*s, 56*s], radius=1*s, fill=c_purple_toxic, outline=c_hazard_magenta, width=int(0.8*s))
+    draw.rounded_rectangle([4*s, 36*s, 6*s, 54*s], radius=0.5*s, fill=c_slime_green)
+    draw.line([(5*s, 38*s), (5*s, 52*s)], fill=c_slime_bright, width=int(0.8*s))
+
+    # Sludge conduits
+    draw.line([(7*s, 19*s), (9*s, 19*s)], fill=c_purple_toxic, width=int(1.4*s))
+    draw.line([(7*s, 45*s), (9*s, 45*s)], fill=c_purple_toxic, width=int(1.4*s))
+    draw.line([(9*s, 10*s), (9*s, 54*s)], fill=c_purple_toxic, width=int(1.2*s))
+
+    # 4 Viscous nozzles
+    for ny in [10*s, 24*s, 40*s, 54*s]:
+        nozzle_pts = [
+            (8.5*s, ny - 3.0*s),
+            (14.5*s, ny - 1.5*s),
+            (15.2*s, ny),
+            (14.5*s, ny + 1.5*s),
+            (8.5*s, ny + 3.0*s),
+        ]
+        draw.polygon(nozzle_pts, fill=c_dark_metal, outline=c_purple_toxic, width=int(0.8*s))
+        draw.line([(9.5*s, ny), (14.5*s, ny)], fill=c_slime_green, width=int(1.4*s))
+        draw.ellipse([14.0*s, ny - 1.0*s, 15.5*s, ny + 1.0*s], fill=c_slime_bright)
+
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "acid_wall_sludge.png"), "acid_wall_sludge")
+
+# =========================================================================
 # 3. ARTILLERY VARIANTS
 # =========================================================================
 
@@ -1616,6 +1830,10 @@ def generate_all_variants():
     gen_archer_piercer()
     gen_arrow_wall_arcane()
     gen_arrow_wall_piercer()
+    gen_wind_wall_tempest()
+    gen_wind_wall_vortex()
+    gen_acid_wall_vitriol()
+    gen_acid_wall_sludge()
     gen_artillery_thermite()
     gen_artillery_salvo()
     gen_barricade_spikes()
@@ -1646,7 +1864,7 @@ def generate_all_variants():
     gen_tar_acid()
     gen_tesla_superconductor()
     gen_tesla_overcharge()
-    print("Successfully generated all 34 tower specialization variants!")
+    print("Successfully generated all 38 tower specialization variants!")
 
 if __name__ == "__main__":
     generate_all_variants()

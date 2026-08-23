@@ -11,6 +11,8 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_m7jpq"]
 [ext_resource type="Texture2D" uid="uid://brx3mfglvxj06" path="res://src/textures/towers/variants/artillery_salvo.png" id="ext_var_heavy_salvo"]
 [ext_resource type="Texture2D" uid="uid://lr61mxg5j5bb" path="res://src/textures/towers/variants/artillery_thermite.png" id="ext_var_thermite_carpet"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/artillery_thermite.png" id="ext_var_thermite_carpet"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/artillery_salvo.png" id="ext_var_heavy_salvo"]
 
 [sub_resource type="Resource" id="Resource_attack"]
 script = ExtResource("2_o4woo")

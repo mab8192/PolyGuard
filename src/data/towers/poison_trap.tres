@@ -9,6 +9,8 @@
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_ydhdu"]
 [ext_resource type="Texture2D" uid="uid://d2j1lbd0k0550" path="res://src/textures/towers/variants/poison_trap_plume.png" id="ext_var_broad_plume"]
 [ext_resource type="Texture2D" uid="uid://df6dy5psonm3n" path="res://src/textures/towers/variants/poison_trap_rapid.png" id="ext_var_rapid_dispersion"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/poison_trap_rapid.png" id="ext_var_rapid_dispersion"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/poison_trap_plume.png" id="ext_var_broad_plume"]
 
 [sub_resource type="Resource" id="Resource_choice_quick"]
 script = ExtResource("1_choice")

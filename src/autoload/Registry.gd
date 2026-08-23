@@ -124,6 +124,8 @@ func _load_registry() -> void:
 	TOWERS = {
 		"archer_tower": load("res://src/data/towers/archer_tower.tres"),
 		"arrow_wall": load("res://src/data/towers/arrow_wall.tres"),
+		"wind_wall": load("res://src/data/towers/wind_wall.tres"),
+		"acid_wall": load("res://src/data/towers/acid_wall.tres"),
 		"crossbow": load("res://src/data/towers/crossbow.tres"),
 		"flamethrower": load("res://src/data/towers/flamethrower.tres"),
 		"barricade": load("res://src/data/towers/barricade.tres"),

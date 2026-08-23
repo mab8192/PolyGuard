@@ -117,6 +117,10 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 				eff.magic_resistance_reduction *= strength_mult
 			if "displace_distance" in eff:
 				eff.displace_distance *= strength_mult
+			if "push_force" in eff:
+				eff.push_force *= strength_mult
+			if "impulse_force" in eff:
+				eff.impulse_force *= strength_mult
 			if "speed_multiplier" in eff and eff.speed_multiplier < 1.0:
 				var slow_pct = (1.0 - eff.speed_multiplier) * strength_mult
 				eff.speed_multiplier = clampf(1.0 - slow_pct, 0.0, 0.95)
@@ -253,6 +257,10 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Effect: Reduces Enemy Speed by 50%")
 	elif tower_id == "freeze_trap":
 		lines.append("Trait: Freezes Enemies in Place (Burst)")
+	elif tower_id == "wind_wall":
+		lines.append("Trait: Continuous & Burst Wind Pushback (Physics Force)")
+	elif tower_id == "acid_wall":
+		lines.append("Trait: Directional Caustic Spray (-25 Armor & DoT)")
 	elif tower_id == "siphon":
 		lines.append("Effect: Increase Enemy Energy Reward by 50%")
 		

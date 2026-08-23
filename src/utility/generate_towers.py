@@ -271,6 +271,127 @@ def generate_arrow_wall_texture(output_path: str = None) -> str:
 
     return save_cropped_sprite(img, (width, height), output_path, "arrow_wall")
 
+def generate_wind_wall_texture(output_path: str = None) -> str:
+    """16x64 Directional Wind Wall with aerodynamic steel frame, pneumatic cyan conduits, and 3 gale turbine nozzles."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "wind_wall.png")
+
+    width, height = 16, 64
+    scale = 8
+    sw, sh = width * scale, height * scale
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    s = scale
+
+    c_frame_dark = (18, 22, 32, 255)
+    c_frame_mid = (36, 44, 60, 255)
+    c_frame_light = (65, 80, 105, 255)
+    c_cyan_glow = (0, 220, 240, 255)
+    c_cyan_bright = (190, 250, 255, 255)
+    c_brass = (215, 165, 45, 255)
+    c_steel = (200, 215, 230, 255)
+
+    # 1. Fortified outer metal chassis
+    draw.rounded_rectangle([1 * s, 1 * s, 15 * s - 1, 63 * s - 1], radius=2 * s, fill=c_frame_dark, outline=(10, 12, 18, 255), width=int(1.2 * s))
+    draw.rounded_rectangle([2 * s, 2 * s, 14 * s - 1, 62 * s - 1], radius=1.5 * s, fill=c_frame_mid)
+
+    # 2. Vertical pneumatic pressure line along left spine
+    draw.line([(3.5 * s, 4 * s), (3.5 * s, 60 * s)], fill=c_cyan_glow, width=int(1.5 * s))
+    draw.line([(3.5 * s, 4 * s), (3.5 * s, 60 * s)], fill=c_cyan_bright, width=int(0.6 * s))
+
+    # Reinforcement brackets & pressure valves
+    for bky in [4 * s, 24 * s, 40 * s, 60 * s]:
+        draw.rectangle([1.5 * s, bky - 1.5 * s, 14.5 * s, bky + 1.5 * s], fill=c_frame_light, outline=c_frame_dark, width=int(0.8 * s))
+        draw.ellipse([2.5 * s, bky - 0.8 * s, 4.5 * s, bky + 0.8 * s], fill=c_brass)
+        draw.ellipse([12 * s, bky - 0.8 * s, 13.5 * s, bky + 0.8 * s], fill=c_steel)
+
+    # 3. 3 High-Power Gale Turbine Housings pointing right (+X)
+    turbine_centers = [14 * s, 32 * s, 50 * s]
+    for ty in turbine_centers:
+        # Turbine circular intake chamber
+        draw.ellipse([4.5 * s, ty - 6 * s, 14.5 * s, ty + 6 * s], fill=c_frame_dark, outline=c_brass, width=int(1.0 * s))
+        # Inner spin vortex ring
+        draw.ellipse([6.5 * s, ty - 4 * s, 12.5 * s, ty + 4 * s], fill=c_frame_mid, outline=c_cyan_glow, width=int(0.8 * s))
+        
+        # Spinning turbine blades
+        draw.line([(9.5 * s - 3 * s, ty - 2.5 * s), (9.5 * s + 3 * s, ty + 2.5 * s)], fill=c_cyan_bright, width=int(1.2 * s))
+        draw.line([(9.5 * s - 3 * s, ty + 2.5 * s), (9.5 * s + 3 * s, ty - 2.5 * s)], fill=c_cyan_bright, width=int(1.2 * s))
+        draw.ellipse([8.5 * s, ty - 1.0 * s, 10.5 * s, ty + 1.0 * s], fill=c_brass)
+
+        # Forward directional exhaust louvers facing right
+        nozzle_pts = [
+            (12.5 * s, ty - 4.5 * s),
+            (15.2 * s, ty - 2.5 * s),
+            (15.2 * s, ty + 2.5 * s),
+            (12.5 * s, ty + 4.5 * s)
+        ]
+        draw.polygon(nozzle_pts, fill=c_frame_light, outline=c_frame_dark, width=int(0.6 * s))
+        draw.line([(13.0 * s, ty), (15.5 * s, ty)], fill=c_cyan_bright, width=int(1.0 * s))
+
+    return save_cropped_sprite(img, (width, height), output_path, "wind_wall")
+
+def generate_acid_wall_texture(output_path: str = None) -> str:
+    """16x64 Directional Acid Wall with industrial hazard plating, glass acid reservoir, and chemical nozzles."""
+    if output_path is None:
+        output_path = os.path.join(get_project_root(), "src", "textures", "towers", "acid_wall.png")
+
+    width, height = 16, 64
+    scale = 8
+    sw, sh = width * scale, height * scale
+    img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
+    draw = ImageDraw.Draw(img)
+    s = scale
+
+    c_dark_metal = (24, 26, 28, 255)
+    c_mid_metal = (44, 48, 52, 255)
+    c_hazard_yellow = (245, 195, 25, 255)
+    c_acid_deep = (40, 160, 20, 255)
+    c_acid_glow = (110, 245, 30, 255)
+    c_acid_bright = (195, 255, 100, 255)
+    c_copper = (185, 105, 45, 255)
+    c_steel = (210, 215, 220, 255)
+
+    # 1. Outer industrial armor casing
+    draw.rounded_rectangle([1 * s, 1 * s, 15 * s - 1, 63 * s - 1], radius=2 * s, fill=c_dark_metal, outline=(12, 14, 16, 255), width=int(1.2 * s))
+    draw.rounded_rectangle([2 * s, 2 * s, 14 * s - 1, 62 * s - 1], radius=1.5 * s, fill=c_mid_metal)
+
+    # Hazard stripes on top and bottom caps
+    for hy in [3 * s, 6 * s, 57 * s, 60 * s]:
+        draw.line([(2 * s, hy), (7 * s, hy)], fill=c_hazard_yellow, width=int(1.2 * s))
+
+    # 2. Dual Glass Acid Canisters along spine
+    # Canister 1 (upper)
+    draw.rounded_rectangle([3 * s, 8 * s, 7 * s, 30 * s], radius=1 * s, fill=c_acid_deep, outline=c_copper, width=int(0.8 * s))
+    draw.rounded_rectangle([4 * s, 10 * s, 6 * s, 28 * s], radius=0.5 * s, fill=c_acid_glow)
+    draw.line([(5 * s, 12 * s), (5 * s, 26 * s)], fill=c_acid_bright, width=int(0.8 * s))
+
+    # Canister 2 (lower)
+    draw.rounded_rectangle([3 * s, 34 * s, 7 * s, 56 * s], radius=1 * s, fill=c_acid_deep, outline=c_copper, width=int(0.8 * s))
+    draw.rounded_rectangle([4 * s, 36 * s, 6 * s, 54 * s], radius=0.5 * s, fill=c_acid_glow)
+    draw.line([(5 * s, 38 * s), (5 * s, 52 * s)], fill=c_acid_bright, width=int(0.8 * s))
+
+    # Distribution pipe connecting canisters to nozzles
+    draw.line([(7 * s, 19 * s), (9 * s, 19 * s)], fill=c_copper, width=int(1.2 * s))
+    draw.line([(7 * s, 45 * s), (9 * s, 45 * s)], fill=c_copper, width=int(1.2 * s))
+    draw.line([(9 * s, 10 * s), (9 * s, 54 * s)], fill=c_copper, width=int(1.0 * s))
+
+    # 3. 4 High-Pressure Atomizer Spray Nozzles pointing right (+X)
+    nozzle_ys = [10 * s, 24 * s, 40 * s, 54 * s]
+    for ny in nozzle_ys:
+        nozzle_pts = [
+            (8.5 * s, ny - 3.0 * s),
+            (14.5 * s, ny - 1.5 * s),
+            (15.2 * s, ny),
+            (14.5 * s, ny + 1.5 * s),
+            (8.5 * s, ny + 3.0 * s),
+        ]
+        draw.polygon(nozzle_pts, fill=c_dark_metal, outline=c_copper, width=int(0.8 * s))
+        # Internal acid injector & tip drop
+        draw.line([(9.5 * s, ny), (14.5 * s, ny)], fill=c_acid_glow, width=int(1.2 * s))
+        draw.ellipse([14.0 * s, ny - 1.0 * s, 15.5 * s, ny + 1.0 * s], fill=c_acid_bright)
+
+    return save_cropped_sprite(img, (width, height), output_path, "acid_wall")
+
 def generate_crossbow_texture(output_path: str = None) -> str:
     """Fortified Heavy Crossbow / Ballista Turret matching the warm wood & stone archer style."""
     if output_path is None:
@@ -998,6 +1119,8 @@ def generate_sparkler_texture(output_path: str = None) -> str:
 def generate_all_towers():
     generate_archer_tower_texture()
     generate_arrow_wall_texture()
+    generate_wind_wall_texture()
+    generate_acid_wall_texture()
     generate_crossbow_texture()
     generate_flamethrower_texture()
     generate_carpet_bomb_artillery_texture()

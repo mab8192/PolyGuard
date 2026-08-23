@@ -5,6 +5,10 @@ import re
 TOWERS_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", "data", "towers"))
 
 MAPPINGS = {
+    "acid_wall.tres": {
+        "vitriol_melter": "res://src/textures/towers/variants/acid_wall_vitriol.png",
+        "caustic_sludge": "res://src/textures/towers/variants/acid_wall_sludge.png"
+    },
     "archer_tower.tres": {
         "arcane_infusion": "res://src/textures/towers/variants/archer_tower_arcane.png",
         "true_piercer": "res://src/textures/towers/variants/archer_tower_piercer.png"
@@ -12,6 +16,10 @@ MAPPINGS = {
     "arrow_wall.tres": {
         "arcane_infusion": "res://src/textures/towers/variants/arrow_wall_arcane.png",
         "true_piercer": "res://src/textures/towers/variants/arrow_wall_piercer.png"
+    },
+    "wind_wall.tres": {
+        "hurricane_force": "res://src/textures/towers/variants/wind_wall_tempest.png",
+        "gale_vortex": "res://src/textures/towers/variants/wind_wall_vortex.png"
     },
     "artillery.tres": {
         "thermite_carpet": "res://src/textures/towers/variants/artillery_thermite.png",

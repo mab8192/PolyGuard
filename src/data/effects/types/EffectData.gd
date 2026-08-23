@@ -27,6 +27,9 @@ class_name EffectData extends Resource
 @export_category("Displacement")
 @export var displace_distance: float = 0.0 ## Path displacement distance along recorded travel history
 
+@export_category("Force & Physics")
+@export var impulse_force: float = 0.0 ## Instant impulse in Newton-seconds applied on hit / trigger
+
 @export_category("Visuals")
 @export var active_vfx: PackedScene ## Persistent particle/visual effect attached to target while active
 @export var impact_vfx: PackedScene ## One-shot burst spawned at target location upon hit

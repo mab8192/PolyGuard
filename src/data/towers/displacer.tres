@@ -8,6 +8,8 @@
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="5_tower"]
 [ext_resource type="Texture2D" uid="uid://bvm21j0d6m8a6" path="res://src/textures/towers/variants/displacer_mass.png" id="ext_var_mass_displacement"]
 [ext_resource type="Texture2D" uid="uid://4afdowiw2qm" path="res://src/textures/towers/variants/displacer_warp.png" id="ext_var_warp_amplifier"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/displacer_warp.png" id="ext_var_warp_amplifier"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/displacer_mass.png" id="ext_var_mass_displacement"]
 
 [sub_resource type="Resource" id="Resource_choice_warp"]
 script = ExtResource("1_choice")

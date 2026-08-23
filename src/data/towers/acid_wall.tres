@@ -1,0 +1,80 @@
+[gd_resource type="Resource" script_class="TowerData" format=3 uid="uid://rqe1geic3i4e"]
+
+[ext_resource type="Script" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
+[ext_resource type="Script" path="res://src/data/effects/types/EffectData.gd" id="2_effect"]
+[ext_resource type="Script" path="res://src/data/components/HealthData.gd" id="3_health"]
+[ext_resource type="Script" path="res://src/data/components/EffectApplierData.gd" id="4_applier"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/acid_wall.png" id="5_icon"]
+[ext_resource type="PackedScene" path="res://src/scenes/towers/acid_wall.tscn" id="6_scene"]
+[ext_resource type="Script" path="res://src/data/towers/TowerData.gd" id="7_tower"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/acid_wall_vitriol.png" id="ext_var_vitriol_melter"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/acid_wall_sludge.png" id="ext_var_caustic_sludge"]
+
+[sub_resource type="Resource" id="Resource_sludge_slow"]
+script = ExtResource("2_effect")
+name = "Acid Sludge Slow"
+duration = 4.0
+speed_multiplier = 0.6
+
+[sub_resource type="Resource" id="Resource_choice_vitriol"]
+script = ExtResource("1_choice")
+id = "vitriol_melter"
+title = "Vitriol Melter"
+description = "Concentrated sulfuric acid compound increases armor shredding and caustic damage by +35%."
+strength_multiplier = 1.35
+icon = ExtResource("ext_var_vitriol_melter")
+
+[sub_resource type="Resource" id="Resource_choice_sludge"]
+script = ExtResource("1_choice")
+id = "caustic_sludge"
+title = "Caustic Sludge"
+description = "Viscous polymer resin severely slows enemies by 40% with +20% faster spray cycles."
+cooldown_multiplier = 0.8
+added_effects = Array[ExtResource("2_effect")]([SubResource("Resource_sludge_slow")])
+icon = ExtResource("ext_var_caustic_sludge")
+
+[sub_resource type="Resource" id="Resource_acid_shred"]
+script = ExtResource("2_effect")
+name = "Acid Corrosion"
+duration = 8.0
+remove_on_exit = false
+armor_reduction = 25.0
+
+[sub_resource type="Resource" id="Resource_acid_burn"]
+script = ExtResource("2_effect")
+name = "Acid Burn"
+duration = 5.0
+remove_on_exit = false
+damage_per_second = 35.0
+damage_type = 1
+
+[sub_resource type="Resource" id="Resource_applier_data"]
+script = ExtResource("4_applier")
+mode = 2
+active_duration = 3.5
+cooldown = 4.0
+effects = Array[ExtResource("2_effect")]([SubResource("Resource_acid_shred"), SubResource("Resource_acid_burn")])
+targeting_mask = 12
+metadata/_custom_type_script = "uid://b6m2boucd8dke"
+
+[sub_resource type="Resource" id="Resource_health"]
+script = ExtResource("3_health")
+max_health = 850.0
+armor = 25.0
+
+[resource]
+script = ExtResource("7_tower")
+tower_id = "acid_wall"
+display_name = "Acid Wall"
+icon = ExtResource("5_icon")
+scene = ExtResource("6_scene")
+description = "Directional chemical barricade that sprays a stream of caustic acid across the lane, stripping enemy armor and inflicting corrosive damage."
+unlock_cost = 500
+required_stage_id = "stage_07"
+choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_vitriol"), SubResource("Resource_choice_sludge")])
+cost = 350
+can_rotate = true
+rotation_step_degrees = 90.0
+collision_layer = 2
+health = SubResource("Resource_health")
+effect_applier = SubResource("Resource_applier_data")

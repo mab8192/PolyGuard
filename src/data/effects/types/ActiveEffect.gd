@@ -56,16 +56,25 @@ func apply(target: Node2D) -> void:
 
 	# Instant / Initial Damage
 	var total_initial: float = data.damage + data.initial_damage
-	if total_initial > 0.0 and target is Enemy and target.health:
+	if total_initial > 0.0 and target.health:
 		target.health.damage(total_initial, data.damage_type)
 
 	# Instant Heal
-	if data.heal_amount > 0.0 and target is Enemy and target.health:
+	if data.heal_amount > 0.0 and target.health:
 		target.health.heal(data.heal_amount)
 
 	# Displacement along recorded path history
-	if data.displace_distance > 0.0 and target is Enemy:
+	if data.displace_distance > 0.0:
 		_displace_enemy_along_path(target as Enemy, data.displace_distance)
+
+	# Impulse force (Newton-seconds)
+	if data.impulse_force > 0.0:
+		var mov = ComponentUtil.get_component(target, MovementComponent) as MovementComponent
+		print("mov", mov)
+		if mov:
+			var dir = _get_source_direction()
+			print("IMPULSE", dir * data.impulse_force)
+			mov.apply_impulse(dir * data.impulse_force)
 
 	# Impact VFX
 	if data.impact_vfx:
@@ -101,13 +110,21 @@ func apply(target: Node2D) -> void:
 	if data.duration == 0.0 or (data.duration != INF and data.duration <= 0.001 and not data.active_vfx and data.damage_per_second == 0.0 and data.heal_per_second == 0.0 and data.speed_multiplier == 1.0 and data.acceleration_multiplier == 1.0 and data.armor_reduction == 0.0 and data.magic_resistance_reduction == 0.0):
 		expired.emit()
 
+func _get_source_direction() -> Vector2:
+	_sources = _sources.filter(func(s): return is_instance_valid(s))
+	if not _sources.is_empty():
+		var src = _sources[0]
+		if src is Node2D:
+			return Vector2.RIGHT.rotated((src as Node2D).global_rotation)
+	return Vector2.RIGHT
+
 func tick(delta: float) -> void:
 	if _counting_time:
 		_elapsed_time_counted += delta
 	_elapsed_time_total += delta
 
 	# Damage Over Time (with optional lambda exponential decay)
-	if data and data.damage_per_second > 0.0 and is_instance_valid(_target) and _target is Enemy and _target.health:
+	if data and data.damage_per_second > 0.0 and is_instance_valid(_target) and _target.health:
 		var current_dps: float = data.damage_per_second
 		if data.lambda != 1.0 and data.lambda > 0.0:
 			current_dps *= pow(data.lambda, _elapsed_time_total)
@@ -115,14 +132,14 @@ func tick(delta: float) -> void:
 		_target.health.damage(damage_amount, data.damage_type)
 
 	# Healing Over Time
-	if data and data.heal_per_second > 0.0 and is_instance_valid(_target) and _target is Enemy and _target.health:
+	if data and data.heal_per_second > 0.0 and is_instance_valid(_target) and _target.health:
 		var heal_amount_tick: float = data.heal_per_second * delta
 		_target.health.heal(heal_amount_tick)
 
 	if data and data.duration != INF and _elapsed_time_counted >= data.duration:
 		_counting_time = false
 		expired.emit()
-
+	
 func remove() -> void:
 	if is_instance_valid(_target) and data and data.target_tint != Color.WHITE:
 		_target.modulate = _original_modulate

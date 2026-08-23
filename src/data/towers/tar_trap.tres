@@ -10,6 +10,8 @@
 [ext_resource type="PackedScene" path="res://src/scenes/effects/particles/corrosive_particles.tscn" id="5_corrosive_vfx"]
 [ext_resource type="Texture2D" uid="uid://dskobkxmvrprp" path="res://src/textures/towers/variants/tar_trap_acid.png" id="ext_var_acid_tar"]
 [ext_resource type="Texture2D" uid="uid://c23x0h0umjlnd" path="res://src/textures/towers/variants/tar_trap_hex.png" id="ext_var_hex_pitch"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/tar_trap_hex.png" id="ext_var_hex_pitch"]
+[ext_resource type="Texture2D" path="res://src/textures/towers/variants/tar_trap_acid.png" id="ext_var_acid_tar"]
 
 [sub_resource type="Resource" id="Resource_eff_mr"]
 script = ExtResource("1_il3ue")

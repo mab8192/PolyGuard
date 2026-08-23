@@ -129,6 +129,10 @@ func _render() -> void:
 		stat_lines.append("Trait: Continuous Thermal Cone")
 	elif tower_data.tower_id == "tar_trap":
 		stat_lines.append("Effect: Reduces Enemy Movement Speed by 50%")
+	elif tower_data.tower_id == "wind_wall":
+		stat_lines.append("Trait: Continuous & Burst Wind Pushback (Physics Force)")
+	elif tower_data.tower_id == "acid_wall":
+		stat_lines.append("Trait: Directional Caustic Spray (-25 Armor & DoT)")
 	elif tower_data.tower_id == "siphon":
 		stat_lines.append("Effect: Increases Enemy Energy Reward by 50%")
 		
