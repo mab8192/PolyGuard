@@ -14,7 +14,9 @@ var fields: Dictionary = {} # String id -> FlowField
 
 func create_field(id: String, p_width: int, p_height: int, p_cell_size: float,
 		p_origin: Vector2 = Vector2.ZERO) -> FlowField:
-	var field: FlowField = FlowField.new(p_width, p_height, p_cell_size, p_origin)
+	var field: FlowField = FlowField.new()
+	if field.has_method("init_grid"):
+		field.init_grid(p_width, p_height, int(p_cell_size), p_origin)
 	fields[id] = field
 	return field
 

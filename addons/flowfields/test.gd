@@ -6,7 +6,9 @@ const GRID_SIZE = 32
 
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
-	field = FlowField.new(40, 40, GRID_SIZE, Vector2.ZERO)
+	field = FlowField.new()
+	if field.has_method("init_grid"):
+		field.init_grid(40, 40, GRID_SIZE, Vector2.ZERO)
 
 	field.add_target(Vector2(300, 300))
 	field.add_target(Vector2(300 + GRID_SIZE, 300))

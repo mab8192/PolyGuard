@@ -212,7 +212,7 @@ func _physics_process(delta: float) -> void:
 				# Ensure separation does not steer into a solid wall
 				var test_pos := _actor.global_position + flow_tangent * (signf(lateral_sep) * 16.0)
 				var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
-				if cur_field and not _is_walkable_world(cur_field, test_pos):
+				if cur_field and not cur_field.is_walkable(test_pos):
 					blended_sep = dir * (forward_sep * 0.25)
 
 				dir = (dir + blended_sep * data.separation_weight).normalized()
@@ -237,11 +237,11 @@ func _physics_process(delta: float) -> void:
 			var perp: Vector2 = Vector2(-dir.y, dir.x) * unstuck_side
 			var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
 			var test_pos := _actor.global_position + perp * 16.0
-			if cur_field and not _is_walkable_world(cur_field, test_pos):
+			if cur_field and not cur_field.is_walkable(test_pos):
 				# Try opposite side
 				perp = -perp
 				test_pos = _actor.global_position + perp * 16.0
-				if cur_field and not _is_walkable_world(cur_field, test_pos):
+				if cur_field and not cur_field.is_walkable(test_pos):
 					perp = Vector2.ZERO
 
 			if perp != Vector2.ZERO:
@@ -250,14 +250,6 @@ func _physics_process(delta: float) -> void:
 	var max_speed: float = movement.get_speed() if movement else 0.0
 	var intended_vel: Vector2 = dir * max_speed
 	velocity_computed.emit(intended_vel)
-
-func _is_walkable_world(field: FlowField, world_pos: Vector2) -> bool:
-	if not field:
-		return true
-	var cell: Vector2i = field._world_to_grid(world_pos)
-	if not field._is_in_bounds(cell):
-		return false
-	return field.cost_grid[field._index(cell)] < FlowField.COST_IMPASSABLE
 
 
 func _pick_target() -> void:

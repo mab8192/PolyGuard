@@ -1,4 +1,4 @@
-class_name FlowField
+class_name FlowFieldGDScript
 extends RefCounted
 
 ## ============================================================================
