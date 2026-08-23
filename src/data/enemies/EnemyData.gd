@@ -26,6 +26,29 @@ var gold_reward: int:
 @export var splitter: SplitterData
 @export var effect_applier: EffectApplierData
 
+func duplicate_data() -> EnemyData:
+	var copy: EnemyData = self.duplicate(true)
+	if health:
+		copy.health = health.duplicate(true)
+	if movement:
+		copy.movement = movement.duplicate(true)
+	if nav:
+		copy.nav = nav.duplicate(true)
+	if attack:
+		copy.attack = attack.duplicate(true)
+	if targeting:
+		copy.targeting = targeting.duplicate(true)
+	if splitter:
+		copy.splitter = splitter.duplicate(true)
+	if effect_applier:
+		copy.effect_applier = effect_applier.duplicate(true)
+		var dup_effects: Array[EffectData] = []
+		for eff in copy.effect_applier.effects:
+			if eff:
+				dup_effects.append(eff.duplicate(true))
+		copy.effect_applier.effects = dup_effects
+	return copy
+
 func create() -> Enemy:
 	if not scene:
 		push_error("EnemyData (%s) has no scene assigned!" % resource_path)
@@ -36,8 +59,9 @@ func create() -> Enemy:
 		push_error("Scene in EnemyData must inherit from Enemy!")
 		return null
 
-	enemy.data = self.duplicate(true)
-	apply_to(enemy)
+	var copy := duplicate_data()
+	enemy.data = copy
+	copy.apply_to(enemy)
 	return enemy
 
 func apply_to(enemy: Enemy) -> void:
@@ -45,27 +69,27 @@ func apply_to(enemy: Enemy) -> void:
 		return
 
 	if health:
-		ComponentUtil.update_component(enemy, HealthComponent, enemy.data.health)
+		ComponentUtil.update_component(enemy, HealthComponent, health)
 
 	if movement:
-		ComponentUtil.update_component(enemy, MovementComponent, enemy.data.movement)
+		ComponentUtil.update_component(enemy, MovementComponent, movement)
 
 	if nav:
-		if nav_strategy != NavigationData.NavStrategy.CLOSEST and enemy.data.nav.strategy == NavigationData.NavStrategy.CLOSEST:
-			enemy.data.nav.strategy = nav_strategy
-		ComponentUtil.update_component(enemy, NavigationComponent, enemy.data.nav)
+		if nav_strategy != NavigationData.NavStrategy.CLOSEST and nav.strategy == NavigationData.NavStrategy.CLOSEST:
+			nav.strategy = nav_strategy
+		ComponentUtil.update_component(enemy, NavigationComponent, nav)
 		
 	if splitter:
-		ComponentUtil.update_component(enemy, SplitterComponent, enemy.data.splitter)
+		ComponentUtil.update_component(enemy, SplitterComponent, splitter)
 		
 	if attack:
-		ComponentUtil.update_component(enemy, AttackComponent, enemy.data.attack)
+		ComponentUtil.update_component(enemy, AttackComponent, attack)
 		
 	if targeting:
-		ComponentUtil.update_component(enemy, TargetingComponent, enemy.data.targeting)
+		ComponentUtil.update_component(enemy, TargetingComponent, targeting)
 
 	if effect_applier:
-		ComponentUtil.update_component(enemy, EffectApplierComponent, enemy.data.effect_applier)
+		ComponentUtil.update_component(enemy, EffectApplierComponent, effect_applier)
 
 func get_stats() -> Dictionary:
 	var hp_val = health.max_health if health else 0.0

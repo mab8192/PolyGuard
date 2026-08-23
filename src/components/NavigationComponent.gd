@@ -166,6 +166,9 @@ func _physics_process(delta: float) -> void:
 			if field and field.is_reachable(_actor.global_position):
 				_no_path = field.is_obstructed(_actor.global_position)
 				dir = field.query(_actor.global_position)
+				var cost_val: float = field.get_integration_cost(_actor.global_position)
+				if cost_val < float(FlowField.INTEGRATION_MAX):
+					remaining_distance = cost_val
 
 	# 2. Standard exit-targeting enemies
 	else:
@@ -181,10 +184,17 @@ func _physics_process(delta: float) -> void:
 					no_path_available.emit()
 					_no_path = true
 			dir = field.query(_actor.global_position)
+			var cost_val: float = field.get_integration_cost(_actor.global_position)
+			if cost_val < float(FlowField.INTEGRATION_MAX):
+				remaining_distance = cost_val
+			elif not _exits.is_empty() and is_instance_valid(_exits[0]):
+				remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
 		else:
 			if not _no_path:
 				no_path_available.emit()
 				_no_path = true
+			if not _exits.is_empty() and is_instance_valid(_exits[0]):
+				remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
 
 		# Fallback if in unreached corner
 		if dir == Vector2.ZERO and not _exits.is_empty():
@@ -198,6 +208,7 @@ func _physics_process(delta: float) -> void:
 						closest_exit = ex
 			if closest_exit:
 				dir = _actor.global_position.direction_to(closest_exit.global_position)
+				remaining_distance = sqrt(min_d_sq)
 
 	# Soft Boid Separation (with Lateral Corridor Lane Spreading)
 	if data and data.enable_separation:

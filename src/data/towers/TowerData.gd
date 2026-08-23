@@ -58,8 +58,25 @@ func get_choice(choice_id: String) -> TowerChoiceUpgrade:
 			return c
 	return null
 
-func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
+func duplicate_data() -> TowerData:
 	var copy: TowerData = self.duplicate(true)
+	if health:
+		copy.health = health.duplicate(true)
+	if attack:
+		copy.attack = attack.duplicate(true)
+	if targeting:
+		copy.targeting = targeting.duplicate(true)
+	if effect_applier:
+		copy.effect_applier = effect_applier.duplicate(true)
+		var dup_effects: Array[EffectData] = []
+		for eff in copy.effect_applier.effects:
+			if eff:
+				dup_effects.append(eff.duplicate(true))
+		copy.effect_applier.effects = dup_effects
+	return copy
+
+func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
+	var copy: TowerData = duplicate_data()
 	
 	var lvl = clampi(level, 1, max_level)
 	var strength_mult = 1.0 + (lvl - 1) * damage_upgrade_per_level
@@ -94,6 +111,8 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 		hp_mult *= choice.health_multiplier
 		if copy.targeting:
 			copy.targeting.max_targets += choice.extra_targets
+		if copy.attack and not is_equal_approx(choice.projectile_speed_multiplier, 1.0):
+			copy.attack.projectile_speed *= choice.projectile_speed_multiplier
 	
 	if copy.attack:
 		copy.attack.damage *= strength_mult
@@ -285,10 +304,11 @@ func create(is_preview: bool = true) -> Tower:
 		push_error("Scene must be a tower!")
 		return null
 
-	tower.data = self.duplicate(true)
+	var copy := duplicate_data()
+	tower.data = copy
 	tower.is_preview = is_preview
 	
-	apply_to(tower)
+	copy.apply_to(tower)
 	return tower
 
 func apply_to(tower: Tower) -> void:
@@ -309,13 +329,13 @@ func apply_to(tower: Tower) -> void:
 			sprite.texture = icon
 
 	if health:
-		ComponentUtil.update_component(tower, HealthComponent, tower.data.health)
+		ComponentUtil.update_component(tower, HealthComponent, health)
 
 	if targeting:
-		ComponentUtil.update_component(tower, TargetingComponent, tower.data.targeting)
+		ComponentUtil.update_component(tower, TargetingComponent, targeting)
 
 	if attack:
-		ComponentUtil.update_component(tower, AttackComponent, tower.data.attack)
+		ComponentUtil.update_component(tower, AttackComponent, attack)
 
 	if effect_applier:
-		ComponentUtil.update_component(tower, EffectApplierComponent, tower.data.effect_applier)
+		ComponentUtil.update_component(tower, EffectApplierComponent, effect_applier)
