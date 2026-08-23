@@ -12,6 +12,11 @@ extends RefCounted
 const COST_DEFAULT: int = 1
 const COST_IMPASSABLE: int = 10000 ## "Cost" to move through an impassable cell (e.g. a wall)
 const INTEGRATION_MAX: int = 2147483647 # sentinel for "unreached" (int32 max)
+
+const PADDING_RADIUS: int = 1 ## Soft obstacle avoidance padding radius in cells
+const PADDING_ADDED_COST: float = 1.0 ## Penalty added to cells directly adjacent to obstacles
+const PADDING_MIN_OBSTACLE_COST: float = 10.0 ## Threshold at which a cell is considered an obstacle to pad
+
 const NEIGHBORS: Array[Vector2i] = [
 	Vector2i(0, -1),
 	Vector2i(-1, 0),
@@ -107,20 +112,28 @@ func query(world_pos: Vector2) -> Vector2:
 	if not (in00 or in10 or in01 or in11):
 		return Vector2.ZERO
 
-	var v00: Vector2 = field[y0 * width + x0] if in00 else Vector2.ZERO
-	var v10: Vector2 = field[y0 * width + x1] if in10 else Vector2.ZERO
-	var v01: Vector2 = field[y1 * width + x0] if in01 else Vector2.ZERO
-	var v11: Vector2 = field[y1 * width + x1] if in11 else Vector2.ZERO
+	var open00 := in00 and cost_grid[y0 * width + x0] < COST_IMPASSABLE
+	var open10 := in10 and cost_grid[y0 * width + x1] < COST_IMPASSABLE
+	var open01 := in01 and cost_grid[y1 * width + x0] < COST_IMPASSABLE
+	var open11 := in11 and cost_grid[y1 * width + x1] < COST_IMPASSABLE
 
-	# Bilinear interpolation
-	var top: Vector2 = v00.lerp(v10, fx)
-	var bot: Vector2 = v01.lerp(v11, fx)
-	var blended: Vector2 = top.lerp(bot, fy)
+	var w00: float = (1.0 - fx) * (1.0 - fy) if open00 else 0.0
+	var w10: float = fx * (1.0 - fy) if open10 else 0.0
+	var w01: float = (1.0 - fx) * fy if open01 else 0.0
+	var w11: float = fx * fy if open11 else 0.0
 
-	if blended.length_squared() > 0.0001:
-		return blended.normalized()
+	var total_w := w00 + w10 + w01 + w11
+	if total_w > 0.001:
+		var v00: Vector2 = field[y0 * width + x0] if open00 else Vector2.ZERO
+		var v10: Vector2 = field[y0 * width + x1] if open10 else Vector2.ZERO
+		var v01: Vector2 = field[y1 * width + x0] if open01 else Vector2.ZERO
+		var v11: Vector2 = field[y1 * width + x1] if open11 else Vector2.ZERO
 
-	# Fallback to nearest center cell if blended vector is zero
+		var blended: Vector2 = (v00 * w00 + v10 * w10 + v01 * w01 + v11 * w11) / total_w
+		if blended.length_squared() > 0.0001:
+			return blended.normalized()
+
+	# Fallback to nearest center cell
 	var nearest_cell := _world_to_grid(world_pos)
 	if _is_in_bounds(nearest_cell):
 		return field[_index(nearest_cell)]
@@ -274,6 +287,28 @@ func _index(idx: Vector2i) -> int:
 ## Compute `integration_grid` from cost_grid
 func _integrate() -> void:
 	var start := Time.get_ticks_usec()
+
+	# Build effective costs locally with obstacle padding so cost_grid is never modified or accumulated
+	var effective_costs := cost_grid
+	if PADDING_RADIUS > 0 and PADDING_ADDED_COST > 0.0:
+		var padded := cost_grid.duplicate()
+		for y in range(height):
+			for x in range(width):
+				var idx := _index(Vector2i(x, y))
+				if cost_grid[idx] >= PADDING_MIN_OBSTACLE_COST:
+					for dy in range(-PADDING_RADIUS, PADDING_RADIUS + 1):
+						for dx in range(-PADDING_RADIUS, PADDING_RADIUS + 1):
+							if dx == 0 and dy == 0:
+								continue
+							var nx := x + dx
+							var ny := y + dy
+							if nx >= 0 and nx < width and ny >= 0 and ny < height:
+								var n_idx := _index(Vector2i(nx, ny))
+								if cost_grid[n_idx] < PADDING_MIN_OBSTACLE_COST:
+									var dist: float = Vector2(dx, dy).length()
+									var penalty: float = PADDING_ADDED_COST / dist
+									padded[n_idx] = maxf(padded[n_idx], float(COST_DEFAULT) + penalty)
+		effective_costs = padded
 	
 	var queue: Array[int] = []
 	for target in targets:
@@ -300,13 +335,13 @@ func _integrate() -> void:
 			if cost_grid[n_idx] >= COST_IMPASSABLE:
 				continue
 			
-			var step_cost := cost_grid[n_idx]
+			var step_cost := effective_costs[n_idx]
 			if i >= 4:
 				var c_o1 := cost_grid[_index(Vector2i(neighbor_pos.x, curr_pos.y))]
 				var c_o2 := cost_grid[_index(Vector2i(curr_pos.x, neighbor_pos.y))]
 				if c_o1 >= COST_IMPASSABLE or c_o2 >= COST_IMPASSABLE:
 					continue
-				step_cost = maxf(step_cost, maxf(c_o1, c_o2))
+				step_cost = maxf(step_cost, maxf(effective_costs[_index(Vector2i(neighbor_pos.x, curr_pos.y))], effective_costs[_index(Vector2i(curr_pos.x, neighbor_pos.y))]))
 			
 			var cost: float = curr_cost + step_cost * NEIGHBOR_DIST[i]
 			if integration_grid[n_idx] > cost:
@@ -351,7 +386,31 @@ func _calculate_flow() -> void:
 					var drop: float = (curr_cost - n_cost) / NEIGHBOR_DIST[i]
 					flow_vec += NEIGHBOR_DIRS[i] * drop
 
+			# Convex Corner Stagnation Fix:
+			# If the vector points diagonally into an impassable corner vertex,
+			# steer along the open edge with the lower integration cost instead.
 			if flow_vec.length_squared() > 0.0001:
+				var sx := 1 if flow_vec.x > 0.15 else (-1 if flow_vec.x < -0.15 else 0)
+				var sy := 1 if flow_vec.y > 0.15 else (-1 if flow_vec.y < -0.15 else 0)
+				if sx != 0 and sy != 0:
+					var diag_pos := curr_pos + Vector2i(sx, sy)
+					if _is_in_bounds(diag_pos) and cost_grid[_index(diag_pos)] >= COST_IMPASSABLE:
+						var ox_pos := curr_pos + Vector2i(sx, 0)
+						var oy_pos := curr_pos + Vector2i(0, sy)
+						var ox_open := _is_in_bounds(ox_pos) and cost_grid[_index(ox_pos)] < COST_IMPASSABLE
+						var oy_open := _is_in_bounds(oy_pos) and cost_grid[_index(oy_pos)] < COST_IMPASSABLE
+						if ox_open and oy_open:
+							var c_ox: float = integration_grid[_index(ox_pos)]
+							var c_oy: float = integration_grid[_index(oy_pos)]
+							if c_ox < c_oy:
+								flow_vec = Vector2(float(sx), 0.0)
+							else:
+								flow_vec = Vector2(0.0, float(sy))
+						elif ox_open:
+							flow_vec = Vector2(float(sx), 0.0)
+						elif oy_open:
+							flow_vec = Vector2(0.0, float(sy))
+
 				field[cell_idx] = flow_vec.normalized()
 			else:
 				field[cell_idx] = Vector2.ZERO

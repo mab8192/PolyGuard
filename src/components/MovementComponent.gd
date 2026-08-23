@@ -60,10 +60,17 @@ func handle_movement(direction: Vector2, delta: float) -> void:
 	else:
 		_body.velocity = _body.velocity.move_toward(Vector2.ZERO, current_accel * delta)
 
-	if _body.velocity.length() > current_max_speed:
-		_body.velocity = _body.velocity.normalized() * current_max_speed
-
 	_body.move_and_slide()
+
+	# Deflect along collision normal tangent so enemies glide smoothly around corners
+	if _body.get_slide_collision_count() > 0 and direction != Vector2.ZERO:
+		for i: int in range(_body.get_slide_collision_count()):
+			var col: KinematicCollision2D = _body.get_slide_collision(i)
+			var n: Vector2 = col.get_normal()
+			if direction.dot(n) < 0.0:
+				var tangent: Vector2 = direction.slide(n)
+				if tangent.length_squared() > 0.01:
+					_body.velocity = tangent.normalized() * current_max_speed
 
 ## Instantly stops all movement velocity.
 func stop() -> void:
