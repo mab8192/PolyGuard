@@ -1,0 +1,6 @@
+[gd_scene format=3 uid="uid://ri4m2p6rekqp"]
+
+[ext_resource type="Script" uid="uid://rhdeonwabpn5" path="res://addons/flowfields/test.gd" id="1_lp54b"]
+
+[node name="Test" type="Node2D" unique_id=344660088]
+script = ExtResource("1_lp54b")
