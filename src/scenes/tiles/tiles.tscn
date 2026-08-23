@@ -1,22 +1,33 @@
 [gd_scene format=3 uid="uid://c3o5j8cdgdxmc"]
 
-[ext_resource type="Texture2D" uid="uid://n0y44thi1hl" path="res://vendor/8x8tiles.png" id="1_3vjfe"]
+[ext_resource type="Texture2D" path="res://src/textures/tiles/tiles.png" id="1_tiles_tex"]
 
-[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_2nh3y"]
-texture = ExtResource("1_3vjfe")
-texture_region_size = Vector2i(8, 8)
+[sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1"]
+texture = ExtResource("1_tiles_tex")
+texture_region_size = Vector2i(64, 64)
+0:0/0 = 0
+1:0/0 = 0
+1:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:1/0 = 0
 1:1/0 = 0
-16:0/0 = 0
-16:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-4, -4, 4, -4, 4, 4, -4, 4)
+1:1/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:2/0 = 0
+1:2/0 = 0
+1:2/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:3/0 = 0
+1:3/0 = 0
+1:3/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
+0:4/0 = 0
+1:4/0 = 0
+1:4/0/physics_layer_0/polygon_0/points = PackedVector2Array(-32, -32, 32, -32, 32, 32, -32, 32)
 
-[sub_resource type="TileSet" id="TileSet_v4asx"]
-tile_size = Vector2i(8, 8)
+[sub_resource type="TileSet" id="TileSet_1"]
+tile_size = Vector2i(64, 64)
 physics_layer_0/collision_layer = 1
 terrain_set_0/mode = 0
 terrain_set_0/terrain_0/name = "Terrain 0"
 terrain_set_0/terrain_0/color = Color(1, 1, 1, 1)
-sources/0 = SubResource("TileSetAtlasSource_2nh3y")
+sources/0 = SubResource("TileSetAtlasSource_1")
 
 [node name="Tiles" type="TileMapLayer" unique_id=92410858]
-scale = Vector2(8, 8)
-tile_set = SubResource("TileSet_v4asx")
+tile_set = SubResource("TileSet_1")

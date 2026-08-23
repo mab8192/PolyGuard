@@ -6,19 +6,16 @@
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_8bub6"]
 [ext_resource type="Texture2D" uid="uid://b8us1luf3bxn7" path="res://src/textures/towers/carpet_bomb_artillery.png" id="5_q2u2u"]
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_solid"]
-size = Vector2(60, 60)
-
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_corridor"]
 size = Vector2(352, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_solid"]
+size = Vector2(64, 64)
 
 [node name="CarpetBombArtillery" type="StaticBody2D" unique_id=502528]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_4g7v0")
-
-[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1554533228]
-shape = SubResource("RectangleShape2D_solid")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=1269865698]
 script = ExtResource("2_m8m6x")
@@ -41,3 +38,6 @@ position = Vector2(28, 0)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=629142085]
 texture = ExtResource("5_q2u2u")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1554533228]
+shape = SubResource("RectangleShape2D_solid")

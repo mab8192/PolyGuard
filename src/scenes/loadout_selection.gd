@@ -31,6 +31,8 @@ var selected_tower: TowerData = null
 @onready var detail_action_button: Button = %DetailActionButton
 
 func _ready() -> void:
+	AudioManager.play_music(AudioManager.music_menu)
+	
 	all_towers = Registry.get_all_towers_sorted()
 	_init_stage_data()
 	_init_loadout()
