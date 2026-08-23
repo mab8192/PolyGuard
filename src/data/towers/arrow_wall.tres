@@ -17,7 +17,7 @@ script = ExtResource("2_ik266")
 damage = 25.0
 cooldown = 0.2
 projectile_scene = ExtResource("1_megk3")
-projectile_speed = 800.0
+projectile_speed = 1000.0
 projectile_follow_target = false
 
 [sub_resource type="Resource" id="Resource_choice_arcane"]

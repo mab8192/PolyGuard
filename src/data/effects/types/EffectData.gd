@@ -13,6 +13,10 @@ class_name EffectData extends Resource
 @export var lambda: float = 1.0 ## Multiplier applied to damage_per_second per second (e.g. 0.9 = 10% reduction per second, 1.0 = steady)
 @export var damage_type: AttackData.DamageType = AttackData.DamageType.PHYSICAL
 
+@export_category("Healing")
+@export var heal_amount: float = 0.0 ## Instant heal applied on hit / trigger
+@export var heal_per_second: float = 0.0 ## Health restored per second while active
+
 @export_category("Modifiers")
 @export var speed_multiplier: float = 1.0
 @export var acceleration_multiplier: float = 1.0

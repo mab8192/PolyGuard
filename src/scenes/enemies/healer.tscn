@@ -5,9 +5,13 @@
 [ext_resource type="Script" uid="uid://btkgrma8jeupr" path="res://src/components/MovementComponent.gd" id="3_move"]
 [ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="4_health"]
 [ext_resource type="Script" uid="uid://v8wb72hbi8fk" path="res://src/components/NavigationComponent.gd" id="5_nav"]
+[ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="6_applier"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_body"]
 radius = 12.0
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_heal"]
+radius = 120.0
 
 [node name="Healer" type="CharacterBody2D" unique_id=1825300404 groups=["enemies"]]
 collision_layer = 4
@@ -32,3 +36,12 @@ script = ExtResource("5_nav")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=879432684]
 visible = false
 shape = SubResource("CircleShape2D_body")
+
+[node name="EffectApplierComponent" type="Area2D" parent="." unique_id=1463687457]
+collision_layer = 0
+collision_mask = 12
+script = ExtResource("6_applier")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=1768159315]
+shape = SubResource("CircleShape2D_heal")
+

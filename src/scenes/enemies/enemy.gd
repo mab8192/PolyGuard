@@ -45,6 +45,13 @@ var targeting: TargetingComponent:
 		_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
 		return _targeting
 
+var _effect_applier: EffectApplierComponent
+var effect_applier: EffectApplierComponent:
+	get:
+		if _effect_applier: return _effect_applier
+		_effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
+		return _effect_applier
+
 var _effect_receiver: EffectReceiverComponent
 var effect_receiver: EffectReceiverComponent:
 	get:
@@ -84,6 +91,7 @@ func _ready() -> void:
 	_splitter = ComponentUtil.get_component(self, SplitterComponent) as SplitterComponent
 	_attack = ComponentUtil.get_component(self, AttackComponent) as AttackComponent
 	_targeting = ComponentUtil.get_component(self, TargetingComponent) as TargetingComponent
+	_effect_applier = ComponentUtil.get_component(self, EffectApplierComponent) as EffectApplierComponent
 	var _er = effect_receiver
 
 	position_history.append(global_position)

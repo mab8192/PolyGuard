@@ -199,11 +199,6 @@ def generate_barricade_texture(output_path: str = None) -> str:
     for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
         draw.regular_polygon((cx + ox, cy + oy, 5 * f), 4, rotation=45, fill=c_dark, outline=c_neon_amber, width=int(1.5 * f))
 
-    draw.regular_polygon((cx, cy, 16 * f), 8, rotation=22.5, fill=c_dark, outline=c_neon_amber, width=int(2 * f))
-    draw.polygon([(cx, cy - 12 * f), (cx + 12 * f, cy), (cx, cy + 12 * f), (cx - 12 * f, cy)], fill=c_light, outline=c_dark, width=int(1.2 * f))
-    draw.polygon([(cx, cy - 10 * f), (cx + 10 * f, cy), (cx, cy), (cx - 10 * f, cy)], fill=c_amber_bright)
-    draw.polygon([(cx, cy), (cx + 10 * f, cy), (cx, cy + 10 * f), (cx - 10 * f, cy)], fill=c_neon_amber)
-
     return save_cropped_sprite(img, (64, 64), output_path, "barricade")
 
 # =========================================================================
@@ -847,11 +842,6 @@ def generate_siphon_texture(output_path: str = None) -> str:
     draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=c_shadow, width=int(2.5 * f))
     draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
 
-    # 4 Corner Carved Rune Nodes (subtle runic bind-dots)
-    for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
-        draw.ellipse([cx + ox - 2.2 * f, cy + oy - 2.2 * f, cx + ox + 2.2 * f, cy + oy + 2.2 * f], fill=c_stone_dark, outline=c_rune_glow, width=int(1.0 * f))
-        draw.ellipse([cx + ox - 1.0 * f, cy + oy - 1.0 * f, cx + ox + 1.0 * f, cy + oy + 1.0 * f], fill=c_rune_bright)
-
     # 2. Outer Arcane Ritual Circles
     r_outer = 23.0 * f
     r_inner = 18.0 * f
@@ -914,12 +904,16 @@ def generate_soul_lantern_texture(output_path: str = None) -> str:
     c_soul_cyan = (0, 235, 255, 255)
     c_soul_bright = (190, 255, 250, 255)
 
+    # 0. Background
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+
     # 1. Octagonal stone pedestal foundation base
     r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(12, 14, 20, 255), width=int(2.5 * f))
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_metal_frame, outline=(12, 14, 20, 255), width=int(2.5 * f))
     draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_stone_mid)
 
-    # 4 Corner Ornate Gold Filigree Brackets
+    # 3. Corner Ornate Gold Filigree Brackets
     for ox, oy in [(-20 * f, -20 * f), (20 * f, -20 * f), (-20 * f, 20 * f), (20 * f, 20 * f)]:
         draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_dark, outline=c_gold, width=int(1.2 * f))
         draw.ellipse([cx + ox - 1.5 * f, cy + oy - 1.5 * f, cx + ox + 1.5 * f, cy + oy + 1.5 * f], fill=c_gold_bright)

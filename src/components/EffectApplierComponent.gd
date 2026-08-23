@@ -111,7 +111,7 @@ func _on_body_entered(body: Node2D) -> void:
 	if not _enabled or not data or _state == State.COOLDOWN:
 		return
 	
-	if not is_instance_valid(body) or body.is_queued_for_deletion():
+	if not _is_valid_target(body):
 		return
 
 	var receiver = ComponentUtil.get_component(body, EffectReceiverComponent) as EffectReceiverComponent
@@ -259,10 +259,18 @@ func _remove_continuous_effect(body: Node2D) -> void:
 			
 		_applied_effects.erase(body)
 
+func _is_valid_target(body: Node2D) -> bool:
+	if not is_instance_valid(body) or body.is_queued_for_deletion():
+		return false
+	if data and not data.can_target_self:
+		if body == get_parent() or body == owner:
+			return false
+	return true
+
 func _get_valid_overlapping_targets() -> Array[Dictionary]:
 	var targets: Array[Dictionary] = []
 	for body in get_overlapping_bodies():
-		if is_instance_valid(body) and not body.is_queued_for_deletion():
+		if _is_valid_target(body):
 			var receiver = ComponentUtil.get_component(body, EffectReceiverComponent) as EffectReceiverComponent
 			if receiver:
 				targets.append({"body": body, "receiver": receiver})
@@ -270,7 +278,7 @@ func _get_valid_overlapping_targets() -> Array[Dictionary]:
 
 func _has_valid_overlapping_receivers() -> bool:
 	for body in get_overlapping_bodies():
-		if is_instance_valid(body) and not body.is_queued_for_deletion():
+		if _is_valid_target(body):
 			if ComponentUtil.get_component(body, EffectReceiverComponent):
 				return true
 	return false

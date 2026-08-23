@@ -59,6 +59,10 @@ func apply(target: Node2D) -> void:
 	if total_initial > 0.0 and target is Enemy and target.health:
 		target.health.damage(total_initial, data.damage_type)
 
+	# Instant Heal
+	if data.heal_amount > 0.0 and target is Enemy and target.health:
+		target.health.heal(data.heal_amount)
+
 	# Displacement along recorded path history
 	if data.displace_distance > 0.0 and target is Enemy:
 		_displace_enemy_along_path(target as Enemy, data.displace_distance)
@@ -94,7 +98,7 @@ func apply(target: Node2D) -> void:
 				(vfx as CPUParticles2D).emitting = true
 
 	# If effect has no duration and is instantaneous, expire immediately
-	if data.duration == 0.0 or (data.duration != INF and data.duration <= 0.001 and not data.active_vfx and data.damage_per_second == 0.0 and data.speed_multiplier == 1.0 and data.armor_reduction == 0.0 and data.magic_resistance_reduction == 0.0):
+	if data.duration == 0.0 or (data.duration != INF and data.duration <= 0.001 and not data.active_vfx and data.damage_per_second == 0.0 and data.heal_per_second == 0.0 and data.speed_multiplier == 1.0 and data.acceleration_multiplier == 1.0 and data.armor_reduction == 0.0 and data.magic_resistance_reduction == 0.0):
 		expired.emit()
 
 func tick(delta: float) -> void:
@@ -109,6 +113,11 @@ func tick(delta: float) -> void:
 			current_dps *= pow(data.lambda, _elapsed_time_total)
 		var damage_amount: float = current_dps * delta
 		_target.health.damage(damage_amount, data.damage_type)
+
+	# Healing Over Time
+	if data and data.heal_per_second > 0.0 and is_instance_valid(_target) and _target is Enemy and _target.health:
+		var heal_amount_tick: float = data.heal_per_second * delta
+		_target.health.heal(heal_amount_tick)
 
 	if data and data.duration != INF and _elapsed_time_counted >= data.duration:
 		_counting_time = false

@@ -201,6 +201,15 @@ func take_lives(amount: int) -> void:
 	else:
 		SignalBus.lives_changed.emit(lives)
 
+func get_towers() -> Array[Tower]:
+	var list: Array[Tower] = []
+	if towers:
+		for child in towers.get_children():
+			if is_instance_valid(child) and child is Tower and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
+				list.append(child as Tower)
+	return list
+
+
 func get_map_pixel_rect() -> Rect2:
 	var used_rect: Rect2i = tiles.get_used_rect()
 	if not used_rect.has_area():
@@ -327,17 +336,11 @@ func _rebuild_flow_fields() -> void:
 	# Gather active tower rects partitioned by collision type
 	var physical_tower_rects: Array[Rect2] = []
 	var spectral_tower_rects: Array[Rect2] = []
-	if towers:
-		for child: Node in towers.get_children():
-			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
-				var t: Tower = child as Tower
-				var r: Rect2 = _get_tower_global_rect(t)
-				# Layer 5 (bit 16): Spectral Tower (blocks ghosts)
-				if t.collision_layer & 16 != 0:
-					spectral_tower_rects.append(r)
-				# Layer 2 (bit 2): Solid Tower (blocks physical units)
-				elif t.collision_layer & 2 != 0 or t.collision_layer == 0:
-					physical_tower_rects.append(r)
+	for tower in get_towers():
+		if (tower.collision_layer & 2) != 0:
+			physical_tower_rects.append(_get_tower_global_rect(tower))
+		if (tower.collision_layer & 16) != 0:
+			spectral_tower_rects.append(_get_tower_global_rect(tower))
 
 	# Rebuild every registered field in FlowFieldManager
 	for field_id: String in FlowFieldManager.fields:
@@ -352,13 +355,11 @@ func _rebuild_flow_fields() -> void:
 
 		# 2. Mark towers
 		if field_id.begins_with("physical"):
-			for tr: Rect2 in physical_tower_rects:
-				field.set_obstructed(tr)
-			for tr: Rect2 in spectral_tower_rects:
-				field.set_obstructed(tr)
+			for rect: Rect2 in physical_tower_rects:
+				field.set_obstructed(rect)
 		elif field_id.begins_with("ghost"):
-			for tr: Rect2 in spectral_tower_rects:
-				field.set_obstructed(tr)
+			for rect: Rect2 in spectral_tower_rects:
+				field.set_obstructed(rect)
 
 		# 3. Add targets as entire exit rectangles
 		field.clear_targets()

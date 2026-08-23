@@ -9,3 +9,4 @@ enum Mode {CONTINUOUS, BURST, TRIGGERED_CONTINUOUS}
 @export var max_targets: int = 0 ## Max enemies affected before entering cooldown (0 = unlimited)
 @export var effects: Array[EffectData] ## List of status effect configurations applied to targets within range
 @export_flags_2d_physics var targeting_mask: int = 4 ## Physics collision layer mask for filtering valid target bodies (e.g. physical vs ghost enemies)
+@export var can_target_self: bool = false ## Whether the applier can apply effects to its owner/parent

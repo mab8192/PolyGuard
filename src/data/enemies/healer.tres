@@ -6,6 +6,22 @@
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://bllmo3a8geds7" path="res://src/data/components/NavigationData.gd" id="4_nav"]
 [ext_resource type="Script" uid="uid://isdbfaupai2y" path="res://src/data/components/MovementData.gd" id="5_move"]
+[ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="6_eff"]
+[ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="7_applier"]
+
+[sub_resource type="Resource" id="Resource_healer_effect"]
+script = ExtResource("6_eff")
+name = "healer_heal"
+duration = 0.0
+remove_on_exit = false
+heal_amount = 25.0
+
+[sub_resource type="Resource" id="Resource_healer_applier"]
+script = ExtResource("7_applier")
+mode = 1
+cooldown = 1.0
+effects = Array[ExtResource("6_eff")]([SubResource("Resource_healer_effect")])
+targeting_mask = 12
 
 [sub_resource type="Resource" id="SubResource_health"]
 script = ExtResource("3_health")
@@ -31,3 +47,4 @@ energy_reward = 20
 health = SubResource("SubResource_health")
 movement = SubResource("SubResource_movement")
 nav = SubResource("Resource_nav")
+effect_applier = SubResource("Resource_healer_applier")

@@ -24,6 +24,7 @@ var gold_reward: int:
 @export var attack: AttackData
 @export var targeting: TargetingData
 @export var splitter: SplitterData
+@export var effect_applier: EffectApplierData
 
 func create() -> Enemy:
 	if not scene:
@@ -62,6 +63,9 @@ func apply_to(enemy: Enemy) -> void:
 		
 	if targeting:
 		ComponentUtil.update_component(enemy, TargetingComponent, enemy.data.targeting)
+
+	if effect_applier:
+		ComponentUtil.update_component(enemy, EffectApplierComponent, enemy.data.effect_applier)
 
 func get_stats() -> Dictionary:
 	var hp_val = health.max_health if health else 0.0

@@ -440,7 +440,7 @@ def gen_barricade_spikes():
         draw.ellipse([cx + ox - 1.8*f, cy + oy - 1.8*f, cx + ox + 1.8*f, cy + oy + 1.8*f], fill=c_gold_rivet)
 
     # Perimeter Armor Interlocking Plates (Edge reinforcements)
-    for px, py in [(cx, 4*f), (cx, sh - 4*f), (4*f, cy), (sw - 4*f, cy)]:
+    for px, py in [(cx, 10*f), (cx, sh - 10*f), (10*f, cy), (sw - 10*f, cy)]:
         draw.regular_polygon((px, py, 3.5*f), 4, rotation=45, fill=c_dark, outline=c_steel_light, width=int(1.0*f))
 
     # 2. Heavy Octagonal Reinforced Blast Bulkhead
@@ -451,11 +451,6 @@ def gen_barricade_spikes():
     draw.polygon([(cx, cy - 13*f), (cx + 13*f, cy), (cx, cy + 13*f), (cx - 13*f, cy)], fill=c_steel_light, outline=c_dark, width=int(1.5*f))
     draw.polygon([(cx, cy - 11*f), (cx + 11*f, cy), (cx, cy), (cx - 11*f, cy)], fill=(130, 160, 200, 255))
     draw.polygon([(cx, cy), (cx + 11*f, cy), (cx, cy + 11*f), (cx - 11*f, cy)], fill=c_steel_dark)
-
-    # Structural Titanium Cross-Bracing & Center Boss
-    draw.line([cx - 9*f, cy, cx + 9*f, cy], fill=c_amber_glow, width=int(2.0*f))
-    draw.line([cx, cy - 9*f, cx, cy + 9*f], fill=c_amber_glow, width=int(2.0*f))
-    draw.regular_polygon((cx, cy, 4.5*f), 4, rotation=45, fill=c_gold_rivet, outline=c_dark, width=int(1.2*f))
 
     return save_cropped_sprite(img, (64, 64), os.path.join(VARIANTS_DIR, "barricade_spikes.png"), "barricade_spikes")
 
@@ -476,11 +471,6 @@ def gen_barricade_spectral():
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
         draw.regular_polygon((cx + ox, cy + oy, 5*f), 4, rotation=45, fill=c_dark, outline=c_cyan, width=int(1.5*f))
         draw.ellipse([cx + ox - 1.5*f, cy + oy - 1.5*f, cx + ox + 1.5*f, cy + oy + 1.5*f], fill=c_magenta)
-
-    draw.regular_polygon((cx, cy, 16*f), 8, rotation=22.5, fill=c_dark, outline=c_magenta, width=int(2*f))
-    draw.polygon([(cx, cy - 12*f), (cx + 12*f, cy), (cx, cy + 12*f), (cx - 12*f, cy)], fill=c_light, outline=c_cyan, width=int(1.5*f))
-    draw.polygon([(cx, cy - 10*f), (cx + 10*f, cy), (cx, cy), (cx - 10*f, cy)], fill=(120, 240, 255, 255))
-    draw.polygon([(cx, cy), (cx + 10*f, cy), (cx, cy + 10*f), (cx - 10*f, cy)], fill=c_cyan)
 
     return save_cropped_sprite(img, (64, 64), os.path.join(VARIANTS_DIR, "barricade_spectral.png"), "barricade_spectral")
 
@@ -1259,9 +1249,13 @@ def gen_soul_split():
     c_soul_magenta = (235, 55, 255, 255)
     c_soul_bright = (220, 255, 255, 255)
 
+    # 0. Background
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+
     # 1. Octagonal foundation base
     r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(12, 14, 20, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_metal_frame, outline=(12, 14, 20, 255), width=int(2.5*f))
     draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
 
     # 4 Corner Ornate Gold Filigree Brackets
@@ -1312,15 +1306,19 @@ def gen_soul_focus():
     c_soul_cyan = (0, 245, 255, 255)
     c_soul_bright = (210, 255, 255, 255)
 
+    # 0. Background
+    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+
     # 1. Octagonal foundation base
     r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(12, 14, 20, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_metal_frame, outline=(12, 14, 20, 255), width=int(2.5*f))
     draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
 
     # 4 Corner Ornate Gold Filigree Brackets
     for ox, oy in [(-20*f, -20*f), (20*f, -20*f), (-20*f, 20*f), (20*f, 20*f)]:
         draw.regular_polygon((cx + ox, cy + oy, 4.5*f), 4, rotation=45, fill=c_stone_dark, outline=c_gold, width=int(1.2*f))
-        draw.ellipse([cx + ox - 1.5*f, cy + oy - 1.5*f, cx + ox + 1.5*f, cy + oy + 1.5*f], fill=c_gold_bright)
+        draw.ellipse([cx + ox - 1.5*f, cy + oy - 1.5*f, cx + ox + 1.5*f, cy + oy + 1.5*f], fill=c_violet_aura)
 
     # 2. Central Mystic Well Chamber
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_stone_dark, outline=c_gold, width=int(2*f))

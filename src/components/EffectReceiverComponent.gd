@@ -21,10 +21,10 @@ func apply_effect(effect: ActiveEffect) -> void:
 	if not effect:
 		return
 	_active_effects.append(effect)
-	var parent_node = get_parent() as Node2D
-	effect.apply(parent_node)
 	if not effect.expired.is_connected(_on_effect_expired.bind(effect)):
 		effect.expired.connect(_on_effect_expired.bind(effect))
+	var parent_node = get_parent() as Node2D
+	effect.apply(parent_node)
 	effect_applied.emit(effect)
 	effects_changed.emit()
 
@@ -58,14 +58,14 @@ func get_speed_multiplier() -> float:
 	var mult: float = 1.0
 	for effect in _active_effects:
 		if effect and effect.data:
-			mult = minf(mult, effect.data.speed_multiplier)
+			mult *= effect.data.speed_multiplier
 	return mult
 
 func get_acceleration_multiplier() -> float:
 	var mult: float = 1.0
 	for effect in _active_effects:
 		if effect and effect.data:
-			mult = minf(mult, effect.data.acceleration_multiplier)
+			mult *= effect.data.acceleration_multiplier
 	return mult
 
 func get_armor_reduction() -> float:

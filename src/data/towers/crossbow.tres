@@ -17,7 +17,7 @@ script = ExtResource("2_attack")
 damage = 180.0
 cooldown = 1.8
 projectile_scene = ExtResource("1_dcd4g")
-projectile_speed = 950.0
+projectile_speed = 1000.0
 projectile_follow_target = false
 
 [sub_resource type="Resource" id="Resource_choice_heavy_bolt"]
