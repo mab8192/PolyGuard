@@ -1,14 +1,14 @@
 # TODO
 
-## Tower Ideas
+## [ ] Tower Ideas
 
-- Freeze Trap
+- [x] Freeze Trap
   - Replace ice with an oil slick that makes them susceptible to fire damage? Would require more damage types which isn't great
-- Some kind of pusher trap? Too similar to displacer?
-- Rail gun (single direction piercing)
-- Siphon (grants extra energy when enemies die on it)
+- [x] Some kind of pusher trap? Too similar to displacer?
+- [ ] Rail gun (single direction piercing)
+- [x] Siphon (grants extra energy when enemies die on it)
 
-## Endless mode
+## [X] Endless mode
 
 Should we apply this to all levels or only a subset that we think work well with endless?
 How to procedurally generate increasingly difficult waves?
