@@ -21,5 +21,4 @@ func _spawn_initial_sample_tower() -> void:
 		var initial_tower: Tower = archer_data.create(false)
 		if initial_tower:
 			towers.add_child(initial_tower)
-			if pathfinding_manager:
-				pathfinding_manager.rebuild_tower_fields()
+			_rebuild_flow_fields()

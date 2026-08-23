@@ -8,7 +8,6 @@ var data: StageData
 var wave_manager: WaveManager
 var placement_manager: TowerPlacementManager
 var effect_manager: EffectManager
-var pathfinding_manager: StagePathfinding
 var flow_field_visualizer: FlowFieldVisualizer
 
 # Stage economy and life tracking state
@@ -19,6 +18,8 @@ var gold: int:
 	set(v): energy = v
 var score: int = 0
 var selected_tower: Tower = null
+
+const TOWER_COST: float = 100.0
 
 # Accessors delegated to WaveManager for external callers
 var wave: int:
@@ -57,10 +58,6 @@ func _ready() -> void:
 	placement_manager = TowerPlacementManager.new()
 	placement_manager.name = "TowerPlacementManager"
 	add_child(placement_manager)
-	
-	pathfinding_manager = StagePathfinding.new()
-	pathfinding_manager.name = "StagePathfinding"
-	add_child(pathfinding_manager)
 
 	flow_field_visualizer = FlowFieldVisualizer.new()
 	flow_field_visualizer.name = "FlowFieldVisualizer"
@@ -71,7 +68,12 @@ func _ready() -> void:
 	effect_manager.setup()
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
-	pathfinding_manager.setup(self)
+	
+	SignalBus.tower_placed.connect(_rebuild_flow_fields)
+	SignalBus.tower_destroyed.connect(_rebuild_flow_fields)
+	SignalBus.exits_updated.connect(_setup_flow_fields)
+	
+	_setup_flow_fields()
 
 func _unhandled_input(event: InputEvent) -> void:
 	if placement_manager and placement_manager.handle_unhandled_input(event):
@@ -254,3 +256,125 @@ func rotate_preview(clockwise: bool = true) -> void:
 func place_preview() -> void:
 	if placement_manager:
 		placement_manager.place_preview()
+
+### FLOW FIELD PATHFINDING MANAGEMENT
+
+func _get_stage_exits() -> Array[Node2D]:
+	var result: Array[Node2D] = []
+	var exit_nodes: Array[Node] = get_tree().get_nodes_in_group("exits")
+	for node: Node in exit_nodes:
+		if is_instance_valid(node) and node is Node2D:
+			var ex: Node2D = node as Node2D
+			if ex is Exit and not (ex as Exit).is_active:
+				continue
+			result.append(ex)
+	return result
+
+func _setup_flow_fields() -> void:
+	if not tiles:
+		return
+		
+	var map_rect: Rect2 = get_map_pixel_rect()
+	if map_rect.size.x <= 0 or map_rect.size.y <= 0:
+		return
+
+	# Grow bounds slightly for boundary clearance
+	var bounds: Rect2 = map_rect.grow(16.0)
+	var origin: Vector2 = bounds.position
+	var pixel_w: float = bounds.size.x
+	var pixel_h: float = bounds.size.y
+
+	# Multi-resolution sizes: Small (16px), Medium (32px), Large (64px)
+	var sizes := {
+		"small": 16.0,
+		"medium": 32.0,
+		"large": 64.0
+	}
+
+	var exit_nodes := _get_stage_exits()
+	var exit_count: int = exit_nodes.size()
+
+	FlowFieldManager.clear()
+
+	for size_name: String in sizes:
+		var cs: float = sizes[size_name]
+		var gw: int = maxi(1, int(ceil(pixel_w / cs)))
+		var gh: int = maxi(1, int(ceil(pixel_h / cs)))
+
+		# Unified multi-goal fields
+		FlowFieldManager.create_field("physical_%s" % size_name, gw, gh, cs, origin)
+		FlowFieldManager.create_field("ghost_%s" % size_name, gw, gh, cs, origin)
+
+		# Per-exit fields if multi-exit stage
+		if exit_count > 1:
+			for e_i in range(exit_count):
+				FlowFieldManager.create_field("physical_%s_%d" % [size_name, e_i], gw, gh, cs, origin)
+				FlowFieldManager.create_field("ghost_%s_%d" % [size_name, e_i], gw, gh, cs, origin)
+
+	_rebuild_flow_fields()
+
+func _rebuild_flow_fields() -> void:
+	var exit_nodes := _get_stage_exits()
+	var exit_rects: Array[Rect2] = []
+	for ex in exit_nodes:
+		if is_instance_valid(ex):
+			if ex.has_method("get_global_rect"):
+				exit_rects.append(ex.get_global_rect())
+			else:
+				exit_rects.append(Rect2(ex.global_position - Vector2(16.0, 16.0), Vector2(32.0, 32.0)))
+
+	if exit_rects.is_empty():
+		return
+
+	# Gather active tower rects
+	var tower_rects: Array[Rect2] = []
+	if towers:
+		for child: Node in towers.get_children():
+			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
+				tower_rects.append(_get_tower_global_rect(child as Node2D))
+
+	# Rebuild every registered field in FlowFieldManager
+	for field_id: String in FlowFieldManager.fields:
+		var field: FlowField = FlowFieldManager.get_field(field_id)
+		if not field:
+			continue
+
+		field.reset()
+
+		# 1. Mark impassable tilemap walls
+		_stamp_tilemap_walls(field)
+
+		# 2. Mark towers on physical fields (ghost fields ignore towers)
+		if field_id.begins_with("physical"):
+			for tr: Rect2 in tower_rects:
+				field.set_cost(tr, TOWER_COST)
+
+		# 3. Add targets as entire exit rectangles
+		field.clear_targets()
+		var parts := field_id.split("_")
+		if parts.size() >= 3 and parts[2].is_valid_int():
+			var exit_idx: int = int(parts[2])
+			if exit_idx < exit_rects.size():
+				field.add_target(exit_rects[exit_idx])
+		else:
+			for er: Rect2 in exit_rects:
+				field.add_target(er)
+
+		field.rebuild()
+
+	FlowFieldManager.notify_fields_updated()
+
+func _stamp_tilemap_walls(field: FlowField) -> void:
+	if not tiles or not tiles.tile_set:
+		return
+
+	var used_cells: Array[Vector2i] = tiles.get_used_cells()
+	var tile_size: Vector2 = Vector2(tiles.tile_set.tile_size) * tiles.scale
+	var half_tile: Vector2 = tile_size / 2.0
+
+	for cell_pos: Vector2i in used_cells:
+		var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
+		if tile_data and tile_data.get_collision_polygons_count(0) > 0:
+			var global_center: Vector2 = tiles.to_global(tiles.map_to_local(cell_pos))
+			var wall_rect: Rect2 = Rect2(global_center - half_tile, tile_size)
+			field.set_impassable(wall_rect)

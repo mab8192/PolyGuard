@@ -11,7 +11,7 @@ config_version=5
 [application]
 
 config/name="Poly Guard 2D"
-run/main_scene="uid://ri4m2p6rekqp"
+run/main_scene="uid://duii2yuv2y63u"
 config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=240
 boot_splash/bg_color=Color(0.0313726, 0.0470588, 0.0862745, 1)

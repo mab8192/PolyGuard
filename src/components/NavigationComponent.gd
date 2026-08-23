@@ -69,29 +69,66 @@ func distance_to_goal() -> float:
 	return remaining_distance
 
 
-func _get_pathfinding() -> StagePathfinding:
-	var stage: Stage = GameManager.current_stage
-	if stage and is_instance_valid(stage):
-		return stage.pathfinding_manager
-	return null
+func get_field_id() -> String:
+	var prefix: String = "ghost" if (data and (data.nav_layer & 4) != 0) else "physical"
+	var size_str: String = "small"
+	if data:
+		if data.size == NavigationData.AgentSize.MEDIUM:
+			size_str = "medium"
+		elif data.size == NavigationData.AgentSize.LARGE:
+			size_str = "large"
+
+	if _exits.size() > 1 and data and data.strategy != NavigationData.NavStrategy.CLOSEST:
+		var exit_idx: int = _get_target_exit_index()
+		return "%s_%s_%d" % [prefix, size_str, exit_idx]
+
+	return "%s_%s" % [prefix, size_str]
+
+
+func _get_target_exit_index() -> int:
+	if _exits.size() <= 1 or not data:
+		return 0
+	if data.strategy == NavigationData.NavStrategy.FIRST:
+		return 0
+	elif data.strategy == NavigationData.NavStrategy.FARTHEST:
+		var max_dist: float = -1.0
+		var best_idx: int = 0
+		for i: int in range(_exits.size()):
+			if is_instance_valid(_exits[i]):
+				var d: float = _actor.global_position.distance_squared_to(_exits[i].global_position)
+				if d > max_dist:
+					max_dist = d
+					best_idx = i
+		return best_idx
+	return 0
 
 
 func _compute_separation_vector() -> Vector2:
-	if not data or not data.enable_separation or data.separation_radius <= 0.0 or not is_instance_valid(_actor):
+	if not data or not data.enable_separation or data.separation_radius <= 0.0 or not is_instance_valid(_actor) or not _actor.is_inside_tree():
 		return Vector2.ZERO
 
-	var pm: StagePathfinding = _get_pathfinding()
-	if not pm:
-		return Vector2.ZERO
+	var sep_vector: Vector2 = Vector2.ZERO
+	var actor_pos: Vector2 = _actor.global_position
+	var rad_sq: float = data.separation_radius * data.separation_radius
+	var my_id: int = _actor.get_instance_id()
 
-	return pm.get_separation_vector(_actor.global_position, data.separation_radius, _actor.get_instance_id())
+	var enemies: Array[Node] = _actor.get_tree().get_nodes_in_group("enemies")
+	for node: Node in enemies:
+		if is_instance_valid(node) and node is Node2D and node.get_instance_id() != my_id:
+			var diff: Vector2 = actor_pos - (node as Node2D).global_position
+			var d2: float = diff.length_squared()
+			if d2 > 0.01 and d2 < rad_sq:
+				var dist: float = sqrt(d2)
+				var strength: float = 1.0 - (dist / data.separation_radius)
+				sep_vector += (diff / dist) * strength
+
+	return sep_vector
 
 
 func _physics_process(delta: float) -> void:
 	if is_finished():
 		return
 
-	var pm: StagePathfinding = _get_pathfinding()
 	var dir: Vector2 = Vector2.ZERO
 
 	# 1. Tower-targeting enemies (Snipers, Bombers)
@@ -115,39 +152,24 @@ func _physics_process(delta: float) -> void:
 				dir = _actor.global_position.direction_to(_target_tower.global_position)
 		else:
 			# Fallback to exit flow field when no towers exist
-			var strat: int = int(data.strategy) if data else 0
-			var field_id: String = pm.get_field_id_for_actor(_actor, data, strat) if pm else "physical_small"
+			var field_id: String = get_field_id()
 			var field: FlowField = FlowFieldManager.get_field(field_id)
-			if field and field.is_valid_cell(field.world_to_grid(_actor.global_position).x, field.world_to_grid(_actor.global_position).y):
+			if field and field.is_reachable(_actor.global_position):
 				_no_path = false
-				var cost_val: int = field.get_integration_at_world(_actor.global_position)
-				if cost_val < FlowField.INTEGRATION_MAX:
-					remaining_distance = float(cost_val) * field.cell_size * 0.1
-					dir = field.sample_flow_world(_actor.global_position, true)
+				dir = field.query(_actor.global_position)
 
 	# 2. Standard exit-targeting enemies
 	else:
-		var strat: int = int(data.strategy) if data else 0
-		var field_id: String = pm.get_field_id_for_actor(_actor, data, strat) if pm else "physical_small"
+		var field_id: String = get_field_id()
 		var field: FlowField = FlowFieldManager.get_field(field_id)
 
-		if field:
-			var cost_val: int = field.get_integration_at_world(_actor.global_position)
-			var is_open: bool = pm.is_open_path(_actor.global_position, field_id) if pm else true
-
-			if is_open:
-				_no_path = false
-				remaining_distance = float(cost_val) * field.cell_size * 0.1
-				dir = field.sample_flow_world(_actor.global_position, true)
-			else:
-				# Blocked by player towers or barricades: path through towers to attack blocking tower
-				if not _no_path:
-					no_path_available.emit()
-					_no_path = true
-
-				if cost_val < FlowField.INTEGRATION_MAX:
-					remaining_distance = float(cost_val) * field.cell_size * 0.1
-					dir = field.sample_flow_world(_actor.global_position, true)
+		if field and field.is_reachable(_actor.global_position):
+			_no_path = false
+			dir = field.query(_actor.global_position)
+		else:
+			if not _no_path:
+				no_path_available.emit()
+				_no_path = true
 
 		# Fallback if in unreached corner
 		if dir == Vector2.ZERO and not _exits.is_empty():
@@ -161,13 +183,6 @@ func _physics_process(delta: float) -> void:
 						closest_exit = ex
 			if closest_exit:
 				dir = _actor.global_position.direction_to(closest_exit.global_position)
-
-	# Congestion Avoidance (Context Steering)
-	if pm and data and data.congestion_weight > 0.0 and dir != Vector2.ZERO:
-		var cong_avoid: Vector2 = pm.get_congestion_avoidance_vector(_actor.global_position, dir, data.separation_radius)
-		if cong_avoid != Vector2.ZERO:
-			var blend_weight: float = data.congestion_weight * 0.4
-			dir = (dir + cong_avoid * blend_weight).normalized()
 
 	# Soft Boid Separation (with Lateral Corridor Lane Spreading)
 	if data and data.enable_separation:
@@ -212,11 +227,7 @@ func _pick_target() -> void:
 	if data and data.targets_towers:
 		_target_tower = _find_target_tower()
 		if _target_tower and is_instance_valid(_target_tower):
-			var pm: StagePathfinding = _get_pathfinding()
-			if pm:
-				_tower_path = pm.find_grid_path(_actor.global_position, _target_tower.global_position)
-			else:
-				_tower_path = PackedVector2Array([_target_tower.global_position])
+			_tower_path = PackedVector2Array([_target_tower.global_position])
 			_tower_path_idx = 0
 		else:
 			_tower_path.clear()
@@ -242,17 +253,13 @@ func _find_target_tower() -> Tower:
 	if candidates.is_empty():
 		return null
 
-	var pm: StagePathfinding = _get_pathfinding()
 	var best_tower: Tower = null
 	var min_cost: float = INF
 
 	for t: Tower in candidates:
 		var direct_dist: float = _actor.global_position.distance_to(t.global_position)
-		if direct_dist >= min_cost:
-			continue
-		var path_len: float = pm.get_grid_path_distance(_actor.global_position, t.global_position) if pm else direct_dist
-		if path_len < min_cost:
-			min_cost = path_len
+		if direct_dist < min_cost:
+			min_cost = direct_dist
 			best_tower = t
 
 	return best_tower

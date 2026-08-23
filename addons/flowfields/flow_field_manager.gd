@@ -41,20 +41,17 @@ func clear() -> void:
 	fields.clear()
 
 
-func bake_field(id: String, use_async: bool = true) -> void:
+func bake_field(id: String) -> void:
 	var field: FlowField = get_field(id)
 	if field == null:
 		push_warning("FlowFieldManager: no field registered with id '%s'" % id)
 		return
-	if use_async:
-		field.bake_async()
-	else:
-		field.bake()
+	field.rebuild()
 
 
-func bake_all(use_async: bool = true) -> void:
+func bake_all() -> void:
 	for id: String in fields:
-		bake_field(id, use_async)
+		bake_field(id)
 
 
 func notify_fields_updated() -> void:

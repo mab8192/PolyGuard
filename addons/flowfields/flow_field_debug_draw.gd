@@ -5,8 +5,7 @@ extends Node2D
 ## FlowFieldDebugDraw
 ## ----------------------------------------------------------------------------
 ## Attach to a Node2D placed at (0,0) in your scene to visualize a shared
-## FlowField's cost field and/or flow direction arrows. Automatically
-## redraws whenever the field finishes (re)baking.
+## FlowField's cost field and/or flow direction arrows.
 ## ============================================================================
 
 @export var field_id: String = "default"
@@ -25,17 +24,12 @@ func _ready() -> void:
 	var manager: FlowFieldManager = get_node_or_null("/root/FlowFieldManager") as FlowFieldManager
 	if manager != null:
 		_field = manager.get_field(field_id)
-	if _field != null:
-		_field.bake_finished.connect(queue_redraw)
+		manager.flow_fields_updated.connect(queue_redraw)
 	queue_redraw()
 
 
 func set_field(field: FlowField) -> void:
-	if _field != null and _field.bake_finished.is_connected(queue_redraw):
-		_field.bake_finished.disconnect(queue_redraw)
 	_field = field
-	if _field != null:
-		_field.bake_finished.connect(queue_redraw)
 	queue_redraw()
 
 
@@ -43,22 +37,22 @@ func _draw() -> void:
 	if _field == null:
 		return
 
-	var cs: float = _field.cell_size
+	var cs: float = float(_field.cell_size)
 	var half: Vector2 = Vector2(cs, cs) * 0.5
 
 	for y: int in range(_field.height):
 		for x: int in range(_field.width):
-			var idx: int = _field.grid_to_index(x, y)
-			var center: Vector2 = _field.world_origin + Vector2(x + 0.5, y + 0.5) * cs
+			var idx: int = _field._index(Vector2i(x, y))
+			var center: Vector2 = _field.origin + Vector2(float(x) + 0.5, float(y) + 0.5) * cs
 
 			if draw_grid_lines:
 				draw_rect(Rect2(center - half, Vector2(cs, cs)), grid_line_color, false, 1.0)
 
-			if draw_cost_overlay and _field.cost_field[idx] == FlowField.COST_IMPASSABLE:
+			if draw_cost_overlay and _field.cost_grid[idx] >= FlowField.COST_IMPASSABLE:
 				draw_rect(Rect2(center - half, Vector2(cs, cs)), wall_color)
 
 			if draw_arrows:
-				var dir: Vector2 = _field.get_flow_vector(x, y)
+				var dir: Vector2 = _field.field[idx]
 				if dir != Vector2.ZERO:
 					var end: Vector2 = center + dir * cs * arrow_length_scale
 					draw_line(center, end, arrow_color, 2.0)

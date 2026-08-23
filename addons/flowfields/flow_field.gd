@@ -55,17 +55,76 @@ var targets: Array[Vector2i] ## Grid cells containing the target
 
 ## PUBLIC API
 
-func add_target(world_pos: Vector2) -> void:
-	var grid_pos := _world_to_grid(world_pos)
-	if _is_in_bounds(grid_pos):
-		targets.append(grid_pos)
-		cost_grid[_index(grid_pos)] = 0
+## Add target goal as a world position (Vector2), grid cell (Vector2i), world rect (Rect2), or grid rect (Rect2i)
+func add_target(target: Variant) -> void:
+	set_cost(target, 0)
+	if target is Vector2:
+		var grid_pos := _world_to_grid(target)
+		if _is_in_bounds(grid_pos) and not targets.has(grid_pos):
+			targets.append(grid_pos)
+	elif target is Vector2i:
+		if _is_in_bounds(target) and not targets.has(target):
+			targets.append(target)
+	elif target is Rect2:
+		var top_left := _world_to_grid(target.position)
+		var bottom_right := _world_to_grid(target.position + target.size)
+		var min_x := clampi(top_left.x, 0, width)
+		var max_x := clampi(bottom_right.x, 0, width)
+		var min_y := clampi(top_left.y, 0, height)
+		var max_y := clampi(bottom_right.y, 0, height)
+		for y in range(min_y, max_y):
+			for x in range(min_x, max_x):
+				var cell := Vector2i(x, y)
+				if not targets.has(cell):
+					targets.append(cell)
+	elif target is Rect2i:
+		var min_x := clampi(target.position.x, 0, width)
+		var max_x := clampi(target.position.x + target.size.x, 0, width)
+		var min_y := clampi(target.position.y, 0, height)
+		var max_y := clampi(target.position.y + target.size.y, 0, height)
+		for y in range(min_y, max_y):
+			for x in range(min_x, max_x):
+				var cell := Vector2i(x, y)
+				if not targets.has(cell):
+					targets.append(cell)
 
+## Returns the continuous, bilinearly-interpolated flow direction vector at world_pos
 func query(world_pos: Vector2) -> Vector2:
-	var grid_cell := _world_to_grid(world_pos)
-	if not _is_in_bounds(grid_cell):
+	var local: Vector2 = (world_pos - origin) / float(cell_size) - Vector2(0.5, 0.5)
+	var x0: int = int(floor(local.x))
+	var y0: int = int(floor(local.y))
+	var fx: float = local.x - float(x0)
+	var fy: float = local.y - float(y0)
+
+	var x1: int = x0 + 1
+	var y1: int = y0 + 1
+
+	var in00 := x0 >= 0 and x0 < width and y0 >= 0 and y0 < height
+	var in10 := x1 >= 0 and x1 < width and y0 >= 0 and y0 < height
+	var in01 := x0 >= 0 and x0 < width and y1 >= 0 and y1 < height
+	var in11 := x1 >= 0 and x1 < width and y1 >= 0 and y1 < height
+
+	if not (in00 or in10 or in01 or in11):
 		return Vector2.ZERO
-	return field[_index(grid_cell)]
+
+	var v00: Vector2 = field[y0 * width + x0] if in00 else Vector2.ZERO
+	var v10: Vector2 = field[y0 * width + x1] if in10 else Vector2.ZERO
+	var v01: Vector2 = field[y1 * width + x0] if in01 else Vector2.ZERO
+	var v11: Vector2 = field[y1 * width + x1] if in11 else Vector2.ZERO
+
+	# Bilinear interpolation
+	var top: Vector2 = v00.lerp(v10, fx)
+	var bot: Vector2 = v01.lerp(v11, fx)
+	var blended: Vector2 = top.lerp(bot, fy)
+
+	if blended.length_squared() > 0.0001:
+		return blended.normalized()
+
+	# Fallback to nearest center cell if blended vector is zero
+	var nearest_cell := _world_to_grid(world_pos)
+	if _is_in_bounds(nearest_cell):
+		return field[_index(nearest_cell)]
+	return Vector2.ZERO
 
 ## Set cost for a world point (Vector2), grid cell (Vector2i), world rect (Rect2), or grid rect (Rect2i)
 func set_cost(target: Variant, cost: float) -> void:
@@ -125,15 +184,28 @@ func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 30
 
 	var curr_pos := start_pos
 	var goal_positions: Array[Vector2] = []
+	var goal_rects: Array[Rect2] = []
 	for g in goal_targets:
 		if g is Vector2:
 			goal_positions.append(g)
+		elif g is Rect2:
+			goal_rects.append(g)
 		elif g is Node2D and is_instance_valid(g):
-			goal_positions.append(g.global_position)
+			if g.has_method("get_global_rect"):
+				goal_rects.append(g.get_global_rect())
+			else:
+				goal_positions.append(g.global_position)
 
 	for _step in range(max_steps):
 		var arrived := false
-		for gp in goal_positions:
+		for gr: Rect2 in goal_rects:
+			if gr.has_point(curr_pos):
+				arrived = true
+				break
+		if arrived:
+			break
+
+		for gp: Vector2 in goal_positions:
 			if curr_pos.distance_to(gp) <= step_size:
 				path.append(gp)
 				arrived = true
@@ -142,14 +214,19 @@ func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 30
 			break
 
 		var grid_pos := _world_to_grid(curr_pos)
-		if goal_positions.is_empty() and grid_pos in targets:
+		if goal_positions.is_empty() and goal_rects.is_empty() and grid_pos in targets:
 			break
 
-		var dir := query(curr_pos)
-		if dir.length_squared() < 0.0001:
+		var k1 := query(curr_pos)
+		if k1.length_squared() < 0.0001:
 			break
 
-		var next_pos := curr_pos + dir * step_size
+		# Midpoint sample (RK2) for smooth streamline curves
+		var mid_pos := curr_pos + k1 * (step_size * 0.5)
+		var k2 := query(mid_pos)
+		var step_dir := k2 if k2.length_squared() > 0.0001 else k1
+
+		var next_pos := curr_pos + step_dir * step_size
 		if next_pos.distance_squared_to(curr_pos) < 0.01:
 			break
 
@@ -263,18 +340,14 @@ func _calculate_flow() -> void:
 				if cost_grid[n_idx] >= COST_IMPASSABLE:
 					continue
 
-				var step_cost := cost_grid[n_idx]
 				if i >= 4:
 					var c_o1 := cost_grid[_index(Vector2i(neighbor_pos.x, curr_pos.y))]
 					var c_o2 := cost_grid[_index(Vector2i(curr_pos.x, neighbor_pos.y))]
 					if c_o1 >= COST_IMPASSABLE or c_o2 >= COST_IMPASSABLE:
 						continue
-					step_cost = maxf(step_cost, maxf(c_o1, c_o2))
 
 				var n_cost: float = integration_grid[n_idx]
-				# Only consider neighbor if stepping into it is a valid path locally (not through a high-cost pinch)
-				var transition_cost: float = n_cost + step_cost * NEIGHBOR_DIST[i]
-				if transition_cost <= curr_cost + 0.5 and n_cost < curr_cost:
+				if n_cost < curr_cost:
 					var drop: float = (curr_cost - n_cost) / NEIGHBOR_DIST[i]
 					flow_vec += NEIGHBOR_DIRS[i] * drop
 

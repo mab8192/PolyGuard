@@ -6,7 +6,14 @@ enum NavStrategy {
 	FIRST, # First in the _exits array
 }
 
+enum AgentSize {
+	SMALL,  ## 16px (1 cell footprint)
+	MEDIUM, ## 32px (2 cells footprint)
+	LARGE   ## 64px (4 cells footprint)
+}
+
 @export var strategy: NavStrategy = NavStrategy.CLOSEST ## Strategy for selecting which destination/exit to navigate toward
+@export var size: AgentSize = AgentSize.SMALL ## Physical footprint size class
 @export_flags_2d_navigation var nav_layer: int = 1 ## Godot navigation layers bitmask used for pathfinding
 @export var targets_towers: bool = false ## If true, entity navigates toward and prioritizes attacking player towers over exits
 

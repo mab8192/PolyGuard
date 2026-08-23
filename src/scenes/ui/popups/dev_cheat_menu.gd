@@ -167,8 +167,6 @@ func _update_in_game_button_states() -> void:
 				FlowFieldVisualizer.DisplayMode.ARROWS: mode_str = "ARROWS"
 				FlowFieldVisualizer.DisplayMode.HEATMAP_AND_ARROWS: mode_str = "HEATMAP+ARROWS"
 				FlowFieldVisualizer.DisplayMode.HEATMAP_ONLY: mode_str = "HEATMAP"
-				FlowFieldVisualizer.DisplayMode.CONGESTION: mode_str = "CONGESTION"
-				FlowFieldVisualizer.DisplayMode.CLEARANCE: mode_str = "CLEARANCE"
 
 			var layer_str = "PHYS (< 16PX)"
 			match vis.current_layer:

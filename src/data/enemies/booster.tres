@@ -19,6 +19,7 @@ acceleration = 350.0
 
 [sub_resource type="Resource" id="Resource_nav"]
 script = ExtResource("4_nav")
+size = 1
 
 [resource]
 script = ExtResource("1_script")

@@ -6,17 +6,13 @@ extends CharacterBody2D
 ## ----------------------------------------------------------------------------
 ## Drop-in example of a unit that follows a shared FlowField registered with
 ## FlowFieldManager (see flow_field_manager.gd). Steering is a simple
-## seek-with-acceleration model; swap _get_steering_velocity() out for your
-## own flocking/avoidance if you need it.
+## seek-with-acceleration model.
 ## ============================================================================
 
 @export var field_id: String = "default"
 @export var move_speed: float = 220.0
 @export var acceleration: float = 900.0
 @export var rotate_to_face_velocity: bool = false
-## Distance (in pixels) from a goal cell's center within which the agent is
-## considered "arrived" and will decelerate to a stop instead of orbiting it.
-@export var arrival_radius: float = 8.0
 
 var _field: FlowField
 
@@ -29,14 +25,12 @@ func _ready() -> void:
 		push_warning("FlowFieldAgent: field '%s' not found. Did you register it with FlowFieldManager?" % field_id)
 
 
-## Call this if the agent is spawned before the field exists, or the field id
-## changes at runtime.
 func set_field(field: FlowField) -> void:
 	_field = field
 
 
 func _physics_process(delta: float) -> void:
-	if _field == null or _field.is_baking():
+	if _field == null:
 		velocity = velocity.move_toward(Vector2.ZERO, acceleration * delta)
 		move_and_slide()
 		return
@@ -51,17 +45,11 @@ func _physics_process(delta: float) -> void:
 
 
 func _get_steering_velocity() -> Vector2:
-	if _field.has_reached_goal_world(global_position):
+	if not _field.is_reachable(global_position):
 		return Vector2.ZERO
 
-	var flow_dir: Vector2 = _field.sample_flow_world(global_position, true)
+	var flow_dir: Vector2 = _field.query(global_position)
 	if flow_dir == Vector2.ZERO:
 		return Vector2.ZERO
 
-	# Slow down gracefully as the agent nears its goal cell rather than
-	# stopping abruptly, using the integration value as a rough distance proxy.
-	var dist_units: float = float(_field.get_integration_at_world(global_position)) / 10.0
-	var slow_distance_cells: float = arrival_radius / _field.cell_size
-	var speed_scale: float = clampf(dist_units / maxf(slow_distance_cells, 0.001), 0.0, 1.0)
-
-	return flow_dir * move_speed * speed_scale
+	return flow_dir * move_speed

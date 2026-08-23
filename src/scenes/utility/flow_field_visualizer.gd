@@ -2,16 +2,14 @@ class_name FlowFieldVisualizer
 extends Node2D
 
 ## Visualizer and Debug Overlay for Multi-Tier Flow Fields.
-## Renders vector arrows, integration cost heatmaps, dynamic congestion, and wall clearance.
+## Renders vector arrows and integration cost heatmaps.
 ## Controls: F2 / F3 to cycle display mode, F4 to cycle field layer.
 
 enum DisplayMode {
 	OFF,
 	ARROWS,
 	HEATMAP_AND_ARROWS,
-	HEATMAP_ONLY,
-	CONGESTION,
-	CLEARANCE
+	HEATMAP_ONLY
 }
 
 enum FieldLayer {
@@ -92,17 +90,15 @@ func _update_badge_ui() -> void:
 		DisplayMode.ARROWS: mode_name = "ARROWS"
 		DisplayMode.HEATMAP_AND_ARROWS: mode_name = "HEATMAP + ARROWS"
 		DisplayMode.HEATMAP_ONLY: mode_name = "HEATMAP"
-		DisplayMode.CONGESTION: mode_name = "CONGESTION"
-		DisplayMode.CLEARANCE: mode_name = "CLEARANCE"
 
 	var layer_name: String = ""
 	match current_layer:
-		FieldLayer.PHYSICAL_SMALL: layer_name = "PHYSICAL (< 16PX)"
-		FieldLayer.PHYSICAL_MEDIUM: layer_name = "PHYSICAL (16-32PX)"
-		FieldLayer.PHYSICAL_LARGE: layer_name = "PHYSICAL (32-64PX)"
-		FieldLayer.GHOST_SMALL: layer_name = "GHOST (< 16PX)"
-		FieldLayer.GHOST_MEDIUM: layer_name = "GHOST (16-32PX)"
-		FieldLayer.GHOST_LARGE: layer_name = "GHOST (32-64PX)"
+		FieldLayer.PHYSICAL_SMALL: layer_name = "PHYSICAL (16PX - SMALL)"
+		FieldLayer.PHYSICAL_MEDIUM: layer_name = "PHYSICAL (32PX - MEDIUM)"
+		FieldLayer.PHYSICAL_LARGE: layer_name = "PHYSICAL (64PX - LARGE)"
+		FieldLayer.GHOST_SMALL: layer_name = "GHOST (16PX - SMALL)"
+		FieldLayer.GHOST_MEDIUM: layer_name = "GHOST (32PX - MEDIUM)"
+		FieldLayer.GHOST_LARGE: layer_name = "GHOST (64PX - LARGE)"
 
 	_badge_label.text = "FLOW FIELD: [%s] | MODE: %s (F2/F3: Mode, F4: Layer)" % [layer_name, mode_name]
 	_badge_panel.reset_size()
@@ -111,7 +107,7 @@ func _update_badge_ui() -> void:
 
 
 func cycle_mode() -> void:
-	var next_mode: int = (int(mode) + 1) % 6
+	var next_mode: int = (int(mode) + 1) % 4
 	mode = next_mode as DisplayMode
 
 
@@ -141,13 +137,6 @@ func _get_active_field() -> FlowField:
 	return FlowFieldManager.get_field("physical_small")
 
 
-func _get_pathfinding() -> StagePathfinding:
-	var stage: Stage = GameManager.current_stage
-	if stage and is_instance_valid(stage):
-		return stage.pathfinding_manager
-	return null
-
-
 func _draw() -> void:
 	if mode == DisplayMode.OFF:
 		return
@@ -158,26 +147,17 @@ func _draw() -> void:
 
 	var w: int = field.width
 	var h: int = field.height
-	var origin: Vector2 = field.world_origin
-	var cs: float = field.cell_size
+	var origin: Vector2 = field.origin
+	var cs: float = float(field.cell_size)
 	var cs_vec: Vector2 = Vector2(cs, cs)
 	var total_cells: int = w * h
-	var pm: StagePathfinding = _get_pathfinding()
 
 	var max_cost: float = 1.0
 	if mode == DisplayMode.HEATMAP_AND_ARROWS or mode == DisplayMode.HEATMAP_ONLY:
 		for idx: int in range(total_cells):
-			var c: int = field.integration_field[idx]
-			if c < FlowField.INTEGRATION_MAX and float(c) > max_cost:
-				max_cost = float(c)
-
-	var max_congestion: float = 1.0
-	if mode == DisplayMode.CONGESTION:
-		var cong_data: PackedFloat32Array = pm.congestion_density if (pm and not pm.congestion_density.is_empty()) else PackedFloat32Array()
-		for idx: int in range(mini(total_cells, cong_data.size())):
-			var cong: float = cong_data[idx]
-			if cong > max_congestion:
-				max_congestion = cong
+			var c: float = field.integration_grid[idx]
+			if c < float(FlowField.INTEGRATION_MAX) and c > max_cost:
+				max_cost = c
 
 	# 1. Draw Heatmaps
 	if mode == DisplayMode.HEATMAP_AND_ARROWS or mode == DisplayMode.HEATMAP_ONLY:
@@ -189,54 +169,17 @@ func _draw() -> void:
 				var cell_x: float = origin.x + float(gx) * cs
 				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs_vec)
 
-				var base: int = field.cost_field[idx]
-				if base == FlowField.COST_IMPASSABLE:
+				var base: float = field.cost_grid[idx]
+				if base >= FlowField.COST_IMPASSABLE:
 					draw_rect(cell_rect, Color(0.06, 0.06, 0.1, 0.65), true)
-				elif base >= StagePathfinding.COST_TOWER:
+				elif base > FlowField.COST_DEFAULT:
 					draw_rect(cell_rect, Color(0.9, 0.3, 0.1, 0.45), true)
 				else:
-					var cost: int = field.integration_field[idx]
-					if cost < FlowField.INTEGRATION_MAX:
-						var t: float = clampf(float(cost) / maxf(max_cost, 1.0), 0.0, 1.0)
+					var cost: float = field.integration_grid[idx]
+					if cost < float(FlowField.INTEGRATION_MAX):
+						var t: float = clampf(cost / maxf(max_cost, 1.0), 0.0, 1.0)
 						var col: Color = Color.from_hsv(lerp(0.5, 0.85, t), 0.75, 0.85, 0.35)
 						draw_rect(cell_rect, col, true)
-
-	elif mode == DisplayMode.CONGESTION:
-		var cong_data: PackedFloat32Array = pm.congestion_density if (pm and not pm.congestion_density.is_empty()) else PackedFloat32Array()
-		var cong_size: int = cong_data.size()
-		for gy: int in range(h):
-			var row: int = gy * w
-			var cell_y: float = origin.y + float(gy) * cs
-			for gx: int in range(w):
-				var idx: int = row + gx
-				var cell_x: float = origin.x + float(gx) * cs
-				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs_vec)
-
-				var cong: float = cong_data[idx] if idx < cong_size else 0.0
-				if cong > 0.01:
-					var t: float = clampf(cong / maxf(max_congestion, 1.0), 0.0, 1.0)
-					var col: Color = Color(1.0, 0.2, 0.1, lerp(0.2, 0.7, t))
-					draw_rect(cell_rect, col, true)
-
-	elif mode == DisplayMode.CLEARANCE:
-		var clr_data: PackedInt32Array = pm.base_wall_clearance if (pm and not pm.base_wall_clearance.is_empty()) else PackedInt32Array()
-		for gy: int in range(h):
-			var row: int = gy * w
-			var cell_y: float = origin.y + float(gy) * cs
-			for gx: int in range(w):
-				var idx: int = row + gx
-				var cell_x: float = origin.x + float(gx) * cs
-				var cell_rect: Rect2 = Rect2(Vector2(cell_x, cell_y), cs_vec)
-
-				if field.cost_field[idx] == FlowField.COST_IMPASSABLE:
-					draw_rect(cell_rect, Color(0.06, 0.06, 0.1, 0.65), true)
-				elif field.cost_field[idx] >= StagePathfinding.COST_TOWER:
-					draw_rect(cell_rect, Color(0.9, 0.3, 0.1, 0.45), true)
-				elif idx < clr_data.size() and clr_data[idx] > 0:
-					var clr_val: int = clr_data[idx]
-					var t: float = clampf(float(clr_val) / 3.0, 0.0, 1.0)
-					var col: Color = Color(0.2, 0.6, 1.0, lerp(0.15, 0.5, t))
-					draw_rect(cell_rect, col, true)
 
 	# 2. Draw Vector Arrows
 	if mode == DisplayMode.ARROWS or mode == DisplayMode.HEATMAP_AND_ARROWS:
@@ -244,12 +187,13 @@ func _draw() -> void:
 		var colors: PackedColorArray = []
 
 		var arrow_len: float = cs * 0.42
-		var head_size: float = 3.0
+		var head_size: float = maxf(2.0, cs * 0.15)
 
 		for gy: int in range(h):
 			var center_y: float = origin.y + (float(gy) + 0.5) * cs
 			for gx: int in range(w):
-				var v: Vector2 = field.get_flow_vector(gx, gy)
+				var idx: int = gy * w + gx
+				var v: Vector2 = field.field[idx]
 				if v.length_squared() < 0.0001:
 					continue
 
@@ -263,9 +207,8 @@ func _draw() -> void:
 				var head_left: Vector2 = end - v * head_size + perp * (head_size * 0.75)
 				var head_right: Vector2 = end - v * head_size - perp * (head_size * 0.75)
 
-				var idx: int = gy * w + gx
 				var col: Color
-				if field.cost_field[idx] >= StagePathfinding.COST_TOWER:
+				if field.cost_grid[idx] > FlowField.COST_DEFAULT:
 					col = Color(1.0, 0.55, 0.2, 0.8) # Tower orange
 				else:
 					col = Color(0.1, 0.95, 0.9, 0.85) # Open cyan

@@ -20,6 +20,7 @@ acceleration = 240.0
 [sub_resource type="Resource" id="Resource_m2ilo"]
 script = ExtResource("3_ky8tn")
 strategy = 1
+size = 1
 nav_layer = 4
 metadata/_custom_type_script = "uid://bllmo3a8geds7"
 

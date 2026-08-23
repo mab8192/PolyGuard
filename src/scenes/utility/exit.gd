@@ -26,6 +26,15 @@ var _indicator_node: Node2D = null
 var _pulse_tween: Tween = null
 var _highlight_tween: Tween = null
 
+func get_global_rect() -> Rect2:
+	if collision_shape_2d and collision_shape_2d.shape:
+		var s = collision_shape_2d.shape
+		if s is RectangleShape2D:
+			return Rect2(collision_shape_2d.global_position - s.size / 2.0, s.size)
+		elif s is CircleShape2D:
+			return Rect2(collision_shape_2d.global_position - Vector2(s.radius, s.radius), Vector2(s.radius * 2.0, s.radius * 2.0))
+	return Rect2(global_position - Vector2(16.0, 16.0), Vector2(32.0, 32.0))
+
 func _ready() -> void:
 	if exit_id.is_empty():
 		exit_id = name
