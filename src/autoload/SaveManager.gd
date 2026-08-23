@@ -189,11 +189,30 @@ func record_stage_clear(stage_id: String, score: int, lives_left: int, max_lives
 	var new_high_score: int = maxi(prev_high_score, score)
 	
 	# Reward calculation:
-	# - First clear: 300 base credits + 100 per star earned (100 to 300)
-	# - Repeat clear: 50 base credits (0 for tutorial) + 100 per newly achieved star (0 if already earned)
+	# - First clear (Tutorial): 150 base credits + 50 per star earned (200 to 300)
+	# - First clear (Early Stages 01–05): 250 base credits + 50 per star earned (300 to 400)
+	# - First clear (Mid Stages 06–12): 300 base credits + 50 per star earned (350 to 450)
+	# - First clear (Late Stages 13–20): 400 base credits + 50 per star earned (450 to 550)
+	# - Repeat clear: 50 base credits (0 for tutorial) + 50 per newly achieved star (0 if already earned)
 	var is_tutorial: bool = (stage_id == "stage_00" or stage_id.begins_with("tutorial"))
-	var base_reward: int = 300 if is_first_clear else (0 if is_tutorial else 50)
-	var star_bonus: int = 0 if (is_tutorial and not is_first_clear) else (newly_earned_stars * 100)
+	var stage_num: int = 0
+	if stage_id.begins_with("stage_"):
+		stage_num = stage_id.trim_prefix("stage_").to_int()
+		
+	var base_reward: int = 50
+	if is_first_clear:
+		if is_tutorial:
+			base_reward = 150
+		elif stage_num <= 5:
+			base_reward = 250
+		elif stage_num <= 12:
+			base_reward = 300
+		else:
+			base_reward = 400
+	elif is_tutorial:
+		base_reward = 0
+
+	var star_bonus: int = 0 if (is_tutorial and not is_first_clear) else (newly_earned_stars * 50)
 	var total_reward: int = base_reward + star_bonus
 	
 	if total_reward > 0:
