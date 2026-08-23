@@ -9,7 +9,7 @@
 size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
-size = Vector2(144, 64)
+size = Vector2(176, 64)
 
 [sub_resource type="Gradient" id="Gradient_gust"]
 offsets = PackedFloat32Array(0, 0.3, 0.8, 1)
@@ -35,7 +35,7 @@ script = ExtResource("3_applier")
 metadata/_custom_type_script = "uid://bi5cw4m6km75g"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=212099105]
-position = Vector2(56, 0)
+position = Vector2(72, 0)
 shape = SubResource("RectangleShape2D_area")
 debug_color = Color(0.2, 0.8, 1, 0.08)
 
