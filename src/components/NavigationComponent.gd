@@ -18,9 +18,18 @@ var _target_recalc_timer: float = 0.0
 const TARGET_RECALC_INTERVAL: float = 0.4
 
 var remaining_distance: float = 0.0
+var is_active: bool = true
 var _stuck_timer: float = 0.0
 var _last_sample_pos: Vector2 = Vector2.ZERO
 var _sample_timer: float = 0.0
+
+func stop() -> void:
+	is_active = false
+	_stuck_timer = 0.0
+	velocity_computed.emit(Vector2.ZERO)
+
+func resume() -> void:
+	is_active = true
 
 
 func _ready() -> void:
@@ -126,7 +135,7 @@ func _compute_separation_vector() -> Vector2:
 
 
 func _physics_process(delta: float) -> void:
-	if is_finished():
+	if not is_active or is_finished():
 		return
 
 	var dir: Vector2 = Vector2.ZERO
@@ -155,7 +164,7 @@ func _physics_process(delta: float) -> void:
 			var field_id: String = get_field_id()
 			var field: FlowField = FlowFieldManager.get_field(field_id)
 			if field and field.is_reachable(_actor.global_position):
-				_no_path = false
+				_no_path = field.is_obstructed(_actor.global_position)
 				dir = field.query(_actor.global_position)
 
 	# 2. Standard exit-targeting enemies
@@ -164,7 +173,13 @@ func _physics_process(delta: float) -> void:
 		var field: FlowField = FlowFieldManager.get_field(field_id)
 
 		if field and field.is_reachable(_actor.global_position):
-			_no_path = false
+			var obstructed: bool = field.is_obstructed(_actor.global_position)
+			if not obstructed:
+				_no_path = false
+			else:
+				if not _no_path:
+					no_path_available.emit()
+					_no_path = true
 			dir = field.query(_actor.global_position)
 		else:
 			if not _no_path:
@@ -193,6 +208,13 @@ func _physics_process(delta: float) -> void:
 				var lateral_sep: float = sep.dot(flow_tangent)
 				var forward_sep: float = sep.dot(dir)
 				var blended_sep: Vector2 = flow_tangent * lateral_sep + dir * (forward_sep * 0.25)
+
+				# Ensure separation does not steer into a solid wall
+				var test_pos := _actor.global_position + flow_tangent * (signf(lateral_sep) * 16.0)
+				var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
+				if cur_field and not _is_walkable_world(cur_field, test_pos):
+					blended_sep = dir * (forward_sep * 0.25)
+
 				dir = (dir + blended_sep * data.separation_weight).normalized()
 			else:
 				dir = sep.normalized()
@@ -213,11 +235,29 @@ func _physics_process(delta: float) -> void:
 		if _stuck_timer >= 0.8:
 			var unstuck_side: float = 1.0 if (_actor.get_instance_id() % 2 == 0) else -1.0
 			var perp: Vector2 = Vector2(-dir.y, dir.x) * unstuck_side
-			dir = (dir * 0.7 + perp * 0.3).normalized()
+			var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
+			var test_pos := _actor.global_position + perp * 16.0
+			if cur_field and not _is_walkable_world(cur_field, test_pos):
+				# Try opposite side
+				perp = -perp
+				test_pos = _actor.global_position + perp * 16.0
+				if cur_field and not _is_walkable_world(cur_field, test_pos):
+					perp = Vector2.ZERO
+
+			if perp != Vector2.ZERO:
+				dir = (dir * 0.7 + perp * 0.3).normalized()
 
 	var max_speed: float = movement.get_speed() if movement else 0.0
 	var intended_vel: Vector2 = dir * max_speed
 	velocity_computed.emit(intended_vel)
+
+func _is_walkable_world(field: FlowField, world_pos: Vector2) -> bool:
+	if not field:
+		return true
+	var cell: Vector2i = field._world_to_grid(world_pos)
+	if not field._is_in_bounds(cell):
+		return false
+	return field.cost_grid[field._index(cell)] < FlowField.COST_IMPASSABLE
 
 
 func _pick_target() -> void:

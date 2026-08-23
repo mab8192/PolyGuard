@@ -115,7 +115,11 @@ func _on_exits_updated() -> void:
 			targets.append(exit)
 	nav.set_exits(targets)
 	
-func _physics_process(_delta: float) -> void:
+func is_attacking() -> bool:
+	var should_attack: bool = (nav and nav.data and nav.data.targets_towers) or (nav and not nav.can_reach_exit())
+	return should_attack and targeting != null and attack != null and targeting.get_targets().size() > 0
+
+func _physics_process(delta: float) -> void:
 	if position_history.is_empty():
 		position_history.append(global_position)
 	elif global_position.distance_squared_to(position_history.back()) >= HISTORY_SAMPLE_DIST_SQ:
@@ -123,11 +127,19 @@ func _physics_process(_delta: float) -> void:
 			position_history.remove_at(0)
 		position_history.append(global_position)
 
-	var should_attack: bool = (nav and nav.data and nav.data.targets_towers) or (nav and not nav.can_reach_exit())
-	if should_attack and targeting and attack and targeting.get_targets().size() > 0:
+	if is_attacking():
+		if nav and nav.is_active:
+			nav.stop()
 		if movement:
 			movement.stop()
-		attack.attack_targets(targeting.get_targets())
+		var targets_list = targeting.get_targets()
+		attack.attack_targets(targets_list)
+		if not targets_list.is_empty() and is_instance_valid(targets_list[0]):
+			var target_angle = (targets_list[0].global_position - global_position).angle()
+			rotation = lerp_angle(rotation, target_angle, 16.0 * delta)
+	else:
+		if nav and not nav.is_active:
+			nav.resume()
 
 func _on_died() -> void:
 	queue_free()
@@ -135,6 +147,11 @@ func _on_died() -> void:
 
 func _on_velocity_computed(vel: Vector2) -> void:
 	var delta: float = get_physics_process_delta_time()
+	if is_attacking():
+		if movement:
+			movement.stop()
+		return
+
 	var dir: Vector2 = vel.normalized()
 	if movement:
 		movement.handle_movement(dir, delta)

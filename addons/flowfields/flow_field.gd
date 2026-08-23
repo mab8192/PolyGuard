@@ -8,8 +8,9 @@ extends RefCounted
 ## Godot 4, suitable for RTS/tower-defense unit movement where many agents share
 ## precomputed fields.
 ## ============================================================================
-
+ 
 const COST_DEFAULT: int = 1
+const COST_OBSTRUCTED: int = 1000 ## Cost to move through something breakable
 const COST_IMPASSABLE: int = 10000 ## "Cost" to move through an impassable cell (e.g. a wall)
 const INTEGRATION_MAX: int = 2147483647 # sentinel for "unreached" (int32 max)
 
@@ -170,6 +171,9 @@ func set_cost(target: Variant, cost: float) -> void:
 func set_impassable(target: Variant) -> void:
 	set_cost(target, COST_IMPASSABLE)
 
+func set_obstructed(target: Variant) -> void:
+	set_cost(target, COST_OBSTRUCTED)
+
 ## Reset cost for a world point (Vector2), grid cell (Vector2i), world rect (Rect2), grid rect (Rect2i), or entire grid if target is null
 func reset(target: Variant = null) -> void:
 	if target == null:
@@ -180,12 +184,27 @@ func reset(target: Variant = null) -> void:
 func clear_targets() -> void:
 	targets.clear()
 
-## Returns true if the world position is in bounds and can reach at least one target
+## Returns true if the world position is in bounds and physically connected to at least one target
 func is_reachable(world_pos: Vector2) -> bool:
 	var grid_cell := _world_to_grid(world_pos)
 	if not _is_in_bounds(grid_cell):
 		return false
 	return integration_grid[_index(grid_cell)] < float(INTEGRATION_MAX)
+
+## Returns true if the path to the target from world_pos requires going through breakable obstacles (towers)
+func is_obstructed(world_pos: Vector2) -> bool:
+	var grid_cell := _world_to_grid(world_pos)
+	if not _is_in_bounds(grid_cell):
+		return true
+	var cost: float = integration_grid[_index(grid_cell)]
+	return cost >= float(COST_OBSTRUCTED) and cost < float(INTEGRATION_MAX)
+
+## Returns the raw integration cost at the given world position
+func get_integration_cost(world_pos: Vector2) -> float:
+	var grid_cell := _world_to_grid(world_pos)
+	if not _is_in_bounds(grid_cell):
+		return float(INTEGRATION_MAX)
+	return integration_grid[_index(grid_cell)]
 
 ## Traces a streamline path from start_pos along the flow field
 func trace_path(start_pos: Vector2, step_size: float = 16.0, max_steps: int = 300, goal_targets: Array = []) -> PackedVector2Array:

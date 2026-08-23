@@ -19,8 +19,6 @@ var gold: int:
 var score: int = 0
 var selected_tower: Tower = null
 
-const TOWER_COST: float = 100.0
-
 # Accessors delegated to WaveManager for external callers
 var wave: int:
 	get: return wave_manager.wave if wave_manager else 0
@@ -326,12 +324,20 @@ func _rebuild_flow_fields() -> void:
 	if exit_rects.is_empty():
 		return
 
-	# Gather active tower rects
-	var tower_rects: Array[Rect2] = []
+	# Gather active tower rects partitioned by collision type
+	var physical_tower_rects: Array[Rect2] = []
+	var spectral_tower_rects: Array[Rect2] = []
 	if towers:
 		for child: Node in towers.get_children():
 			if child is Tower and is_instance_valid(child) and not child.is_queued_for_deletion() and not (child as Tower).is_preview:
-				tower_rects.append(_get_tower_global_rect(child as Node2D))
+				var t: Tower = child as Tower
+				var r: Rect2 = _get_tower_global_rect(t)
+				# Layer 5 (bit 16): Spectral Tower (blocks ghosts)
+				if t.collision_layer & 16 != 0:
+					spectral_tower_rects.append(r)
+				# Layer 2 (bit 2): Solid Tower (blocks physical units)
+				elif t.collision_layer & 2 != 0 or t.collision_layer == 0:
+					physical_tower_rects.append(r)
 
 	# Rebuild every registered field in FlowFieldManager
 	for field_id: String in FlowFieldManager.fields:
@@ -344,10 +350,15 @@ func _rebuild_flow_fields() -> void:
 		# 1. Mark impassable tilemap walls
 		_stamp_tilemap_walls(field)
 
-		# 2. Mark towers on physical fields (ghost fields ignore towers)
+		# 2. Mark towers
 		if field_id.begins_with("physical"):
-			for tr: Rect2 in tower_rects:
-				field.set_cost(tr, TOWER_COST)
+			for tr: Rect2 in physical_tower_rects:
+				field.set_obstructed(tr)
+			for tr: Rect2 in spectral_tower_rects:
+				field.set_obstructed(tr)
+		elif field_id.begins_with("ghost"):
+			for tr: Rect2 in spectral_tower_rects:
+				field.set_obstructed(tr)
 
 		# 3. Add targets as entire exit rectangles
 		field.clear_targets()
