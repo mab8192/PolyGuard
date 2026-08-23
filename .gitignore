@@ -2,5 +2,7 @@
 .godot/
 /android/
 addons/flowfields/build*/
+addons/flowfields/.godot-cpp/
+
 
 

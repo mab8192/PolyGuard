@@ -7,12 +7,13 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 
 include(FetchContent)
 
-# Automatically fetch godot-cpp into the local build folder during configuration
+# Share a single godot-cpp source checkout across all platform build folders
 FetchContent_Declare(
     godot-cpp
     GIT_REPOSITORY https://github.com/godotengine/godot-cpp.git
     GIT_TAG        godot-4.3-stable
     GIT_SHALLOW    TRUE
+    SOURCE_DIR     "${CMAKE_CURRENT_SOURCE_DIR}/.godot-cpp"
 )
 FetchContent_MakeAvailable(godot-cpp)
 
@@ -43,6 +44,19 @@ if(ANDROID)
         set(LIB_NAME "flowfield.android.debug.arm64")
     else()
         set(LIB_NAME "flowfield.android.release.arm64")
+    endif()
+elseif(WIN32)
+    target_link_options(flowfield PRIVATE "-static" "-static-libgcc" "-static-libstdc++")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(LIB_NAME "flowfield.windows.debug.x86_64")
+    else()
+        set(LIB_NAME "flowfield.windows.release.x86_64")
+    endif()
+elseif(IOS OR CMAKE_SYSTEM_NAME STREQUAL "iOS")
+    if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+        set(LIB_NAME "flowfield.ios.debug.arm64")
+    else()
+        set(LIB_NAME "flowfield.ios.release.arm64")
     endif()
 else()
     set(LIB_NAME "flowfield")
