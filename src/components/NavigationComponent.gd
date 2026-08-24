@@ -169,6 +169,28 @@ func _physics_process(delta: float) -> void:
 				var cost_val: float = field.get_integration_cost(_actor.global_position)
 				if cost_val < float(FlowField.INTEGRATION_MAX):
 					remaining_distance = cost_val
+				elif not _exits.is_empty() and is_instance_valid(_exits[0]):
+					remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
+			else:
+				if not _no_path:
+					no_path_available.emit()
+					_no_path = true
+				if not _exits.is_empty() and is_instance_valid(_exits[0]):
+					remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
+
+			# Fallback if in unreached corner
+			if dir == Vector2.ZERO and not _exits.is_empty():
+				var closest_exit: Node2D = null
+				var min_d_sq: float = INF
+				for ex: Node2D in _exits:
+					if is_instance_valid(ex):
+						var d: float = _actor.global_position.distance_squared_to(ex.global_position)
+						if d < min_d_sq:
+							min_d_sq = d
+							closest_exit = ex
+				if closest_exit:
+					dir = _actor.global_position.direction_to(closest_exit.global_position)
+					remaining_distance = sqrt(min_d_sq)
 
 	# 2. Standard exit-targeting enemies
 	else:

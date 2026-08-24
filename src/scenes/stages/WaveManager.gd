@@ -40,12 +40,21 @@ func _process(delta: float) -> void:
 		var mins = total_secs / 60
 		var secs = total_secs % 60
 		SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])
+		
+		# Ensure wave completion triggers if all spawners finish and no enemies remain
+		if spawners.all(func(x: Spawner): return !x.is_spawning()):
+			_check_wave_completion()
 
 func _refresh_spawners() -> void:
+	for s in spawners:
+		if is_instance_valid(s) and s.finished.is_connected(_check_wave_completion):
+			s.finished.disconnect(_check_wave_completion)
 	spawners.clear()
 	for node in get_tree().get_nodes_in_group("spawners"):
 		if node is Spawner:
 			spawners.append(node)
+			if not node.finished.is_connected(_check_wave_completion):
+				node.finished.connect(_check_wave_completion)
 
 func _init_stage_spawners_and_exits() -> void:
 	if not stage or not stage.data:
