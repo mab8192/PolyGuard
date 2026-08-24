@@ -307,6 +307,7 @@ func _setup_flow_fields() -> void:
 	var exit_count: int = exit_nodes.size()
 
 	FlowFieldManager.clear()
+	FlowFieldManager.setup_astar(gw, gh, CELL_SIZE, origin)
 
 	for tier_name: String in tiers:
 		var cfg: Dictionary = tiers[tier_name]
@@ -360,6 +361,22 @@ func _rebuild_flow_fields() -> void:
 			physical_tower_rects.append(_get_tower_global_rect(tower))
 		if (tower.collision_layer & 16) != 0:
 			spectral_tower_rects.append(_get_tower_global_rect(tower))
+
+	# Rebuild AStar pathfinding grid
+	FlowFieldManager.reset_astar()
+	if tiles and tiles.tile_set:
+		var used_cells: Array[Vector2i] = tiles.get_used_cells()
+		var tile_size: Vector2 = Vector2(tiles.tile_set.tile_size) * tiles.scale
+		var half_tile: Vector2 = tile_size / 2.0
+		for cell_pos: Vector2i in used_cells:
+			var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
+			if tile_data and tile_data.get_collision_polygons_count(0) > 0:
+				var global_center: Vector2 = tiles.to_global(tiles.map_to_local(cell_pos))
+				var wall_rect: Rect2 = Rect2(global_center - half_tile, tile_size)
+				FlowFieldManager.set_astar_rect_solid(wall_rect, true)
+
+	for rect: Rect2 in physical_tower_rects:
+		FlowFieldManager.set_astar_rect_weight(rect, 4.0)
 
 	# Rebuild every registered field in FlowFieldManager
 	for field_id: String in FlowFieldManager.fields:

@@ -12,8 +12,8 @@
 
 [sub_resource type="Resource" id="Resource_aacki"]
 script = ExtResource("2_dyd85")
-damage = 200.0
-cooldown = 3.0
+damage = 100.0
+cooldown = 4.0
 projectile_scene = ExtResource("1_aacki")
 metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 
@@ -24,7 +24,7 @@ magic_resistance = 10.0
 
 [sub_resource type="Resource" id="SubResource_movement"]
 script = ExtResource("4_movement")
-max_speed = 90.0
+max_speed = 60.0
 acceleration = 800.0
 
 [sub_resource type="Resource" id="Resource_jksdh"]

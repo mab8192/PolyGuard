@@ -143,13 +143,13 @@ func _physics_process(delta: float) -> void:
 	# 1. Tower-targeting enemies (Snipers, Bombers)
 	if data and data.targets_towers:
 		_target_recalc_timer += delta
-		if _target_recalc_timer >= TARGET_RECALC_INTERVAL or not is_instance_valid(_target_tower) or _target_tower.is_queued_for_deletion():
+		if _target_recalc_timer >= TARGET_RECALC_INTERVAL or not is_instance_valid(_target_tower) or _target_tower.is_queued_for_deletion() or _tower_path.is_empty():
 			_target_recalc_timer = 0.0
 			_pick_target()
 
 		if is_instance_valid(_target_tower) and not _target_tower.is_queued_for_deletion():
 			_no_path = false
-			remaining_distance = _actor.global_position.distance_to(_target_tower.global_position)
+			remaining_distance = _calculate_path_length(_tower_path.slice(_tower_path_idx)) if _tower_path_idx < _tower_path.size() else _actor.global_position.distance_to(_target_tower.global_position)
 
 			# Advance waypoints
 			while _tower_path_idx < _tower_path.size() and _actor.global_position.distance_squared_to(_tower_path[_tower_path_idx]) < 256.0:
@@ -291,10 +291,7 @@ func _pick_target() -> void:
 
 	if data and data.targets_towers:
 		_target_tower = _find_target_tower()
-		if _target_tower and is_instance_valid(_target_tower):
-			_tower_path = PackedVector2Array([_target_tower.global_position])
-			_tower_path_idx = 0
-		else:
+		if not _target_tower or not is_instance_valid(_target_tower):
 			_tower_path.clear()
 			_tower_path_idx = 0
 
@@ -318,16 +315,50 @@ func _find_target_tower() -> Tower:
 	if candidates.is_empty():
 		return null
 
+	# Sort candidates by direct Euclidean distance to test closest towers first
+	candidates.sort_custom(func(a: Tower, b: Tower):
+		return _actor.global_position.distance_squared_to(a.global_position) < _actor.global_position.distance_squared_to(b.global_position)
+	)
+
 	var best_tower: Tower = null
+	var best_path: PackedVector2Array = PackedVector2Array()
 	var min_cost: float = INF
 
 	for t: Tower in candidates:
-		var direct_dist: float = _actor.global_position.distance_to(t.global_position)
-		if direct_dist < min_cost:
-			min_cost = direct_dist
-			best_tower = t
+		var path: PackedVector2Array = FlowFieldManager.find_path(_actor.global_position, t.global_position)
+		if not path.is_empty():
+			var path_len: float = _calculate_path_length(path)
+			if path_len < min_cost:
+				min_cost = path_len
+				best_tower = t
+				best_path = path
+				# If path is already direct (<= 2 waypoints) and short, select immediately
+				if path.size() <= 2:
+					break
+		else:
+			# Fallback for ghost enemies that can phase through walls
+			if (data.nav_layer & 4) != 0:
+				var direct_dist: float = _actor.global_position.distance_to(t.global_position)
+				if direct_dist < min_cost:
+					min_cost = direct_dist
+					best_tower = t
+					best_path = PackedVector2Array([t.global_position])
 
-	return best_tower
+	if best_tower and not best_path.is_empty():
+		_tower_path = best_path
+		_tower_path_idx = 0
+		return best_tower
+
+	return null
+
+
+func _calculate_path_length(path: PackedVector2Array) -> float:
+	if path.size() < 2:
+		return 0.0
+	var total_len: float = 0.0
+	for i in range(path.size() - 1):
+		total_len += path[i].distance_to(path[i + 1])
+	return total_len
 
 
 ## Calculates the shortest path to an exit ignoring towers (using Ghost Small field)

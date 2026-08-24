@@ -17,7 +17,7 @@ var is_range_visible: bool = false:
 			queue_redraw()
 
 var _targets: Array[Node2D] = []
-var _rays: Dictionary[Node2D, RayCast2D] = {}
+var _rays: Dictionary[Node2D, ShapeCast2D] = {}
 var _active_targets: Array[Node2D] = []
 
 func set_range_visible(vis: bool) -> void:
@@ -212,7 +212,7 @@ func get_strategy_description() -> String:
 func _has_line_of_sight(target: Node2D) -> bool:
 	if not is_instance_valid(target):
 		return false
-	var ray: RayCast2D = _rays.get(target)
+	var ray: ShapeCast2D = _rays.get(target)
 	if not ray or not is_instance_valid(ray):
 		_create_ray_for(target)
 		ray = _rays.get(target)
@@ -220,13 +220,16 @@ func _has_line_of_sight(target: Node2D) -> bool:
 		return true
 
 	ray.target_position = ray.to_local(target.global_position)
-	ray.force_raycast_update()
+	ray.force_shapecast_update()
 	return not ray.is_colliding()
 
 func _create_ray_for(target: Node2D) -> void:
 	if _rays.has(target) or not is_instance_valid(target):
 		return
-	var ray := RayCast2D.new()
+	var ray := ShapeCast2D.new()
+	var shape := CircleShape2D.new()
+	shape.radius = 4 # 4 px radius to allow for projectiles to clear walls without hitting them
+	ray.shape = shape
 	ray.collision_mask = 1 # Layer 1: Walls / Environment
 	ray.enabled = true
 	if get_parent() is CollisionObject2D:
