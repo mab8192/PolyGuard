@@ -19,6 +19,14 @@ build_android() {
             -DANDROID_PLATFORM=android-24 \
             -DCMAKE_BUILD_TYPE=Release
         cmake --build "${SCRIPT_DIR}/build_android_release" --target flowfield -j$(nproc)
+
+        echo "--> Building Android ARM64 (Debug)..."
+        cmake -B "${SCRIPT_DIR}/build_android_debug" -S "${SCRIPT_DIR}" \
+            -DCMAKE_TOOLCHAIN_FILE="${NDK_PATH}/build/cmake/android.toolchain.cmake" \
+            -DANDROID_ABI=arm64-v8a \
+            -DANDROID_PLATFORM=android-24 \
+            -DCMAKE_BUILD_TYPE=Debug
+        cmake --build "${SCRIPT_DIR}/build_android_debug" --target flowfield -j$(nproc)
     else
         echo "NDK path not found: $NDK_PATH"
     fi
