@@ -33,7 +33,7 @@ var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Vict
 # Music Streams
 @export_group("Music Tracks")
 @export var music_menu: Array[AudioStream] = [
-	preload("res://vendor/mrpoly/awesomeness.wav"),
+	preload("res://vendor/mrpoly/awesomeness.ogg"),
 	preload("res://vendor/DeusLower/deuslower-medieval-ambient-236809.mp3")
 ]
 @export var music_build: AudioStream = preload("res://vendor/Zefz/TheLoomingBattle.ogg")
@@ -44,7 +44,6 @@ var sfx_stage_complete: AudioStream = preload("res://vendor/celestialghost8/Vict
 	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 4.mp3"),
 	preload("res://vendor/AlexandrZhelanov/Battle Themes/Battle Theme 5.mp3")
 ]
-@export var music_victory: AudioStream = preload("res://vendor/Quitschie/8 Bit Background Music.wav")
 
 # --- Node References ---
 var _music_player_a: AudioStreamPlayer
@@ -290,7 +289,6 @@ func _on_stage_loaded() -> void:
 	play_music(music_build)
 
 func _on_stage_completed(_stage_id: String = "") -> void:
-	play_music(music_victory)
 	play_sfx(sfx_stage_complete)
 
 func _on_enemy_died(_enemy: Enemy) -> void:

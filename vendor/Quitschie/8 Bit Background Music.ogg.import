@@ -1,0 +1,19 @@
+[remap]
+
+importer="oggvorbisstr"
+type="AudioStreamOggVorbis"
+uid="uid://df2byad50t6ap"
+path="res://.godot/imported/8 Bit Background Music.ogg-dc2c17e8142014f4fdfdb49c3f3bc319.oggvorbisstr"
+
+[deps]
+
+source_file="res://vendor/Quitschie/8 Bit Background Music.ogg"
+dest_files=["res://.godot/imported/8 Bit Background Music.ogg-dc2c17e8142014f4fdfdb49c3f3bc319.oggvorbisstr"]
+
+[params]
+
+loop=false
+loop_offset=0
+bpm=0
+beat_count=0
+bar_beats=4
