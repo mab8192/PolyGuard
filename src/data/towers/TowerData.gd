@@ -25,6 +25,7 @@ class_name TowerData extends Resource
 @export_category("Placement")
 @export var can_rotate: bool = true ## Whether this tower/trap can be rotated during placement
 @export var rotation_step_degrees: float = 90.0 ## Rotation increment angle in degrees (e.g., 90 for square/rect, 45 for cone/directional)
+@export var requires_wall_behind: bool = false ## Whether this tower/trap can only be placed with a solid wall or tower directly behind it
 
 @export_category("Physics Collision")
 @export_flags_2d_physics var collision_layer: int = 2 ## Physics layer this tower occupies (0 = non-solid trap, 2 = physical tower, 18 = blocks ghosts too)
@@ -228,7 +229,9 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 	var scaled = get_scaled_copy(level, choice_id)
 	
 	var type_str = "Ground Trap"
-	if scaled.collision_layer > 0:
+	if scaled.requires_wall_behind:
+		type_str = "Wall Trap"
+	elif scaled.collision_layer > 0:
 		if (scaled.collision_layer & 16) != 0:
 			type_str = "Spectral Barrier"
 		else:
@@ -266,6 +269,8 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		lines.append("Ghost Detection: Active")
 	if summary["blocks_ghosts"]:
 		lines.append("Ghost Barrier: Active")
+	if scaled.requires_wall_behind:
+		lines.append("Placement: Requires Solid Wall/Tower Support")
 	if tower_id == "soul_lantern":
 		lines.append("Trait: Ramping Focus Damage (+35%/s)")
 	elif tower_id == "tesla_tower":

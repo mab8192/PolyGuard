@@ -11,8 +11,6 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_im5y4"]
 [ext_resource type="Texture2D" uid="uid://ccfd3lujxywlq" path="res://src/textures/towers/variants/arrow_wall_arcane.png" id="ext_var_arcane_infusion"]
 [ext_resource type="Texture2D" uid="uid://cn6damlq645pv" path="res://src/textures/towers/variants/arrow_wall_piercer.png" id="ext_var_true_piercer"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/arrow_wall_arcane.png" id="ext_var_arcane_infusion"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/arrow_wall_piercer.png" id="ext_var_true_piercer"]
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_ik266")
@@ -56,12 +54,14 @@ tower_id = "arrow_wall"
 display_name = "Arrow Wall"
 icon = ExtResource("5_megk3")
 scene = ExtResource("6_megk3")
-description = "Ranged multi-target arrow wall. Solid structure that blocks enemy movement."
+description = "Directional multi-target arrow wall mounted on solid structures to fire volleys of arrows across lanes."
 unlock_cost = 250
 required_stage_id = "stage_01"
 choices = Array[ExtResource("3_77e18")]([SubResource("Resource_choice_arcane"), SubResource("Resource_choice_true")])
 cooldown_reduction_per_level = 0.0
 cost = 300
+requires_wall_behind = true
+collision_layer = 0
 health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")
 targeting = SubResource("Resource_1mbg1")

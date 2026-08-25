@@ -114,9 +114,21 @@ func _find_tower_at(pos: Vector2) -> Tower:
 	if candidates.is_empty():
 		return null
 	
+	# Sort candidates: higher z_index first (top-most visual layer), then closer rect center to click position
 	candidates.sort_custom(func(a: Tower, b: Tower) -> bool:
-		return a.global_position.distance_squared_to(pos) < b.global_position.distance_squared_to(pos)
+		if a.z_index != b.z_index:
+			return a.z_index > b.z_index
+		var rect_a = _get_tower_global_rect(a)
+		var rect_b = _get_tower_global_rect(b)
+		return rect_a.get_center().distance_squared_to(pos) < rect_b.get_center().distance_squared_to(pos)
 	)
+
+	# If the currently selected tower is in the candidates list and there are multiple, cycle to the next candidate
+	if selected_tower and is_instance_valid(selected_tower):
+		var current_idx: int = candidates.find(selected_tower)
+		if current_idx != -1 and candidates.size() > 1:
+			return candidates[(current_idx + 1) % candidates.size()]
+	
 	return candidates[0]
 
 func _get_tower_global_rect(node: Node2D) -> Rect2:

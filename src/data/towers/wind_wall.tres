@@ -59,5 +59,7 @@ unlock_cost = 500
 required_stage_id = "stage_09"
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_tempest"), SubResource("Resource_choice_vortex")])
 cost = 300
+requires_wall_behind = true
+collision_layer = 0
 health = SubResource("Resource_health")
 effect_applier = SubResource("Resource_applier_data")

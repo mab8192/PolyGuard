@@ -70,10 +70,8 @@ func apply(target: Node2D) -> void:
 	# Impulse force (Newton-seconds)
 	if data.impulse_force > 0.0:
 		var mov = ComponentUtil.get_component(target, MovementComponent) as MovementComponent
-		print("mov", mov)
 		if mov:
 			var dir = _get_source_direction()
-			print("IMPULSE", dir * data.impulse_force)
 			mov.apply_impulse(dir * data.impulse_force)
 
 	# Impact VFX

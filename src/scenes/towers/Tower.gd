@@ -193,6 +193,11 @@ func _update_solid_state() -> void:
 	elif collision_layer == 0:
 		collision_layer = 2
 
+func get_default_z_index() -> int:
+	if data and data.requires_wall_behind:
+		return 2
+	return 0
+
 func _update_preview_state() -> void:
 	# Disable collision shapes while previewing
 	for child in get_children():
@@ -208,7 +213,7 @@ func _update_preview_state() -> void:
 		modulate.a = 0.5
 		is_range_visible = true
 	else:
-		z_index = 0
+		z_index = get_default_z_index()
 		_update_active_state(false)
 		is_range_visible = is_selected
 	

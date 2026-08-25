@@ -9,14 +9,14 @@
 size = Vector2(16, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
-size = Vector2(176, 64)
+size = Vector2(184, 64)
 
 [sub_resource type="Gradient" id="Gradient_gust"]
 offsets = PackedFloat32Array(0, 0.3, 0.8, 1)
 colors = PackedColorArray(1, 1, 1, 0.9, 0.5, 0.95, 1, 0.75, 0.1, 0.8, 1, 0.3, 0, 0.4, 0.8, 0)
 
 [node name="WindWall" type="StaticBody2D" unique_id=887299101]
-collision_layer = 2
+collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_script")
 
@@ -35,18 +35,19 @@ script = ExtResource("3_applier")
 metadata/_custom_type_script = "uid://bi5cw4m6km75g"
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="EffectApplierComponent" unique_id=212099105]
-position = Vector2(72, 0)
+position = Vector2(68, 0)
 shape = SubResource("RectangleShape2D_area")
 debug_color = Color(0.2, 0.8, 1, 0.08)
 
 [node name="Sprite2D" type="Sprite2D" parent="." unique_id=179599106]
-position = Vector2(-24, 0)
+position = Vector2(-28, 0)
+scale = Vector2(0.5, 1)
 texture = ExtResource("4_texture")
 
 [node name="Gust Effect" type="CPUParticles2D" parent="." unique_id=173199108]
 z_index = 26
 z_as_relative = false
-position = Vector2(-16, 0)
+position = Vector2(-24, 0)
 emitting = false
 amount = 50
 lifetime = 0.8

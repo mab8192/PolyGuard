@@ -127,10 +127,11 @@ func can_place_preview() -> bool:
 		# 3. Check for overlap with already placed towers
 		if stage.towers:
 			for child in stage.towers.get_children():
-				if child is Tower and child != preview_tower and not child.is_preview:
+				if child is Tower and child != preview_tower and not child.is_preview and not child.is_queued_for_deletion():
 					var child_rect: Rect2 = _get_tower_global_rect(child)
 					if preview_rect.intersects(child_rect):
-						return false
+						if not _can_overlap_tower(preview_tower, child):
+							return false
 
 	# 4. Check for overlap with active enemies
 	if preview_tower.collision_layer > 0:
@@ -155,6 +156,10 @@ func can_place_preview() -> bool:
 			var obj_rect: Rect2 = _get_tower_global_rect(obj)
 			if preview_rect.intersects(obj_rect):
 				return false
+
+	# 6. Check solid structure backing requirement for wall traps
+	if not _has_solid_structure_behind(preview_tower):
+		return false
 
 	return true
 
@@ -351,3 +356,56 @@ func _get_tower_global_rect(node: Node2D) -> Rect2:
 
 	var default_half = Vector2(GRID_SIZE, GRID_SIZE)
 	return Rect2(node.global_position - default_half, default_half * 2.0)
+
+func _can_overlap_tower(preview: Tower, existing: Tower) -> bool:
+	var preview_is_wall: bool = preview.data != null and preview.data.requires_wall_behind
+	var existing_is_wall: bool = existing.data != null and existing.data.requires_wall_behind
+	var preview_is_ground: bool = (preview.collision_layer == 0 or (preview.data and preview.data.collision_layer == 0)) and not preview_is_wall
+	var existing_is_ground: bool = existing.collision_layer == 0 and not existing_is_wall
+
+	# Wall traps and ground traps can intersect each other
+	if (preview_is_wall and existing_is_ground) or (preview_is_ground and existing_is_wall):
+		return true
+
+	return false
+
+func _has_solid_structure_behind(tower: Tower) -> bool:
+	if not tower or not tower.data or not tower.data.requires_wall_behind:
+		return true
+
+	var sample_offsets: Array[Vector2] = [
+		Vector2(-40, -16),
+		Vector2(-40, 0),
+		Vector2(-40, 16)
+	]
+
+	for offset in sample_offsets:
+		var sample_point: Vector2 = tower.to_global(offset)
+		if not _is_solid_structure_at(sample_point):
+			return false
+
+	return true
+
+func _is_solid_structure_at(global_pos: Vector2) -> bool:
+	if not stage:
+		return false
+
+	# 1. Check tilemap solid wall
+	if stage.tiles:
+		var tiles: TileMapLayer = stage.tiles
+		var cell_pos: Vector2i = tiles.local_to_map(tiles.to_local(global_pos))
+		var tile_data: TileData = tiles.get_cell_tile_data(cell_pos)
+		if tile_data and tile_data.get_collision_polygons_count(0) > 0:
+			return true
+
+	# 2. Check placed solid towers/structures (collision_layer > 0)
+	if stage.towers:
+		for child in stage.towers.get_children():
+			if child is Tower and child != preview_tower and not child.is_preview and not child.is_queued_for_deletion():
+				if child.collision_layer > 0:
+					var child_rect: Rect2 = _get_tower_global_rect(child)
+					if child_rect.has_point(global_pos):
+						return true
+
+	return false
+
