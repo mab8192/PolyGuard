@@ -5,7 +5,7 @@
 [ext_resource type="Script" uid="uid://duyvjjug04cvq" path="res://src/scenes/utility/spawner_path_preview.gd" id="3_path_preview"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_naouo"]
-size = Vector2(64, 64)
+size = Vector2(192, 192)
 
 [node name="Spawner" type="Area2D" unique_id=964929055 groups=["spawners"]]
 script = ExtResource("1_y5mdg")
@@ -17,5 +17,4 @@ script = ExtResource("3_path_preview")
 texture = ExtResource("2_spawner_tex")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1839956020]
-visible = false
 shape = SubResource("RectangleShape2D_naouo")
