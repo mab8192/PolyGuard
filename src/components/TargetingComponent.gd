@@ -105,7 +105,7 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.nav and b_e.nav:
+				if a_e and b_e:
 					if not is_equal_approx(a_e.nav.remaining_distance, b_e.nav.remaining_distance):
 						return a_e.nav.remaining_distance < b_e.nav.remaining_distance
 				return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
@@ -114,7 +114,7 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.nav and b_e.nav:
+				if a_e and b_e:
 					if not is_equal_approx(a_e.nav.remaining_distance, b_e.nav.remaining_distance):
 						return a_e.nav.remaining_distance > b_e.nav.remaining_distance
 				return global_position.distance_squared_to(a.global_position) > global_position.distance_squared_to(b.global_position)
@@ -127,7 +127,7 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 					return d_a < d_b
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.nav and b_e.nav:
+				if a_e and b_e:
 					return a_e.nav.remaining_distance < b_e.nav.remaining_distance
 				return false
 			)
@@ -139,7 +139,7 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 					return d_a > d_b
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.nav and b_e.nav:
+				if a_e and b_e:
 					return a_e.nav.remaining_distance < b_e.nav.remaining_distance
 				return false
 			)
@@ -147,12 +147,11 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.health and b_e.health:
+				if a_e and b_e:
 					var a_hp = a_e.health.get_health()
 					var b_hp = b_e.health.get_health()
 					if not is_equal_approx(a_hp, b_hp):
 						return a_hp > b_hp
-				if a_e and b_e and a_e.nav and b_e.nav:
 					if not is_equal_approx(a_e.nav.remaining_distance, b_e.nav.remaining_distance):
 						return a_e.nav.remaining_distance < b_e.nav.remaining_distance
 				return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)
@@ -161,12 +160,11 @@ func _sort_candidates(candidates: Array[Node2D]) -> void:
 			candidates.sort_custom(func(a: Node2D, b: Node2D) -> bool:
 				var a_e = a as Enemy
 				var b_e = b as Enemy
-				if a_e and b_e and a_e.health and b_e.health:
+				if a_e and b_e:
 					var a_hp = a_e.health.get_health()
 					var b_hp = b_e.health.get_health()
 					if not is_equal_approx(a_hp, b_hp):
 						return a_hp < b_hp
-				if a_e and b_e and a_e.nav and b_e.nav:
 					if not is_equal_approx(a_e.nav.remaining_distance, b_e.nav.remaining_distance):
 						return a_e.nav.remaining_distance < b_e.nav.remaining_distance
 				return global_position.distance_squared_to(a.global_position) < global_position.distance_squared_to(b.global_position)

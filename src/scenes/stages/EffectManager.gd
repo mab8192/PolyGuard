@@ -17,9 +17,9 @@ func explosion(pos: Vector2, color: Color = Color.WHITE) -> void:
 	effect.emitting = true
 	effect.finished.connect(func(): effect.queue_free())
 
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.effects):
+	if GameManager.stage_root:
 		GameManager.stage_root.effects.add_child(effect)
-	elif effects_container and is_instance_valid(effects_container):
+	elif is_instance_valid(effects_container):
 		effects_container.add_child(effect)
 	else:
 		add_child(effect)
@@ -32,15 +32,15 @@ func siphon_burst(pos: Vector2) -> void:
 	effect.emitting = true
 	effect.finished.connect(func(): effect.queue_free())
 
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.effects):
+	if GameManager.stage_root:
 		GameManager.stage_root.effects.add_child(effect)
-	elif effects_container and is_instance_valid(effects_container):
+	elif is_instance_valid(effects_container):
 		effects_container.add_child(effect)
 	else:
 		add_child(effect)
 
 func _on_enemy_died(enemy: Enemy) -> void:
-	if enemy and enemy.effect_receiver and enemy.effect_receiver.get_energy_reward_multiplier() > 1.0:
+	if is_instance_valid(enemy) and enemy.effect_receiver.get_energy_reward_multiplier() > 1.0:
 		siphon_burst(enemy.global_position)
-	else:
+	elif is_instance_valid(enemy):
 		explosion(enemy.global_position)

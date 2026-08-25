@@ -54,9 +54,9 @@ func _on_loadout_pressed() -> void:
 	GameManager.load_view(GameManager.View.LOADOUT)
 
 func _on_dev_cheats_pressed() -> void:
-	if DevCheatMenu.instance and is_instance_valid(DevCheatMenu.instance):
+	if is_instance_valid(DevCheatMenu.instance):
 		DevCheatMenu.instance.open()
-	elif GameManager and GameManager.dev_cheat_menu and is_instance_valid(GameManager.dev_cheat_menu):
+	elif is_instance_valid(GameManager.dev_cheat_menu):
 		GameManager.dev_cheat_menu.open()
 
 func _on_main_menu_pressed() -> void:

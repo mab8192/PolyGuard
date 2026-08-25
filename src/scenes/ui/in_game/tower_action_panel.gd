@@ -34,26 +34,26 @@ func open(tower: Tower) -> void:
 		close()
 		return
 	
-	if _current_tower and is_instance_valid(_current_tower) and _current_tower.health:
+	if is_instance_valid(_current_tower) and _current_tower.health:
 		if _current_tower.health.health_changed.is_connected(_on_tower_health_changed):
 			_current_tower.health.health_changed.disconnect(_on_tower_health_changed)
 
 	_current_tower = tower
-	if _current_tower and _current_tower.health:
+	if _current_tower.health:
 		_current_tower.health.health_changed.connect(_on_tower_health_changed)
 
 	_update_ui()
 	show()
 
 func close() -> void:
-	if _current_tower and is_instance_valid(_current_tower) and _current_tower.health:
+	if is_instance_valid(_current_tower) and _current_tower.health:
 		if _current_tower.health.health_changed.is_connected(_on_tower_health_changed):
 			_current_tower.health.health_changed.disconnect(_on_tower_health_changed)
 	_current_tower = null
 	hide()
 
 func _update_ui() -> void:
-	if not _current_tower or not is_instance_valid(_current_tower) or not _current_tower.data:
+	if not is_instance_valid(_current_tower) or not _current_tower.data:
 		return
 	
 	var data: TowerData = _current_tower.data
@@ -99,7 +99,7 @@ func _update_ui() -> void:
 		repair_button.hide()
 
 func _on_strategy_pressed() -> void:
-	if _current_tower and is_instance_valid(_current_tower) and _current_tower.targeting:
+	if is_instance_valid(_current_tower) and _current_tower.targeting:
 		_current_tower.targeting.cycle_strategy(true)
 		_update_ui()
 

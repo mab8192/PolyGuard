@@ -124,7 +124,7 @@ func _find_tower_at(pos: Vector2) -> Tower:
 	)
 
 	# If the currently selected tower is in the candidates list and there are multiple, cycle to the next candidate
-	if selected_tower and is_instance_valid(selected_tower):
+	if is_instance_valid(selected_tower):
 		var current_idx: int = candidates.find(selected_tower)
 		if current_idx != -1 and candidates.size() > 1:
 			return candidates[(current_idx + 1) % candidates.size()]
@@ -142,29 +142,29 @@ func select_tower(tower: Tower) -> void:
 	if selected_tower == tower:
 		return
 	
-	if selected_tower and is_instance_valid(selected_tower):
+	if is_instance_valid(selected_tower):
 		selected_tower.is_selected = false
 	
 	selected_tower = tower
-	if selected_tower and is_instance_valid(selected_tower):
+	if is_instance_valid(selected_tower):
 		selected_tower.is_selected = true
 		SignalBus.tower_selected.emit(selected_tower)
 	else:
 		SignalBus.tower_deselected.emit()
 
 func deselect_tower() -> void:
-	if selected_tower and is_instance_valid(selected_tower):
+	if is_instance_valid(selected_tower):
 		selected_tower.is_selected = false
 	selected_tower = null
 	SignalBus.tower_deselected.emit()
 
 func get_selected_tower() -> Tower:
-	if selected_tower and is_instance_valid(selected_tower):
+	if is_instance_valid(selected_tower):
 		return selected_tower
 	return null
 
 func sell_selected_tower() -> void:
-	if not selected_tower or not is_instance_valid(selected_tower):
+	if not is_instance_valid(selected_tower):
 		return
 	
 	var tower_to_sell: Tower = selected_tower
@@ -176,7 +176,7 @@ func sell_selected_tower() -> void:
 	tower_to_sell._on_died()
 
 func repair_selected_tower() -> bool:
-	if not selected_tower or not is_instance_valid(selected_tower):
+	if not is_instance_valid(selected_tower):
 		return false
 	var cost: int = selected_tower.get_repair_cost()
 	if cost <= 0 or energy < cost:

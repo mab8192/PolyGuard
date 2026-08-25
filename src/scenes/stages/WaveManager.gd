@@ -214,7 +214,7 @@ func _on_wave_started() -> void:
 
 func _check_wave_completion() -> void:
 	var enemies_remaining: int = pending_enemies
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.enemies):
+	if GameManager.stage_root:
 		for e in GameManager.stage_root.enemies.get_children():
 			if is_instance_valid(e) and !e.is_queued_for_deletion():
 				enemies_remaining += 1
@@ -234,7 +234,7 @@ func _check_wave_completion() -> void:
 			var time_bonus = max(0, 5000 - int(stage_time) * 10)
 			var lives_bonus = stage.lives * 1000
 			stage.add_score(lives_bonus + time_bonus)
-			var stage_id = stage.data.stage_id if stage and stage.data else ""
+			var stage_id = stage.data.stage_id
 			SignalBus.stage_completed.emit(stage_id)
 		else:
 			# Preview upcoming indicators for the next wave during build phase

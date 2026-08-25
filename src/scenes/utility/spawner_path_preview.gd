@@ -103,7 +103,7 @@ func _update_materials_alpha() -> void:
 		mat.set_shader_parameter("fade_alpha", _fade_alpha)
 
 func is_active_for_preview() -> bool:
-	if not spawner or not is_instance_valid(spawner):
+	if not is_instance_valid(spawner):
 		return false
 	return spawner.is_active or spawner.indicator_state == Spawner.IndicatorState.WILL_ACTIVATE
 
@@ -111,7 +111,7 @@ func is_between_waves() -> bool:
 	if not _stage_is_active or _wave_is_active:
 		return false
 	var stage = GameManager.current_stage
-	if stage and is_instance_valid(stage):
+	if is_instance_valid(stage):
 		if not stage.is_stage_active or stage.wave_is_active:
 			return false
 	return true
@@ -124,7 +124,7 @@ func _update_target_visibility() -> void:
 
 func _update_stage_wave_state() -> void:
 	var stage = GameManager.current_stage
-	if stage and is_instance_valid(stage):
+	if is_instance_valid(stage):
 		_stage_is_active = stage.is_stage_active
 		_wave_is_active = stage.wave_is_active
 
@@ -161,7 +161,7 @@ func _get_target_exits() -> Array[Node2D]:
 	return fallback
 
 func _recalculate_paths() -> void:
-	if not is_inside_tree() or not spawner or not is_instance_valid(spawner):
+	if not is_inside_tree() or not is_instance_valid(spawner):
 		_clear_lines()
 		return
 

@@ -56,12 +56,16 @@ func apply(target: Node2D) -> void:
 
 	# Instant / Initial Damage
 	var total_initial: float = data.damage + data.initial_damage
-	if total_initial > 0.0 and target.health:
-		target.health.damage(total_initial, data.damage_type)
+	if total_initial > 0.0:
+		var health_comp = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
+		if health_comp:
+			health_comp.damage(total_initial, data.damage_type)
 
 	# Instant Heal
-	if data.heal_amount > 0.0 and target.health:
-		target.health.heal(data.heal_amount)
+	if data.heal_amount > 0.0:
+		var health_comp = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
+		if health_comp:
+			health_comp.heal(data.heal_amount)
 
 	# Displacement along recorded path history
 	if data.displace_distance > 0.0:
@@ -122,19 +126,23 @@ func tick(delta: float) -> void:
 	_elapsed_time_total += delta
 
 	# Damage Over Time (with optional lambda exponential decay)
-	if data and data.damage_per_second > 0.0 and is_instance_valid(_target) and _target.health:
-		var current_dps: float = data.damage_per_second
-		if data.lambda != 1.0 and data.lambda > 0.0:
-			current_dps *= pow(data.lambda, _elapsed_time_total)
-		var damage_amount: float = current_dps * delta
-		_target.health.damage(damage_amount, data.damage_type)
+	if data.damage_per_second > 0.0 and is_instance_valid(_target):
+		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		if health_comp:
+			var current_dps: float = data.damage_per_second
+			if data.lambda != 1.0 and data.lambda > 0.0:
+				current_dps *= pow(data.lambda, _elapsed_time_total)
+			var damage_amount: float = current_dps * delta
+			health_comp.damage(damage_amount, data.damage_type)
 
 	# Healing Over Time
-	if data and data.heal_per_second > 0.0 and is_instance_valid(_target) and _target.health:
-		var heal_amount_tick: float = data.heal_per_second * delta
-		_target.health.heal(heal_amount_tick)
+	if data.heal_per_second > 0.0 and is_instance_valid(_target):
+		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		if health_comp:
+			var heal_amount_tick: float = data.heal_per_second * delta
+			health_comp.heal(heal_amount_tick)
 
-	if data and data.duration != INF and _elapsed_time_counted >= data.duration:
+	if data.duration != INF and _elapsed_time_counted >= data.duration:
 		_counting_time = false
 		expired.emit()
 	
@@ -189,9 +197,9 @@ func _displace_enemy_along_path(enemy: Enemy, distance: float) -> void:
 	enemy.global_position = target_pos
 	if enemy.movement:
 		enemy.movement.stop()
-	if enemy.nav and enemy.nav.agent:
-		enemy.nav.agent.set_velocity(Vector2.ZERO)
-		enemy.nav.agent.target_position = enemy.nav.agent.target_position
+	if enemy.nav:
+		enemy.nav.stop()
+		enemy.nav.resume()
 
 func _spawn_warp_visual(enemy: Enemy, pos: Vector2) -> void:
 	if not is_instance_valid(enemy) or not enemy.get_parent():

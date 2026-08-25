@@ -207,11 +207,11 @@ func _update_hover_from_position(pos: Vector2) -> void:
 func _set_hovered_item(item: RadialMenuItem) -> void:
 	if _hovered_item == item:
 		return
-	if _hovered_item and is_instance_valid(_hovered_item):
+	if is_instance_valid(_hovered_item):
 		_hovered_item.set_highlighted(false)
 	
 	_hovered_item = item
-	if _hovered_item and is_instance_valid(_hovered_item):
+	if is_instance_valid(_hovered_item):
 		_hovered_item.set_highlighted(true)
 
 func _on_item_clicked(item: RadialMenuItem) -> void:

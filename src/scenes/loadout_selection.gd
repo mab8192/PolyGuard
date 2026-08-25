@@ -78,7 +78,7 @@ func _init_loadout() -> void:
 					if Registry.get_tower_id(t) == t_id:
 						matching_tower = t
 						break
-				if matching_tower and unlocked_towers.has(matching_tower) and not equipped_towers.has(matching_tower):
+				if matching_tower and not equipped_towers.has(matching_tower):
 					if equipped_towers.size() < max_loadout_size:
 						equipped_towers.append(matching_tower)
 	

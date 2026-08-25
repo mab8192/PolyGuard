@@ -172,7 +172,7 @@ func _on_died() -> void:
 	queue_free()
 	SignalBus.tower_destroyed.emit()
 	AudioManager.play_random_sfx(AudioManager.sfx_enemy_died)
-	if GameManager and GameManager.current_stage and GameManager.current_stage.effect_manager:
+	if GameManager.current_stage:
 		GameManager.current_stage.effect_manager.explosion(global_position)
 
 func _on_hit(_dmg: float) -> void:

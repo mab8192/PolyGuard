@@ -10,7 +10,7 @@ func _ready() -> void:
 		damage_component.hit.connect(explode)
 
 func explode(primary_target: Node2D = null) -> void:
-	if GameManager and GameManager.current_stage and GameManager.current_stage.effect_manager:
+	if GameManager.current_stage:
 		GameManager.current_stage.effect_manager.explosion(global_position, Color.DARK_RED)
 
 	var mask: int = damage_component.collision_mask if damage_component else 4

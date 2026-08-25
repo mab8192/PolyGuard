@@ -27,8 +27,7 @@ func set_ad_free(p_ad_free: bool) -> void:
 		return
 	_is_ad_free = p_ad_free
 	save_to_disk()
-	if AdManager and AdManager.has_signal("ads_enabled_changed"):
-		AdManager.ads_enabled_changed.emit(AdManager.are_ads_enabled())
+	AdManager.ads_enabled_changed.emit(AdManager.are_ads_enabled())
 
 func get_selected_loadout() -> Array[String]:
 	return _selected_loadout.duplicate()

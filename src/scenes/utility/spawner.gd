@@ -83,7 +83,7 @@ func set_indicator(state: IndicatorState) -> void:
 		return
 	indicator_state = state
 	_update_indicator_ui()
-	if path_preview and is_instance_valid(path_preview):
+	if is_instance_valid(path_preview):
 		path_preview.update_preview()
 
 func _update_indicator_ui() -> void:
@@ -232,7 +232,7 @@ func _instantiate_enemy(enemy_data: EnemyData, hp_mult: float = 1.0, speed_mult:
 	enemy.global_position = _get_spawn_point()
 	
 	# Add it to the scene tree
-	if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
+	if GameManager.stage_root:
 		GameManager.stage_root.enemies.add_child(enemy)
 	else:
 		add_child(enemy)

@@ -22,7 +22,7 @@ func setup(p_stage: Stage, p_wave_manager: WaveManager) -> void:
 	SignalBus.wave_started.connect(exit_placement_mode)
 
 func _process(_delta: float) -> void:
-	if preview_tower and is_instance_valid(preview_tower):
+	if is_instance_valid(preview_tower):
 		var valid: bool = can_place_preview()
 		preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
 
@@ -80,7 +80,7 @@ func can_preview_rotate() -> bool:
 	return is_in_placement_mode() and preview_tower.data != null and preview_tower.data.can_rotate and preview_tower.data.rotation_step_degrees > 0.0
 
 func exit_placement_mode() -> void:
-	if preview_tower and is_instance_valid(preview_tower):
+	if is_instance_valid(preview_tower):
 		preview_tower.queue_free()
 		preview_tower = null
 	is_dragging = false
@@ -89,7 +89,7 @@ func exit_placement_mode() -> void:
 		SignalBus.placement_mode_changed.emit(false)
 
 func is_in_placement_mode() -> bool:
-	return _is_placement_active and preview_tower != null and is_instance_valid(preview_tower)
+	return _is_placement_active and is_instance_valid(preview_tower)
 
 func get_preview_tower_position() -> Vector2:
 	if is_in_placement_mode():
@@ -97,7 +97,7 @@ func get_preview_tower_position() -> Vector2:
 	return Vector2.ZERO
 
 func can_place_preview() -> bool:
-	if not preview_tower or not is_instance_valid(preview_tower):
+	if not is_instance_valid(preview_tower):
 		return false
 
 	if stage and preview_tower.data and preview_tower.data.cost > stage.energy:
@@ -136,7 +136,7 @@ func can_place_preview() -> bool:
 	# 4. Check for overlap with active enemies
 	if preview_tower.collision_layer > 0:
 		var enemy_nodes: Array = []
-		if GameManager and GameManager.stage_root and GameManager.stage_root.enemies:
+		if GameManager.stage_root:
 			enemy_nodes = GameManager.stage_root.enemies.get_children()
 		else:
 			enemy_nodes = get_tree().get_nodes_in_group("enemies")

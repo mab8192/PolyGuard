@@ -1,6 +1,7 @@
 extends Node
 
 ## Signals
+@warning_ignore("unused_signal")
 signal ads_enabled_changed(is_enabled: bool)
 signal rewarded_ad_loaded()
 signal rewarded_ad_failed_to_load(error_message: String)
@@ -67,7 +68,7 @@ func is_paid_version() -> bool:
 		return true
 	if not ProjectSettings.get_setting("admob/general/enabled", true):
 		return true
-	if SaveManager and SaveManager.has_method("is_ad_free") and SaveManager.is_ad_free():
+	if SaveManager.is_ad_free():
 		return true
 	return false
 

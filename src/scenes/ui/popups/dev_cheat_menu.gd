@@ -216,8 +216,8 @@ func _cheat_kill_all_enemies() -> void:
 	var enemies = get_tree().get_nodes_in_group("enemies")
 	var count = 0
 	for enemy in enemies:
-		if is_instance_valid(enemy) and enemy.has_node("HealthComponent"):
-			var hc = enemy.get_node("HealthComponent") as HealthComponent
+		if is_instance_valid(enemy):
+			var hc = ComponentUtil.get_component(enemy, HealthComponent) as HealthComponent
 			if hc:
 				hc.damage(99999.0, AttackData.DamageType.MAGIC)
 				count += 1

@@ -24,7 +24,7 @@ func detonate() -> void:
 	set_physics_process(false)
 	
 	# Spawn visual explosion via stage EffectManager
-	if GameManager and GameManager.current_stage and GameManager.current_stage.effect_manager:
+	if GameManager.current_stage:
 		GameManager.current_stage.effect_manager.explosion(global_position, Color(1.0, 0.35, 0.15))
 	
 	var base_damage: float = attack.data.damage if (attack and attack.data) else EXPLOSION_DAMAGE

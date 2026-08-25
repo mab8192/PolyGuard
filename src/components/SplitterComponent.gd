@@ -9,7 +9,8 @@ func _ready() -> void:
 		push_error("Missing SplitterData! %s" % get_path())
 		return
 	
-	_health = ComponentUtil.get_component(owner, HealthComponent) as HealthComponent
+	var actor: Node2D = (owner if owner else get_parent()) as Node2D
+	_health = ComponentUtil.get_component(actor, HealthComponent) as HealthComponent
 	if !_health:
 		push_error("SplitterComponent requires an attached HealthComponent to function!")
 		return
@@ -19,32 +20,34 @@ func _ready() -> void:
 
 ## Split the owner into smaller copies of itself
 func split() -> void:
-	if not data or not is_instance_valid(owner):
+	var actor: Node2D = (owner if owner else get_parent()) as Node2D
+	if not data or not is_instance_valid(actor):
 		return
 
-	var spawn_pos: Vector2 = owner.global_position
-	var spawn_scale: Vector2 = owner.scale * 0.5
-	var enemy_data: EnemyData = (owner as Enemy).data if (owner is Enemy) else null
+	var spawn_pos: Vector2 = actor.global_position
+	var spawn_scale: Vector2 = actor.scale * 0.5
+	var enemy_data: EnemyData = (actor as Enemy).data if (actor is Enemy) else null
 	var split_data: SplitterData = data.duplicate(true)
-	var parent_node: Node = GameManager.stage_root.enemies if (GameManager.stage_root and GameManager.stage_root.enemies) else owner.get_parent()
+	var parent_node: Node = GameManager.stage_root.enemies if GameManager.stage_root else actor.get_parent()
 
 	SignalBus.enemy_split_pending.emit(split_data.number_of_copies)
 	_spawn_copies.call_deferred(spawn_pos, spawn_scale, enemy_data, split_data, parent_node)
 
 func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyData, split_data: SplitterData, parent_node: Node) -> void:
 	if not is_instance_valid(parent_node):
-		if GameManager.stage_root and GameManager.stage_root.enemies:
+		if GameManager.stage_root:
 			parent_node = GameManager.stage_root.enemies
 		else:
 			return
 
+	var actor: Node2D = (owner if owner else get_parent()) as Node2D
 	for i in range(split_data.number_of_copies):
 		var copy: Node2D = null
 
 		if enemy_data:
 			copy = enemy_data.create()
-		elif is_instance_valid(owner):
-			copy = owner.duplicate() as Node2D
+		elif is_instance_valid(actor):
+			copy = actor.duplicate() as Node2D
 
 		if not copy:
 			continue

@@ -355,7 +355,7 @@ func _pick_target() -> void:
 
 	if data and data.targets_towers:
 		_target_tower = _find_target_tower()
-		if not _target_tower or not is_instance_valid(_target_tower):
+		if not is_instance_valid(_target_tower):
 			_tower_path.clear()
 			_tower_path_idx = 0
 

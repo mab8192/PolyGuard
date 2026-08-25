@@ -30,8 +30,7 @@ func _ready() -> void:
 	SignalBus.tower_upgraded.connect(func(_t, _l): _refresh_all())
 	SignalBus.tower_choice_changed.connect(func(_t, _c): _refresh_all())
 	
-	if AdManager and AdManager.has_signal("ads_enabled_changed"):
-		AdManager.ads_enabled_changed.connect(func(_e): _update_action_buttons())
+	AdManager.ads_enabled_changed.connect(func(_e): _update_action_buttons())
 	
 	_update_action_buttons()
 	_populate_towers()

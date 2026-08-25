@@ -24,9 +24,9 @@ func _ready() -> void:
 	_setup_sliders()
 
 func _on_dev_cheats_pressed() -> void:
-	if DevCheatMenu.instance and is_instance_valid(DevCheatMenu.instance):
+	if is_instance_valid(DevCheatMenu.instance):
 		DevCheatMenu.instance.open()
-	elif GameManager and GameManager.dev_cheat_menu and is_instance_valid(GameManager.dev_cheat_menu):
+	elif is_instance_valid(GameManager.dev_cheat_menu):
 		GameManager.dev_cheat_menu.open()
 	else:
 		if not _cheat_menu:

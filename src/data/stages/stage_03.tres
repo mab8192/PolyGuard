@@ -10,5 +10,5 @@ stage_id = "stage_03"
 stage_name = "Stage 3"
 scene = ExtResource("3_scene")
 icon = ExtResource("1_icon")
-starting_energy = 750
+starting_energy = 700
 wave_data_file = "res://src/data/stages/waves/Stage3.json"

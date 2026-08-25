@@ -119,7 +119,7 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 			return
 		
 		# If currently playing this exact playlist and no specific different track was requested, do not interrupt
-		if _is_music_playing and _active_music_player and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist):
+		if _is_music_playing and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist):
 			if start_index < 0 or start_index == _current_track_index:
 				return
 		
@@ -130,7 +130,7 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 	elif music is AudioStream:
 		var stream: AudioStream = music
 		# If the active player is already playing this exact stream, do nothing
-		if _is_music_playing and _active_music_player and _active_music_player.playing and _active_music_player.stream == stream:
+		if _is_music_playing and _active_music_player.playing and _active_music_player.stream == stream:
 			return
 
 		# Preserve full list looping if a single stream belongs to one of the predefined playlists
@@ -144,7 +144,7 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 			target_playlist = [stream]
 			target_index = 0
 
-		if _is_music_playing and _active_music_player and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist) and _current_track_index == target_index:
+		if _is_music_playing and _active_music_player.playing and _are_playlists_equal(_current_playlist, target_playlist) and _current_track_index == target_index:
 			return
 	else:
 		return
@@ -152,7 +152,7 @@ func play_music(music: Variant, duration: float = -1.0, start_index: int = -1) -
 	var target_stream: AudioStream = target_playlist[target_index]
 	
 	# If already playing this playlist and the active track matches, do not interrupt
-	if _is_music_playing and _active_music_player and _active_music_player.playing and _active_music_player.stream == target_stream and _are_playlists_equal(_current_playlist, target_playlist):
+	if _is_music_playing and _active_music_player.playing and _active_music_player.stream == target_stream and _are_playlists_equal(_current_playlist, target_playlist):
 		_current_playlist = target_playlist
 		_current_track_index = target_index
 		return

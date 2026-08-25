@@ -250,7 +250,7 @@ func _remove_continuous_effect(body: Node2D) -> void:
 		for effect in _applied_effects[body]:
 			effect.remove_source(self)
 			if not effect.has_active_sources():
-				if effect.data and effect.data.remove_on_exit:
+				if effect.data.remove_on_exit:
 					if receiver:
 						receiver.remove_effect(effect)
 					removed_effect.emit(body)

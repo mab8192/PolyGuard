@@ -30,7 +30,7 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(delta: float) -> void:
-	if follow_target and target and is_instance_valid(target):
+	if follow_target and is_instance_valid(target):
 		direction = global_position.direction_to(target.global_position)
 
 	global_position += delta * direction * projectile_speed

@@ -94,13 +94,11 @@ func _spawn_projectile(target: Node2D) -> void:
 		push_error("Projectile scene must inherit from Projectile!")
 		return
 
-	var parent_node: Node = get_tree().current_scene
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.effects):
-		parent_node = GameManager.stage_root.effects
+	var parent_node: Node = GameManager.stage_root.effects if GameManager.stage_root else get_tree().current_scene
 	parent_node.add_child(proj)
 
 	var spawn_pt: Marker2D = get_attack_point(target)
-	if spawn_pt and is_instance_valid(spawn_pt):
+	if is_instance_valid(spawn_pt):
 		proj.global_position = spawn_pt.global_position
 	elif get_parent() is Node2D:
 		proj.global_position = (get_parent() as Node2D).global_position

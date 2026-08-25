@@ -50,7 +50,7 @@ func explode(primary_target: Node2D = null) -> void:
 	_exploded = true
 	
 	# Fiery explosion visual
-	if GameManager and GameManager.current_stage and GameManager.current_stage.effect_manager:
+	if GameManager.current_stage:
 		GameManager.current_stage.effect_manager.explosion(global_position, Color(1.0, 0.45, 0.1))
 
 	var mask: int = damage_component.collision_mask if damage_component else 4
@@ -101,9 +101,7 @@ func explode(primary_target: Node2D = null) -> void:
 	queue_free()
 
 func _spawn_burning_ground() -> void:
-	var effects_parent: Node = get_tree().current_scene
-	if GameManager and GameManager.stage_root and is_instance_valid(GameManager.stage_root.effects):
-		effects_parent = GameManager.stage_root.effects
+	var effects_parent: Node = GameManager.stage_root.effects if GameManager.stage_root else get_tree().current_scene
 
 	var fwd = direction if direction != Vector2.ZERO else Vector2.RIGHT
 	var offsets: Array[float] = [0.0]

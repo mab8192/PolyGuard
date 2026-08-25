@@ -48,13 +48,17 @@ func _ready() -> void:
 		# Hide until damaged
 		_health_bar.visible = false
 		
-		owner.add_child.call_deferred(_health_bar)
+		var actor: Node2D = (owner if owner else get_parent()) as Node2D
+		if is_instance_valid(actor):
+			actor.add_child.call_deferred(_health_bar)
 	
 	health_changed.connect(_on_health_changed)
 
 func _process(_delta: float) -> void:
-	if _health_bar and _health_bar.visible and is_instance_valid(owner):
-		_health_bar.global_position = owner.global_position + HEALTH_BAR_OFFSET - Vector2(16, 2)
+	if _health_bar and _health_bar.visible:
+		var actor: Node2D = (owner if owner else get_parent()) as Node2D
+		if is_instance_valid(actor):
+			_health_bar.global_position = actor.global_position + HEALTH_BAR_OFFSET - Vector2(16, 2)
 
 func _update_health_bar_color(health: float) -> void:
 	if not _fill_stylebox or not data or data.max_health <= 0.0:
