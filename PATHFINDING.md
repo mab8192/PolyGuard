@@ -68,3 +68,16 @@ Enemies select their size and navigation behavior directly via `NavigationData`:
 `FlowFieldVisualizer.gd` provides an in-game HUD overlay:
 - **F2 / F3**: Cycle display modes (`OFF`, `ARROWS`, `HEATMAP + ARROWS`, `HEATMAP ONLY`).
 - **F4**: Cycle layer (`PHYSICAL_SMALL`, `PHYSICAL_MEDIUM`, `PHYSICAL_LARGE`, `GHOST_SMALL`, `GHOST_MEDIUM`, `GHOST_LARGE`).
+
+---
+
+## 4. Local Boid Separation Steering
+
+To prevent unnatural clump compression in crowded choke points, `NavigationComponent` applies local repulsion forces with lateral corridor lane spreading.
+
+Separation is computed via a high-performance **2D Spatial Hash Grid**:
+- **$O(N)$ Construction**: Automatically constructed once per physics tick on demand (`Engine.get_physics_frames()`), bucketing registered active enemies into 48px cells (`SPATIAL_CELL_SIZE`).
+- **$O(1)$ Neighbor Sampling**: Each enemy queries only its 9 adjacent spatial buckets, testing against nearby units rather than performing global scene tree searches.
+- **Zero GC Churn**: Avoids `get_nodes_in_group` allocations and Variant marshalling overhead during the physics process.
+
+

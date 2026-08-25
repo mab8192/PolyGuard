@@ -23,6 +23,25 @@ var _stuck_timer: float = 0.0
 var _last_sample_pos: Vector2 = Vector2.ZERO
 var _sample_timer: float = 0.0
 
+# --- Static Spatial Grid Data Structures (O(N) bucketing) ---
+static var _active_components: Dictionary = {} # int (instance_id) -> NavigationComponent
+static var _spatial_grid: Dictionary = {} # Vector2i -> Array[NavigationComponent]
+static var _last_spatial_update_frame: int = -1
+const SPATIAL_CELL_SIZE: float = 48.0
+const INV_SPATIAL_CELL_SIZE: float = 1.0 / SPATIAL_CELL_SIZE
+
+var _cached_pos: Vector2 = Vector2.ZERO
+
+
+func _enter_tree() -> void:
+	_active_components[get_instance_id()] = self
+
+
+func _exit_tree() -> void:
+	_active_components.erase(get_instance_id())
+
+
+
 func stop() -> void:
 	is_active = false
 	_stuck_timer = 0.0
@@ -30,6 +49,7 @@ func stop() -> void:
 
 func resume() -> void:
 	is_active = true
+
 
 
 func _ready() -> void:
@@ -112,26 +132,70 @@ func _get_target_exit_index() -> int:
 	return 0
 
 
+static func _update_spatial_grid_if_needed() -> void:
+	var current_frame: int = Engine.get_physics_frames()
+	if _last_spatial_update_frame == current_frame:
+		return
+	_last_spatial_update_frame = current_frame
+	_spatial_grid.clear()
+
+	var dead_ids: Array[int] = []
+
+	for id: int in _active_components:
+		var comp: NavigationComponent = _active_components[id]
+		if not is_instance_valid(comp) or not comp.is_inside_tree():
+			dead_ids.append(id)
+			continue
+		if not comp.is_active or not is_instance_valid(comp._actor):
+			continue
+		if not comp.data or not comp.data.enable_separation:
+			continue
+
+		comp._cached_pos = comp._actor.global_position
+		var cx: int = int(floor(comp._cached_pos.x * INV_SPATIAL_CELL_SIZE))
+		var cy: int = int(floor(comp._cached_pos.y * INV_SPATIAL_CELL_SIZE))
+		var cell := Vector2i(cx, cy)
+		var bucket: Array = _spatial_grid.get(cell, [])
+		if bucket.is_empty():
+			_spatial_grid[cell] = bucket
+		bucket.append(comp)
+
+	for id: int in dead_ids:
+		_active_components.erase(id)
+
+
 func _compute_separation_vector() -> Vector2:
 	if not data or not data.enable_separation or data.separation_radius <= 0.0 or not is_instance_valid(_actor) or not _actor.is_inside_tree():
 		return Vector2.ZERO
 
+	_update_spatial_grid_if_needed()
+
 	var sep_vector: Vector2 = Vector2.ZERO
 	var actor_pos: Vector2 = _actor.global_position
-	var rad_sq: float = data.separation_radius * data.separation_radius
-	var my_id: int = _actor.get_instance_id()
+	var rad: float = data.separation_radius
+	var rad_sq: float = rad * rad
+	var inv_rad: float = 1.0 / rad
 
-	var enemies: Array[Node] = _actor.get_tree().get_nodes_in_group("enemies")
-	for node: Node in enemies:
-		if is_instance_valid(node) and node is Node2D and node.get_instance_id() != my_id:
-			var diff: Vector2 = actor_pos - (node as Node2D).global_position
-			var d2: float = diff.length_squared()
-			if d2 > 0.01 and d2 < rad_sq:
-				var dist: float = sqrt(d2)
-				var strength: float = 1.0 - (dist / data.separation_radius)
-				sep_vector += (diff / dist) * strength
+	var cx: int = int(floor(actor_pos.x * INV_SPATIAL_CELL_SIZE))
+	var cy: int = int(floor(actor_pos.y * INV_SPATIAL_CELL_SIZE))
+	var cell_range: int = int(ceil(rad * INV_SPATIAL_CELL_SIZE))
+
+	for dy in range(-cell_range, cell_range + 1):
+		for dx in range(-cell_range, cell_range + 1):
+			var cell := Vector2i(cx + dx, cy + dy)
+			var bucket: Array = _spatial_grid.get(cell, [])
+			for other: NavigationComponent in bucket:
+				if other == self:
+					continue
+				var diff: Vector2 = actor_pos - other._cached_pos
+				var d2: float = diff.length_squared()
+				if d2 > 0.01 and d2 < rad_sq:
+					var dist: float = sqrt(d2)
+					sep_vector += diff * ((1.0 / dist) - inv_rad)
 
 	return sep_vector
+
+
 
 
 func _physics_process(delta: float) -> void:
