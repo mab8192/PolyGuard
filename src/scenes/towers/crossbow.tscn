@@ -26,7 +26,8 @@ script = ExtResource("3_target")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionPolygon2D" parent="TargetingComponent" unique_id=2120966365]
-polygon = PackedVector2Array(0, 0, 288, -256, 424, -160, 500, 0, 424, 160, 288, 256)
+position = Vector2(-8, 0)
+polygon = PackedVector2Array(0, 0, 328, -320, 504, -168, 584, 0, 504, 168, 328, 320)
 
 [node name="AttackComponent" type="Node" parent="." unique_id=635266676]
 script = ExtResource("4_attack")

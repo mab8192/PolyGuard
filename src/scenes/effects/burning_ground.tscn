@@ -4,7 +4,7 @@
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="2_applier"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="3_applier_data"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_effect_data"]
-[ext_resource type="Resource" path="res://src/data/effects/CarpetBombBurnEffect.tres" id="5_burn_effect"]
+[ext_resource type="Resource" uid="uid://etxc8366mjqm" path="res://src/data/effects/CarpetBombBurnEffect.tres" id="5_burn_effect"]
 
 [sub_resource type="Resource" id="Resource_applier_data"]
 script = ExtResource("3_applier_data")

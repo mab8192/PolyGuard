@@ -6,14 +6,14 @@
         "count": 10.0,
         "delay": 0.5,
         "enemy_type": "grunt",
-        "interval": 1.0,
+        "interval": 1.4,
         "spawner_id": "Spawner"
       },
       {
         "count": 12.0,
         "delay": 2.0,
         "enemy_type": "light",
-        "interval": 0.7,
+        "interval": 0.9,
         "spawner_id": "Spawner"
       },
       {
@@ -127,7 +127,7 @@
         "spawner_id": "Spawner2"
       },
       {
-        "count": 1,
+        "count": 1.0,
         "delay": 6.0,
         "enemy_type": "sniper",
         "interval": 1.2,

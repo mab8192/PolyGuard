@@ -11,12 +11,10 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_target"]
 [ext_resource type="Texture2D" uid="uid://dnyp4uo8bfbhv" path="res://src/textures/towers/variants/crossbow_windlass.png" id="ext_var_quick_windlass"]
 [ext_resource type="Texture2D" uid="uid://bs5b6ul52jq08" path="res://src/textures/towers/variants/crossbow_spectral.png" id="ext_var_spectral_bolt"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/crossbow_spectral.png" id="ext_var_spectral_bolt"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/crossbow_windlass.png" id="ext_var_quick_windlass"]
 
 [sub_resource type="Resource" id="Resource_cb_attack"]
 script = ExtResource("2_attack")
-damage = 180.0
+damage = 240.0
 cooldown = 1.8
 projectile_scene = ExtResource("1_dcd4g")
 projectile_speed = 1000.0

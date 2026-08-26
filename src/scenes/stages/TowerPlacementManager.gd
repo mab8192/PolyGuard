@@ -400,12 +400,12 @@ func _has_solid_structure_behind(tower: Tower) -> bool:
 
 	for offset in sample_offsets:
 		var sample_point: Vector2 = tower.to_global(offset)
-		if not _is_solid_structure_at(sample_point):
+		if not _is_solid_structure_at(sample_point, tower):
 			return false
 
 	return true
 
-func _is_solid_structure_at(global_pos: Vector2) -> bool:
+func _is_solid_structure_at(global_pos: Vector2, ignore_tower: Tower = null) -> bool:
 	if not stage:
 		return false
 
@@ -420,7 +420,7 @@ func _is_solid_structure_at(global_pos: Vector2) -> bool:
 	# 2. Check placed solid towers/structures (collision_layer > 0)
 	if stage.towers:
 		for child in stage.towers.get_children():
-			if child is Tower and child != preview_tower and not child.is_preview and not child.is_queued_for_deletion():
+			if child is Tower and child != preview_tower and child != ignore_tower and not child.is_preview and not child.is_queued_for_deletion():
 				if child.collision_layer > 0:
 					var child_rect: Rect2 = _get_tower_global_rect(child)
 					if child_rect.grow(0.5).has_point(global_pos):

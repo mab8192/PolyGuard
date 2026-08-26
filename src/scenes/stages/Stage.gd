@@ -68,7 +68,7 @@ func _ready() -> void:
 	placement_manager.setup(self, wave_manager)
 	
 	SignalBus.tower_placed.connect(_rebuild_flow_fields)
-	SignalBus.tower_destroyed.connect(_rebuild_flow_fields)
+	SignalBus.tower_destroyed.connect(_on_tower_destroyed)
 	SignalBus.exits_updated.connect(_setup_flow_fields)
 	
 	_setup_flow_fields()
@@ -351,6 +351,33 @@ func _setup_flow_fields() -> void:
 					g_e_field.padding_added_cost = added_cost
 
 	_rebuild_flow_fields()
+
+var _is_cleaning_unsupported_traps: bool = false
+
+func _on_tower_destroyed() -> void:
+	if is_instance_valid(selected_tower) and selected_tower.is_queued_for_deletion():
+		deselect_tower()
+	_cleanup_unsupported_wall_traps()
+	_rebuild_flow_fields()
+
+func _cleanup_unsupported_wall_traps() -> void:
+	if _is_cleaning_unsupported_traps or not placement_manager or not towers:
+		return
+
+	_is_cleaning_unsupported_traps = true
+	var unsupported_traps: Array[Tower] = []
+	for child in towers.get_children():
+		if child is Tower and is_instance_valid(child) and not child.is_preview and not child.is_queued_for_deletion():
+			if child.data and child.data.requires_wall_behind:
+				if not placement_manager._has_solid_structure_behind(child):
+					unsupported_traps.append(child)
+
+	for trap in unsupported_traps:
+		if is_instance_valid(trap) and not trap.is_queued_for_deletion():
+			if selected_tower == trap:
+				deselect_tower()
+			trap._on_died()
+	_is_cleaning_unsupported_traps = false
 
 func _rebuild_flow_fields() -> void:
 	var exit_nodes := _get_stage_exits()

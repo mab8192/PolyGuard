@@ -11,8 +11,6 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="6_targeting"]
 [ext_resource type="Texture2D" uid="uid://bu6tythvv0fpb" path="res://src/textures/towers/variants/archer_tower_arcane.png" id="ext_var_arcane_infusion"]
 [ext_resource type="Texture2D" uid="uid://b8jq4vslydpxb" path="res://src/textures/towers/variants/archer_tower_piercer.png" id="ext_var_true_piercer"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/archer_tower_arcane.png" id="ext_var_arcane_infusion"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/archer_tower_piercer.png" id="ext_var_true_piercer"]
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("5_attack")

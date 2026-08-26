@@ -3,24 +3,24 @@
     "reward_energy": 260.0,
     "spawns": [
       {
-        "count": 14,
+        "count": 14.0,
         "delay": 0.5,
         "enemy_type": "grunt",
-        "interval": 0.9,
+        "interval": 1.2,
         "spawner_id": "Spawner"
       },
       {
-        "count": 8,
+        "count": 8.0,
         "delay": 2.0,
         "enemy_type": "light",
         "interval": 0.8,
         "spawner_id": "Spawner"
       },
       {
-        "count": 4.0,
+        "count": 5,
         "delay": 4.0,
         "enemy_type": "heavy",
-        "interval": 1.8,
+        "interval": 1.7,
         "spawner_id": "Spawner"
       }
     ],
