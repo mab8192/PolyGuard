@@ -114,6 +114,15 @@ func get_field_id() -> String:
 	return "%s_%s" % [prefix, size_str]
 
 
+func get_distance_field_id() -> String:
+	var prefix: String = "ghost" if (data and (data.nav_layer & 4) != 0) else "physical"
+	if _exits.size() > 1 and data and data.strategy != NavigationData.NavStrategy.CLOSEST:
+		var exit_idx: int = _get_target_exit_index()
+		return "%s_small_%d" % [prefix, exit_idx]
+
+	return "%s_small" % prefix
+
+
 func _get_target_exit_index() -> int:
 	if _exits.size() <= 1 or not data:
 		return 0
@@ -230,9 +239,11 @@ func _physics_process(delta: float) -> void:
 			if field and field.is_reachable(_actor.global_position):
 				_no_path = field.is_obstructed(_actor.global_position)
 				dir = field.query(_actor.global_position)
-				var cost_val: float = field.get_integration_cost(_actor.global_position)
+				var dist_field_id: String = get_distance_field_id()
+				var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != field_id else field
+				var cost_val: float = dist_field.get_integration_cost(_actor.global_position) if dist_field else float(FlowField.INTEGRATION_MAX)
 				if cost_val < float(FlowField.INTEGRATION_MAX):
-					remaining_distance = cost_val
+					remaining_distance = cost_val * float(dist_field.cell_size)
 				elif not _exits.is_empty() and is_instance_valid(_exits[0]):
 					remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
 			else:
@@ -270,9 +281,11 @@ func _physics_process(delta: float) -> void:
 					no_path_available.emit()
 					_no_path = true
 			dir = field.query(_actor.global_position)
-			var cost_val: float = field.get_integration_cost(_actor.global_position)
+			var dist_field_id: String = get_distance_field_id()
+			var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != field_id else field
+			var cost_val: float = dist_field.get_integration_cost(_actor.global_position) if dist_field else float(FlowField.INTEGRATION_MAX)
 			if cost_val < float(FlowField.INTEGRATION_MAX):
-				remaining_distance = cost_val
+				remaining_distance = cost_val * float(dist_field.cell_size)
 			elif not _exits.is_empty() and is_instance_valid(_exits[0]):
 				remaining_distance = _actor.global_position.distance_to(_exits[0].global_position)
 		else:

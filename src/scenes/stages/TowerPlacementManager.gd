@@ -100,18 +100,19 @@ func can_place_preview() -> bool:
 	if not is_instance_valid(preview_tower):
 		return false
 
+	# 1. Energy check
 	if stage and preview_tower.data and preview_tower.data.cost > stage.energy:
 		return false
 
 	var preview_rect: Rect2 = _get_tower_global_rect(preview_tower)
 
-	# 1. Map boundary check
+	# 2. Map boundary check
 	if stage:
 		var map_rect: Rect2 = stage.get_map_pixel_rect()
-		if map_rect.has_area() and not map_rect.encloses(preview_rect):
+		if map_rect.has_area() and not map_rect.grow(0.1).encloses(preview_rect):
 			return false
 
-		# 2. Tilemap terrain check (every cell covered by preview_rect must be walkable)
+		# 3. Tilemap terrain check (every cell covered by preview_rect must be walkable)
 		if stage.tiles:
 			var tiles = stage.tiles
 			var min_cell: Vector2i = tiles.local_to_map(tiles.to_local(preview_rect.position + Vector2(1, 1)))
@@ -124,16 +125,16 @@ func can_place_preview() -> bool:
 					if tile_data and tile_data.get_collision_polygons_count(0) > 0:
 						return false
 
-		# 3. Check for overlap with already placed towers
+		# 4. Check for overlap with already placed towers (use 0.1px inset to avoid edge-touching float precision false positives)
 		if stage.towers:
 			for child in stage.towers.get_children():
 				if child is Tower and child != preview_tower and not child.is_preview and not child.is_queued_for_deletion():
 					var child_rect: Rect2 = _get_tower_global_rect(child)
-					if preview_rect.intersects(child_rect):
+					if preview_rect.grow(-0.1).intersects(child_rect.grow(-0.1)):
 						if not _can_overlap_tower(preview_tower, child):
 							return false
 
-	# 4. Check for overlap with active enemies
+	# 5. Check for overlap with active enemies
 	if preview_tower.collision_layer > 0:
 		var enemy_nodes: Array = []
 		if GameManager.stage_root:
@@ -146,7 +147,7 @@ func can_place_preview() -> bool:
 				if preview_rect.grow(16.0).has_point(enemy.global_position):
 					return false
 
-	# 5. Check for overlap with spawners and exits
+	# 6. Check for overlap with spawners and exits
 	var spawner_and_exit_nodes: Array = []
 	spawner_and_exit_nodes.append_array(get_tree().get_nodes_in_group("spawners"))
 	spawner_and_exit_nodes.append_array(get_tree().get_nodes_in_group("exits"))
@@ -154,10 +155,10 @@ func can_place_preview() -> bool:
 	for obj in spawner_and_exit_nodes:
 		if obj is Node2D and is_instance_valid(obj) and not obj.is_queued_for_deletion():
 			var obj_rect: Rect2 = _get_tower_global_rect(obj)
-			if preview_rect.intersects(obj_rect):
+			if preview_rect.grow(-0.1).intersects(obj_rect.grow(-0.1)):
 				return false
 
-	# 6. Check solid structure backing requirement for wall traps
+	# 7. Check solid structure backing requirement for wall traps
 	if not _has_solid_structure_behind(preview_tower):
 		return false
 
@@ -310,11 +311,17 @@ func _get_tower_global_rect(node: Node2D) -> Rect2:
 					g_min.y = minf(g_min.y, g_pt.y)
 					g_max.x = maxf(g_max.x, g_pt.x)
 					g_max.y = maxf(g_max.y, g_pt.y)
+				g_min.x = snappedf(g_min.x, 0.001)
+				g_min.y = snappedf(g_min.y, 0.001)
+				g_max.x = snappedf(g_max.x, 0.001)
+				g_max.y = snappedf(g_max.y, 0.001)
 				return Rect2(g_min, g_max - g_min)
 			elif shape is CircleShape2D:
 				var r = shape.radius
 				var center = child.to_global(Vector2.ZERO)
-				return Rect2(center - Vector2(r, r), Vector2(r * 2, r * 2))
+				var g_min = Vector2(snappedf(center.x - r, 0.001), snappedf(center.y - r, 0.001))
+				var g_size = Vector2(snappedf(r * 2.0, 0.001), snappedf(r * 2.0, 0.001))
+				return Rect2(g_min, g_size)
 			elif shape is CapsuleShape2D:
 				var r = shape.radius
 				var h = shape.height
@@ -323,6 +330,10 @@ func _get_tower_global_rect(node: Node2D) -> Rect2:
 				var bot_center = child.to_global(Vector2(0, half_h))
 				var g_min = Vector2(minf(top_center.x, bot_center.x) - r, minf(top_center.y, bot_center.y) - r)
 				var g_max = Vector2(maxf(top_center.x, bot_center.x) + r, maxf(top_center.y, bot_center.y) + r)
+				g_min.x = snappedf(g_min.x, 0.001)
+				g_min.y = snappedf(g_min.y, 0.001)
+				g_max.x = snappedf(g_max.x, 0.001)
+				g_max.y = snappedf(g_max.y, 0.001)
 				return Rect2(g_min, g_max - g_min)
 		elif child is CollisionPolygon2D and child.polygon.size() > 0:
 			var g_min = child.to_global(child.polygon[0])
@@ -333,6 +344,10 @@ func _get_tower_global_rect(node: Node2D) -> Rect2:
 				g_min.y = minf(g_min.y, g_pt.y)
 				g_max.x = maxf(g_max.x, g_pt.x)
 				g_max.y = maxf(g_max.y, g_pt.y)
+			g_min.x = snappedf(g_min.x, 0.001)
+			g_min.y = snappedf(g_min.y, 0.001)
+			g_max.x = snappedf(g_max.x, 0.001)
+			g_max.y = snappedf(g_max.y, 0.001)
 			return Rect2(g_min, g_max - g_min)
 
 	var color_rect = node.find_child("ColorRect", false, false) as ColorRect
@@ -352,6 +367,10 @@ func _get_tower_global_rect(node: Node2D) -> Rect2:
 			g_min.y = minf(g_min.y, g_pt.y)
 			g_max.x = maxf(g_max.x, g_pt.x)
 			g_max.y = maxf(g_max.y, g_pt.y)
+		g_min.x = snappedf(g_min.x, 0.001)
+		g_min.y = snappedf(g_min.y, 0.001)
+		g_max.x = snappedf(g_max.x, 0.001)
+		g_max.y = snappedf(g_max.y, 0.001)
 		return Rect2(g_min, g_max - g_min)
 
 	var default_half = Vector2(GRID_SIZE, GRID_SIZE)
@@ -404,8 +423,7 @@ func _is_solid_structure_at(global_pos: Vector2) -> bool:
 			if child is Tower and child != preview_tower and not child.is_preview and not child.is_queued_for_deletion():
 				if child.collision_layer > 0:
 					var child_rect: Rect2 = _get_tower_global_rect(child)
-					if child_rect.has_point(global_pos):
+					if child_rect.grow(0.5).has_point(global_pos):
 						return true
 
 	return false
-

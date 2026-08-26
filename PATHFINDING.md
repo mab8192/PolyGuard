@@ -47,19 +47,23 @@ The pathfinding system is strictly separated into two layers:
 
 ---
 
-## 2. Size Tiers & Multi-Resolution Clearance
+## 2. Size Tiers, Clearance Dilation & Targeting Distance
 
-Different enemy units have varying physical footprints. To prevent large units from attempting to squeeze through narrow 1-tile bottlenecks, `Stage.gd` generates **three separate multi-resolution cell sizes** for both **Physical** and **Ghost** enemy types:
+Different enemy units have varying physical footprints. `Stage.gd` generates tier-specific flow fields on a unified 16px grid with soft obstacle clearance dilation:
 
-| Size Class | Pixel Width / Footprint | Grid Cell Size | Applicable Units | Navigation Behavior |
-| :--- | :--- | :--- | :--- | :--- |
-| **Small** | `< 16px` | 16px | Light, Speeder, Light Ghost | Navigates through 1-tile gaps and narrow passageways. |
-| **Medium** | `16px – 32px` | 32px | Grunt, Heavy, Tank, Bomber, Healer, Booster, Sniper, Ghost, Heavy Ghost | Requires at least a 2-cell opening; 1-tile pinches are impassable. |
-| **Large** | `32px – 64px` | 64px | Citadel, Bosses | Requires wide corridors (>= 64px); rejects 1-tile and 2-tile pinches. |
+| Size Class | Pixel Footprint | Padding Radius | Added Wall Penalty | Applicable Units | Navigation Behavior |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **Small** | `< 16px` | 0 cells | 0.0 | Light, Speeder, Light Ghost | Navigates tightly through narrow 1-tile passages without clearance penalty. |
+| **Medium** | `16px – 32px` | 1 cell | 4.0 | Grunt, Heavy, Tank, Bomber, Healer, Booster, Sniper, Ghost, Heavy Ghost | Softly steers away from walls toward the center of corridors. |
+| **Large** | `32px – 64px` | 2 cells | 8.0 | Citadel, Bosses | Strongly avoids narrow corridors and hugging obstacle edges. |
 
 Enemies select their size and navigation behavior directly via `NavigationData`:
 - `size`: `AgentSize.SMALL`, `AgentSize.MEDIUM`, or `AgentSize.LARGE`
 - `nav_layer`: Layer flags (e.g. `nav_layer & 4 != 0` for Ghost units)
+
+### Decoupled Steering vs. Distance Queries
+- **Steering (`field.query`)**: Units query their respective tier field (`physical_medium`, `physical_large`, etc.) to steer with smooth clearance dilation around walls and towers.
+- **Progress & Distance (`dist_field.get_integration_cost`)**: Units query the **unpadded baseline field** (`physical_small` or `ghost_small`) scaled by `cell_size` in world pixels. This prevents clearance dilation penalties from inflating the remaining distance of medium/large enemies, ensuring towers targeting `FIRST` or `LAST` compare true topological distance to the exit across all size classes with zero backup pathfinding overhead.
 
 ---
 
