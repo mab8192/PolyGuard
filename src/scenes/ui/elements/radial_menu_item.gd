@@ -23,6 +23,7 @@ signal item_clicked(item: RadialMenuItem)
 		_update_positions()
 
 var data: Variant = null
+var cost: int = -1
 var is_highlighted: bool = false
 var is_enabled: bool = true
 
@@ -44,6 +45,7 @@ func _ready() -> void:
 
 func setup(item_data: Dictionary) -> void:
 	data = item_data.get("payload", item_data)
+	cost = item_data.get("cost", -1)
 	
 	var title_text: String = item_data.get("title", item_data.get("name", ""))
 	var icon_tex: Texture2D = item_data.get("icon", null)
@@ -59,7 +61,6 @@ func setup(item_data: Dictionary) -> void:
 		# Fallback if no texture provided
 		icon_rect.texture = null
 	
-	var cost: int = item_data.get("cost", -1)
 	if cost >= 0 and cost_label and cost_badge:
 		cost_label.text = "%d" % cost
 		cost_label.modulate = Color(0.22, 0.92, 1.0, 1.0) if is_enabled else Color(1.0, 0.45, 0.45)
@@ -69,6 +70,16 @@ func setup(item_data: Dictionary) -> void:
 	
 	modulate = Color.WHITE if is_enabled else Color(0.5, 0.5, 0.5, 0.6)
 	_update_positions()
+
+func set_item_enabled(enabled: bool) -> void:
+	if is_enabled == enabled:
+		return
+	is_enabled = enabled
+	if cost >= 0 and cost_label:
+		cost_label.modulate = Color(0.22, 0.92, 1.0, 1.0) if is_enabled else Color(1.0, 0.45, 0.45)
+	modulate = Color.WHITE if is_enabled else Color(0.5, 0.5, 0.5, 0.6)
+	if not is_enabled and is_highlighted:
+		set_highlighted(false)
 
 func set_highlighted(highlight: bool) -> void:
 	if is_highlighted == highlight:

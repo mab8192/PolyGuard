@@ -27,9 +27,14 @@ func _ready() -> void:
 	rotate_button.pressed.connect(_on_rotate_placement_pressed)
 	confirm_button.pressed.connect(_on_confirm_placement_pressed)
 	SignalBus.placement_mode_changed.connect(_on_placement_mode_changed)
+	SignalBus.energy_changed.connect(_on_energy_changed)
 	
 	SignalBus.wave_started.connect(func(): next_wave_button.hide())
 	SignalBus.wave_completed.connect(func(): next_wave_button.show())
+
+func _on_energy_changed(energy: int) -> void:
+	if radial_menu and radial_menu.is_open():
+		radial_menu.update_item_enabled_by_cost(energy)
 
 func _process(_delta: float) -> void:
 	if not placement_buttons.visible:

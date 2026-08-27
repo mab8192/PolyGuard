@@ -50,6 +50,17 @@ func _ready() -> void:
 func is_open() -> bool:
 	return _is_open
 
+func update_item_enabled_by_cost(current_energy: int) -> void:
+	for item in _items:
+		if is_instance_valid(item) and item.cost >= 0:
+			item.set_item_enabled(current_energy >= item.cost)
+	
+	if _hovered_item and not _hovered_item.is_enabled:
+		_set_hovered_item(null)
+	
+	if _is_open:
+		_update_hover_from_position(get_global_mouse_position())
+
 func open(item_data_list: Array, center_global_pos: Vector2) -> void:
 	_center_pos = center_global_pos
 	_clear_items()
