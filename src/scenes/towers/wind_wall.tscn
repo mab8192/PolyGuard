@@ -6,7 +6,7 @@
 [ext_resource type="Texture2D" uid="uid://bd1gij6sv1r3h" path="res://src/textures/towers/wind_wall.png" id="4_texture"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(16, 64)
+size = Vector2(8, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
 size = Vector2(184, 64)
@@ -21,7 +21,7 @@ collision_mask = 0
 script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683299102]
-position = Vector2(-24, 0)
+position = Vector2(-28, 0)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=759999103]
@@ -60,3 +60,6 @@ initial_velocity_max = 380.0
 scale_amount_min = 2.5
 scale_amount_max = 4.5
 color_ramp = SubResource("Gradient_gust")
+
+[node name="Marker2D" type="Marker2D" parent="." unique_id=533513178]
+position = Vector2(-24, 0)

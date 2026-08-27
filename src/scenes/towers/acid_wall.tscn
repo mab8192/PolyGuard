@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://d2y4y1vv1g2xp" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/stop.png" id="5_particle"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wall"]
-size = Vector2(16, 64)
+size = Vector2(8, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_area"]
 size = Vector2(184, 64)
@@ -26,7 +26,7 @@ collision_mask = 0
 script = ExtResource("1_script")
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683299202]
-position = Vector2(-24, 0)
+position = Vector2(-28, 0)
 shape = SubResource("RectangleShape2D_wall")
 
 [node name="HealthComponent" type="Node" parent="." unique_id=759999203]
@@ -70,3 +70,6 @@ scale_amount_min = 0.25
 scale_amount_max = 0.55
 scale_amount_curve = SubResource("Curve_acid")
 color_ramp = SubResource("Gradient_acid")
+
+[node name="Marker2D" type="Marker2D" parent="." unique_id=1570124766]
+position = Vector2(-24, 0)
