@@ -9,36 +9,35 @@
 [ext_resource type="PackedScene" uid="uid://cvnxnh3reoedw" path="res://src/scenes/towers/arrow_wall.tscn" id="6_megk3"]
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="7_rakto"]
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="8_im5y4"]
-[ext_resource type="Texture2D" uid="uid://ccfd3lujxywlq" path="res://src/textures/towers/variants/arrow_wall_arcane.png" id="ext_var_arcane_infusion"]
-[ext_resource type="Texture2D" uid="uid://cn6damlq645pv" path="res://src/textures/towers/variants/arrow_wall_piercer.png" id="ext_var_true_piercer"]
+[ext_resource type="Texture2D" uid="uid://bwpk53e3sdbjx" path="res://src/textures/towers/variants/arrow_wall_heavy_draw.png" id="ext_var_heavy_draw"]
+[ext_resource type="Texture2D" uid="uid://hp5qknodhfvp" path="res://src/textures/towers/variants/arrow_wall_murder_holes.png" id="ext_var_murder_holes"]
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_ik266")
-damage = 25.0
-cooldown = 0.2
+damage = 18.0
+cooldown = 0.3
 projectile_scene = ExtResource("1_megk3")
 projectile_speed = 1000.0
 projectile_follow_target = false
 
 [sub_resource type="Resource" id="Resource_choice_arcane"]
 script = ExtResource("3_77e18")
-id = "arcane_infusion"
-title = "Arcane Infusion"
-description = "Converts arrows to Magic Damage and allows this tower to target ghost-class enemies."
-has_damage_type_override = true
-damage_type_override = 1
-has_targeting_mask_override = true
-icon = ExtResource("ext_var_arcane_infusion")
+id = "murder_holes"
+title = "Murder Holes"
+description = "Adds an extra hole in the wall for arrows to fire through."
+cooldown_multiplier = 1.1
+extra_targets = 1
+icon = ExtResource("ext_var_murder_holes")
 
 [sub_resource type="Resource" id="Resource_choice_true"]
 script = ExtResource("3_77e18")
-id = "true_piercer"
-title = "True Piercer"
-description = "Converts arrows to True Damage (bypasses armor) with +10% attack speed."
-has_damage_type_override = true
-damage_type_override = 2
-cooldown_multiplier = 0.9
-icon = ExtResource("ext_var_true_piercer")
+id = "heavy_draw"
+title = "Heavy Draw"
+description = "Increases damage per shot substantially with an increase in cooldown to match."
+strength_multiplier = 1.4
+cooldown_multiplier = 1.3
+extra_targets = -1
+icon = ExtResource("ext_var_heavy_draw")
 
 [sub_resource type="Resource" id="Resource_k6tlf"]
 script = ExtResource("4_nkuh4")

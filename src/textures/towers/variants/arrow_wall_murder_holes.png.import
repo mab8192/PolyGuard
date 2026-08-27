@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://cn6damlq645pv"
-path="res://.godot/imported/arrow_wall_piercer.png-e0177068525e1c369e6a2f9eb5a5280f.ctex"
+uid="uid://hp5qknodhfvp"
+path="res://.godot/imported/arrow_wall_murder_holes.png-9effead843e5e97727819aa51e8b37b1.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/towers/variants/arrow_wall_piercer.png"
-dest_files=["res://.godot/imported/arrow_wall_piercer.png-e0177068525e1c369e6a2f9eb5a5280f.ctex"]
+source_file="res://src/textures/towers/variants/arrow_wall_murder_holes.png"
+dest_files=["res://.godot/imported/arrow_wall_murder_holes.png-9effead843e5e97727819aa51e8b37b1.ctex"]
 
 [params]
 

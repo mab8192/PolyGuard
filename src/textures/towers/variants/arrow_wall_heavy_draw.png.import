@@ -2,16 +2,16 @@
 
 importer="texture"
 type="CompressedTexture2D"
-uid="uid://ccfd3lujxywlq"
-path="res://.godot/imported/arrow_wall_arcane.png-d81b034844b247dc286f055b1d91d0a3.ctex"
+uid="uid://bwpk53e3sdbjx"
+path="res://.godot/imported/arrow_wall_heavy_draw.png-a5607e3f5cfc6010223ca312e61fe7e9.ctex"
 metadata={
 "vram_texture": false
 }
 
 [deps]
 
-source_file="res://src/textures/towers/variants/arrow_wall_arcane.png"
-dest_files=["res://.godot/imported/arrow_wall_arcane.png-d81b034844b247dc286f055b1d91d0a3.ctex"]
+source_file="res://src/textures/towers/variants/arrow_wall_heavy_draw.png"
+dest_files=["res://.godot/imported/arrow_wall_heavy_draw.png-a5607e3f5cfc6010223ca312e61fe7e9.ctex"]
 
 [params]
 

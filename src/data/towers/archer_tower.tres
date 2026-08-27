@@ -33,11 +33,11 @@ icon = ExtResource("ext_var_arcane_infusion")
 script = ExtResource("1_choice")
 id = "true_piercer"
 title = "True Piercer"
-description = "Converts arrows to True Damage (bypasses armor) with an additional +10% attack speed."
+description = "Converts arrows to True Damage (bypasses armor) with a minor base damage reduction. Excels at taking down heaviliy-armored enemies but can be easily overwhelmed by swarms of smaller enemies."
 unlock_cost = 400
 has_damage_type_override = true
 damage_type_override = 2
-cooldown_multiplier = 0.9
+strength_multiplier = 0.85
 icon = ExtResource("ext_var_true_piercer")
 
 [sub_resource type="Resource" id="Resource_rcoxi"]

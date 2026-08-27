@@ -14,8 +14,8 @@ MAPPINGS = {
         "true_piercer": "res://src/textures/towers/variants/archer_tower_piercer.png"
     },
     "arrow_wall.tres": {
-        "arcane_infusion": "res://src/textures/towers/variants/arrow_wall_arcane.png",
-        "true_piercer": "res://src/textures/towers/variants/arrow_wall_piercer.png"
+        "murder_holes": "res://src/textures/towers/variants/arrow_wall_murder_holes.png",
+        "heavy_draw": "res://src/textures/towers/variants/arrow_wall_heavy_draw.png"
     },
     "wind_wall.tres": {
         "hurricane_force": "res://src/textures/towers/variants/wind_wall_tempest.png",

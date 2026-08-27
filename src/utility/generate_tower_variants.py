@@ -145,116 +145,126 @@ def gen_archer_piercer():
 # 2. ARROW WALL VARIANTS
 # =========================================================================
 
-def gen_arrow_wall_arcane():
-    """16x64 Arcane Arrow Wall: violet wood planks, brackets with purple gems, glowing arcane arrow slits."""
+def gen_arrow_wall_murder_holes():
+    """16x64 Arrow Wall - Murder Holes: 5 arrow embrasures with loaded arrows for multi-target volley."""
     width, height, s = 16, 64, 8
     sw, sh = width * s, height * s
     img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    c_stone_dark = (20, 22, 34, 255)
-    c_stone_mid = (36, 40, 60, 255)
-    c_wood_dark = (40, 22, 60, 255)
-    c_wood_mid = (75, 40, 105, 255)
-    c_metal = (50, 55, 80, 255)
-    c_cyan = (0, 235, 255, 255)
-    c_purple = (185, 55, 255, 255)
-    c_bright = (230, 250, 255, 255)
+    c_stone_dark = (24, 28, 36, 255)
+    c_stone_mid = (42, 50, 62, 255)
+    c_wood_dark = (85, 55, 32, 255)
+    c_wood_mid = (135, 88, 50, 255)
+    c_wood_light = (175, 115, 70, 255)
+    c_metal = (55, 62, 75, 255)
+    c_gold = (245, 190, 50, 255)
+    c_arrow_white = (240, 245, 255, 255)
 
     # 1. Outer stone frame
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(12, 14, 22, 255), width=int(1.2*s))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(1.2 * s))
     draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_wood_mid)
 
     # Wood plank grain lines
-    for dy in [8*s, 16*s, 24*s, 32*s, 40*s, 48*s, 56*s]:
-        draw.line([2*s, dy, 14*s, dy], fill=c_wood_dark, width=int(0.8*s))
+    for dy in [8 * s, 16 * s, 24 * s, 32 * s, 40 * s, 48 * s, 56 * s]:
+        draw.line([1.5 * s, dy, sw - 1 - 1.5 * s, dy], fill=c_wood_dark, width=int(0.8 * s))
 
     # Left reinforced stone spine
-    draw.rectangle([1.5*s, 3*s, 4.5*s, 61*s], fill=c_stone_mid, outline=c_stone_dark, width=int(0.8*s))
+    draw.rectangle([1.5 * s, 2 * s, 4.5 * s, sh - 1 - 2 * s], fill=c_stone_mid, outline=c_stone_dark, width=int(0.8 * s))
 
-    # Metal brackets with arcane gems
-    for bky in [16*s, 32*s, 48*s]:
-        draw.rectangle([1.5*s, bky - 1.5*s, 14.5*s, bky + 1.5*s], fill=c_metal, outline=c_stone_dark, width=int(0.8*s))
-        draw.ellipse([3*s, bky - 0.8*s, 4.5*s, bky + 0.8*s], fill=c_cyan)
-        draw.ellipse([11.5*s, bky - 0.8*s, 13*s, bky + 0.8*s], fill=c_purple)
+    # Metal reinforcement brackets
+    for bky in [12.5 * s, 25.5 * s, 38.5 * s, 51.5 * s]:
+        draw.rectangle([1.5 * s, bky - 1.2 * s, sw - 1 - 1.5 * s, bky + 1.2 * s], fill=c_metal, outline=c_stone_dark, width=int(0.8 * s))
+        draw.ellipse([2.5 * s, bky - 0.7 * s, 4.2 * s, bky + 0.7 * s], fill=c_gold)
+        draw.ellipse([11.5 * s, bky - 0.7 * s, 13.2 * s, bky + 0.7 * s], fill=c_gold)
 
-    # 4 Arrow Slits
-    for sy in [9*s, 24*s, 40*s, 56*s]:
+    # 5 Murder Holes / Arrow Slits
+    slot_centers = [6.5 * s, 19.0 * s, 32.0 * s, 45.0 * s, 57.5 * s]
+    for sy in slot_centers:
         slit_pts = [
-            (5.5*s, sy - 3.2*s),
-            (14.5*s, sy - 1.8*s),
-            (15*s, sy),
-            (14.5*s, sy + 1.8*s),
-            (5.5*s, sy + 3.2*s),
-            (7*s, sy)
+            (5.5 * s, sy - 2.6 * s),
+            (14.5 * s, sy - 1.4 * s),
+            (15.0 * s, sy),
+            (14.5 * s, sy + 1.4 * s),
+            (5.5 * s, sy + 2.6 * s),
+            (6.8 * s, sy),
         ]
-        draw.polygon(slit_pts, fill=c_stone_dark, outline=c_purple, width=int(0.8*s))
-        draw.line([(6*s, sy), (13.5*s, sy)], fill=c_cyan, width=int(1.4*s))
+        draw.polygon(slit_pts, fill=c_stone_dark, outline=c_metal, width=int(0.8 * s))
+        
+        # Arrow shaft & head
+        draw.line([(5.5 * s, sy), (13.5 * s, sy)], fill=c_wood_light, width=int(1.1 * s))
         arrow_tip = [
-            (10*s, sy - 1.8*s),
-            (15.2*s, sy),
-            (10*s, sy + 1.8*s),
-            (11*s, sy)
+            (10.0 * s, sy - 1.5 * s),
+            (15.2 * s, sy),
+            (10.0 * s, sy + 1.5 * s),
+            (11.0 * s, sy),
         ]
-        draw.polygon(arrow_tip, fill=c_bright, outline=c_purple, width=int(0.6*s))
+        draw.polygon(arrow_tip, fill=c_arrow_white, outline=c_stone_dark, width=int(0.6 * s))
+        draw.line([(5.5 * s, sy - 0.8 * s), (5.5 * s, sy + 0.8 * s)], fill=c_gold, width=int(0.8 * s))
 
-    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "arrow_wall_arcane.png"), "arrow_wall_arcane")
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "arrow_wall_murder_holes.png"), "arrow_wall_murder_holes")
 
-def gen_arrow_wall_piercer():
-    """16x64 Piercer Arrow Wall: colors match Archer Tower Piercer with dark red stone, crimson wood deck, gold rivets, and steel/crimson broadheads."""
+def gen_arrow_wall_heavy_draw():
+    """16x64 Arrow Wall - Heavy Draw: 3 massive heavy-caliber ballista quarrels with reinforced steel plating."""
     width, height, s = 16, 64, 8
     sw, sh = width * s, height * s
     img = Image.new("RGBA", (sw, sh), (0, 0, 0, 0))
     draw = ImageDraw.Draw(img)
 
-    c_stone_dark = (28, 20, 20, 255)
-    c_stone_mid = (50, 36, 36, 255)
-    c_wood_dark = (40, 22, 22, 255)
-    c_wood_mid = (75, 38, 38, 255)
-    c_metal = (60, 48, 48, 255)
-    c_crimson = (245, 40, 40, 255)
-    c_gold = (255, 200, 40, 255)
-    c_steel = (250, 250, 255, 255)
+    c_stone_dark = (20, 22, 28, 255)
+    c_stone_mid = (36, 42, 52, 255)
+    c_wood_dark = (70, 42, 24, 255)
+    c_wood_mid = (115, 72, 42, 255)
+    c_iron_plate = (65, 75, 92, 255)
+    c_iron_bright = (140, 160, 190, 255)
+    c_bronze = (210, 155, 45, 255)
+    c_steel = (245, 250, 255, 255)
+    c_steel_dark = (100, 115, 135, 255)
 
-    # 1. Outer red-stone frame
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(18, 12, 12, 255), width=int(1.2*s))
+    # 1. Heavy armored stone/iron casing
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(12, 14, 18, 255), width=int(1.2 * s))
     draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_wood_mid)
 
-    # Wood plank grain lines
-    for dy in [8*s, 16*s, 24*s, 32*s, 40*s, 48*s, 56*s]:
-        draw.line([2*s, dy, 14*s, dy], fill=c_wood_dark, width=int(0.8*s))
+    # Thick heavy iron backing spine
+    draw.rectangle([1.5 * s, 2 * s, 5.5 * s, sh - 1 - 2 * s], fill=c_stone_mid, outline=c_stone_dark, width=int(1.0 * s))
+    draw.line([(3.5 * s, 3 * s), (3.5 * s, sh - 1 - 3 * s)], fill=c_bronze, width=int(1.2 * s))
 
-    # Left reinforced spine
-    draw.rectangle([1.5*s, 3*s, 4.5*s, 61*s], fill=c_stone_mid, outline=c_stone_dark, width=int(0.8*s))
+    # Heavy reinforcement armor plates & bronze torsion winches
+    for bky in [4 * s, 21 * s, 43 * s, 60 * s]:
+        draw.rectangle([1.5 * s, bky - 2.0 * s, sw - 1 - 1.5 * s, bky + 2.0 * s], fill=c_iron_plate, outline=c_stone_dark, width=int(1.0 * s))
+        draw.ellipse([2.5 * s, bky - 1.2 * s, 4.8 * s, bky + 1.2 * s], fill=c_bronze, outline=c_stone_dark, width=int(0.6 * s))
+        draw.ellipse([11.2 * s, bky - 1.2 * s, 13.5 * s, bky + 1.2 * s], fill=c_bronze, outline=c_stone_dark, width=int(0.6 * s))
 
-    # Metal reinforcement brackets with gold rivets
-    for bky in [16*s, 32*s, 48*s]:
-        draw.rectangle([1.5*s, bky - 1.5*s, 14.5*s, bky + 1.5*s], fill=c_metal, outline=c_stone_dark, width=int(0.8*s))
-        draw.ellipse([3*s, bky - 0.8*s, 4.5*s, bky + 0.8*s], fill=c_gold)
-        draw.ellipse([11.5*s, bky - 0.8*s, 13*s, bky + 0.8*s], fill=c_gold)
-
-    # 4 Piercer Arrow Slits
-    for sy in [9*s, 24*s, 40*s, 56*s]:
-        slit_pts = [
-            (5.5*s, sy - 3.2*s),
-            (14.5*s, sy - 1.8*s),
-            (15*s, sy),
-            (14.5*s, sy + 1.8*s),
-            (5.5*s, sy + 3.2*s),
-            (7*s, sy)
+    # 3 Heavy Reinforced Ballista Ports
+    slot_centers = [12.5 * s, 32.0 * s, 51.5 * s]
+    for sy in slot_centers:
+        # Massive reinforced steel mantlet
+        port_pts = [
+            (5.0 * s, sy - 4.5 * s),
+            (14.5 * s, sy - 2.5 * s),
+            (15.2 * s, sy),
+            (14.5 * s, sy + 2.5 * s),
+            (5.0 * s, sy + 4.5 * s),
+            (6.5 * s, sy),
         ]
-        draw.polygon(slit_pts, fill=c_stone_dark, outline=c_gold, width=int(0.8*s))
-        draw.line([(6*s, sy), (13.5*s, sy)], fill=c_gold, width=int(1.4*s))
-        arrow_tip = [
-            (10*s, sy - 1.8*s),
-            (15.2*s, sy),
-            (10*s, sy + 1.8*s),
-            (11*s, sy)
-        ]
-        draw.polygon(arrow_tip, fill=c_crimson, outline=c_steel, width=int(0.7*s))
-        draw.line([(6*s, sy - 1*s), (6*s, sy + 1*s)], fill=c_gold, width=int(0.8*s))
+        draw.polygon(port_pts, fill=c_stone_dark, outline=c_bronze, width=int(1.0 * s))
+        
+        # Heavy steel guide rail & tension cable
+        draw.line([(5.5 * s, sy), (13.5 * s, sy)], fill=c_iron_bright, width=int(2.2 * s))
+        draw.line([(5.5 * s, sy - 2.0 * s), (8.5 * s, sy)], fill=c_bronze, width=int(1.0 * s))
+        draw.line([(5.5 * s, sy + 2.0 * s), (8.5 * s, sy)], fill=c_bronze, width=int(1.0 * s))
 
-    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "arrow_wall_piercer.png"), "arrow_wall_piercer")
+        # Massive broadhead harpoon head
+        harpoon_pts = [
+            (8.5 * s, sy - 2.8 * s),
+            (15.5 * s, sy),
+            (8.5 * s, sy + 2.8 * s),
+            (10.5 * s, sy),
+        ]
+        draw.polygon(harpoon_pts, fill=c_steel, outline=c_steel_dark, width=int(0.8 * s))
+        draw.line([(9.5 * s, sy), (15.0 * s, sy)], fill=c_bronze, width=int(1.0 * s))
+
+    return save_cropped_sprite(img, (width, height), os.path.join(VARIANTS_DIR, "arrow_wall_heavy_draw.png"), "arrow_wall_heavy_draw")
 
 # =========================================================================
 # WIND WALL VARIANTS
@@ -1825,8 +1835,8 @@ def generate_all_variants():
     os.makedirs(VARIANTS_DIR, exist_ok=True)
     gen_archer_arcane()
     gen_archer_piercer()
-    gen_arrow_wall_arcane()
-    gen_arrow_wall_piercer()
+    gen_arrow_wall_murder_holes()
+    gen_arrow_wall_heavy_draw()
     gen_wind_wall_tempest()
     gen_wind_wall_vortex()
     gen_acid_wall_vitriol()
