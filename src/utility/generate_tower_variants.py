@@ -995,12 +995,16 @@ def gen_crossbow_spectral():
     c_purple = (185, 55, 255, 255)
     c_ghost_white = (230, 250, 255, 255)
 
-    # 1. Foundation Base
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(10, 14, 22, 255), width=int(2.5*f))
-    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
+    # 1. Foundation Base with 8 Perimeter Battlements (allows seamless 45-degree rotation)
+    r_base = 31.8 * f
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(10, 14, 22, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
 
-    for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
-        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.2*f))
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5*f)
+        py = cy + math.sin(ang) * (r_base - 5*f)
+        draw.regular_polygon((px, py, 2.8*f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.0*f))
 
     # 2. Central Swivel Ring Platform with Wood Inlay
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_stone_dark, outline=c_cyan, width=int(2*f))
@@ -1084,12 +1088,16 @@ def gen_crossbow_windlass():
     c_brass_bright = (255, 220, 90, 255)
     c_steel = (245, 250, 255, 255)
 
-    # 1. Foundation Base
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5*f))
-    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
+    # 1. Foundation Base with 8 Perimeter Battlements (allows seamless 45-degree rotation)
+    r_base = 31.8 * f
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
 
-    for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
-        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.2*f))
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5*f)
+        py = cy + math.sin(ang) * (r_base - 5*f)
+        draw.regular_polygon((px, py, 2.8*f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.0*f))
 
     # 2. Central Swivel Ring Platform with Wood Inlay
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_stone_dark, outline=c_brass, width=int(2*f))
@@ -1228,12 +1236,17 @@ def gen_flamethrower_napalm():
     c_neon_orange = (255, 120, 20, 255)
     c_white = (255, 255, 255, 255)
 
-    # 1. Full 64x64 solid hull base
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(14, 8, 10, 255), width=int(2.5*f))
-    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
+    # 1. Octagonal foundation base (allows seamless 45-degree rotation)
+    r_base = 31.8 * f
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(14, 8, 10, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_mid_hull)
 
-    for ox, oy in [(-23 * f, -23 * f), (23 * f, -23 * f), (-23 * f, 23 * f), (23 * f, 23 * f)]:
-        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_crimson, width=int(1.2*f))
+    # 8 Outer Hazard Trims
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5*f)
+        py = cy + math.sin(ang) * (r_base - 5*f)
+        draw.regular_polygon((px, py, 2.5*f), 4, rotation=45, fill=c_dark_hull, outline=c_crimson, width=int(1.0*f))
 
     # 2. Central Swivel Turret Ring
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_dark_hull, outline=c_crimson, width=int(2*f))
@@ -1289,12 +1302,17 @@ def gen_flamethrower_turbo():
     c_neon_yellow = (255, 220, 50, 255)
     c_white = (255, 255, 255, 255)
 
-    # 1. Full 64x64 solid hull base
-    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 18, 255), width=int(2.5*f))
-    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
+    # 1. Octagonal foundation base (allows seamless 45-degree rotation)
+    r_base = 31.8 * f
+    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(10, 12, 18, 255), width=int(2.5*f))
+    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_mid_hull)
 
-    for ox, oy in [(-23 * f, -23 * f), (23 * f, -23 * f), (-23 * f, 23 * f), (23 * f, 23 * f)]:
-        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_cyan, width=int(1.2*f))
+    # 8 Outer Hazard Trims
+    for i in range(8):
+        ang = (i * 45 + 22.5) * math.pi / 180.0
+        px = cx + math.cos(ang) * (r_base - 5*f)
+        py = cy + math.sin(ang) * (r_base - 5*f)
+        draw.regular_polygon((px, py, 2.5*f), 4, rotation=45, fill=c_dark_hull, outline=c_cyan, width=int(1.0*f))
 
     # 2. Central Swivel Turret Ring
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_dark_hull, outline=c_cyan, width=int(2*f))
