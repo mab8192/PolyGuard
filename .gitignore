@@ -3,6 +3,5 @@
 /android/
 addons/flowfields/build*/
 addons/flowfields/.godot-cpp/
-
-
-
+__pycache__/
+*.pyc

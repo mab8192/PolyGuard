@@ -21,9 +21,6 @@ def create_canvas(width=64, height=64, factor=4):
 
 def save_cropped_sprite(img: Image.Image, size: tuple[int, int], output_path: str, label: str) -> str:
     final_img = img.resize(size, Image.Resampling.LANCZOS)
-    bbox = final_img.getbbox()
-    if bbox:
-        final_img = final_img.crop(bbox)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     final_img.save(output_path, "PNG")
     print(f"Generated {label}: {output_path} (size: {final_img.size})")
@@ -54,8 +51,8 @@ def generate_archer_tower_texture(output_path: str = None) -> str:
     c_arrow_white = (240, 245, 255, 255)
 
     # 1. Solid fortified stone base (64x64 with 2px margin)
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Battlements (Crenellations)
     battlement_size = 6 * f
@@ -122,8 +119,8 @@ def generate_bomb_tower_texture(output_path: str = None) -> str:
     c_neon_yellow = (255, 230, 60, 255)
 
     # 1. Full 64x64 solid base
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_base_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Hazard Lugs
     for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
@@ -154,8 +151,8 @@ def generate_tesla_tower_texture(output_path: str = None) -> str:
     c_core_white = (220, 255, 255, 255)
 
     # 1. Full 64x64 solid base
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_base_dark, outline=(10, 14, 20, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(10, 14, 20, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Conduit Lugs
     for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
@@ -193,8 +190,8 @@ def generate_barricade_texture(output_path: str = None) -> str:
     c_neon_amber = (255, 175, 20, 255)
     c_amber_bright = (255, 235, 150, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid)
 
     for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
         draw.regular_polygon((cx + ox, cy + oy, 5 * f), 4, rotation=45, fill=c_dark, outline=c_neon_amber, width=int(1.5 * f))
@@ -412,17 +409,13 @@ def generate_crossbow_texture(output_path: str = None) -> str:
     c_gold_bright = (255, 225, 120, 255)
     c_arrow_white = (240, 245, 255, 255)
 
-    # 1. Circular/Octagonal stone foundation base (diameter 60px)
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
-    draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_stone_mid)
+    # 1. Full 64x64 solid stone base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
     
-    # 8 Perimeter stone battlements / iron lugs
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5 * f)
-        py = cy + math.sin(ang) * (r_base - 5 * f)
-        draw.regular_polygon((px, py, 2.8 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.0 * f))
+    # 4 Corner Fortification Battlements
+    for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.2 * f))
 
     # 2. Central Swivel Ring Platform with Wood Inlay
     draw.ellipse([cx - 18 * f, cy - 18 * f, cx + 18 * f, cy + 18 * f], fill=c_stone_dark, outline=c_metal, width=int(2 * f))
@@ -505,17 +498,13 @@ def generate_flamethrower_texture(output_path: str = None) -> str:
     c_neon_crimson = (235, 40, 30, 255)
     c_neon_yellow = (255, 230, 60, 255)
 
-    # 1. Circular/Octagonal base extended to the border (r=30*f, diameter 60px)
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.regular_polygon((cx, cy, r_base - 3.5 * f), 8, rotation=22.5, fill=c_mid_hull)
+    # 1. Full 64x64 solid hull base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
-    # Outer Octagon Hazard Trims
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5 * f)
-        py = cy + math.sin(ang) * (r_base - 5 * f)
-        draw.regular_polygon((px, py, 2.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_neon_orange, width=int(1.0 * f))
+    # 4 Corner Hazard Lugs
+    for ox, oy in [(-23 * f, -23 * f), (23 * f, -23 * f), (-23 * f, 23 * f), (23 * f, 23 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_neon_orange, width=int(1.2 * f))
 
     # 2. Central 360-degree Swivel Turret Ring
     draw.ellipse([cx - 18 * f, cy - 18 * f, cx + 18 * f, cy + 18 * f], fill=c_dark_hull, outline=c_neon_orange, width=int(2 * f))
@@ -577,8 +566,8 @@ def generate_carpet_bomb_artillery_texture(output_path: str = None) -> str:
     c_hazard_black = (20, 22, 28, 255)
 
     # 1. 64x64 Solid Base with beveled armor corners
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_mid_hull)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
     # 4 Corner Fortification Anchor Lugs
     for ox, oy in [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]:
@@ -660,8 +649,8 @@ def generate_brimstone_texture(output_path: str = None) -> str:
     c_lava_white = (255, 255, 220, 255)
 
     # 1. Outer Heavy Chassis Base (64x64 with 2px margin)
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_frame_mid)
 
     # 2. 4 Corner Heat-Sink Radiators with thermal exhaust notches
     corner_offsets = [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]
@@ -740,8 +729,8 @@ def generate_tar_trap_texture(output_path: str = None) -> str:
     c_tar_surface = (28, 34, 42, 255)
     c_gold_sheen = (255, 220, 100, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_plate_dark, outline=(8, 10, 12, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(8, 10, 12, 255), width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.rounded_rectangle([8 * f, 8 * f, sw - 8 * f, sh - 8 * f], radius=2.5 * f, fill=c_tar_base, outline=c_neon_gold, width=int(1.8 * f))
     draw.rounded_rectangle([10 * f, 10 * f, sw - 10 * f, sh - 10 * f], radius=1.5 * f, fill=c_tar_surface)
 
@@ -767,8 +756,8 @@ def generate_poison_trap_texture(output_path: str = None) -> str:
     c_toxic_bright = (245, 170, 255, 255)
 
     # 1. Dark outer border plate
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_plate_dark, outline=(10, 8, 14, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(10, 8, 14, 255), width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
 
     # 2. Toxic Vent Chamber
     draw.rounded_rectangle([8 * f, 8 * f, sw - 8 * f, sh - 8 * f], radius=2.5 * f, fill=(12, 10, 16, 255), outline=c_neon_purple, width=int(1.8 * f))
@@ -798,8 +787,8 @@ def generate_displacer_texture(output_path: str = None) -> str:
     c_warp_cyan = (0, 240, 255, 255)
     c_core_white = (245, 220, 255, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_plate_dark, outline=(10, 12, 20, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(10, 12, 20, 255), width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.ellipse([cx - 24 * f, cy - 24 * f, cx + 24 * f, cy + 24 * f], fill=c_plate_dark, outline=c_warp_purple, width=int(2 * f))
 
     for ox, oy in [(-20 * f, -20 * f), (20 * f, -20 * f), (-20 * f, 20 * f), (20 * f, 20 * f)]:
@@ -827,8 +816,8 @@ def generate_ice_trap_texture(output_path: str = None) -> str:
     c_ice_surface = (68, 142, 172, 255)
     c_ice_light = (130, 215, 240, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_frame_dark, outline=(6, 12, 18, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame_dark, outline=(6, 12, 18, 255), width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_frame_mid)
     draw.rounded_rectangle([8 * f, 8 * f, sw - 8 * f, sh - 8 * f], radius=2.5 * f, fill=c_ice_base, outline=c_neon_cyan, width=int(1.8 * f))
     draw.rounded_rectangle([10 * f, 10 * f, sw - 10 * f, sh - 10 * f], radius=1.5 * f, fill=c_ice_surface)
 
@@ -853,8 +842,8 @@ def generate_corrosive_vapor_texture(output_path: str = None) -> str:
     c_acid_green = (50, 245, 60, 255)
     c_acid_bright = (190, 255, 140, 255)
 
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_plate_dark, outline=(10, 15, 10, 255), width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(10, 15, 10, 255), width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.line([6 * f, 8 * f, 6 * f, sh - 8 * f], fill=c_hazard_yellow, width=int(2 * f))
     draw.line([sw - 6 * f, 8 * f, sw - 6 * f, sh - 8 * f], fill=c_hazard_yellow, width=int(2 * f))
 
@@ -888,8 +877,8 @@ def generate_spike_trap_texture(output_path: str = None) -> str:
     c_gold = (245, 190, 50, 255)
 
     # 1. Fortified outer stone/iron plate base
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # Corner brass rivets
     for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
@@ -960,8 +949,8 @@ def generate_siphon_texture(output_path: str = None) -> str:
     c_pure_white   = (255, 255, 255, 255)
 
     # 1. Dark weathered stone slab base (Clean square tile with rounded corners)
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=c_shadow, width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=c_shadow, width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 2. Outer Arcane Ritual Circles
     r_outer = 23.0 * f
@@ -1026,8 +1015,8 @@ def generate_soul_lantern_texture(output_path: str = None) -> str:
     c_soul_bright = (190, 255, 250, 255)
 
     # 0. Background
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 1. Octagonal stone pedestal foundation base
     r_base = 30 * f
@@ -1082,8 +1071,8 @@ def generate_sparkler_texture(output_path: str = None) -> str:
     c_spark_bright = (255, 245, 160, 255)
 
     # 1. Solid fortified stone base (64x64)
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Rivets / Mounts
     for ox, oy in [(-20 * f, -20 * f), (20 * f, -20 * f), (-20 * f, 20 * f), (20 * f, 20 * f)]:

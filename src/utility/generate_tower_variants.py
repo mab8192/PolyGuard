@@ -22,9 +22,6 @@ def create_canvas(width=64, height=64, factor=4):
 
 def save_cropped_sprite(img: Image.Image, size: tuple[int, int], output_path: str, label: str) -> str:
     final_img = img.resize(size, Image.Resampling.LANCZOS)
-    bbox = final_img.getbbox()
-    if bbox:
-        final_img = final_img.crop(bbox)
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
     final_img.save(output_path, "PNG")
     print(f"Generated {label}: {output_path} (size: {final_img.size})")
@@ -51,8 +48,8 @@ def gen_archer_arcane():
     c_bright = (230, 250, 255, 255)
 
     # 1. Solid stone base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_stone_dark, outline=(12, 14, 22, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(12, 14, 22, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Battlements
     battlement_size = 6 * f
@@ -105,8 +102,8 @@ def gen_archer_piercer():
     c_steel = (250, 250, 255, 255)
 
     # 1. Solid stone base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_stone_dark, outline=(18, 12, 12, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(18, 12, 12, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Battlements
     battlement_size = 6 * f
@@ -165,8 +162,8 @@ def gen_arrow_wall_arcane():
     c_bright = (230, 250, 255, 255)
 
     # 1. Outer stone frame
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_stone_dark, outline=(12, 14, 22, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_wood_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(12, 14, 22, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_wood_mid)
 
     # Wood plank grain lines
     for dy in [8*s, 16*s, 24*s, 32*s, 40*s, 48*s, 56*s]:
@@ -220,8 +217,8 @@ def gen_arrow_wall_piercer():
     c_steel = (250, 250, 255, 255)
 
     # 1. Outer red-stone frame
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_stone_dark, outline=(18, 12, 12, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_wood_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_stone_dark, outline=(18, 12, 12, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_wood_mid)
 
     # Wood plank grain lines
     for dy in [8*s, 16*s, 24*s, 32*s, 40*s, 48*s, 56*s]:
@@ -279,8 +276,8 @@ def gen_wind_wall_tempest():
     c_copper = (210, 120, 45, 255)
 
     # 1. Fortified gold-trimmed frame
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_frame_dark, outline=(18, 14, 8, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_frame_dark, outline=(18, 14, 8, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_frame_mid)
 
     # Power conduits
     draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_electric_blue, width=int(2.0*s))
@@ -332,8 +329,8 @@ def gen_wind_wall_vortex():
     c_steel = (210, 230, 225, 255)
 
     # 1. Frame
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_frame_dark, outline=(8, 16, 14, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_frame_dark, outline=(8, 16, 14, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_frame_mid)
 
     # Vacuum lines
     draw.line([(3.5*s, 4*s), (3.5*s, 60*s)], fill=c_teal_glow, width=int(1.6*s))
@@ -386,8 +383,8 @@ def gen_acid_wall_vitriol():
     c_hazard_orange = (255, 110, 20, 255)
 
     # 1. Corroded brass casing
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_dark_metal, outline=(16, 14, 10, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_mid_metal)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_dark_metal, outline=(16, 14, 10, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_mid_metal)
 
     # Amber hazard accents
     for hy in [3*s, 6*s, 57*s, 60*s]:
@@ -437,8 +434,8 @@ def gen_acid_wall_sludge():
     c_hazard_magenta = (230, 60, 160, 255)
 
     # 1. Dark purple/charcoal frame
-    draw.rounded_rectangle([1*s, 1*s, 15*s-1, 63*s-1], radius=2*s, fill=c_dark_metal, outline=(14, 10, 18, 255), width=int(1.2*s))
-    draw.rounded_rectangle([2*s, 2*s, 14*s-1, 62*s-1], radius=1.5*s, fill=c_mid_metal)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=2 * s, fill=c_dark_metal, outline=(14, 10, 18, 255), width=int(1.2*s))
+    draw.rounded_rectangle([1.5 * s, 1.5 * s, sw - 1 - 1.5 * s, sh - 1 - 1.5 * s], radius=1.5 * s, fill=c_mid_metal)
 
     # Magenta warning stripes
     for hy in [3*s, 6*s, 57*s, 60*s]:
@@ -492,8 +489,8 @@ def gen_artillery_thermite():
     c_brass = (245, 180, 45, 255)
 
     # 1. 64x64 Solid Base with beveled armor corners
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark_hull, outline=(18, 8, 10, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid_hull)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(18, 8, 10, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
     # 4 Corner Fortification Anchor Lugs with Searing Centers
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -574,8 +571,8 @@ def gen_artillery_salvo():
     c_hazard_yellow = (255, 215, 0, 255)
 
     # 1. 64x64 Solid Base with beveled armor corners
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid_hull)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 16, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
     # 4 Corner Fortification Anchor Lugs
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -645,8 +642,8 @@ def gen_barricade_spikes():
     c_gold_rivet = (255, 215, 70, 255)
 
     # 1. Fortified 64x64 solid armor base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(10, 14, 20, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(10, 14, 20, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid)
 
     # Heavy Reinforced Corner Armor Brackets with Steel Studs
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -679,8 +676,8 @@ def gen_barricade_spectral():
     c_magenta = (235, 50, 255, 255)
     c_light = (45, 65, 95, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(8, 12, 20, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(8, 12, 20, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid)
 
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
         draw.regular_polygon((cx + ox, cy + oy, 5*f), 4, rotation=45, fill=c_dark, outline=c_cyan, width=int(1.5*f))
@@ -705,8 +702,8 @@ def gen_bomb_incendiary():
     c_neon_yellow = (255, 230, 60, 255)
 
     # 1. 64x64 Solid Base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_base_dark, outline=(14, 8, 10, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(14, 8, 10, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Hazard Lugs
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -744,8 +741,8 @@ def gen_bomb_concussion():
     c_white = (240, 250, 255, 255)
 
     # 1. 64x64 Solid Base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_base_dark, outline=(8, 12, 18, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(8, 12, 18, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Hazard Lugs
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -787,8 +784,8 @@ def gen_brimstone_hellfire():
     c_lava_white = (255, 255, 240, 255)
 
     # 1. Base Chassis
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_frame_mid)
 
     # 2. 4 Overheated Supercharger Heat-Pipes connecting Core to Corners
     corner_offsets = [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]
@@ -862,8 +859,8 @@ def gen_brimstone_void():
     c_core_white = (245, 235, 255, 255)
 
     # 1. Base Chassis
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_frame_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame_dark, outline=c_frame_edge, width=int(2 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_frame_mid)
 
     # 2. 4 Corner Void Rift Crystals / Multi-target Field Projectors
     corner_offsets = [(-21 * f, -21 * f), (21 * f, -21 * f), (-21 * f, 21 * f), (21 * f, 21 * f)]
@@ -937,8 +934,8 @@ def gen_corrosive_acid():
     c_acid = (80, 255, 40, 255)
     c_bright = (220, 255, 120, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_plate_dark, outline=(8, 16, 8, 255), width=int(2*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(8, 16, 8, 255), width=int(2*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.line([6*f, 8*f, 6*f, sh-8*f], fill=c_hazard_yellow, width=int(2*f))
     draw.line([sw-6*f, 8*f, sw-6*f, sh-8*f], fill=c_hazard_yellow, width=int(2*f))
 
@@ -963,8 +960,8 @@ def gen_corrosive_volatile():
     c_cyan = (0, 245, 220, 255)
     c_bright = (200, 255, 245, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_plate_dark, outline=(6, 16, 18, 255), width=int(2*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(6, 16, 18, 255), width=int(2*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.line([6*f, 8*f, 6*f, sh-8*f], fill=c_hazard_yellow, width=int(2*f))
     draw.line([sw-6*f, 8*f, sw-6*f, sh-8*f], fill=c_hazard_yellow, width=int(2*f))
 
@@ -998,16 +995,12 @@ def gen_crossbow_spectral():
     c_purple = (185, 55, 255, 255)
     c_ghost_white = (230, 250, 255, 255)
 
-    # 1. Foundation Base with 8 Perimeter Battlements
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(10, 14, 22, 255), width=int(2.5*f))
-    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
+    # 1. Foundation Base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(10, 14, 22, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5*f)
-        py = cy + math.sin(ang) * (r_base - 5*f)
-        draw.regular_polygon((px, py, 2.8*f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.0*f))
+    for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.2*f))
 
     # 2. Central Swivel Ring Platform with Wood Inlay
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_stone_dark, outline=c_cyan, width=int(2*f))
@@ -1091,16 +1084,12 @@ def gen_crossbow_windlass():
     c_brass_bright = (255, 220, 90, 255)
     c_steel = (245, 250, 255, 255)
 
-    # 1. Foundation Base with 8 Perimeter Battlements
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5*f))
-    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_stone_mid)
+    # 1. Foundation Base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 16, 22, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5*f)
-        py = cy + math.sin(ang) * (r_base - 5*f)
-        draw.regular_polygon((px, py, 2.8*f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.0*f))
+    for ox, oy in [(-22 * f, -22 * f), (22 * f, -22 * f), (-22 * f, 22 * f), (22 * f, 22 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_stone_light, outline=c_stone_dark, width=int(1.2*f))
 
     # 2. Central Swivel Ring Platform with Wood Inlay
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_stone_dark, outline=c_brass, width=int(2*f))
@@ -1184,8 +1173,8 @@ def gen_displacer_warp():
     c_magenta = (245, 45, 255, 255)
     c_white = (255, 230, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_plate_dark, outline=(10, 6, 16, 255), width=int(2*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(10, 6, 16, 255), width=int(2*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.ellipse([cx-24*f, cy-24*f, cx+24*f, cy+24*f], fill=c_plate_dark, outline=c_magenta, width=int(2*f))
 
     for ox, oy in [(-20*f, -20*f), (20*f, -20*f), (-20*f, 20*f), (20*f, 20*f)]:
@@ -1208,8 +1197,8 @@ def gen_displacer_mass():
     c_cyan = (0, 245, 255, 255)
     c_white = (230, 255, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_plate_dark, outline=(8, 12, 20, 255), width=int(2*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_plate_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_plate_dark, outline=(8, 12, 20, 255), width=int(2*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_plate_mid)
     draw.ellipse([cx-24*f, cy-24*f, cx+24*f, cy+24*f], fill=c_plate_dark, outline=c_cyan, width=int(2*f))
 
     for ox, oy in [(-20*f, -20*f), (20*f, -20*f), (-20*f, 20*f), (20*f, 20*f)]:
@@ -1239,17 +1228,12 @@ def gen_flamethrower_napalm():
     c_neon_orange = (255, 120, 20, 255)
     c_white = (255, 255, 255, 255)
 
-    # 1. Octagonal foundation base
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(14, 8, 10, 255), width=int(2.5*f))
-    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_mid_hull)
+    # 1. Full 64x64 solid hull base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(14, 8, 10, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
-    # 8 Outer Hazard Trims
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5*f)
-        py = cy + math.sin(ang) * (r_base - 5*f)
-        draw.regular_polygon((px, py, 2.5*f), 4, rotation=45, fill=c_dark_hull, outline=c_crimson, width=int(1.0*f))
+    for ox, oy in [(-23 * f, -23 * f), (23 * f, -23 * f), (-23 * f, 23 * f), (23 * f, 23 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_crimson, width=int(1.2*f))
 
     # 2. Central Swivel Turret Ring
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_dark_hull, outline=c_crimson, width=int(2*f))
@@ -1305,17 +1289,12 @@ def gen_flamethrower_turbo():
     c_neon_yellow = (255, 220, 50, 255)
     c_white = (255, 255, 255, 255)
 
-    # 1. Octagonal foundation base
-    r_base = 30 * f
-    draw.regular_polygon((cx, cy, r_base), 8, rotation=22.5, fill=c_dark_hull, outline=(10, 12, 18, 255), width=int(2.5*f))
-    draw.regular_polygon((cx, cy, r_base - 3.5*f), 8, rotation=22.5, fill=c_mid_hull)
+    # 1. Full 64x64 solid hull base
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark_hull, outline=(10, 12, 18, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid_hull)
 
-    # 8 Outer Hazard Trims
-    for i in range(8):
-        ang = (i * 45 + 22.5) * math.pi / 180.0
-        px = cx + math.cos(ang) * (r_base - 5*f)
-        py = cy + math.sin(ang) * (r_base - 5*f)
-        draw.regular_polygon((px, py, 2.5*f), 4, rotation=45, fill=c_dark_hull, outline=c_cyan, width=int(1.0*f))
+    for ox, oy in [(-23 * f, -23 * f), (23 * f, -23 * f), (-23 * f, 23 * f), (23 * f, 23 * f)]:
+        draw.regular_polygon((cx + ox, cy + oy, 4.5 * f), 4, rotation=45, fill=c_dark_hull, outline=c_cyan, width=int(1.2*f))
 
     # 2. Central Swivel Turret Ring
     draw.ellipse([cx - 18*f, cy - 18*f, cx + 18*f, cy + 18*f], fill=c_dark_hull, outline=c_cyan, width=int(2*f))
@@ -1372,7 +1351,7 @@ def gen_ice_permafrost():
     c_cyan = (0, 245, 245, 255)
     c_white = (240, 255, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_frame, outline=(6, 12, 20, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame, outline=(6, 12, 20, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=c_ice, outline=c_cyan, width=int(1.8*f))
 
     for ang in [0, 45, 90, 135, 180, 225, 270, 315]:
@@ -1394,7 +1373,7 @@ def gen_ice_glaze():
     c_cyan = (0, 255, 230, 255)
     c_white = (245, 255, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_frame, outline=(4, 14, 18, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_frame, outline=(4, 14, 18, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=c_ice, outline=c_cyan, width=int(1.8*f))
     draw.line([11*f, 11*f, sw-11*f, 11*f], fill=c_white, width=int(2.0*f))
     draw.line([11*f, 11*f, 11*f, sh-11*f], fill=c_white, width=int(2.0*f))
@@ -1414,7 +1393,7 @@ def gen_poison_rapid():
     c_purple = (185, 45, 245, 255)
     c_green = (60, 245, 100, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(10, 12, 10, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(10, 12, 10, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=(12, 16, 14, 255), outline=c_green, width=int(1.8*f))
 
     for vy in [-12*f, -4*f, 4*f, 12*f]:
@@ -1434,7 +1413,7 @@ def gen_poison_plume():
     c_purple = (220, 45, 255, 255)
     c_bright = (250, 190, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(12, 8, 18, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(12, 8, 18, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=(16, 8, 24, 255), outline=c_purple, width=int(1.8*f))
 
     for ox, oy in [(-8*f, -8*f), (8*f, -8*f), (-8*f, 8*f), (8*f, 8*f)]:
@@ -1464,8 +1443,8 @@ def gen_soul_split():
     c_soul_bright = (220, 255, 255, 255)
 
     # 0. Background
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 1. Octagonal foundation base
     r_base = 30 * f
@@ -1521,8 +1500,8 @@ def gen_soul_focus():
     c_soul_bright = (210, 255, 255, 255)
 
     # 0. Background
-    draw.rounded_rectangle([2 * f, 2 * f, sw - 2 * f, sh - 2 * f], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
-    draw.rounded_rectangle([5 * f, 5 * f, sw - 5 * f, sh - 5 * f], radius=3 * f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(10, 12, 16, 255), width=int(2.5 * f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 1. Octagonal foundation base
     r_base = 30 * f
@@ -1579,8 +1558,8 @@ def gen_sparkler_prismatic():
     c_amber = (255, 140, 30, 255)
 
     # 1. Solid fortified stone base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_stone_dark, outline=(12, 16, 24, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(12, 16, 24, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Rivets / Mounts
     for ox, oy in [(-20*f, -20*f), (20*f, -20*f), (-20*f, 20*f), (20*f, 20*f)]:
@@ -1624,8 +1603,8 @@ def gen_sparkler_overcharge():
     c_bright = (255, 245, 180, 255)
 
     # 1. Solid fortified stone base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_stone_dark, outline=(14, 10, 22, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_stone_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_stone_dark, outline=(14, 10, 22, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_stone_mid)
 
     # 4 Corner Fortification Rivets / Mounts
     for ox, oy in [(-20*f, -20*f), (20*f, -20*f), (-20*f, 20*f), (20*f, 20*f)]:
@@ -1668,8 +1647,8 @@ def gen_spike_serrated():
     c_crimson = (245, 40, 40, 255)
     c_steel = (245, 250, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(16, 10, 10, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(16, 10, 10, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid)
     draw.rounded_rectangle([9*f, 9*f, sw-9*f, sh-9*f], radius=2*f, fill=(18, 12, 12, 255), outline=c_crimson, width=int(1.5*f))
 
     for sx in [-13*f, -4.5*f, 4.5*f, 13*f]:
@@ -1690,8 +1669,8 @@ def gen_spike_hydraulic():
     c_gold = (245, 190, 40, 255)
     c_steel = (240, 245, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(14, 12, 10, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(14, 12, 10, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_mid)
     draw.rounded_rectangle([9*f, 9*f, sw-9*f, sh-9*f], radius=2*f, fill=(16, 14, 12, 255), outline=c_gold, width=int(1.5*f))
 
     for sx in [-13*f, -4.5*f, 4.5*f, 13*f]:
@@ -1716,7 +1695,7 @@ def gen_tar_hex():
     c_purple = (195, 55, 255, 255)
     c_cyan = (0, 235, 255, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(10, 8, 16, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(10, 8, 16, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=c_tar, outline=c_purple, width=int(1.8*f))
     draw.rounded_rectangle([10*f, 10*f, sw-10*f, sh-10*f], radius=1.5*f, fill=(32, 22, 50, 255))
 
@@ -1735,7 +1714,7 @@ def gen_tar_acid():
     c_acid = (80, 255, 40, 255)
     c_bright = (220, 255, 120, 255)
 
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_dark, outline=(8, 14, 8, 255), width=int(2*f))
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_dark, outline=(8, 14, 8, 255), width=int(2*f))
     draw.rounded_rectangle([8*f, 8*f, sw-8*f, sh-8*f], radius=2.5*f, fill=c_tar, outline=c_acid, width=int(1.8*f))
     draw.rounded_rectangle([10*f, 10*f, sw-10*f, sh-10*f], radius=1.5*f, fill=(28, 44, 24, 255))
 
@@ -1758,8 +1737,8 @@ def gen_tesla_superconductor():
     c_core_white = (220, 255, 255, 255)
 
     # 1. Full 64x64 solid base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_base_dark, outline=(8, 14, 22, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(8, 14, 22, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Conduit Lugs with Connecting Power Lines to Center
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
@@ -1795,8 +1774,8 @@ def gen_tesla_overcharge():
     c_core_white = (255, 250, 220, 255)
 
     # 1. Full 64x64 solid base
-    draw.rounded_rectangle([2*f, 2*f, sw-2*f, sh-2*f], radius=4*f, fill=c_base_dark, outline=(14, 8, 20, 255), width=int(2.5*f))
-    draw.rounded_rectangle([5*f, 5*f, sw-5*f, sh-5*f], radius=3*f, fill=c_base_mid)
+    draw.rounded_rectangle([0, 0, sw - 1, sh - 1], radius=4 * f, fill=c_base_dark, outline=(14, 8, 20, 255), width=int(2.5*f))
+    draw.rounded_rectangle([3 * f, 3 * f, sw - 1 - 3 * f, sh - 1 - 3 * f], radius=3 * f, fill=c_base_mid)
 
     # 4 Corner Conduit Lugs with Connecting Power Lines to Center
     for ox, oy in [(-21*f, -21*f), (21*f, -21*f), (-21*f, 21*f), (21*f, 21*f)]:
