@@ -9,8 +9,6 @@
 [ext_resource type="Script" uid="uid://cw0m0nshd12m7" path="res://src/data/towers/TowerData.gd" id="6_y670i"]
 [ext_resource type="Texture2D" uid="uid://cn52lx76u6ugd" path="res://src/textures/towers/variants/brimstone_hellfire.png" id="ext_var_hellfire_core"]
 [ext_resource type="Texture2D" uid="uid://nt1pvv548w3q" path="res://src/textures/towers/variants/brimstone_void.png" id="ext_var_nether_void"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/brimstone_hellfire.png" id="ext_var_hellfire_core"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/brimstone_void.png" id="ext_var_nether_void"]
 
 [sub_resource type="Resource" id="Resource_choice_quick_fire"]
 script = ExtResource("1_choice")
@@ -34,7 +32,6 @@ name = "Brimstone Fire"
 duration = 5.0
 remove_on_exit = false
 damage_per_second = 50.0
-damage_type = 0
 active_vfx = ExtResource("2_burn_vfx")
 
 [sub_resource type="Resource" id="Resource_x5pvt"]

@@ -27,7 +27,8 @@ var selected_tower: TowerData = null
 @onready var detail_level_badge: Label = %DetailLevelBadge
 @onready var detail_type_badge: Label = %DetailTypeBadge
 @onready var detail_desc: Label = %DetailDesc
-@onready var detail_stats: Label = %DetailStats
+@onready var detail_stats_grid: GridContainer = %DetailStatsGrid
+@onready var detail_trait_label: Label = %DetailTraitLabel
 @onready var detail_action_button: Button = %DetailActionButton
 
 func _ready() -> void:
@@ -177,7 +178,10 @@ func _update_details_panel() -> void:
 	if not selected_tower:
 		detail_title.text = "NO TOWER SELECTED"
 		detail_desc.text = "Select a tower to view its attributes."
-		detail_stats.text = ""
+		for child in detail_stats_grid.get_children():
+			child.queue_free()
+		detail_trait_label.text = ""
+		detail_trait_label.visible = false
 		detail_cost.text = ""
 		detail_level_badge.text = ""
 		detail_type_badge.text = ""
@@ -224,8 +228,28 @@ func _update_details_panel() -> void:
 		
 	detail_type_badge.text = (stats.get("type", "DEFENSE")).to_upper()
 		
-	var stat_lines: Array[String] = stats.get("stat_lines", [])
-	detail_stats.text = "   •   ".join(stat_lines)
+	for child in detail_stats_grid.get_children():
+		child.queue_free()
+		
+	var grid_stats: Array = stats.get("grid_stats", [])
+	for item in grid_stats:
+		if item is Dictionary:
+			var card = _create_stat_card(item.get("label", ""), item.get("value", ""))
+			detail_stats_grid.add_child(card)
+		elif item is String:
+			var parts = item.split(":", true, 1)
+			var key = parts[0].strip_edges() if parts.size() > 1 else "STAT"
+			var val = parts[1].strip_edges() if parts.size() > 1 else item
+			var card = _create_stat_card(key, val)
+			detail_stats_grid.add_child(card)
+			
+	var traits: Array = stats.get("traits", [])
+	if traits.is_empty():
+		detail_trait_label.text = ""
+		detail_trait_label.visible = false
+	else:
+		detail_trait_label.text = " • ".join(traits)
+		detail_trait_label.visible = true
 	
 	# Action Button
 	if not is_unlocked:
@@ -263,6 +287,29 @@ func _update_details_panel() -> void:
 				detail_action_button.text = "+ EQUIP TO LOADOUT"
 				detail_action_button.disabled = false
 				detail_action_button.theme_type_variation = &"PrimaryButton"
+
+func _create_stat_card(key_text: String, value_text: String) -> PanelContainer:
+	var card = PanelContainer.new()
+	card.theme_type_variation = &"StatCard"
+	card.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	
+	var vbox = VBoxContainer.new()
+	vbox.alignment = BoxContainer.ALIGNMENT_CENTER
+	card.add_child(vbox)
+	
+	var lbl_key = Label.new()
+	lbl_key.theme_type_variation = &"StatKeyText"
+	lbl_key.text = key_text
+	lbl_key.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(lbl_key)
+	
+	var lbl_val = Label.new()
+	lbl_val.theme_type_variation = &"StatValueText"
+	lbl_val.text = value_text
+	lbl_val.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	vbox.add_child(lbl_val)
+	
+	return card
 
 func _on_slot_clicked(slot: LoadoutSlot) -> void:
 	if slot.tower_data:

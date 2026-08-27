@@ -33,8 +33,9 @@ icon = ExtResource("ext_var_spectral_bolt")
 script = ExtResource("3_choice")
 id = "quick_windlass"
 title = "Quick Windlass"
-description = "High-tension spanning mechanism providing +30% attack speed."
+description = "High-tension spanning mechanism providing +30% attack speed but slightly slower arrow velocity."
 cooldown_multiplier = 0.7
+projectile_speed_multiplier = 0.9
 icon = ExtResource("ext_var_quick_windlass")
 
 [sub_resource type="Resource" id="Resource_cb_health"]

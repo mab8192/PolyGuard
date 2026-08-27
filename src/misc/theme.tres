@@ -722,6 +722,22 @@ corner_radius_top_right = 16
 corner_radius_bottom_right = 16
 corner_radius_bottom_left = 16
 
+[sub_resource type="StyleBoxFlat" id="StyleBoxFlat_stat_card"]
+content_margin_left = 6.0
+content_margin_top = 4.0
+content_margin_right = 6.0
+content_margin_bottom = 4.0
+bg_color = Color(0.06, 0.1, 0.18, 0.85)
+border_width_left = 1
+border_width_top = 1
+border_width_right = 1
+border_width_bottom = 1
+border_color = Color(0.18, 0.35, 0.55, 0.6)
+corner_radius_top_left = 8
+corner_radius_top_right = 8
+corner_radius_bottom_right = 8
+corner_radius_bottom_left = 8
+
 [sub_resource type="StyleBoxFlat" id="StyleBoxFlat_status_badge"]
 content_margin_left = 12.0
 content_margin_top = 4.0
@@ -948,9 +964,17 @@ SlotEquippedPanel/styles/panel = SubResource("StyleBoxFlat_slot_equipped")
 SmallText/base_type = &"Label"
 SmallText/colors/font_color = Color(0.58, 0.68, 0.82, 1)
 SmallText/font_sizes/font_size = 26
+StatCard/base_type = &"PanelContainer"
+StatCard/styles/panel = SubResource("StyleBoxFlat_stat_card")
+StatKeyText/base_type = &"Label"
+StatKeyText/colors/font_color = Color(0.55, 0.7, 0.88, 1)
+StatKeyText/font_sizes/font_size = 20
 StatText/base_type = &"Label"
 StatText/colors/font_color = Color(0, 0.96, 0.83, 1)
 StatText/font_sizes/font_size = 30
+StatValueText/base_type = &"Label"
+StatValueText/colors/font_color = Color(0, 0.96, 0.83, 1)
+StatValueText/font_sizes/font_size = 26
 StatusBadge/base_type = &"PanelContainer"
 StatusBadge/styles/panel = SubResource("StyleBoxFlat_status_badge")
 SubHeaderText/base_type = &"Label"

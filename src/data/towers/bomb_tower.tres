@@ -11,8 +11,6 @@
 [ext_resource type="Script" uid="uid://cqd3is7v2mbn2" path="res://src/data/components/TargetingData.gd" id="7_fy0nx"]
 [ext_resource type="Texture2D" uid="uid://b15jixowp4452" path="res://src/textures/towers/variants/bomb_tower_concussion.png" id="ext_var_heavy_concussion"]
 [ext_resource type="Texture2D" uid="uid://cvrfs1cjunbu7" path="res://src/textures/towers/variants/bomb_tower_incendiary.png" id="ext_var_incendiary_shells"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/bomb_tower_incendiary.png" id="ext_var_incendiary_shells"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/bomb_tower_concussion.png" id="ext_var_heavy_concussion"]
 
 [sub_resource type="Resource" id="Resource_soe44"]
 script = ExtResource("2_mg0rn")
@@ -36,11 +34,10 @@ icon = ExtResource("ext_var_incendiary_shells")
 script = ExtResource("1_choice")
 id = "heavy_concussion"
 title = "Heavy Concussion"
-description = "Shockwave shells inflicting True Damage directly ignoring armored plating."
+description = "Shockwave shells inflict True Damage directly, ignoring armor plating, at a small cost to raw damage."
 has_damage_type_override = true
 damage_type_override = 2
 strength_multiplier = 0.85
-cooldown_multiplier = 0.9
 icon = ExtResource("ext_var_heavy_concussion")
 
 [sub_resource type="Resource" id="Resource_k6tlf"]

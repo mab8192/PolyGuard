@@ -8,8 +8,6 @@
 [ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_health"]
 [ext_resource type="Texture2D" uid="uid://cpcnweqnxjuw" path="res://src/textures/towers/variants/barricade_spikes.png" id="ext_var_reinforced_spikes"]
 [ext_resource type="Texture2D" uid="uid://dlynvvsph0wjc" path="res://src/textures/towers/variants/barricade_spectral.png" id="ext_var_spectral_barrier"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/barricade_spikes.png" id="ext_var_reinforced_spikes"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/variants/barricade_spectral.png" id="ext_var_spectral_barrier"]
 
 [sub_resource type="Resource" id="Resource_choice_spiked"]
 script = ExtResource("1_choice")
@@ -23,8 +21,7 @@ icon = ExtResource("ext_var_reinforced_spikes")
 script = ExtResource("1_choice")
 id = "spectral_barrier"
 title = "Spectral Barrier"
-description = "Projects an arcane anti-spectral field that blocks Ghost-type enemies while granting +10% structure health."
-health_multiplier = 1.1
+description = "Projects an arcane anti-spectral field that blocks Ghost-type enemies."
 has_collision_layer_override = true
 icon = ExtResource("ext_var_spectral_barrier")
 

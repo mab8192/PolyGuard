@@ -169,7 +169,16 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		"targets_ghosts": false,
 		"blocks_ghosts": false,
 		"has_attack": false,
-		"has_health": false
+		"has_health": false,
+		"dot_dps": 0.0,
+		"dot_duration": 0.0,
+		"slow_pct": 0.0,
+		"has_freeze": false,
+		"freeze_duration": 0.0,
+		"armor_reduction": 0.0,
+		"magic_resistance_reduction": 0.0,
+		"energy_reward_bonus": 0.0,
+		"active_duration": 0.0
 	}
 	
 	if scaled.attack:
@@ -182,29 +191,52 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
 			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
 			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
-	elif scaled.effect_applier:
-		var total_dmg = 0.0
-		for eff in scaled.effect_applier.effects:
-			if "damage" in eff:
-				total_dmg += eff.damage
-				result["damage_type"] = eff.damage_type
-			elif "initial_damage" in eff:
-				total_dmg += eff.initial_damage
-				result["damage_type"] = eff.damage_type
-			elif "damage_per_second" in eff:
-				total_dmg += eff.damage_per_second * eff.duration
-				result["damage_type"] = eff.damage_type
-		if total_dmg > 0.0:
-			result["has_attack"] = true
-			result["damage"] = total_dmg
-			result["cooldown"] = scaled.effect_applier.cooldown
-			result["dps"] = total_dmg / maxf(scaled.effect_applier.cooldown, 0.05) if scaled.effect_applier.cooldown > 0 else total_dmg
-			match result["damage_type"]:
-				AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
-				AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
-				AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
+			
+	if scaled.effect_applier:
+		result["cooldown"] = scaled.effect_applier.cooldown
+		result["active_duration"] = scaled.effect_applier.active_duration if scaled.effect_applier.mode == EffectApplierData.Mode.TRIGGERED_CONTINUOUS else 0.0
 		result["max_targets"] = scaled.effect_applier.max_targets
 		result["targets_ghosts"] = (scaled.effect_applier.targeting_mask & 8) != 0
+		
+		for eff in scaled.effect_applier.effects:
+			if not eff:
+				continue
+			if eff.damage > 0.0:
+				result["has_attack"] = true
+				result["damage"] += eff.damage
+				result["damage_type"] = eff.damage_type
+			if eff.initial_damage > 0.0:
+				result["has_attack"] = true
+				result["damage"] += eff.initial_damage
+				result["damage_type"] = eff.damage_type
+			if eff.damage_per_second > 0.0:
+				result["dot_dps"] += eff.damage_per_second
+				var dur = eff.duration if not is_inf(eff.duration) else 0.0
+				result["dot_duration"] = maxf(result["dot_duration"], dur)
+				result["damage_type"] = eff.damage_type
+			if eff.speed_multiplier < 1.0 and eff.speed_multiplier > 0.0:
+				var s = (1.0 - eff.speed_multiplier) * 100.0
+				result["slow_pct"] = maxf(result["slow_pct"], s)
+			elif eff.speed_multiplier == 0.0:
+				result["has_freeze"] = true
+				result["freeze_duration"] = maxf(result["freeze_duration"], eff.duration if not is_inf(eff.duration) else 2.0)
+			if eff.armor_reduction > 0.0:
+				result["armor_reduction"] += eff.armor_reduction
+			if eff.magic_resistance_reduction > 0.0:
+				result["magic_resistance_reduction"] += eff.magic_resistance_reduction
+			if eff.energy_reward_multiplier > 1.0:
+				result["energy_reward_bonus"] += (eff.energy_reward_multiplier - 1.0) * 100.0
+
+		match result["damage_type"]:
+			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
+			AttackData.DamageType.MAGIC: result["damage_type_str"] = "Magic"
+			AttackData.DamageType.TRUE: result["damage_type_str"] = "True"
+			
+		if result["dot_dps"] > 0.0 and result["damage"] == 0.0:
+			result["dps"] = result["dot_dps"]
+		elif result["damage"] > 0.0:
+			var cd = maxf(scaled.effect_applier.cooldown, 0.05) if scaled.effect_applier.cooldown > 0 else 0.05
+			result["dps"] = result["damage"] / cd + result["dot_dps"]
 			
 	if scaled.health:
 		result["has_health"] = true
@@ -253,53 +285,109 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		"targets_ghosts": summary["targets_ghosts"],
 		"blocks_ghosts": summary["blocks_ghosts"],
 		"is_solid": summary["is_solid"],
+		"grid_stats": [],
+		"traits": [],
 		"stat_lines": []
 	}
 	
+	var grid_stats: Array[Dictionary] = []
+	var traits: Array[String] = []
 	var lines: Array[String] = []
+	
+	# Primary combat stats
 	if summary["has_attack"]:
-		var cd_str = "%.2fs" % summary["cooldown"] if summary["cooldown"] > 0 else "Continuous"
+		var dmg_type = summary["damage_type_str"].left(4) if summary["damage_type_str"] != "Normal" else ""
+		var dmg_val = "%.0f (%s)" % [summary["damage"], dmg_type] if not dmg_type.is_empty() else "%.0f" % summary["damage"]
+		grid_stats.append({"label": "DAMAGE", "value": dmg_val})
+		
+		var cd_str = "%.2fs" % summary["cooldown"] if summary["cooldown"] > 0 else "Cont."
+		grid_stats.append({"label": "FIRE RATE", "value": cd_str})
+		grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
+		
 		lines.append("Damage: %.0f (%s)" % [summary["damage"], summary["damage_type_str"]])
 		lines.append("Rate: %s   •   DPS: %.1f" % [cd_str, summary["dps"]])
+	elif summary["dot_dps"] > 0.0:
+		grid_stats.append({"label": "DoT DPS", "value": "%.0f/s" % summary["dot_dps"]})
+		if summary["dot_duration"] > 0.0:
+			grid_stats.append({"label": "DURATION", "value": "%.1fs" % summary["dot_duration"]})
+		if summary["cooldown"] > 0.0:
+			grid_stats.append({"label": "CYCLE", "value": "%.1fs" % summary["cooldown"]})
+		lines.append("DoT: %.0f/s (%s)" % [summary["dot_dps"], summary["damage_type_str"]])
+		
+	# Status debuffs & specialized trap metrics
+	if summary["slow_pct"] > 0.0:
+		grid_stats.append({"label": "SLOW", "value": "-%.0f%%" % summary["slow_pct"]})
+		lines.append("Slow: -%.0f%% Movement Speed" % summary["slow_pct"])
+		
+	if summary["has_freeze"]:
+		grid_stats.append({"label": "FREEZE", "value": "%.1fs" % summary["freeze_duration"]})
+		if summary["cooldown"] > 0.0 and summary["has_attack"] == false and summary["dot_dps"] == 0.0:
+			grid_stats.append({"label": "CYCLE", "value": "%.1fs" % summary["cooldown"]})
+		lines.append("Freeze Duration: %.1fs" % summary["freeze_duration"])
+		
+	if summary["armor_reduction"] > 0.0:
+		grid_stats.append({"label": "ARMOR", "value": "-%.0f" % summary["armor_reduction"]})
+		lines.append("Armor Shred: -%.0f" % summary["armor_reduction"])
+		
+	if summary["magic_resistance_reduction"] > 0.0:
+		grid_stats.append({"label": "MAGIC RES", "value": "-%.0f" % summary["magic_resistance_reduction"]})
+		lines.append("Magic Resistance Shred: -%.0f" % summary["magic_resistance_reduction"])
+		
+	if summary["energy_reward_bonus"] > 0.0:
+		grid_stats.append({"label": "ENERGY", "value": "+%.0f%%" % summary["energy_reward_bonus"]})
+		lines.append("Energy Reward: +%.0f%%" % summary["energy_reward_bonus"])
+		
+	if summary["active_duration"] > 0.0:
+		grid_stats.append({"label": "ACTIVE", "value": "%.1fs" % summary["active_duration"]})
+		
 	if summary["has_health"]:
+		grid_stats.append({"label": "HEALTH", "value": "%.0f HP" % summary["max_health"]})
 		lines.append("Structure HP: %.0f" % summary["max_health"])
+		
 	if summary["max_targets"] > 1:
+		grid_stats.append({"label": "CAPACITY", "value": "%d Units" % summary["max_targets"]})
 		lines.append("Target Capacity: %d Enemies" % summary["max_targets"])
+		
 	if summary["targets_ghosts"]:
+		grid_stats.append({"label": "GHOSTS", "value": "Detect"})
 		lines.append("Ghost Detection: Active")
+		
 	if summary["blocks_ghosts"]:
+		grid_stats.append({"label": "BARRIER", "value": "Active"})
 		lines.append("Ghost Barrier: Active")
+		
+	# Traits & Placement rules
+	var t_id = tower_id if not tower_id.is_empty() else Registry.get_tower_id(self)
 	if scaled.requires_wall_behind:
+		traits.append("Placement: Requires Solid Wall/Tower Support")
 		lines.append("Placement: Requires Solid Wall/Tower Support")
-	if tower_id == "soul_lantern":
+		
+	if t_id == "soul_lantern":
+		traits.append("Trait: Ramping Focus Damage (+35%/s)")
 		lines.append("Trait: Ramping Focus Damage (+35%/s)")
-	elif tower_id == "tesla_tower":
+	elif t_id == "tesla_tower":
+		traits.append("Trait: Arc Lightning Chain")
 		lines.append("Trait: Arc Lightning Chain")
-	elif tower_id == "flamethrower":
+	elif t_id == "flamethrower":
+		traits.append("Trait: Continuous Thermal Cone")
 		lines.append("Trait: Continuous Thermal Cone")
-	elif tower_id == "tar_trap":
-		lines.append("Effect: Reduces Enemy Speed by 50%")
-	elif tower_id == "freeze_trap":
-		lines.append("Trait: Freezes Enemies in Place (Burst)")
-	elif tower_id == "wind_wall":
+	elif t_id == "wind_wall":
+		traits.append("Trait: Continuous & Burst Wind Pushback")
 		lines.append("Trait: Continuous & Burst Wind Pushback (Physics Force)")
-	elif tower_id == "acid_wall":
-		lines.append("Trait: Directional Caustic Spray (-25 Armor & DoT)")
-	elif tower_id == "siphon":
-		lines.append("Effect: Increase Enemy Energy Reward by 50%")
 		
 	if not choice_id.is_empty():
 		var choice = get_choice(choice_id)
 		if choice:
 			var spec_details = choice.get_upgrade_details()
 			if not spec_details.is_empty():
+				traits.append("Spec (%s): %s" % [choice.title, ", ".join(spec_details)])
 				lines.append("Spec (%s): %s" % [choice.title, ", ".join(spec_details)])
 			else:
+				traits.append("Spec: %s" % choice.title)
 				lines.append("Spec: %s" % choice.title)
 		
-	if lines.is_empty():
-		lines.append("Defensive Tactical Installation")
-		
+	stats_dict["grid_stats"] = grid_stats
+	stats_dict["traits"] = traits
 	stats_dict["stat_lines"] = lines
 	return stats_dict
 

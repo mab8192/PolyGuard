@@ -48,7 +48,7 @@ theme_type_variation = &"SecondaryButton"
 text = "RESET ARSENAL"
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681901]
-custom_minimum_size = Vector2(0, 430)
+custom_minimum_size = Vector2(0, 450)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
@@ -123,23 +123,29 @@ text = "SOLID DEFENSE"
 
 [node name="DetailBottomVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681914]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681915]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 120)
+custom_minimum_size = Vector2(0, 72)
 layout_mode = 2
 theme_type_variation = &"BodyText"
 text = "Fires rapid arrows at incoming enemies."
 autowrap_mode = 2
 clip_text = true
 
-[node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681916]
+[node name="DetailStatsGrid" type="GridContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681916]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 80)
 layout_mode = 2
-theme_type_variation = &"StatText"
-text = "Damage: 50 | Rate: Every 0.5s"
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 4
+columns = 4
+
+[node name="DetailTraitLabel" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681919]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"SmallText"
 autowrap_mode = 2
 clip_text = true
 
@@ -147,6 +153,7 @@ clip_text = true
 unique_name_in_owner = true
 custom_minimum_size = Vector2(0, 76)
 layout_mode = 2
+size_flags_vertical = 8
 focus_mode = 0
 theme_type_variation = &"PrimaryButton"
 text = "UPGRADE & SPECIALIZE"
@@ -175,3 +182,4 @@ columns = 4
 
 [node name="TowerUpgradePopup" parent="." unique_id=637681922 instance=ExtResource("4_upgrade_popup")]
 unique_name_in_owner = true
+visible = false
