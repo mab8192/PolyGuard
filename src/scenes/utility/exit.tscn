@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" uid="uid://b7jfg1dcg7o6c" path="res://src/textures/utility/exit.png" id="2_exit_tex"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0ocy5"]
-size = Vector2(192, 192)
+size = Vector2(64, 64)
 
 [node name="Exit" type="Area2D" unique_id=2011848074 groups=["exits"]]
 collision_mask = 12

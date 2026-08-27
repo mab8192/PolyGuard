@@ -155,7 +155,8 @@ func can_place_preview() -> bool:
 	for obj in spawner_and_exit_nodes:
 		if obj is Node2D and is_instance_valid(obj) and not obj.is_queued_for_deletion():
 			var obj_rect: Rect2 = _get_tower_global_rect(obj)
-			if preview_rect.grow(-0.1).intersects(obj_rect.grow(-0.1)):
+			var margin: float = 64.0 if (obj is Exit or obj.is_in_group("exits")) else 0.0
+			if preview_rect.grow(-0.1).intersects(obj_rect.grow(margin - 0.1)):
 				return false
 
 	# 7. Check solid structure backing requirement for wall traps
