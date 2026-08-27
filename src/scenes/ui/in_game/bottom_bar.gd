@@ -19,8 +19,6 @@ func _ready() -> void:
 
 	placement_buttons.hide()
 
-	radial_menu.arc_angle_degrees = 180
-
 	radial_menu.item_selected.connect(_on_radial_item_selected)
 	
 	build_button.gui_input.connect(_on_build_button_gui_input)

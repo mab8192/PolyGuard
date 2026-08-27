@@ -3,8 +3,8 @@ class_name RadialMenu extends Control
 signal item_selected(item_data: Variant)
 signal menu_closed()
 
-@export var radius: float = 280.0
-@export var arc_angle_degrees: float = 240.0
+@export var radius: float = 320.0
+@export var arc_angle_degrees: float = 160.0
 @export var center_angle_degrees: float = -90.0 # -90 deg points straight UP
 @export var max_items: int = 6
 @export var deadzone_radius: float = 50.0
