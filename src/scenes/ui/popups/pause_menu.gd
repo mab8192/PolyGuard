@@ -23,6 +23,8 @@ func _ready() -> void:
 	_setup_audio_sliders()
 
 func open() -> void:
+	bgm_slider.set_value_no_signal(SettingsManager.get_bus_volume("Music", 1.0))
+	sfx_slider.set_value_no_signal(SettingsManager.get_bus_volume("SFX", 1.0))
 	get_tree().paused = true
 	show()
 
@@ -31,12 +33,12 @@ func close() -> void:
 	hide()
 
 func _setup_audio_sliders() -> void:
-	bgm_slider.value = SettingsManager.get_bus_volume("Music", 1.0)
+	bgm_slider.set_value_no_signal(SettingsManager.get_bus_volume("Music", 1.0))
 	bgm_slider.value_changed.connect(func(val: float):
 		SettingsManager.set_bus_volume("Music", val)
 	)
 
-	sfx_slider.value = SettingsManager.get_bus_volume("SFX", 1.0)
+	sfx_slider.set_value_no_signal(SettingsManager.get_bus_volume("SFX", 1.0))
 	sfx_slider.value_changed.connect(func(val: float):
 		SettingsManager.set_bus_volume("SFX", val)
 	)

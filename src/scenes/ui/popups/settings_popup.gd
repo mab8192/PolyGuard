@@ -21,7 +21,8 @@ func _ready() -> void:
 		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
 	if credits_button:
 		credits_button.pressed.connect(_on_credits_pressed)
-	_setup_sliders()
+	_connect_slider_signals()
+	_update_slider_values()
 
 func _on_dev_cheats_pressed() -> void:
 	if is_instance_valid(DevCheatMenu.instance):
@@ -41,28 +42,30 @@ func _on_credits_pressed() -> void:
 	_credits_popup.open()
 
 func open() -> void:
-	_setup_sliders()
+	_update_slider_values()
 	reset_button.text = "RESET SAVE DATA"
 	show()
 
 func close() -> void:
 	hide()
 
-func _setup_sliders() -> void:
-	master_slider.value = SettingsManager.get_bus_volume("Master", 1.0)
+func _connect_slider_signals() -> void:
 	master_slider.value_changed.connect(func(val: float):
 		SettingsManager.set_bus_volume("Master", val)
 	)
 	
-	music_slider.value = SettingsManager.get_bus_volume("Music", 1.0)
 	music_slider.value_changed.connect(func(val: float):
 		SettingsManager.set_bus_volume("Music", val)
 	)
 	
-	sfx_slider.value = SettingsManager.get_bus_volume("SFX", 1.0)
 	sfx_slider.value_changed.connect(func(val: float):
 		SettingsManager.set_bus_volume("SFX", val)
 	)
+
+func _update_slider_values() -> void:
+	master_slider.set_value_no_signal(SettingsManager.get_bus_volume("Master", 1.0))
+	music_slider.set_value_no_signal(SettingsManager.get_bus_volume("Music", 1.0))
+	sfx_slider.set_value_no_signal(SettingsManager.get_bus_volume("SFX", 1.0))
 
 func _on_reset_pressed() -> void:
 	SaveManager._init_defaults()
