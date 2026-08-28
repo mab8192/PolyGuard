@@ -54,50 +54,7 @@ func apply(target: Node2D) -> void:
 		if movement:
 			movement.stop()
 
-	# Instant / Initial Damage
-	var total_initial: float = data.damage + data.initial_damage
-	if total_initial > 0.0:
-		var health_comp = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
-		if health_comp:
-			health_comp.damage(total_initial, data.damage_type)
-
-	# Instant Heal
-	if data.heal_amount > 0.0:
-		var health_comp = ComponentUtil.get_component(target, HealthComponent) as HealthComponent
-		if health_comp:
-			health_comp.heal(data.heal_amount)
-
-	# Displacement along recorded path history
-	if data.displace_distance > 0.0:
-		_displace_enemy_along_path(target as Enemy, data.displace_distance)
-
-	# Impulse force (Newton-seconds)
-	if data.impulse_force > 0.0:
-		var mov = ComponentUtil.get_component(target, MovementComponent) as MovementComponent
-		if mov:
-			var dir = _get_source_direction()
-			mov.apply_impulse(dir * data.impulse_force)
-
-	# Impact VFX
-	if data.impact_vfx:
-		var imp = data.impact_vfx.instantiate()
-		if imp:
-			if imp is CanvasItem:
-				(imp as CanvasItem).z_index = 30
-				(imp as CanvasItem).z_as_relative = false
-			var parent_node = target.get_parent() if target.get_parent() else target
-			if imp is Node2D:
-				if parent_node is Node2D:
-					(imp as Node2D).position = (parent_node as Node2D).to_local(target.global_position)
-				else:
-					(imp as Node2D).position = target.global_position
-			parent_node.add_child(imp)
-			if imp is Node2D:
-				(imp as Node2D).reset_physics_interpolation()
-			if imp is CPUParticles2D:
-				(imp as CPUParticles2D).emitting = true
-				if (imp as CPUParticles2D).one_shot:
-					imp.finished.connect(func(): if is_instance_valid(imp): imp.queue_free())
+	_apply_instant_effects()
 
 	# Active VFX
 	if data.active_vfx:
@@ -114,6 +71,72 @@ func apply(target: Node2D) -> void:
 	# If effect has no duration and is instantaneous, expire immediately
 	if data.duration == 0.0 or (data.duration != INF and data.duration <= 0.001 and not data.active_vfx and data.damage_per_second == 0.0 and data.heal_per_second == 0.0 and data.speed_multiplier == 1.0 and data.acceleration_multiplier == 1.0 and data.armor_reduction == 0.0 and data.magic_resistance_reduction == 0.0):
 		expired.emit()
+
+func reapply(source: Object = null) -> void:
+	if source:
+		add_source(source)
+	count_time()
+	_elapsed_time_total = 0.0
+
+	if not is_instance_valid(_target) or not data:
+		return
+
+	# If speed multiplier is zero (freeze/root), immediately halt movement
+	if data.speed_multiplier <= 0.0:
+		var movement = ComponentUtil.get_component(_target, MovementComponent) as MovementComponent
+		if movement:
+			movement.stop()
+
+	_apply_instant_effects()
+
+func _apply_instant_effects() -> void:
+	if not is_instance_valid(_target) or not data:
+		return
+
+	# Instant / Initial Damage
+	var total_initial: float = data.damage + data.initial_damage
+	if total_initial > 0.0:
+		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		if health_comp:
+			health_comp.damage(total_initial, data.damage_type)
+
+	# Instant Heal
+	if data.heal_amount > 0.0:
+		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		if health_comp:
+			health_comp.heal(data.heal_amount)
+
+	# Displacement along recorded path history
+	if data.displace_distance > 0.0:
+		_displace_enemy_along_path(_target as Enemy, data.displace_distance)
+
+	# Impulse force (Newton-seconds)
+	if data.impulse_force > 0.0:
+		var mov = ComponentUtil.get_component(_target, MovementComponent) as MovementComponent
+		if mov:
+			var dir = _get_source_direction()
+			mov.apply_impulse(dir * data.impulse_force)
+
+	# Impact VFX
+	if data.impact_vfx:
+		var imp = data.impact_vfx.instantiate()
+		if imp:
+			if imp is CanvasItem:
+				(imp as CanvasItem).z_index = 30
+				(imp as CanvasItem).z_as_relative = false
+			var parent_node = _target.get_parent() if _target.get_parent() else _target
+			if imp is Node2D:
+				if parent_node is Node2D:
+					(imp as Node2D).position = (parent_node as Node2D).to_local(_target.global_position)
+				else:
+					(imp as Node2D).position = _target.global_position
+			parent_node.add_child(imp)
+			if imp is Node2D:
+				(imp as Node2D).reset_physics_interpolation()
+			if imp is CPUParticles2D:
+				(imp as CPUParticles2D).emitting = true
+				if (imp as CPUParticles2D).one_shot:
+					imp.finished.connect(func(): if is_instance_valid(imp): imp.queue_free())
 
 func _get_source_direction() -> Vector2:
 	_sources = _sources.filter(func(s): return is_instance_valid(s))

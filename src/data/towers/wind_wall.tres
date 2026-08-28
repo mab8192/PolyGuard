@@ -30,9 +30,9 @@ icon = ExtResource("ext_var_gale_vortex")
 [sub_resource type="Resource" id="Resource_wind_force"]
 script = ExtResource("2_effect")
 name = "Aerodynamic Wind Thrust"
-duration = 0.0
-speed_multiplier = 0.9
-impulse_force = 350.0
+duration = 2.0
+speed_multiplier = 0.8
+impulse_force = 400.0
 
 [sub_resource type="Resource" id="Resource_applier_data"]
 script = ExtResource("4_applier")

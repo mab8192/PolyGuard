@@ -41,15 +41,6 @@ offset_top = -192.0
 
 [node name="TowerActionPanel" parent="HUDControl" unique_id=3100000 instance=ExtResource("4_tap")]
 layout_mode = 1
-anchors_preset = -1
-anchor_left = 0.055555556
-anchor_top = 0.625
-anchor_right = 0.9444444
-anchor_bottom = 0.8125
-offset_left = 0.0
-offset_top = 0.0
-offset_right = 0.0
-offset_bottom = 0.0
 
 [node name="Defeat" parent="." unique_id=2160001 instance=ExtResource("6_defeat")]
 visible = false

@@ -224,8 +224,8 @@ func _apply_effects_to_target(receiver: EffectReceiverComponent, body: Node2D) -
 	for effect_data in data.effects:
 		var existing = receiver.get_effect(effect_data.name)
 		if existing:
-			existing.add_source(self)
-			existing.count_time()
+			existing.reapply(self)
+			applied_effect.emit(body)
 		else:
 			var ac = effect_data.create_instance()
 			if ac:
@@ -243,6 +243,8 @@ func _apply_continuous_effect(receiver: EffectReceiverComponent, body: Node2D) -
 		if existing_effect:
 			existing_effect.add_source(self)
 			existing_effect.stop_counting_time()
+			if (effect_data.damage > 0.0 or effect_data.initial_damage > 0.0) and existing_effect not in _applied_effects[body]:
+				existing_effect._apply_instant_effects()
 			if existing_effect not in _applied_effects[body]:
 				_applied_effects[body].append(existing_effect)
 		else:

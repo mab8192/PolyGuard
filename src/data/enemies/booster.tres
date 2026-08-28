@@ -12,7 +12,9 @@
 [sub_resource type="Resource" id="Resource_booster_effect"]
 script = ExtResource("6_eff")
 name = "booster_speed"
-speed_multiplier = 1.35
+speed_multiplier = 1.2
+armor_reduction = -10.0
+magic_resistance_reduction = -10.0
 
 [sub_resource type="Resource" id="Resource_booster_applier"]
 script = ExtResource("7_applier")

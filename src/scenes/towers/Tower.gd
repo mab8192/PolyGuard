@@ -8,7 +8,7 @@ signal state_changed(is_active: bool)
 ## Visual modulations for active vs inactive/recharging states
 const ACTIVE_MODULATE: Color = Color(1.0, 1.0, 1.0, 1.0)
 const INACTIVE_MODULATE: Color = Color(0.48, 0.48, 0.54, 0.75)
-const SELL_REFUND_RATIO: float = 0.5
+const SELL_REFUND_RATIO: float = 0.75
 
 ## Components that CAN be attached. Most are not required
 

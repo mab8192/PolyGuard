@@ -4,7 +4,7 @@ signal item_selected(item_data: Variant)
 signal menu_closed()
 
 @export var radius: float = 300.0
-@export var arc_angle_degrees: float = 170.0
+@export var arc_angle_degrees_per_item: float = 28
 @export var center_angle_degrees: float = -90.0 # -90 deg points straight UP
 @export var max_items: int = 6
 @export var deadzone_radius: float = 50.0
@@ -138,6 +138,8 @@ func _layout_items_in_arc() -> void:
 	var count = _items.size()
 	if count == 0:
 		return
+	
+	var arc_angle_degrees = arc_angle_degrees_per_item * count
 	
 	var start_angle = center_angle_degrees - (arc_angle_degrees / 2.0)
 	var step_angle = 0.0
