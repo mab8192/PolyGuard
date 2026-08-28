@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://cjqnvert2lp6q" path="res://src/scenes/towers/projectiles/projectile.tscn" id="1_megk3"]
 [ext_resource type="Script" uid="uid://cgsewox3e0gwv" path="res://src/data/components/AttackData.gd" id="2_ik266"]
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="3_77e18"]
-[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="4_nkuh4"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="4_uu8f1"]
 [ext_resource type="Texture2D" uid="uid://dyw1aps8nch8f" path="res://src/textures/towers/arrow_wall.png" id="5_megk3"]
 [ext_resource type="PackedScene" uid="uid://cvnxnh3reoedw" path="res://src/scenes/towers/arrow_wall.tscn" id="6_megk3"]
@@ -39,10 +38,6 @@ cooldown_multiplier = 1.3
 extra_targets = -1
 icon = ExtResource("ext_var_heavy_draw")
 
-[sub_resource type="Resource" id="Resource_k6tlf"]
-script = ExtResource("4_nkuh4")
-armor = 20.0
-
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("8_im5y4")
 max_targets = 4
@@ -61,6 +56,5 @@ cooldown_reduction_per_level = 0.0
 cost = 300
 requires_wall_behind = true
 collision_layer = 0
-health = SubResource("Resource_k6tlf")
 attack = SubResource("Resource_soe44")
 targeting = SubResource("Resource_1mbg1")

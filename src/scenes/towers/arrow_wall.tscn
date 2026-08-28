@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://cvnxnh3reoedw"]
 
 [ext_resource type="Script" uid="uid://c7i3iydmeskm" path="res://src/scenes/towers/Tower.gd" id="1_f8rp4"]
-[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_2uwvr"]
 [ext_resource type="Script" uid="uid://ce03oldy8eqse" path="res://src/components/TargetingComponent.gd" id="3_e8xqp"]
 [ext_resource type="Script" uid="uid://cvs3f0a1ee8do" path="res://src/components/AttackComponent.gd" id="4_qelov"]
 [ext_resource type="Texture2D" uid="uid://dyw1aps8nch8f" path="res://src/textures/towers/arrow_wall.png" id="5_f8rp4"]
@@ -12,7 +11,7 @@ size = Vector2(8, 64)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2ptdd"]
 size = Vector2(184, 64)
 
-[node name="ArcherTower" type="StaticBody2D" unique_id=887214604]
+[node name="ArrowWall" type="StaticBody2D" unique_id=887214604]
 collision_layer = 0
 collision_mask = 0
 script = ExtResource("1_f8rp4")
@@ -20,10 +19,6 @@ script = ExtResource("1_f8rp4")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683204369]
 position = Vector2(-28, 0)
 shape = SubResource("RectangleShape2D_d56y3")
-
-[node name="HealthComponent" type="Node" parent="." unique_id=75994436]
-script = ExtResource("2_2uwvr")
-metadata/_custom_type_script = "uid://b25aa5trewubh"
 
 [node name="TargetingComponent" type="Area2D" parent="." unique_id=854869402]
 script = ExtResource("3_e8xqp")

@@ -12,7 +12,7 @@ size = Vector2(352, 64)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_solid"]
 size = Vector2(64, 64)
 
-[node name="CarpetBombArtillery" type="StaticBody2D" unique_id=502528]
+[node name="Artillery" type="StaticBody2D" unique_id=502528]
 collision_layer = 2
 collision_mask = 0
 script = ExtResource("1_4g7v0")

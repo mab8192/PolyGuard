@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://b0w1ndwa11scn"]
 
 [ext_resource type="Script" uid="uid://dmdb6ls0c7nb5" path="res://src/scenes/towers/wind_wall.gd" id="1_script"]
-[ext_resource type="Script" uid="uid://b25aa5trewubh" path="res://src/components/HealthComponent.gd" id="2_health"]
 [ext_resource type="Script" uid="uid://bi5cw4m6km75g" path="res://src/components/EffectApplierComponent.gd" id="3_applier"]
 [ext_resource type="Texture2D" uid="uid://bd1gij6sv1r3h" path="res://src/textures/towers/wind_wall.png" id="4_texture"]
 
@@ -23,10 +22,6 @@ script = ExtResource("1_script")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=683299102]
 position = Vector2(-28, 0)
 shape = SubResource("RectangleShape2D_wall")
-
-[node name="HealthComponent" type="Node" parent="." unique_id=759999103]
-script = ExtResource("2_health")
-metadata/_custom_type_script = "uid://b25aa5trewubh"
 
 [node name="EffectApplierComponent" type="Area2D" parent="." unique_id=854899104]
 collision_layer = 0

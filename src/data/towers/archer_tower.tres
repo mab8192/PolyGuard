@@ -42,7 +42,7 @@ icon = ExtResource("ext_var_true_piercer")
 
 [sub_resource type="Resource" id="Resource_rcoxi"]
 script = ExtResource("4_health")
-max_health = 400.0
+max_health = 250.0
 
 [sub_resource type="Resource" id="Resource_1mbg1"]
 script = ExtResource("6_targeting")

@@ -41,6 +41,7 @@ icon = ExtResource("ext_var_heavy_salvo")
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("4_q30ju")
+max_health = 400.0
 
 [sub_resource type="Resource" id="Resource_targeting"]
 script = ExtResource("8_m7jpq")

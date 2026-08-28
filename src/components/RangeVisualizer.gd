@@ -443,4 +443,3 @@ static func draw_polygon_unobstructed(component: CanvasItem, poly: PackedVector2
 	var closed := poly.duplicate()
 	closed.append(poly[0])
 	component.draw_polyline(closed, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
-

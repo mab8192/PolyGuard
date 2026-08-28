@@ -2,7 +2,6 @@
 
 [ext_resource type="Script" uid="uid://dhuai3f8nixad" path="res://src/data/towers/TowerChoiceUpgrade.gd" id="1_choice"]
 [ext_resource type="Script" uid="uid://65fpl2i11sd7" path="res://src/data/effects/types/EffectData.gd" id="2_effect"]
-[ext_resource type="Script" uid="uid://d0q63vr1c0htm" path="res://src/data/components/HealthData.gd" id="3_health"]
 [ext_resource type="Script" uid="uid://b6m2boucd8dke" path="res://src/data/components/EffectApplierData.gd" id="4_applier"]
 [ext_resource type="Texture2D" uid="uid://bd1gij6sv1r3h" path="res://src/textures/towers/wind_wall.png" id="5_icon"]
 [ext_resource type="PackedScene" uid="uid://b0w1ndwa11scn" path="res://src/scenes/towers/wind_wall.tscn" id="6_scene"]
@@ -44,11 +43,6 @@ cooldown = 5.0
 effects = Array[ExtResource("2_effect")]([SubResource("Resource_wind_force")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"
 
-[sub_resource type="Resource" id="Resource_health"]
-script = ExtResource("3_health")
-max_health = 950.0
-armor = 20.0
-
 [resource]
 script = ExtResource("7_tower")
 tower_id = "wind_wall"
@@ -62,5 +56,4 @@ choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_tempest")
 cost = 300
 requires_wall_behind = true
 collision_layer = 0
-health = SubResource("Resource_health")
 effect_applier = SubResource("Resource_applier_data")

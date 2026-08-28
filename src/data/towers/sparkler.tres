@@ -40,7 +40,7 @@ icon = ExtResource("ext_var_arcane_overcharge")
 
 [sub_resource type="Resource" id="Resource_health"]
 script = ExtResource("3_health")
-max_health = 200.0
+max_health = 250.0
 armor = 5.0
 
 [sub_resource type="Resource" id="Resource_target"]
