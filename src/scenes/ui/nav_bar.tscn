@@ -6,6 +6,11 @@
 [ext_resource type="Texture2D" uid="uid://iqfqn64bbvaj" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/2x/information.png" id="4_info"]
 [ext_resource type="Texture2D" uid="uid://dh5ega7ehveqt" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/backward.png" id="5_backward"]
 [ext_resource type="Texture2D" uid="uid://dhd6bgem5006c" path="res://vendor/Kenney/Kenney_gameIcons/PNG/White/1x/forward.png" id="6_forward"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/nav_campaign.png" id="2_nav_campaign"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/nav_inventory.png" id="3_nav_inventory"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/nav_codex.png" id="4_nav_codex"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/nav_arrow_left.png" id="5_nav_arrow_left"]
+[ext_resource type="Texture2D" path="res://src/textures/icons/nav_arrow_right.png" id="6_nav_arrow_right"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="7_theme"]
 
 [node name="NavBar" type="Panel" unique_id=645505814]
@@ -55,6 +60,7 @@ offset_bottom = 164.0
 grow_horizontal = 2
 pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("3_wrench")
+texture_normal = ExtResource("3_nav_inventory")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -75,6 +81,7 @@ offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("6_forward")
+texture = ExtResource("6_nav_arrow_right")
 expand_mode = 1
 stretch_mode = 5
 
@@ -116,6 +123,7 @@ offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_backward")
+texture = ExtResource("5_nav_arrow_left")
 expand_mode = 1
 stretch_mode = 5
 
@@ -133,6 +141,7 @@ offset_bottom = 134.0
 grow_horizontal = 2
 pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("2_home")
+texture_normal = ExtResource("2_nav_campaign")
 ignore_texture_size = true
 stretch_mode = 5
 
@@ -152,6 +161,7 @@ offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("6_forward")
+texture = ExtResource("6_nav_arrow_right")
 expand_mode = 1
 stretch_mode = 5
 
@@ -193,6 +203,7 @@ offset_bottom = 24.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("5_backward")
+texture = ExtResource("5_nav_arrow_left")
 expand_mode = 1
 stretch_mode = 5
 
@@ -210,6 +221,7 @@ offset_bottom = 164.0
 grow_horizontal = 2
 pivot_offset = Vector2(60, 60)
 texture_normal = ExtResource("4_info")
+texture_normal = ExtResource("4_nav_codex")
 ignore_texture_size = true
 stretch_mode = 5
 
