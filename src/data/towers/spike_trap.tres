@@ -48,6 +48,7 @@ icon = ExtResource("3_icon")
 scene = ExtResource("4_scene")
 description = "Non-solid floor trap that impales physical enemies with an instant damage burst after a short delay."
 choices = Array[ExtResource("1_choice")]([SubResource("Resource_choice_serrated"), SubResource("Resource_choice_recoil")])
+damage_upgrade_per_level = 0.15
 cooldown_reduction_per_level = 0.0
 health_upgrade_per_level = 0.0
 cost = 175

@@ -1,6 +1,6 @@
-[gd_scene format=3 uid="uid://cx8tutorialoverlay01"]
+[gd_scene format=3 uid="uid://cwgkjy8pa3x7a"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/in_game/tutorial_overlay.gd" id="1_tut"]
+[ext_resource type="Script" uid="uid://buncs0kbkdyem" path="res://src/scenes/ui/in_game/tutorial_overlay.gd" id="1_tut"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
 
 [node name="TutorialOverlay" type="CanvasLayer" unique_id=2190001]
@@ -46,7 +46,6 @@ alignment = 1
 
 [node name="HeaderHBox" type="HBoxContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox" unique_id=2190007]
 layout_mode = 2
-alignment = 0
 
 [node name="CategoryBadgePanel" type="PanelContainer" parent="CenterContainer/ModalContainer/MarginContainer/VBox/HeaderHBox" unique_id=2190008]
 layout_mode = 2

@@ -28,7 +28,6 @@ var selected_tower: TowerData = null
 @onready var detail_type_badge: Label = %DetailTypeBadge
 @onready var detail_desc: Label = %DetailDesc
 @onready var detail_stats_grid: GridContainer = %DetailStatsGrid
-@onready var detail_trait_label: Label = %DetailTraitLabel
 @onready var detail_action_button: Button = %DetailActionButton
 
 func _ready() -> void:
@@ -180,8 +179,6 @@ func _update_details_panel() -> void:
 		detail_desc.text = "Select a tower to view its attributes."
 		for child in detail_stats_grid.get_children():
 			child.queue_free()
-		detail_trait_label.text = ""
-		detail_trait_label.visible = false
 		detail_cost.text = ""
 		detail_level_badge.text = ""
 		detail_type_badge.text = ""
@@ -242,15 +239,7 @@ func _update_details_panel() -> void:
 			var val = parts[1].strip_edges() if parts.size() > 1 else item
 			var card = _create_stat_card(key, val)
 			detail_stats_grid.add_child(card)
-			
-	var traits: Array = stats.get("traits", [])
-	if traits.is_empty():
-		detail_trait_label.text = ""
-		detail_trait_label.visible = false
-	else:
-		detail_trait_label.text = " • ".join(traits)
-		detail_trait_label.visible = true
-	
+
 	# Action Button
 	if not is_unlocked:
 		if not is_avail:

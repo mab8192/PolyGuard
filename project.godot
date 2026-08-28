@@ -10,7 +10,7 @@ config_version=5
 
 [application]
 
-config/name="Poly Guard 2D"
+config/name="Poly Guard"
 run/main_scene="uid://duii2yuv2y63u"
 config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=240
