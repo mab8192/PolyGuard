@@ -24,7 +24,6 @@ var _last_range_pos: Vector2 = Vector2.INF
 var _last_range_rot: float = 0.0
 
 var _targets: Array[Node2D] = []
-var _rays: Dictionary[Node2D, ShapeCast2D] = {}
 var _active_targets: Array[Node2D] = []
 
 func set_range_visible(vis: bool) -> void:
@@ -67,13 +66,6 @@ func _process(delta: float) -> void:
 func _update_targets() -> void:
 	_targets = _targets.filter(func(node): return is_instance_valid(node))
 	
-	for target in _rays.keys():
-		if not is_instance_valid(target):
-			var ray = _rays[target]
-			if is_instance_valid(ray):
-				ray.queue_free()
-			_rays.erase(target)
-
 	if _targets.is_empty():
 		_active_targets.clear()
 		return
@@ -224,52 +216,33 @@ func get_targeting_origin_global() -> Vector2:
 	return RangeVisualizer.get_targeting_origin_global(self)
 
 func _has_line_of_sight(target: Node2D) -> bool:
-	if not is_instance_valid(target):
+	if not is_instance_valid(target) or not is_inside_tree():
 		return false
-	var ray: ShapeCast2D = _rays.get(target)
-	if not ray or not is_instance_valid(ray):
-		_create_ray_for(target)
-		ray = _rays.get(target)
-	if not ray:
+	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
+	if not space_state:
 		return true
 
-	ray.global_position = get_targeting_origin_global()
-	ray.target_position = ray.to_local(target.global_position)
-	ray.force_shapecast_update()
-	return not ray.is_colliding()
+	var from_pos: Vector2 = get_targeting_origin_global()
+	var to_pos: Vector2 = target.global_position
 
-func _create_ray_for(target: Node2D) -> void:
-	if _rays.has(target) or not is_instance_valid(target):
-		return
-	var ray := ShapeCast2D.new()
-	var shape := CircleShape2D.new()
-	shape.radius = 4 # 4 px radius to allow for projectiles to clear walls without hitting them
-	ray.shape = shape
-	ray.collision_mask = 1 # Layer 1: Walls / Environment
-	ray.enabled = true
-	if get_parent() is CollisionObject2D:
-		ray.add_exception(get_parent())
-	add_child(ray)
-	_rays[target] = ray
+	var query := PhysicsRayQueryParameters2D.create(from_pos, to_pos, 1) # Layer 1: Level Colliders / Walls
+	query.collide_with_areas = false
+	query.collide_with_bodies = true
+	var parent_node = get_parent()
+	if parent_node is CollisionObject2D:
+		query.exclude = [parent_node.get_rid()]
 
-func _remove_ray_for(target: Node2D) -> void:
-	if _rays.has(target):
-		var ray = _rays[target]
-		if is_instance_valid(ray):
-			ray.queue_free()
-		_rays.erase(target)
+	var hit: Dictionary = space_state.intersect_ray(query)
+	return hit.is_empty()
 
 func _on_body_entered(body: Node2D) -> void:
 	if is_instance_valid(body) and body != owner and not _targets.has(body):
 		_targets.append(body)
-		if not data.can_target_through_walls:
-			_create_ray_for(body)
 
 func _on_body_exited(body: Node2D) -> void:
 	if is_instance_valid(body) and _targets.has(body):
 		_targets.erase(body)
 		_active_targets.erase(body)
-		_remove_ray_for(body)
 
 func _draw() -> void:
 	if not is_range_visible:

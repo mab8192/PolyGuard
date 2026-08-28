@@ -95,8 +95,7 @@ func _spawn_projectile(target: Node2D) -> void:
 		return
 
 	var parent_node: Node = GameManager.stage_root.effects if GameManager.stage_root else get_tree().current_scene
-	parent_node.add_child(proj)
-
+	
 	var spawn_pt: Marker2D = get_attack_point(target)
 	if is_instance_valid(spawn_pt):
 		proj.global_position = spawn_pt.global_position
@@ -115,6 +114,8 @@ func _spawn_projectile(target: Node2D) -> void:
 			dmg_comp.targeting_mask = 4
 
 	proj.target = target
+	
+	parent_node.add_child(proj)
 
 func _deal_direct_damage(target: Node2D) -> void:
 	var health = ComponentUtil.get_component(target, HealthComponent) as HealthComponent

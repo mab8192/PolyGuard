@@ -1,6 +1,9 @@
 [gd_scene format=3 uid="uid://c3o5j8cdgdxmc"]
 
-[ext_resource type="Texture2D" path="res://src/textures/tiles/tiles.png" id="1_tiles_tex"]
+[ext_resource type="Texture2D" uid="uid://bcc27lqglhxel" path="res://src/textures/tiles/tiles.png" id="1_tiles_tex"]
+
+[sub_resource type="CanvasItemMaterial" id="CanvasItemMaterial_yufto"]
+blend_mode = 1
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_1"]
 texture = ExtResource("1_tiles_tex")
@@ -30,4 +33,5 @@ terrain_set_0/terrain_0/color = Color(1, 1, 1, 1)
 sources/0 = SubResource("TileSetAtlasSource_1")
 
 [node name="Tiles" type="TileMapLayer" unique_id=92410858]
+material = SubResource("CanvasItemMaterial_yufto")
 tile_set = SubResource("TileSet_1")
