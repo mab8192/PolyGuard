@@ -228,14 +228,12 @@ func _instantiate_enemy(enemy_data: EnemyData, hp_mult: float = 1.0, speed_mult:
 	if hp_mult != 1.0 or speed_mult != 1.0 or bounty_mult != 1.0:
 		enemy.apply_wave_scaling(hp_mult, speed_mult, bounty_mult)
 
-	# Set up required fields
-	enemy.global_position = _get_spawn_point()
-	
-	# Add it to the scene tree
-	if GameManager.stage_root:
-		GameManager.stage_root.enemies.add_child(enemy)
-	else:
-		add_child(enemy)
+	# Set up required fields and parent node
+	var spawn_pos: Vector2 = _get_spawn_point()
+	var parent_node: Node2D = GameManager.stage_root.enemies if (GameManager.stage_root and GameManager.stage_root.enemies) else self
+	enemy.position = parent_node.to_local(spawn_pos)
+	parent_node.add_child(enemy)
+	enemy.reset_physics_interpolation()
 
 	# Assign targeted active exits if available
 	var active_exits = get_active_exits()

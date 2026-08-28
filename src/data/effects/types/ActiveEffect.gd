@@ -85,12 +85,15 @@ func apply(target: Node2D) -> void:
 			if imp is CanvasItem:
 				(imp as CanvasItem).z_index = 30
 				(imp as CanvasItem).z_as_relative = false
-			if target.get_parent():
-				target.get_parent().add_child(imp)
-			else:
-				target.add_child(imp)
+			var parent_node = target.get_parent() if target.get_parent() else target
 			if imp is Node2D:
-				(imp as Node2D).global_position = target.global_position
+				if parent_node is Node2D:
+					(imp as Node2D).position = (parent_node as Node2D).to_local(target.global_position)
+				else:
+					(imp as Node2D).position = target.global_position
+			parent_node.add_child(imp)
+			if imp is Node2D:
+				(imp as Node2D).reset_physics_interpolation()
 			if imp is CPUParticles2D:
 				(imp as CPUParticles2D).emitting = true
 				if (imp as CPUParticles2D).one_shot:
@@ -195,6 +198,7 @@ func _displace_enemy_along_path(enemy: Enemy, distance: float) -> void:
 	_spawn_warp_visual(enemy, target_pos)
 
 	enemy.global_position = target_pos
+	enemy.reset_physics_interpolation()
 	if enemy.movement:
 		enemy.movement.stop()
 	if enemy.nav:
@@ -220,7 +224,12 @@ func _spawn_warp_visual(enemy: Enemy, pos: Vector2) -> void:
 	p.scale_amount_min = 2.0
 	p.scale_amount_max = 4.0
 	p.color = Color(0.85, 0.35, 1.0, 0.9)
-	enemy.get_parent().add_child(p)
-	p.global_position = pos
+	var parent_node = enemy.get_parent()
+	if parent_node is Node2D:
+		p.position = (parent_node as Node2D).to_local(pos)
+	else:
+		p.position = pos
+	parent_node.add_child(p)
+	p.reset_physics_interpolation()
 	var timer = enemy.get_tree().create_timer(0.5)
 	timer.timeout.connect(func(): if is_instance_valid(p): p.queue_free())

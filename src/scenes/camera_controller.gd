@@ -103,6 +103,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 ## Pointer Lifecycle Helpers
 func _on_pointer_down(id: int, pos: Vector2) -> void:
+	_is_zooming = false
 	_velocity = Vector2.ZERO
 	_drag_history.clear()
 	_record_drag_point(pos)
@@ -235,15 +236,16 @@ func _clamp_position() -> void:
 
 	var effective_top = stage_bounds.position.y - v_pad
 	var effective_bottom = stage_bounds.end.y + v_pad
+	var effective_height = effective_bottom - effective_top
 	var min_y: float
 	var max_y: float
-	if (effective_bottom - effective_top) > half_visible.y * 2.0:
+	if effective_height > half_visible.y * 2.0:
 		min_y = effective_top + half_visible.y
 		max_y = effective_bottom - half_visible.y
 	else:
 		var center_y = stage_bounds.get_center().y
-		min_y = center_y - v_pad
-		max_y = center_y + v_pad
+		min_y = center_y
+		max_y = center_y
 
 	global_position = Vector2(
 		clampf(global_position.x, min_x, max_x),

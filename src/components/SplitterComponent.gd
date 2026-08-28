@@ -49,10 +49,11 @@ func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyDa
 		elif is_instance_valid(actor):
 			copy = actor.duplicate() as Node2D
 
-		if not copy:
-			continue
-
-		copy.global_position = spawn_pos + Vector2(randf_range(-12, 12), randf_range(-12, 12))
+		var target_pos: Vector2 = spawn_pos + Vector2(randf_range(-12, 12), randf_range(-12, 12))
+		if parent_node is Node2D:
+			copy.position = (parent_node as Node2D).to_local(target_pos)
+		else:
+			copy.position = target_pos
 		copy.scale = spawn_scale
 
 		var splitter_comp: SplitterComponent = ComponentUtil.get_component(copy, SplitterComponent) as SplitterComponent
@@ -72,6 +73,7 @@ func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyDa
 			attack_comp.data.damage *= split_data.health_multiplier
 
 		parent_node.add_child(copy)
+		copy.reset_physics_interpolation()
 
 		if copy is Enemy:
 			copy.data.lives_penalty = split_data.lives_penalty_override

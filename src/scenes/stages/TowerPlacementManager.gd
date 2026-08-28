@@ -55,15 +55,19 @@ func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
 		push_error("Must be a tower scene!")
 		return
 
+	var snapped_pos = _snap_to_grid(pos)
+	preview_pos = snapped_pos
+
 	if stage and stage.towers:
+		preview_tower.position = stage.towers.to_local(snapped_pos)
 		stage.towers.add_child(preview_tower)
+	else:
+		preview_tower.position = snapped_pos
+		add_child(preview_tower)
 	
+	preview_tower.reset_physics_interpolation()
 	preview_tower.is_preview = true
 	preview_tower.rotation_degrees = current_rotation_degrees
-	
-	var snapped_pos = _snap_to_grid(pos)
-	preview_tower.global_position = snapped_pos
-	preview_pos = snapped_pos
 
 func rotate_preview(clockwise: bool = true) -> void:
 	if not is_in_placement_mode() or not preview_tower.data:

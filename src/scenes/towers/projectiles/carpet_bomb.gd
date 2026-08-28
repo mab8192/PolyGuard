@@ -113,5 +113,10 @@ func _spawn_burning_ground() -> void:
 	for offset in offsets:
 		var patch = BURNING_GROUND_SCENE.instantiate() as Node2D
 		if patch:
-			patch.position = global_position + fwd * offset
-			effects_parent.call_deferred("add_child", patch)
+			var target_pos: Vector2 = global_position + fwd * offset
+			if effects_parent is Node2D:
+				patch.position = (effects_parent as Node2D).to_local(target_pos)
+			else:
+				patch.position = target_pos
+			effects_parent.add_child(patch)
+			patch.reset_physics_interpolation()

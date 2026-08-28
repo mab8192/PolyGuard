@@ -48,6 +48,7 @@ class HealthBarVisualizer extends Node2D:
 			if should_show and is_instance_valid(actor):
 				global_position = actor.global_position + offset
 				global_rotation = 0.0
+				reset_physics_interpolation()
 		if visible:
 			queue_redraw()
 
@@ -84,6 +85,7 @@ func _ready() -> void:
 		_health_bar.max_value = data.max_health
 		_health_bar.value = _health
 		_health_bar.offset = HEALTH_BAR_OFFSET
+		_health_bar.position = HEALTH_BAR_OFFSET
 		
 		var actor: Node2D = (owner if owner else get_parent()) as Node2D
 		if is_instance_valid(actor):
