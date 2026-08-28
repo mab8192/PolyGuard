@@ -25,13 +25,14 @@ layout_mode = 2
 theme_override_constants/separation = 14
 
 [node name="DetailsPanel" type="PanelContainer" parent="RootVBox" unique_id=637681921]
-custom_minimum_size = Vector2(0, 300)
+custom_minimum_size = Vector2(0, 400)
+custom_maximum_size = Vector2(-1, 400)
 layout_mode = 2
 theme_type_variation = &"DetailPanel"
 
 [node name="DetailVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel" unique_id=637681922]
 layout_mode = 2
-theme_override_constants/separation = 8
+theme_override_constants/separation = 10
 
 [node name="DetailTopHBox" type="HBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681923]
 layout_mode = 2
@@ -89,25 +90,26 @@ text = "PHYSICAL UNIT"
 
 [node name="DetailBottomVBox" type="VBoxContainer" parent="RootVBox/DetailsPanel/DetailVBox" unique_id=637681934]
 layout_mode = 2
+size_flags_vertical = 3
 theme_override_constants/separation = 4
 
 [node name="DetailDesc" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681935]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 110)
+custom_minimum_size = Vector2(0, 96)
 layout_mode = 2
+size_flags_vertical = 3
 theme_type_variation = &"BodyText"
-text = "Standard polygon foot soldier."
+text = "Standard polygon foot soldier. Standard polygon foot soldier.Standard polygon foot soldier.Standard polygon foot soldier."
 autowrap_mode = 2
 clip_text = true
 
-[node name="DetailStats" type="Label" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
+[node name="DetailStatsGrid" type="GridContainer" parent="RootVBox/DetailsPanel/DetailVBox/DetailBottomVBox" unique_id=637681936]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(0, 40)
 layout_mode = 2
-theme_type_variation = &"StatText"
-text = "HP: 100 | Speed: 150 | Lives Penalty: 1"
-autowrap_mode = 2
-clip_text = true
+size_flags_vertical = 3
+theme_override_constants/h_separation = 8
+theme_override_constants/v_separation = 4
+columns = 4
 
 [node name="ScrollContainer" type="ScrollContainer" parent="RootVBox" unique_id=637681937]
 layout_mode = 2

@@ -119,6 +119,41 @@ func get_stats() -> Dictionary:
 	elif display_name == "Sniper":
 		traits.append("Long-Range Ballistics (Attacks towers outside standard range)")
 		
+	var grid_stats: Array[Dictionary] = []
+	
+	# 1. Health
+	grid_stats.append({"label": "HEALTH", "value": "%d HP" % int(hp_val)})
+	
+	# 2. Armor / Physical Defense
+	if is_ghost:
+		grid_stats.append({"label": "ARMOR", "value": "None"})
+	elif armor_val > 0:
+		grid_stats.append({"label": "ARMOR", "value": "%d" % int(armor_val)})
+	else:
+		grid_stats.append({"label": "ARMOR", "value": "0"})
+		
+	# 3. Magic Resistance
+	if mr_val > 0:
+		grid_stats.append({"label": "MAGIC RES", "value": "%d" % int(mr_val)})
+	else:
+		grid_stats.append({"label": "MAGIC RES", "value": "0"})
+		
+	# 4. Speed
+	grid_stats.append({"label": "SPEED", "value": "%d px/s" % int(speed_val)})
+	
+	# 5. Attack Damage (if unit attacks)
+	if attack and attack.damage > 0:
+		grid_stats.append({"label": "DAMAGE", "value": "%.0f" % attack.damage})
+		if attack.cooldown > 0:
+			grid_stats.append({"label": "FIRE RATE", "value": "%.1fs" % attack.cooldown})
+			
+	# 6. Lives Penalty
+	grid_stats.append({"label": "PENALTY", "value": "%d %s" % [lives_penalty, "Life" if lives_penalty == 1 else "Lives"]})
+	
+	# 7. Splitter copies (if applicable)
+	if splitter:
+		grid_stats.append({"label": "SPLITS", "value": "%dx" % splitter.number_of_copies})
+		
 	var lines: Array[String] = []
 	lines.append("HP: %d" % int(hp_val))
 	if not is_ghost:
@@ -141,6 +176,7 @@ func get_stats() -> Dictionary:
 		"speed": speed_val,
 		"lives_penalty": lives_penalty,
 		"energy_reward": energy_reward,
+		"grid_stats": grid_stats,
 		"traits": traits,
 		"stat_lines": lines
 	}
