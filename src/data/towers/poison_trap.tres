@@ -30,6 +30,7 @@ icon = ExtResource("ext_var_broad_plume")
 script = ExtResource("3_ydhdu")
 mode = 2
 delay = 0.5
+active_duration = 3.0
 cooldown = 4.0
 effects = Array[ExtResource("1_7rdgg")]([ExtResource("2_1grd6")])
 metadata/_custom_type_script = "uid://b6m2boucd8dke"

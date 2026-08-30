@@ -124,12 +124,14 @@ func _update_header() -> void:
 			var high_wave = endless_rec.get("highest_wave", 0)
 			stage_title_label.text = "ENDLESS • " + current_stage.stage_name.to_upper()
 			if high_wave > 0:
-				stage_subtitle_label.text = "Starting Energy: %d  •  Lives: %d  •  Best: Wave %d" % [current_stage.starting_energy, current_stage.starting_lives, high_wave]
+				stage_subtitle_label.text = "Starting Energy: %d  •  Lives: %d  •  Best: Wave %d  •  Ghosts: DETECTED" % [current_stage.starting_energy, current_stage.starting_lives, high_wave]
 			else:
-				stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d  •  Endless Defense" % [current_stage.starting_energy, current_stage.starting_lives]
+				stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d  •  Endless Defense  •  Ghosts: DETECTED" % [current_stage.starting_energy, current_stage.starting_lives]
 		else:
+			var has_ghosts: bool = current_stage.has_ghosts()
+			var ghost_str: String = "Ghosts: DETECTED" if has_ghosts else "Ghosts: None"
 			stage_title_label.text = current_stage.stage_name.to_upper()
-			stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d" % [current_stage.starting_energy, current_stage.starting_lives]
+			stage_subtitle_label.text = "Starting Energy: %d  •  Base Lives: %d  •  %s" % [current_stage.starting_energy, current_stage.starting_lives, ghost_str]
 	else:
 		stage_title_label.text = "CUSTOM LOADOUT"
 		stage_subtitle_label.text = "Select your defensive arsenal"

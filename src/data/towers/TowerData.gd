@@ -160,6 +160,7 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		"is_solid": scaled.collision_layer > 0,
 		"collision_layer": scaled.collision_layer,
 		"damage": 0.0,
+		"initial_damage": 0.0,
 		"cooldown": 0.0,
 		"dps": 0.0,
 		"damage_type": AttackData.DamageType.PHYSICAL,
@@ -170,6 +171,7 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 		"blocks_ghosts": false,
 		"has_attack": false,
 		"has_health": false,
+		"has_dot": false,
 		"dot_dps": 0.0,
 		"dot_duration": 0.0,
 		"slow_pct": 0.0,
@@ -203,13 +205,17 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 				continue
 			if eff.damage > 0.0:
 				result["has_attack"] = true
+				result["initial_damage"] += eff.damage
 				result["damage"] += eff.damage
 				result["damage_type"] = eff.damage_type
 			if eff.initial_damage > 0.0:
 				result["has_attack"] = true
+				result["initial_damage"] += eff.initial_damage
 				result["damage"] += eff.initial_damage
 				result["damage_type"] = eff.damage_type
 			if eff.damage_per_second > 0.0:
+				result["has_attack"] = true
+				result["has_dot"] = true
 				result["dot_dps"] += eff.damage_per_second
 				var dur = eff.duration if not is_inf(eff.duration) else 0.0
 				result["dot_duration"] = maxf(result["dot_duration"], dur)
@@ -275,11 +281,15 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		"cost": cost,
 		"level": level,
 		"damage": summary["damage"],
+		"initial_damage": summary["initial_damage"],
 		"cooldown": summary["cooldown"],
 		"dps": summary["dps"],
 		"damage_type_str": summary["damage_type_str"],
 		"has_attack": summary["has_attack"],
 		"has_health": summary["has_health"],
+		"has_dot": summary["has_dot"],
+		"dot_dps": summary["dot_dps"],
+		"dot_duration": summary["dot_duration"],
 		"max_health": summary["max_health"],
 		"max_targets": summary["max_targets"],
 		"targets_ghosts": summary["targets_ghosts"],
@@ -295,24 +305,30 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 	var lines: Array[String] = []
 	
 	# Primary combat stats
-	if summary["has_attack"]:
+	if summary["damage"] > 0.0:
 		var dmg_type = summary["damage_type_str"].left(4) if summary["damage_type_str"] != "Normal" else ""
 		var dmg_val = "%.0f (%s)" % [summary["damage"], dmg_type] if not dmg_type.is_empty() else "%.0f" % summary["damage"]
-		grid_stats.append({"label": "DAMAGE", "value": dmg_val})
+		var label = "INIT DMG" if summary["has_dot"] else "DAMAGE"
+		grid_stats.append({"label": label, "value": dmg_val})
 		
-		var cd_str = "%.2fs" % summary["cooldown"] if summary["cooldown"] > 0 else "Cont."
-		grid_stats.append({"label": "FIRE RATE", "value": cd_str})
-		grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
+		if summary["cooldown"] > 0.0 and not summary["has_dot"]:
+			grid_stats.append({"label": "FIRE RATE", "value": "%.2fs" % summary["cooldown"]})
+			grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
 		
-		lines.append("Damage: %.0f (%s)" % [summary["damage"], summary["damage_type_str"]])
-		lines.append("Rate: %s   •   DPS: %.1f" % [cd_str, summary["dps"]])
-	elif summary["dot_dps"] > 0.0:
+		lines.append("%s: %.0f (%s)" % ["Initial Damage" if summary["has_dot"] else "Damage", summary["damage"], summary["damage_type_str"]])
+
+	if summary["dot_dps"] > 0.0:
 		grid_stats.append({"label": "DoT DPS", "value": "%.0f/s" % summary["dot_dps"]})
 		if summary["dot_duration"] > 0.0:
 			grid_stats.append({"label": "DURATION", "value": "%.1fs" % summary["dot_duration"]})
 		if summary["cooldown"] > 0.0:
 			grid_stats.append({"label": "CYCLE", "value": "%.1fs" % summary["cooldown"]})
-		lines.append("DoT: %.0f/s (%s)" % [summary["dot_dps"], summary["damage_type_str"]])
+		if summary["dps"] > 0.0:
+			grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
+		lines.append("DoT: %.0f/s for %.1fs (%s)" % [summary["dot_dps"], summary["dot_duration"], summary["damage_type_str"]] if summary["dot_duration"] > 0.0 else "DoT: %.0f/s (%s)" % [summary["dot_dps"], summary["damage_type_str"]])
+	elif summary["damage"] > 0.0 and summary["cooldown"] > 0.0:
+		var cd_str = "%.2fs" % summary["cooldown"]
+		lines.append("Rate: %s   •   DPS: %.1f" % [cd_str, summary["dps"]])
 		
 	# Status debuffs & specialized trap metrics
 	if summary["slow_pct"] > 0.0:

@@ -93,20 +93,61 @@ func _render() -> void:
 	damage_type_badge_label.text = ("%s DAMAGE" % current_stats["damage_type_str"]).to_upper()
 	
 	var stat_lines: Array[String] = []
-	if current_stats["has_attack"]:
-		if is_unlocked and level < tower_data.max_level:
-			var dmg_pct = tower_data.damage_upgrade_per_level * 100.0
-			var cd_pct = tower_data.cooldown_reduction_per_level * 100.0
-			stat_lines.append("Attack Damage: %.0f -> %.0f (+%.0f%%)" % [current_stats["damage"], next_stats["damage"], dmg_pct])
-			stat_lines.append("Attack Speed: Every %.2fs -> %.2fs (-%.0f%% cd)" % [current_stats["cooldown"], next_stats["cooldown"], cd_pct])
+	var is_upgradable: bool = is_unlocked and level < tower_data.max_level
+	var dmg_pct = tower_data.damage_upgrade_per_level * 100.0
+	var cd_pct = tower_data.cooldown_reduction_per_level * 100.0
+
+	# 1. Direct / Initial Attack Damage
+	if current_stats["damage"] > 0.0:
+		var dmg_label = "Initial Damage" if current_stats["has_dot"] else "Attack Damage"
+		if is_upgradable:
+			stat_lines.append("%s: %.0f -> %.0f (+%.0f%%)" % [dmg_label, current_stats["damage"], next_stats["damage"], dmg_pct])
+		else:
+			stat_lines.append("%s: %.0f" % [dmg_label, current_stats["damage"]])
+
+	# 2. DoT Damage & Duration
+	if current_stats["dot_dps"] > 0.0:
+		if is_upgradable:
+			stat_lines.append("Damage Over Time: %.0f/s -> %.0f/s (+%.0f%%)" % [current_stats["dot_dps"], next_stats["dot_dps"], dmg_pct])
+		else:
+			stat_lines.append("Damage Over Time: %.0f/s" % current_stats["dot_dps"])
+		if current_stats["dot_duration"] > 0.0:
+			stat_lines.append("DoT Duration: %.1fs" % current_stats["dot_duration"])
+
+	# 3. Fire Rate / Trigger Cycle
+	if current_stats["cooldown"] > 0.0:
+		var is_trap_applier = tower_data.effect_applier != null
+		var cd_label = "Trigger Cooldown" if is_trap_applier else "Attack Speed"
+		if is_upgradable:
+			stat_lines.append("%s: Every %.2fs -> %.2fs (-%.0f%% cd)" % [cd_label, current_stats["cooldown"], next_stats["cooldown"], cd_pct])
+		else:
+			stat_lines.append("%s: Every %.2fs" % [cd_label, current_stats["cooldown"]])
+
+	# 4. DPS Rating
+	if current_stats["dps"] > 0.0:
+		if is_upgradable:
 			stat_lines.append("DPS Rating: %.1f -> %.1f" % [current_stats["dps"], next_stats["dps"]])
 		else:
-			stat_lines.append("Attack Damage: %.0f" % current_stats["damage"])
-			stat_lines.append("Attack Speed: Every %.2fs" % current_stats["cooldown"])
 			stat_lines.append("DPS Rating: %.1f" % current_stats["dps"])
+
+	# 5. Active Duration
+	if current_stats["active_duration"] > 0.0:
+		stat_lines.append("Active Duration: %.1fs" % current_stats["active_duration"])
+
+	# 6. Status Effects
+	if current_stats["slow_pct"] > 0.0:
+		stat_lines.append("Movement Slow: -%.0f%%" % current_stats["slow_pct"])
+	if current_stats["has_freeze"]:
+		stat_lines.append("Freeze Duration: %.1fs" % current_stats["freeze_duration"])
+	if current_stats["armor_reduction"] > 0.0:
+		stat_lines.append("Armor Shred: -%.0f" % current_stats["armor_reduction"])
+	if current_stats["magic_resistance_reduction"] > 0.0:
+		stat_lines.append("Magic Resistance Shred: -%.0f" % current_stats["magic_resistance_reduction"])
+	if current_stats["energy_reward_bonus"] > 0.0:
+		stat_lines.append("Energy Reward Bonus: +%.0f%%" % current_stats["energy_reward_bonus"])
 			
 	if current_stats["has_health"]:
-		if is_unlocked and level < tower_data.max_level:
+		if is_upgradable:
 			var hp_pct = tower_data.health_upgrade_per_level * 100.0
 			stat_lines.append("Structure Health: %.0f -> %.0f (+%.0f%%)" % [current_stats["max_health"], next_stats["max_health"], hp_pct])
 		else:

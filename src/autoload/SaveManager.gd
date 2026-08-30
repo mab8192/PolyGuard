@@ -4,8 +4,11 @@ const SAVE_PATH = "user://savegame.json"
 
 const DEFAULT_UNLOCKED_STAGES: Array[String] = ["stage_00", "test_stage"]
 const DEFAULT_UNLOCKED_TOWERS: Array[String] = ["archer_tower", "tar_trap", "spike_trap"]
+const FREE_CREDITS_COOLDOWN_SECONDS: int = 8 * 3600 # 8 hours
+const FREE_CREDITS_CLAIM_AMOUNT: int = 200
 
 var _credits: int = 0
+var _last_free_credits_claim_time: int = 0
 var _unlocked_stages: Array[String] = []
 var _stage_records: Dictionary = {} # stage_id -> { "completed": bool, "stars": int, "high_score": int, "cleared_once": bool }
 var _endless_records: Dictionary = {} # stage_id -> { "highest_wave": int, "high_score": int }
@@ -53,6 +56,27 @@ func deduct_credits(amount: int) -> bool:
 		return false
 	_credits -= amount
 	SignalBus.credits_changed.emit(_credits)
+	save_to_disk()
+	return true
+
+func get_last_free_credits_claim_time() -> int:
+	return _last_free_credits_claim_time
+
+func get_free_credits_cooldown_remaining() -> int:
+	if _last_free_credits_claim_time <= 0:
+		return 0
+	var now := int(Time.get_unix_time_from_system())
+	var elapsed := now - _last_free_credits_claim_time
+	return maxi(0, FREE_CREDITS_COOLDOWN_SECONDS - elapsed)
+
+func can_claim_free_credits() -> bool:
+	return get_free_credits_cooldown_remaining() <= 0
+
+func claim_free_credits(amount: int = FREE_CREDITS_CLAIM_AMOUNT) -> bool:
+	if not can_claim_free_credits():
+		return false
+	_last_free_credits_claim_time = int(Time.get_unix_time_from_system())
+	add_credits(amount)
 	save_to_disk()
 	return true
 
@@ -435,6 +459,7 @@ func _ensure_valid_loadout() -> void:
 func save_to_disk() -> void:
 	var data = {
 		"credits": _credits,
+		"last_free_credits_claim_time": _last_free_credits_claim_time,
 		"is_ad_free": _is_ad_free,
 		"unlocked_stages": _unlocked_stages,
 		"stage_records": _stage_records,
@@ -477,6 +502,7 @@ func load_save() -> void:
 		return
 	
 	_credits = int(data.get("credits", 0))
+	_last_free_credits_claim_time = int(data.get("last_free_credits_claim_time", 0))
 	_is_ad_free = bool(data.get("is_ad_free", false))
 	
 	var saved_stages = data.get("unlocked_stages", [])
@@ -528,6 +554,7 @@ func load_save() -> void:
 
 func _init_defaults() -> void:
 	_credits = 0
+	_last_free_credits_claim_time = 0
 	_is_ad_free = false
 	_unlocked_stages = DEFAULT_UNLOCKED_STAGES.duplicate()
 	_stage_records = {}

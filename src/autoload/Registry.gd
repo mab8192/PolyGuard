@@ -118,7 +118,7 @@ func _load_registry() -> void:
 		"stage_18": load("res://src/data/stages/stage_18.tres"),
 		"stage_19": load("res://src/data/stages/stage_19.tres"),
 		"stage_20": load("res://src/data/stages/stage_20.tres"),
-		"test_stage": load("res://src/data/stages/TestStage.tres"),
+		#"test_stage": load("res://src/data/stages/TestStage.tres"),
 	}
 	
 	TOWERS = {

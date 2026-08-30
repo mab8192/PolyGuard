@@ -65,9 +65,9 @@ func get_upgrade_details() -> Array[String]:
 		var pct = int(round((health_multiplier - 1.0) * 100.0))
 		details.append("Structure Health: %+d%%" % pct)
 	if extra_targets != 0:
-		details.append("Target Capacity: %s%d" % ["+" if extra_targets > 0 else "", extra_targets])
+		details.append("Target Capacity: %s%d" % ["+" if extra_targets > 0 else "-", abs(extra_targets)])
 	if cost_reduction != 0:
-		details.append("Placement Cost: %s%d Energy" % ["+" if cost_reduction < 0 else "", cost_reduction])
+		details.append("Placement Cost: %s%d Energy" % ["-" if cost_reduction > 0 else "+", abs(cost_reduction)])
 	if has_targeting_mask_override and (targeting_mask_override & 8) != 0:
 		details.append("Targeting: Can hit Ghost / Spectral")
 	if has_collision_layer_override and (collision_layer_override & 16) != 0:

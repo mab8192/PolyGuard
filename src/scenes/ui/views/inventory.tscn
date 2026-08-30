@@ -31,7 +31,7 @@ theme_override_constants/separation = 14
 
 [node name="AddCreditsButton" type="Button" parent="RootVBox/TopActionsHBox" unique_id=637681931]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(250, 52)
+custom_minimum_size = Vector2(280, 52)
 layout_mode = 2
 size_flags_horizontal = 0
 focus_mode = 0

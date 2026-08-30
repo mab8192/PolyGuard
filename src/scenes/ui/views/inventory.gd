@@ -18,6 +18,7 @@ const CARD_SCENE: PackedScene = preload("res://src/scenes/ui/elements/card.tscn"
 
 var _cards: Array[Card] = []
 var _selected_tower: TowerData = null
+var _countdown_accum: float = 0.0
 
 func _ready() -> void:
 	upgrade_button.pressed.connect(_on_upgrade_button_pressed)
@@ -36,6 +37,15 @@ func _ready() -> void:
 	_update_action_buttons()
 	_populate_towers()
 
+func _process(delta: float) -> void:
+	if not is_visible_in_tree():
+		return
+	if AdManager.is_paid_version() and add_credits_button:
+		_countdown_accum += delta
+		if _countdown_accum >= 1.0:
+			_countdown_accum = 0.0
+			_update_action_buttons()
+
 func _refresh_all() -> void:
 	_update_action_buttons()
 	_populate_towers()
@@ -44,7 +54,27 @@ func _refresh_all() -> void:
 
 func _update_action_buttons() -> void:
 	if add_credits_button:
-		add_credits_button.visible = not AdManager.is_paid_version()
+		add_credits_button.visible = true
+		if AdManager.is_paid_version():
+			if SaveManager.can_claim_free_credits():
+				add_credits_button.text = "CLAIM FREE CREDITS (+%d)" % SaveManager.FREE_CREDITS_CLAIM_AMOUNT
+				add_credits_button.disabled = false
+				add_credits_button.theme_type_variation = &"PrimaryButton"
+			else:
+				var rem = SaveManager.get_free_credits_cooldown_remaining()
+				var hours = rem / 3600
+				var mins = (rem % 3600) / 60
+				var secs = rem % 60
+				if hours > 0:
+					add_credits_button.text = "CLAIM IN %dh %02dm" % [hours, mins]
+				else:
+					add_credits_button.text = "CLAIM IN %02dm %02ds" % [mins, secs]
+				add_credits_button.disabled = true
+				add_credits_button.theme_type_variation = &"SecondaryButton"
+		else:
+			add_credits_button.text = "+100 CREDITS (AD)"
+			add_credits_button.disabled = false
+			add_credits_button.theme_type_variation = &"PrimaryButton"
 	
 	if respec_arsenal_button:
 		var total_spent := SaveManager.get_total_spent_credits()
@@ -206,7 +236,12 @@ func _on_upgrade_button_pressed() -> void:
 		tower_upgrade_popup.open(_selected_tower)
 
 func _on_add_credits_pressed() -> void:
-	AdManager.show_rewarded()
+	if AdManager.is_paid_version():
+		if SaveManager.can_claim_free_credits():
+			SaveManager.claim_free_credits()
+			_update_action_buttons()
+	else:
+		AdManager.show_rewarded()
 
 func _on_respec_arsenal_pressed() -> void:
 	var popup_scene = load("res://src/scenes/ui/popups/respec_popup.tscn")
