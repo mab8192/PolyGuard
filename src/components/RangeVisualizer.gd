@@ -396,7 +396,8 @@ static func _draw_perimeter_points_occluded(component: CanvasItem, node: Node2D,
 			component.draw_line(end_i, end_j, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
 
 	# 2. Draw visible line-of-sight polygon fill
-	component.draw_colored_polygon(visible_pts, RANGE_FILL_COLOR)
+	if visible_pts.size() > 2:
+		component.draw_colored_polygon(visible_pts, RANGE_FILL_COLOR)
 
 static func draw_shape_unobstructed(component: CanvasItem, shape: Shape2D) -> void:
 	if shape is CircleShape2D:

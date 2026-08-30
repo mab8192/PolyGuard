@@ -7,7 +7,7 @@ var stage_ids: Array[String] = Registry.STAGES.keys()
 func _ready() -> void:
 	GameManager.camera = $Camera2D
 	GameManager.stage_root = $StageRoot
-	
+		
 	var stage_to_load = GameManager.selected_stage
 	if not stage_to_load:
 		if not stage_ids.is_empty():

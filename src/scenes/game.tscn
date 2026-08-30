@@ -17,6 +17,7 @@ environment = SubResource("Environment_qgbsg")
 [node name="StageRoot" parent="." unique_id=28076084 instance=ExtResource("2_yufto")]
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=430116562]
+process_callback = 0
 script = ExtResource("2_cam")
 
 [node name="HUD" parent="." unique_id=4857712 instance=ExtResource("2_3rtjt")]
