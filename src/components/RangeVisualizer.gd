@@ -97,6 +97,18 @@ static func draw_shape_with_occlusion(component: CanvasItem, node: Node2D, shape
 	else:
 		draw_shape_unobstructed(component, shape)
 
+static func draw_polygon_with_occlusion(component: CanvasItem, node: Node2D, poly: PackedVector2Array, can_target_through_walls: bool, origin_global: Vector2) -> void:
+	if can_target_through_walls or not component.is_inside_tree():
+		draw_polygon_unobstructed(component, poly)
+		return
+
+	var space_state: PhysicsDirectSpaceState2D = component.get_world_2d().direct_space_state if component.get_world_2d() else null
+	if not space_state:
+		draw_polygon_unobstructed(component, poly)
+		return
+
+	_draw_polygon_occluded(component, node, poly, space_state, origin_global)
+
 static func _get_tile_map_layer(context: CanvasItem) -> TileMapLayer:
 	if GameManager.current_stage and is_instance_valid(GameManager.current_stage.tiles):
 		return GameManager.current_stage.tiles
@@ -126,33 +138,51 @@ static func _collect_wall_corner_angles(context: CanvasItem, origin_global: Vect
 			var poly_count := tile_data.get_collision_polygons_count(0)
 			for p in range(poly_count):
 				var pts := tile_data.get_collision_polygon_points(0, p)
-				for pt in pts:
-					var g_pt := tiles.to_global(cell_local_center + pt)
-					var diff := g_pt - origin_global
-					var dist_sq := diff.length_squared()
-					if dist_sq <= (radius + margin) * (radius + margin) and dist_sq > 0.01:
-						var ang := atan2(diff.y, diff.x)
-						angles.append(ang)
-						angles.append(ang - 0.0002)
-						angles.append(ang + 0.0002)
+				var pt_count := pts.size()
+				for idx in range(pt_count):
+					var p1 := pts[idx]
+					var p2 := pts[(idx + 1) % pt_count]
+					var g_p1 := tiles.to_global(cell_local_center + p1)
+					var g_p2 := tiles.to_global(cell_local_center + p2)
 
-static func _draw_circle_occluded(component: CanvasItem, node: Node2D, radius: float, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
-	var base_segments := 96
-	var angles: Array[float] = []
-	for i in range(base_segments):
-		angles.append(i * TAU / float(base_segments))
+					# 1. Corner vertices
+					var diff1 := g_p1 - origin_global
+					var dist1_sq := diff1.length_squared()
+					if dist1_sq <= (radius + margin) * (radius + margin) and dist1_sq > 0.01:
+						angles.append(atan2(diff1.y, diff1.x))
 
-	var corner_world_angles: Array[float] = []
-	_collect_wall_corner_angles(component, origin_global, radius, corner_world_angles)
+					# 2. Impute exact intersection points where wall edge crosses range boundary
+					var edge := g_p2 - g_p1
+					var a := edge.length_squared()
+					if a > 0.0001:
+						var v := g_p1 - origin_global
+						var b := 2.0 * v.dot(edge)
+						var c := v.length_squared() - radius * radius
+						var disc := b * b - 4.0 * a * c
+						if disc >= 0.0:
+							var sqrt_disc := sqrt(disc)
+							var t1 := (-b - sqrt_disc) / (2.0 * a)
+							var t2 := (-b + sqrt_disc) / (2.0 * a)
+							if t1 >= -0.001 and t1 <= 1.001:
+								var inter1 := g_p1 + edge * clampf(t1, 0.0, 1.0) - origin_global
+								angles.append(atan2(inter1.y, inter1.x))
+							if t2 >= -0.001 and t2 <= 1.001:
+								var inter2 := g_p1 + edge * clampf(t2, 0.0, 1.0) - origin_global
+								angles.append(atan2(inter2.y, inter2.x))
 
-	for ang in corner_world_angles:
-		var world_dir := Vector2(cos(ang), sin(ang))
-		var local_dir := (node.to_local(origin_global + world_dir) - node.to_local(origin_global)).normalized()
-		var local_ang := atan2(local_dir.y, local_dir.x)
-		angles.append(local_ang)
-		angles.append(local_ang - 0.0002)
-		angles.append(local_ang + 0.0002)
+static func _draw_ray_sweep(
+	component: CanvasItem,
+	node: Node2D,
+	angles: Array[float],
+	origin_local: Vector2,
+	origin_global: Vector2,
+	space_state: PhysicsDirectSpaceState2D,
+	get_boundary_pt: Callable
+) -> void:
+	if angles.is_empty():
+		return
 
+	# 1. Deduplicate and sort angles in [0, TAU)
 	for i in range(angles.size()):
 		angles[i] = fposmod(angles[i], TAU)
 	angles.sort()
@@ -162,190 +192,19 @@ static func _draw_circle_occluded(component: CanvasItem, node: Node2D, radius: f
 		if unique_angles.is_empty() or absf(angles[i] - unique_angles.back()) > 0.00005:
 			unique_angles.append(angles[i])
 
-	var perimeter_pts: PackedVector2Array = []
-	for ang in unique_angles:
-		perimeter_pts.append(Vector2(cos(ang), sin(ang)) * radius)
-
-	_draw_perimeter_points_occluded(component, node, perimeter_pts, space_state, origin_global)
-
-static func _get_ray_rect_intersection(origin: Vector2, dir: Vector2, rect: Rect2) -> Vector2:
-	var min_p := rect.position
-	var max_p := rect.end
-	var t_near := -INF
-	var t_far := INF
-
-	if absf(dir.x) > 0.00001:
-		var t1 := (min_p.x - origin.x) / dir.x
-		var t2 := (max_p.x - origin.x) / dir.x
-		var t_min := minf(t1, t2)
-		var t_max := maxf(t1, t2)
-		t_near = maxf(t_near, t_min)
-		t_far = minf(t_far, t_max)
-	elif origin.x < min_p.x or origin.x > max_p.x:
-		return origin + dir * 100.0
-
-	if absf(dir.y) > 0.00001:
-		var t1 := (min_p.y - origin.y) / dir.y
-		var t2 := (max_p.y - origin.y) / dir.y
-		var t_min := minf(t1, t2)
-		var t_max := maxf(t1, t2)
-		t_near = maxf(t_near, t_min)
-		t_far = minf(t_far, t_max)
-	elif origin.y < min_p.y or origin.y > max_p.y:
-		return origin + dir * 100.0
-
-	var t := t_far if (t_near <= 0.0 and t_far > 0.0) else (t_far if t_far > t_near else t_near)
-	return origin + dir * maxf(t, 0.0)
-
-static func _get_rect_perimeter_distance(p: Vector2, rect: Rect2) -> float:
-	var half := rect.size / 2.0
-	var w := rect.size.x
-	var h := rect.size.y
-	var px := clampf(p.x, -half.x, half.x)
-	var py := clampf(p.y, -half.y, half.y)
-
-	var d_top := absf(py - (-half.y))
-	var d_right := absf(px - half.x)
-	var d_bottom := absf(py - half.y)
-	var d_left := absf(px - (-half.x))
-
-	var min_d := minf(minf(d_top, d_right), minf(d_bottom, d_left))
-
-	if min_d == d_top:
-		return px + half.x
-	elif min_d == d_right:
-		return w + (py + half.y)
-	elif min_d == d_bottom:
-		return w + h + (half.x - px)
-	else:
-		return 2.0 * w + h + (half.y - py)
-
-static func _sort_points_along_rect(pts: PackedVector2Array, rect: Rect2) -> PackedVector2Array:
-	var items: Array[Dictionary] = []
-	for p in pts:
-		var s := _get_rect_perimeter_distance(p, rect)
-		items.append({"p": p, "s": s})
-
-	items.sort_custom(func(a: Dictionary, b: Dictionary) -> bool:
-		return a["s"] < b["s"]
-	)
-
-	var result: PackedVector2Array = []
-	for item in items:
-		if result.is_empty() or absf(item["s"] - items[result.size() - 1]["s"]) > 0.1:
-			result.append(item["p"])
-	return result
-
-static func _draw_rect_occluded(component: CanvasItem, node: Node2D, size: Vector2, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
-	var half := size / 2.0
-	var rect := Rect2(-half, size)
-	var tower_local := node.to_local(origin_global)
-	var max_dim := size.length() + tower_local.length()
-
-	var side_segments := 32
-	var perimeter_pts: PackedVector2Array = []
-
-	# Top edge: (-half.x, -half.y) -> (half.x, -half.y)
-	for i in range(side_segments):
-		var t := float(i) / float(side_segments)
-		perimeter_pts.append(Vector2(lerpf(-half.x, half.x, t), -half.y))
-	# Right edge: (half.x, -half.y) -> (half.x, half.y)
-	for i in range(side_segments):
-		var t := float(i) / float(side_segments)
-		perimeter_pts.append(Vector2(half.x, lerpf(-half.y, half.y, t)))
-	# Bottom edge: (half.x, half.y) -> (-half.x, half.y)
-	for i in range(side_segments):
-		var t := float(i) / float(side_segments)
-		perimeter_pts.append(Vector2(lerpf(half.x, -half.x, t), half.y))
-	# Left edge: (-half.x, half.y) -> (-half.x, -half.y)
-	for i in range(side_segments):
-		var t := float(i) / float(side_segments)
-		perimeter_pts.append(Vector2(-half.x, lerpf(half.y, -half.y, t)))
-
-	var corner_world_angles: Array[float] = []
-	_collect_wall_corner_angles(component, origin_global, max_dim, corner_world_angles)
-
-	for ang in corner_world_angles:
-		var world_dir := Vector2(cos(ang), sin(ang))
-		var local_dir := (node.to_local(origin_global + world_dir) - tower_local).normalized()
-		var pt_on_rect := _get_ray_rect_intersection(tower_local, local_dir, rect)
-		perimeter_pts.append(pt_on_rect)
-
-	var sorted_pts := _sort_points_along_rect(perimeter_pts, rect)
-	_draw_perimeter_points_occluded(component, node, sorted_pts, space_state, origin_global)
-
-static func _draw_capsule_occluded(component: CanvasItem, node: Node2D, radius: float, height: float, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
-	var half_h := maxf(0.0, (height / 2.0) - radius)
-	var max_dim := radius + half_h
-	var angles: Array[float] = []
-	var segments := 48
-	for i in range(segments):
-		var angle := PI + (PI * i / float(segments))
-		var p = Vector2(cos(angle) * radius, -half_h + sin(angle) * radius)
-		angles.append(atan2(p.y, p.x))
-	for i in range(segments):
-		var angle := (PI * i / float(segments))
-		var p = Vector2(cos(angle) * radius, half_h + sin(angle) * radius)
-		angles.append(atan2(p.y, p.x))
-
-	var corner_world_angles: Array[float] = []
-	_collect_wall_corner_angles(component, origin_global, max_dim, corner_world_angles)
-
-	for ang in corner_world_angles:
-		var world_dir := Vector2(cos(ang), sin(ang))
-		var local_dir := (node.to_local(origin_global + world_dir) - node.to_local(origin_global)).normalized()
-		var local_ang := atan2(local_dir.y, local_dir.x)
-		angles.append(local_ang)
-		angles.append(local_ang - 0.0002)
-		angles.append(local_ang + 0.0002)
-
-	for i in range(angles.size()):
-		angles[i] = fposmod(angles[i], TAU)
-	angles.sort()
-
-	var unique_angles: Array[float] = []
-	for i in range(angles.size()):
-		if unique_angles.is_empty() or absf(angles[i] - unique_angles.back()) > 0.00005:
-			unique_angles.append(angles[i])
-
-	var perimeter_pts: PackedVector2Array = []
-	for ang in unique_angles:
-		perimeter_pts.append(Vector2(cos(ang), sin(ang)) * radius)
-
-	_draw_perimeter_points_occluded(component, node, perimeter_pts, space_state, origin_global)
-
-static func draw_polygon_with_occlusion(component: CanvasItem, node: Node2D, poly: PackedVector2Array, can_target_through_walls: bool, origin_global: Vector2) -> void:
-	if can_target_through_walls or not component.is_inside_tree():
-		draw_polygon_unobstructed(component, poly)
-		return
-
-	var space_state: PhysicsDirectSpaceState2D = component.get_world_2d().direct_space_state if component.get_world_2d() else null
-	if not space_state:
-		draw_polygon_unobstructed(component, poly)
-		return
-
-	_draw_polygon_occluded(component, node, poly, space_state, origin_global)
-
-static func _draw_polygon_occluded(component: CanvasItem, node: Node2D, poly: PackedVector2Array, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
-	if poly.size() < 3:
-		return
-	var perimeter_pts: PackedVector2Array = []
-	var count := poly.size()
-	var samples_per_edge := 20
-	for i in range(count):
-		var p1 := poly[i]
-		var p2 := poly[(i + 1) % count]
-		for s in range(samples_per_edge):
-			var t := float(s) / float(samples_per_edge)
-			perimeter_pts.append(p1.lerp(p2, t))
-
-	_draw_perimeter_points_occluded(component, node, perimeter_pts, space_state, origin_global)
-
-static func _draw_perimeter_points_occluded(component: CanvasItem, node: Node2D, perimeter_pts: PackedVector2Array, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
-	var count := perimeter_pts.size()
+	var count := unique_angles.size()
 	if count < 3:
 		return
 
+	# 2. Compute boundary points
+	var perimeter_pts: PackedVector2Array = []
+	perimeter_pts.resize(count)
+	for i in range(count):
+		var ang := unique_angles[i]
+		var dir := Vector2(cos(ang), sin(ang))
+		perimeter_pts[i] = get_boundary_pt.call(origin_local, dir)
+
+	# 3. Raycast to determine visible points and blocked status
 	var visible_pts: PackedVector2Array = []
 	visible_pts.resize(count)
 	var is_blocked: Array[bool] = []
@@ -380,7 +239,7 @@ static func _draw_perimeter_points_occluded(component: CanvasItem, node: Node2D,
 			visible_pts[i] = local_end
 			is_blocked[i] = false
 
-	# 1. Draw blocked quads and outer boundary segments
+	# 4. Render slices slice-by-slice as guaranteed primitive triangles
 	for i in range(count):
 		var j := (i + 1) % count
 		var end_i := perimeter_pts[i]
@@ -388,16 +247,291 @@ static func _draw_perimeter_points_occluded(component: CanvasItem, node: Node2D,
 		var vis_i := visible_pts[i]
 		var vis_j := visible_pts[j]
 
-		if is_blocked[i] or is_blocked[j]:
-			var blocked_quad := PackedVector2Array([vis_i, end_i, end_j, vis_j])
-			component.draw_colored_polygon(blocked_quad, BLOCKED_RANGE_FILL_COLOR)
+		# Visible triangle: (origin_local, vis_i, vis_j)
+		var vis_area := 0.5 * absf((vis_i.x - origin_local.x) * (vis_j.y - origin_local.y) - (vis_j.x - origin_local.x) * (vis_i.y - origin_local.y))
+		if vis_area > 0.05:
+			component.draw_colored_polygon(PackedVector2Array([origin_local, vis_i, vis_j]), RANGE_FILL_COLOR)
+
+		# Blocked triangles clamped to wall edges
+		if is_blocked[i] and is_blocked[j]:
+			var area_b1 := 0.5 * absf((end_i.x - vis_i.x) * (end_j.y - vis_i.y) - (end_j.x - vis_i.x) * (end_i.y - vis_i.y))
+			if area_b1 > 0.05:
+				component.draw_colored_polygon(PackedVector2Array([vis_i, end_i, end_j]), BLOCKED_RANGE_FILL_COLOR)
+
+			var area_b2 := 0.5 * absf((end_j.x - vis_i.x) * (vis_j.y - vis_i.y) - (vis_j.x - vis_i.x) * (end_j.y - vis_i.y))
+			if area_b2 > 0.05:
+				component.draw_colored_polygon(PackedVector2Array([vis_i, end_j, vis_j]), BLOCKED_RANGE_FILL_COLOR)
+
+			# Wall shadow boundary line along wall front
+			component.draw_line(vis_i, vis_j, BLOCKED_RANGE_BORDER_COLOR, 1.5, true)
 			component.draw_line(end_i, end_j, BLOCKED_RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
+		elif is_blocked[i] or is_blocked[j]:
+			# Transition slice: keep outer boundary color intact so red does not float outside wall
+			if is_blocked[i]:
+				var area_t := 0.5 * absf((end_i.x - vis_i.x) * (end_j.y - vis_i.y) - (end_j.x - vis_i.x) * (end_i.y - vis_i.y))
+				if area_t > 0.05:
+					component.draw_colored_polygon(PackedVector2Array([vis_i, end_i, end_j]), BLOCKED_RANGE_FILL_COLOR)
+			else:
+				var area_t := 0.5 * absf((end_j.x - vis_j.x) * (end_i.y - vis_j.y) - (end_i.x - vis_j.x) * (end_j.y - vis_j.y))
+				if area_t > 0.05:
+					component.draw_colored_polygon(PackedVector2Array([vis_j, end_i, end_j]), BLOCKED_RANGE_FILL_COLOR)
+			component.draw_line(end_i, end_j, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
 		else:
 			component.draw_line(end_i, end_j, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)
 
-	# 2. Draw visible line-of-sight polygon fill
-	if visible_pts.size() > 2:
-		component.draw_colored_polygon(visible_pts, RANGE_FILL_COLOR)
+static func _draw_circle_occluded(component: CanvasItem, node: Node2D, radius: float, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
+	var origin_local := node.to_local(origin_global)
+	var angles: Array[float] = []
+	var base_segments := 96
+	for i in range(base_segments):
+		angles.append(i * TAU / float(base_segments))
+
+	var corner_world_angles: Array[float] = []
+	_collect_wall_corner_angles(component, origin_global, radius + origin_local.length(), corner_world_angles)
+	for ang in corner_world_angles:
+		var world_dir := Vector2(cos(ang), sin(ang))
+		var local_dir := (node.to_local(origin_global + world_dir) - origin_local).normalized()
+		var local_ang := atan2(local_dir.y, local_dir.x)
+		angles.append(local_ang - 0.0003)
+		angles.append(local_ang)
+		angles.append(local_ang + 0.0003)
+
+	var get_pt := func(orig: Vector2, dir: Vector2) -> Vector2:
+		if orig.length_squared() < 0.01:
+			return dir * radius
+		var b := orig.dot(dir)
+		var c := orig.length_squared() - radius * radius
+		var disc := b * b - c
+		if disc >= 0.0:
+			var t := -b + sqrt(disc)
+			return orig + dir * maxf(t, 0.0)
+		return dir * radius
+
+	_draw_ray_sweep(component, node, angles, origin_local, origin_global, space_state, get_pt)
+
+static func _get_ray_rect_intersection(origin: Vector2, dir: Vector2, rect: Rect2) -> Vector2:
+	var min_p := rect.position
+	var max_p := rect.end
+	var t_near := -INF
+	var t_far := INF
+
+	if absf(dir.x) > 0.00001:
+		var t1 := (min_p.x - origin.x) / dir.x
+		var t2 := (max_p.x - origin.x) / dir.x
+		var t_min := minf(t1, t2)
+		var t_max := maxf(t1, t2)
+		t_near = maxf(t_near, t_min)
+		t_far = minf(t_far, t_max)
+	elif origin.x < min_p.x or origin.x > max_p.x:
+		return origin + dir * 100.0
+
+	if absf(dir.y) > 0.00001:
+		var t1 := (min_p.y - origin.y) / dir.y
+		var t2 := (max_p.y - origin.y) / dir.y
+		var t_min := minf(t1, t2)
+		var t_max := maxf(t1, t2)
+		t_near = maxf(t_near, t_min)
+		t_far = minf(t_far, t_max)
+	elif origin.y < min_p.y or origin.y > max_p.y:
+		return origin + dir * 100.0
+
+	var t := t_far if t_far > 0.0 else (t_near if t_near > 0.0 else 0.0)
+	return origin + dir * t
+
+static func _draw_rect_occluded(component: CanvasItem, node: Node2D, size: Vector2, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
+	var origin_local := node.to_local(origin_global)
+	var half := size / 2.0
+	var rect := Rect2(-half, size)
+	var max_dim := size.length() + origin_local.length()
+
+	var angles: Array[float] = []
+	var side_segments := 24
+	for i in range(side_segments):
+		var p := Vector2(lerpf(-half.x, half.x, float(i) / float(side_segments)), -half.y)
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+	for i in range(side_segments):
+		var p := Vector2(half.x, lerpf(-half.y, half.y, float(i) / float(side_segments)))
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+	for i in range(side_segments):
+		var p := Vector2(lerpf(half.x, -half.x, float(i) / float(side_segments)), half.y)
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+	for i in range(side_segments):
+		var p := Vector2(-half.x, lerpf(half.y, -half.y, float(i) / float(side_segments)))
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+
+	var corners := [Vector2(-half.x, -half.y), Vector2(half.x, -half.y), Vector2(half.x, half.y), Vector2(-half.x, half.y)]
+	for c in corners:
+		var ang := atan2(c.y - origin_local.y, c.x - origin_local.x)
+		angles.append(ang - 0.0003)
+		angles.append(ang + 0.0003)
+
+	var corner_world_angles: Array[float] = []
+	_collect_wall_corner_angles(component, origin_global, max_dim, corner_world_angles)
+	for ang in corner_world_angles:
+		var world_dir := Vector2(cos(ang), sin(ang))
+		var local_dir := (node.to_local(origin_global + world_dir) - origin_local).normalized()
+		var local_ang := atan2(local_dir.y, local_dir.x)
+		angles.append(local_ang - 0.0003)
+		angles.append(local_ang)
+		angles.append(local_ang + 0.0003)
+
+	var get_pt := func(orig: Vector2, dir: Vector2) -> Vector2:
+		return _get_ray_rect_intersection(orig, dir, rect)
+
+	_draw_ray_sweep(component, node, angles, origin_local, origin_global, space_state, get_pt)
+
+static func _get_ray_capsule_intersection(origin: Vector2, dir: Vector2, radius: float, half_h: float) -> Vector2:
+	var best_t := -INF
+	var fallback := origin + dir * (radius + half_h)
+
+	# 1. Left line segment x = -radius, y in [-half_h, half_h]
+	if absf(dir.x) > 0.00001:
+		var t := (-radius - origin.x) / dir.x
+		if t > 0.0:
+			var py := origin.y + dir.y * t
+			if py >= -half_h - 0.001 and py <= half_h + 0.001:
+				if t > best_t:
+					best_t = t
+					fallback = origin + dir * t
+
+	# 2. Right line segment x = radius, y in [-half_h, half_h]
+	if absf(dir.x) > 0.00001:
+		var t := (radius - origin.x) / dir.x
+		if t > 0.0:
+			var py := origin.y + dir.y * t
+			if py >= -half_h - 0.001 and py <= half_h + 0.001:
+				if t > best_t:
+					best_t = t
+					fallback = origin + dir * t
+
+	# 3. Top semicircle center (0, -half_h)
+	var c_top := Vector2(0.0, -half_h)
+	var diff_top := origin - c_top
+	var b_top := diff_top.dot(dir)
+	var c_val_top := diff_top.length_squared() - radius * radius
+	var disc_top := b_top * b_top - c_val_top
+	if disc_top >= 0.0:
+		var t := -b_top + sqrt(disc_top)
+		if t > 0.0:
+			var py := origin.y + dir.y * t
+			if py <= -half_h + 0.001:
+				if t > best_t:
+					best_t = t
+					fallback = origin + dir * t
+
+	# 4. Bottom semicircle center (0, half_h)
+	var c_bot := Vector2(0.0, half_h)
+	var diff_bot := origin - c_bot
+	var b_bot := diff_bot.dot(dir)
+	var c_val_bot := diff_bot.length_squared() - radius * radius
+	var disc_bot := b_bot * b_bot - c_val_bot
+	if disc_bot >= 0.0:
+		var t := -b_bot + sqrt(disc_bot)
+		if t > 0.0:
+			var py := origin.y + dir.y * t
+			if py >= half_h - 0.001:
+				if t > best_t:
+					best_t = t
+					fallback = origin + dir * t
+
+	return fallback
+
+static func _draw_capsule_occluded(component: CanvasItem, node: Node2D, radius: float, height: float, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
+	var origin_local := node.to_local(origin_global)
+	var half_h := maxf(0.0, (height / 2.0) - radius)
+	var max_dim := radius + half_h + origin_local.length()
+
+	var angles: Array[float] = []
+	var segments := 48
+	for i in range(segments):
+		var angle := PI + (PI * i / float(segments))
+		var p := Vector2(cos(angle) * radius, -half_h + sin(angle) * radius)
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+	for i in range(segments):
+		var angle := (PI * i / float(segments))
+		var p := Vector2(cos(angle) * radius, half_h + sin(angle) * radius)
+		angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+
+	var corner_world_angles: Array[float] = []
+	_collect_wall_corner_angles(component, origin_global, max_dim, corner_world_angles)
+	for ang in corner_world_angles:
+		var world_dir := Vector2(cos(ang), sin(ang))
+		var local_dir := (node.to_local(origin_global + world_dir) - origin_local).normalized()
+		var local_ang := atan2(local_dir.y, local_dir.x)
+		angles.append(local_ang - 0.0003)
+		angles.append(local_ang)
+		angles.append(local_ang + 0.0003)
+
+	var get_pt := func(orig: Vector2, dir: Vector2) -> Vector2:
+		return _get_ray_capsule_intersection(orig, dir, radius, half_h)
+
+	_draw_ray_sweep(component, node, angles, origin_local, origin_global, space_state, get_pt)
+
+static func _get_ray_polygon_intersection(origin: Vector2, dir: Vector2, poly: PackedVector2Array) -> Vector2:
+	var count := poly.size()
+	var best_t := -INF
+	var fallback := origin + dir * 100.0
+
+	for i in range(count):
+		var p1 := poly[i]
+		var p2 := poly[(i + 1) % count]
+		var edge := p2 - p1
+		var denom := dir.x * edge.y - dir.y * edge.x
+		if absf(denom) < 0.00001:
+			continue
+		var diff := p1 - origin
+		var t := (diff.x * edge.y - diff.y * edge.x) / denom
+		var u := (diff.x * dir.y - diff.y * dir.x) / denom
+		if t > 0.0001 and u >= -0.001 and u <= 1.001:
+			if t > best_t:
+				best_t = t
+				fallback = origin + dir * t
+
+	return fallback
+
+static func _draw_polygon_occluded(component: CanvasItem, node: Node2D, poly: PackedVector2Array, space_state: PhysicsDirectSpaceState2D, origin_global: Vector2) -> void:
+	if poly.size() < 3:
+		return
+	var origin_local := node.to_local(origin_global)
+	var count := poly.size()
+	var max_dim := 0.0
+	for p in poly:
+		max_dim = maxf(max_dim, origin_local.distance_to(p))
+
+	var angles: Array[float] = []
+
+	var base_segments := 64
+	for i in range(base_segments):
+		angles.append(i * TAU / float(base_segments))
+
+	var samples_per_edge := 16
+	for i in range(count):
+		var p1 := poly[i]
+		var p2 := poly[(i + 1) % count]
+		var ang_v := atan2(p1.y - origin_local.y, p1.x - origin_local.x)
+		angles.append(ang_v - 0.0003)
+		angles.append(ang_v)
+		angles.append(ang_v + 0.0003)
+
+		for s in range(1, samples_per_edge):
+			var t := float(s) / float(samples_per_edge)
+			var p := p1.lerp(p2, t)
+			angles.append(atan2(p.y - origin_local.y, p.x - origin_local.x))
+
+	var corner_world_angles: Array[float] = []
+	_collect_wall_corner_angles(component, origin_global, max_dim, corner_world_angles)
+	for ang in corner_world_angles:
+		var world_dir := Vector2(cos(ang), sin(ang))
+		var local_dir := (node.to_local(origin_global + world_dir) - origin_local).normalized()
+		var local_ang := atan2(local_dir.y, local_dir.x)
+		angles.append(local_ang - 0.0003)
+		angles.append(local_ang)
+		angles.append(local_ang + 0.0003)
+
+	var get_pt := func(orig: Vector2, dir: Vector2) -> Vector2:
+		return _get_ray_polygon_intersection(orig, dir, poly)
+
+	_draw_ray_sweep(component, node, angles, origin_local, origin_global, space_state, get_pt)
 
 static func draw_shape_unobstructed(component: CanvasItem, shape: Shape2D) -> void:
 	if shape is CircleShape2D:
@@ -440,7 +574,14 @@ static func draw_shape_unobstructed(component: CanvasItem, shape: Shape2D) -> vo
 static func draw_polygon_unobstructed(component: CanvasItem, poly: PackedVector2Array) -> void:
 	if poly.size() < 3:
 		return
-	component.draw_colored_polygon(poly, RANGE_FILL_COLOR)
+	var indices := Geometry2D.triangulate_polygon(poly)
+	if not indices.is_empty():
+		component.draw_colored_polygon(poly, RANGE_FILL_COLOR)
+	else:
+		var convex_parts := Geometry2D.decompose_polygon_in_convex(poly)
+		for cp in convex_parts:
+			if cp.size() >= 3:
+				component.draw_colored_polygon(cp, RANGE_FILL_COLOR)
 	var closed := poly.duplicate()
 	closed.append(poly[0])
 	component.draw_polyline(closed, RANGE_BORDER_COLOR, RANGE_BORDER_WIDTH, true)

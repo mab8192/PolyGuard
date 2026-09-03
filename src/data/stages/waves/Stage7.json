@@ -3,14 +3,14 @@
     "reward_energy": 360.0,
     "spawns": [
       {
-        "count": 8,
+        "count": 8.0,
         "delay": 0.5,
         "enemy_type": "grunt",
         "interval": 1.8,
         "spawner_id": "Spawner"
       },
       {
-        "count": 10,
+        "count": 10.0,
         "delay": 2.0,
         "enemy_type": "light",
         "interval": 1.2,
@@ -20,7 +20,7 @@
     "wave_number": 1
   },
   {
-    "reward_energy": 200,
+    "reward_energy": 200.0,
     "spawns": [
       {
         "count": 12.0,
@@ -44,7 +44,7 @@
         "spawner_id": "Spawner"
       },
       {
-        "count": 2.0,
+        "count": 1,
         "delay": 5.5,
         "enemy_type": "sniper",
         "interval": 1.3,
@@ -71,7 +71,7 @@
     "activate_exits": [
       "Exit2"
     ],
-    "reward_energy": 100,
+    "reward_energy": 100.0,
     "spawns": [
       {
         "count": 12.0,
@@ -88,7 +88,7 @@
         "spawner_id": "Spawner"
       },
       {
-        "count": 2.0,
+        "count": 1,
         "delay": 5.0,
         "enemy_type": "sniper",
         "interval": 1.2,
@@ -140,7 +140,7 @@
     "wave_number": 3
   },
   {
-    "reward_energy": 100,
+    "reward_energy": 100.0,
     "spawns": [
       {
         "count": 14.0,
@@ -164,7 +164,7 @@
         "spawner_id": "Spawner"
       },
       {
-        "count": 3.0,
+        "count": 1,
         "delay": 6.5,
         "enemy_type": "splitter",
         "interval": 1.0,
@@ -178,7 +178,7 @@
         "spawner_id": "Spawner"
       },
       {
-        "count": 2,
+        "count": 2.0,
         "delay": 4.5,
         "enemy_type": "bomber",
         "interval": 1.0,
@@ -199,14 +199,14 @@
         "spawner_id": "Spawner2"
       },
       {
-        "count": 4,
+        "count": 4.0,
         "delay": 4.5,
         "enemy_type": "bomber",
         "interval": 1.5,
         "spawner_id": "Spawner2"
       },
       {
-        "count": 2,
+        "count": 2.0,
         "delay": 6.0,
         "enemy_type": "booster",
         "interval": 1.0,
@@ -223,7 +223,7 @@
     "wave_number": 4
   },
   {
-    "reward_energy": 100,
+    "reward_energy": 100.0,
     "spawns": [
       {
         "count": 16.0,
@@ -268,14 +268,14 @@
         "spawner_id": "Spawner2"
       },
       {
-        "count": 3,
+        "count": 3.0,
         "delay": 3.0,
         "enemy_type": "booster",
         "interval": 2.0,
         "spawner_id": "Spawner2"
       },
       {
-        "count": 5,
+        "count": 5.0,
         "delay": 4.5,
         "enemy_type": "bomber",
         "interval": 1.2,
