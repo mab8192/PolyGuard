@@ -16,7 +16,7 @@ config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=240
 boot_splash/bg_color=Color(0.0313726, 0.0470588, 0.0862745, 1)
 boot_splash/image="res://src/textures/splash.png"
-config/icon="uid://dl76pbu2a8ce5"
+config/icon="res://src/textures/app_icons/icon_192.png"
 
 [audio]
 

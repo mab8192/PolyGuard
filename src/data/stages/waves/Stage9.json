@@ -27,7 +27,7 @@
     "wave_number": 1
   },
   {
-    "reward_energy": 280.0,
+    "reward_energy": 200,
     "spawns": [
       {
         "count": 12.0,
@@ -75,7 +75,7 @@
     "wave_number": 2
   },
   {
-    "reward_energy": 300.0,
+    "reward_energy": 150,
     "spawns": [
       {
         "count": 14.0,
@@ -144,7 +144,7 @@
     "wave_number": 3
   },
   {
-    "reward_energy": 330.0,
+    "reward_energy": 100,
     "spawns": [
       {
         "count": 16.0,
@@ -213,7 +213,7 @@
     "wave_number": 4
   },
   {
-    "reward_energy": 360.0,
+    "reward_energy": 50,
     "spawns": [
       {
         "count": 18.0,
