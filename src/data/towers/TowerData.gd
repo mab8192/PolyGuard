@@ -59,6 +59,12 @@ func get_choice(choice_id: String) -> TowerChoiceUpgrade:
 			return c
 	return null
 
+func get_display_icon(choice_id: String = "") -> Texture2D:
+	var choice = get_choice(choice_id)
+	if choice and choice.icon:
+		return choice.icon
+	return icon
+
 func duplicate_data() -> TowerData:
 	var copy: TowerData = self.duplicate(true)
 	if health:

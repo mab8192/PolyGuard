@@ -52,4 +52,5 @@ func _update_display() -> void:
 		empty_box.hide()
 		content_box.show()
 		remove_button.show()
-		icon_rect.texture = tower_data.icon
+		var t_id = Registry.get_tower_id(tower_data)
+		icon_rect.texture = tower_data.get_display_icon(SaveManager.get_tower_choice(t_id))

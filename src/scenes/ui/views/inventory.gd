@@ -102,7 +102,8 @@ func _populate_towers() -> void:
 		else:
 			badge = "LOCKED"
 		
-		card.setup(tower.icon, tower.display_name, badge, tower, not is_unlocked, not is_unlocked and not is_avail)
+		var active_choice = SaveManager.get_tower_choice(t_id)
+		card.setup(tower.get_display_icon(active_choice), tower.display_name, badge, tower, not is_unlocked, not is_unlocked and not is_avail)
 		card.card_clicked.connect(_on_card_clicked)
 		_cards.append(card)
 		
@@ -135,7 +136,7 @@ func _update_details(tower: TowerData) -> void:
 	var active_choice = SaveManager.get_tower_choice(t_id)
 	var stats = tower.get_stats(level, active_choice)
 	
-	detail_icon.texture = tower.icon
+	detail_icon.texture = tower.get_display_icon(active_choice)
 	detail_title.text = tower.display_name
 	detail_cost.text = "%d Energy" % tower.cost
 	

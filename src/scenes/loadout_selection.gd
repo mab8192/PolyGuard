@@ -196,7 +196,7 @@ func _update_details_panel() -> void:
 	
 	var is_avail = selected_tower.is_available()
 	
-	detail_icon.texture = selected_tower.icon
+	detail_icon.texture = selected_tower.get_display_icon(active_choice)
 	detail_title.text = selected_tower.display_name
 	detail_cost.text = "%d Energy" % selected_tower.cost
 	

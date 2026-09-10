@@ -54,7 +54,7 @@ func _update_ui() -> void:
 	var t_id = Registry.get_tower_id(tower_data)
 	is_unlocked = SaveManager.is_tower_unlocked(t_id)
 	
-	icon_rect.texture = tower_data.icon
+	icon_rect.texture = tower_data.get_display_icon(SaveManager.get_tower_choice(t_id))
 	name_label.text = tower_data.display_name
 	cost_label.text = "%d Energy" % tower_data.cost
 	
