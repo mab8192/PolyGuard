@@ -100,7 +100,7 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 			{
 				"icon": ICON_ENERGY,
 				"headline": "CREDIT REWARDS",
-				"body": "Each newly achieved star awards +100 Credits, plus +300 Credits on your initial stage clear. Spend credits in the Armory to unlock new towers and permanent specialization branches."
+				"body": "First clear awards 150 Credits on the tutorial (250–400 on later stages), plus 50 Credits per star earned. Repeat clears award 50 Credits, plus 50 per newly earned star. Spend credits in the Armory to unlock towers and specializations."
 			}
 		],
 		"tip": "Tip: Star bonuses are one-time awards. Beating previously-cleared stages awards +50 credits."

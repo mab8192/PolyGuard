@@ -77,4 +77,5 @@ func _spawn_copies(spawn_pos: Vector2, spawn_scale: Vector2, enemy_data: EnemyDa
 
 		if copy is Enemy:
 			copy.data.lives_penalty = split_data.lives_penalty_override
+			copy.data.energy_reward = split_data.energy_reward_override
 			SignalBus.enemy_spawned.emit(copy)

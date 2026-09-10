@@ -145,7 +145,9 @@ func upgrade_tower(tower_id: String, cost: int) -> bool:
 	if tower_id.is_empty():
 		return false
 	var cur_level = get_tower_level(tower_id)
-	if cur_level >= 5:
+	var tower_data = Registry.get_tower_data(tower_id)
+	var max_level: int = tower_data.max_level if tower_data else 3
+	if cur_level >= max_level:
 		return false
 	if cost > 0 and not deduct_credits(cost):
 		return false
@@ -611,8 +613,9 @@ func cheat_unlock_all_towers() -> void:
 func cheat_max_all_towers() -> void:
 	cheat_unlock_all_towers()
 	for tower_id in Registry.TOWERS:
-		_tower_levels[tower_id] = 5
 		var t_data = Registry.get_tower_data(tower_id)
+		var max_level: int = t_data.max_level if t_data else 3
+		_tower_levels[tower_id] = max_level
 		if t_data and not t_data.choices.is_empty():
 			var specs: Array[String] = []
 			for choice in t_data.choices:
@@ -621,7 +624,7 @@ func cheat_max_all_towers() -> void:
 			_unlocked_specializations[tower_id] = specs
 			if not specs.is_empty():
 				_tower_choices[tower_id] = specs[0]
-		SignalBus.tower_upgraded.emit(tower_id, 5)
+		SignalBus.tower_upgraded.emit(tower_id, max_level)
 	save_to_disk()
 
 func cheat_set_endless_record(stage_id: String, wave: int = 50, score: int = 500000) -> void:

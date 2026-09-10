@@ -6,7 +6,7 @@ class_name TowerChoiceUpgrade extends Resource
 
 @export_group("Requirements & Cost")
 @export var unlock_cost: int = 300 ## Credit cost to purchase this specialization
-@export var required_level: int = 3 ## Minimum tower level required to unlock (e.g. Level 4 = 3 base upgrades)
+@export var required_level: int = 2 ## Minimum tower level required to unlock this specialization
 
 @export_group("Cost")
 @export var cost_reduction: int = 0
