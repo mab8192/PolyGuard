@@ -1,9 +1,9 @@
 [gd_scene format=3 uid="uid://dm4k8q1v5w2ca"]
 
-[ext_resource type="Script" path="res://src/scenes/ui/popups/ghost_alert_popup.gd" id="1_popup"]
+[ext_resource type="Script" uid="uid://d1aivwgm0t0j" path="res://src/scenes/ui/popups/ghost_alert_popup.gd" id="1_popup"]
 [ext_resource type="Theme" uid="uid://knh4f5ekk7vf" path="res://src/misc/theme.tres" id="2_theme"]
-[ext_resource type="Texture2D" path="res://src/textures/enemies/ghost.png" id="3_ghost"]
-[ext_resource type="Texture2D" path="res://src/textures/towers/sparkler.png" id="4_sparkler"]
+[ext_resource type="Texture2D" uid="uid://d4ars28tkgssy" path="res://src/textures/enemies/ghost.png" id="3_ghost"]
+[ext_resource type="Texture2D" uid="uid://2fbh81vex1ec" path="res://src/textures/towers/sparkler.png" id="4_sparkler"]
 
 [node name="GhostAlertPopup" type="CanvasLayer" unique_id=2180001]
 layer = 25
@@ -92,14 +92,15 @@ theme_override_constants/separation = 10
 [node name="IntelHeader" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel/IntelMargin/IntelVBox" unique_id=2180015]
 layout_mode = 2
 theme_type_variation = &"StatText"
-text = "TACTICAL INTEL: STAGE 3"
+text = "INTEL: STAGE 3"
+horizontal_alignment = 1
 
 [node name="IntelBody" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/IntelPanel/IntelMargin/IntelVBox" unique_id=2180016]
 layout_mode = 2
 theme_type_variation = &"BodyText"
-text = "• The next stage introduces ETHEREAL GHOST enemies.
-• Ghost units phase directly through solid defensive towers and physical barricades.
-• Kinetic physical weapons (Archers, Crossbows, Bombs) CANNOT damage ghosts.
+text = "• The next stage introduces GHOST enemies.
+• Ghost units phase directly through solid defensive towers.
+• Physical weapons (Archers, Crossbows, Bombs) CANNOT damage ghosts.
 • Only towers with MAGIC or TRUE damage can detect and eliminate ghosts."
 autowrap_mode = 2
 

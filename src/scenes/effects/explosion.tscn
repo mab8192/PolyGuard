@@ -3,6 +3,7 @@
 [node name="Explosion" type="CPUParticles2D" unique_id=1013732968]
 emitting = false
 amount = 10
+fixed_fps = 30
 lifetime = 0.5
 one_shot = true
 explosiveness = 0.9

@@ -65,7 +65,7 @@ var effect_receiver: EffectReceiverComponent:
 
 var position_history: Array[Vector2] = []
 const HISTORY_SAMPLE_DIST_SQ: float = 64.0 ## Sample point every 8px moved
-const MAX_HISTORY_POINTS: int = 500
+const MAX_HISTORY_POINTS: int = 80 ## ~640px of trail, enough for displacer knockback
 
 func apply_effect(effect: ActiveEffect) -> void:
 	if effect_receiver:

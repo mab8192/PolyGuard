@@ -47,7 +47,7 @@ func get_attack_point(target: Node2D = null) -> Marker2D:
 	
 	return attack_points.pick_random()
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	_time += delta
 
 func can_attack() -> bool:
@@ -127,6 +127,6 @@ func _deal_direct_damage(target: Node2D) -> void:
 	if health:
 		var raw_damage = data.damage
 		if data.attack_mode == AttackData.AttackMode.CONTINUOUS:
-			raw_damage *= get_process_delta_time()
+			raw_damage *= get_physics_process_delta_time() if Engine.is_in_physics_frame() else get_process_delta_time()
 		
 		health.damage(raw_damage, data.damage_type)

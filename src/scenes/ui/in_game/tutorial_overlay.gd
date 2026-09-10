@@ -112,13 +112,13 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 			{
 				"icon": ICON_BUILD,
 				"headline": "RADIAL LOADOUT WHEEL",
-				"body": "Tap the BUILD button at the bottom center to open your equipped tower selection wheel. Selecting any tower enters real-time placement mode."
+				"body": "Tap or drag the BUILD button at the bottom center to open your equipped tower selection wheel. Selecting any tower enters placement mode."
 			},
 			{
 				"icon": ICON_CONFIRM,
 				"modulate": Color(0.3, 1.0, 0.4),
 				"headline": "POSITIONING & CONFIRMATION",
-				"body": "Drag or tap anywhere on the battlefield grid to move the preview.\n• Green: Valid placement zone.\n• Red: Obstructed (cannot block spawners, exits, or existing walls).\nTap the Checkmark (✓) to build, or Rotate (↺) for directional towers."
+				"body": "Drag anywhere on the battlefield grid to move the preview.\n• Green: Valid placement zone.\n• Red: Obstructed (cannot block spawners, exits, or existing walls).\nTap the Checkmark (✓) to build, or Rotate (↺) for directional towers."
 			}
 		],
 		"tip": "Tip: Solid towers alter enemy pathfinding. Build winding chokepoints to maximize range!"
@@ -130,13 +130,13 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 			{
 				"icon": ICON_ARCHER,
 				"headline": "INSPECTING TOWER ATTRIBUTES",
-				"body": "Tap or click any constructed tower on the map to open the Tower Action Panel. View DPS, attack cooldown, current durability, and more!"
+				"body": "Tap any constructed tower on the map to open the Tower Action Panel. View DPS, attack cooldown, current health, and more!"
 			},
 			{
 				"icon": ICON_TRASH,
 				"modulate": Color(1.0, 0.4, 0.3),
 				"headline": "50% ENERGY REFUND",
-				"body": "Need to reshape your chokepoint or pivot to magic weapons? Tap the SELL button in the action panel to dismantle the tower and instantly recover 50% of its cost."
+				"body": "Need to reshape your chokepoint or pivot to magic-based traps? Tap the SELL button in the action panel to dismantle the tower and instantly recover 75% of its cost."
 			}
 		],
 		"tip": "Tip: Selling allows you to dynamically adapt your defense when armored or ghost enemies appear!"

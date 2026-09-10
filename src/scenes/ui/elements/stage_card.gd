@@ -90,7 +90,7 @@ func _render() -> void:
 				status_badge_container.show()
 				status_badge_container.theme_type_variation = &"TypeBadge"
 				status_badge_label.text = "AVAILABLE"
-			record_label.text = "First Clear: 400 Credits"
+			record_label.text = "Best Score: 0"
 			start_button.text = "START"
 			if endless_button:
 				endless_button.hide()

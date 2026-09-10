@@ -7,6 +7,7 @@ colors = PackedColorArray(0, 0.94, 1, 1, 0.4, 0.98, 1, 0.85, 1, 1, 1, 0)
 [node name="SiphonBurst" type="CPUParticles2D" unique_id=257566666]
 emitting = false
 amount = 20
+fixed_fps = 30
 lifetime = 0.4
 one_shot = true
 explosiveness = 1.0

@@ -8,6 +8,10 @@ func _ready() -> void:
 
 # Called every frame. 'delta' is the elapsed time since the previous frame.
 func _process(_delta: float) -> void:
+	if not is_instance_valid(targeting_component) or targeting_component.get_targets().is_empty():
+		visible = false
+		return
+	visible = true
 	queue_redraw()
 
 func _draw() -> void:

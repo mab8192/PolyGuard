@@ -20,7 +20,7 @@ func _ready() -> void:
 		damage_component._update_collision_mask()
 		damage_component.hit.connect(_on_damage_hit)
 
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if _exploded:
 		return
 	
@@ -39,7 +39,7 @@ func _process(delta: float) -> void:
 			explode(null)
 			return
 		
-	super._process(delta)
+	super._physics_process(delta)
 
 func _on_damage_hit(primary_target: Node2D) -> void:
 	explode(primary_target)

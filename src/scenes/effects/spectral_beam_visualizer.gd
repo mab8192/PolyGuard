@@ -9,6 +9,10 @@ func _ready() -> void:
 	z_as_relative = false
 
 func _process(delta: float) -> void:
+	if not is_instance_valid(targeting_component) or targeting_component.get_targets().is_empty():
+		visible = false
+		return
+	visible = true
 	_pulse_offset = fmod(_pulse_offset + delta * 2.5, 1.0)
 	queue_redraw()
 

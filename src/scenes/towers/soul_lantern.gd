@@ -12,6 +12,9 @@ func get_ramp_multiplier_for(target: Node2D) -> float:
 	var t = get_focus_time_for(target)
 	return minf(1.0 + t * RAMP_RATE_PER_SEC, MAX_RAMP_MULTIPLIER)
 
+func _process_attacks() -> void:
+	pass ## Ramping damage is handled in _process so it can track focus time smoothly.
+
 func _process(delta: float) -> void:
 	if is_preview or not is_active:
 		_target_focus_time.clear()
@@ -21,6 +24,8 @@ func _process(delta: float) -> void:
 		return
 		
 	var active_targets = targeting.get_targets()
+	if active_targets.is_empty() and _target_focus_time.is_empty():
+		return
 	
 	# Clean up targets that left range or died
 	for t in _target_focus_time.keys():

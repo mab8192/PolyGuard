@@ -65,7 +65,7 @@ func _setup_lines() -> void:
 		line.joint_mode = Line2D.LINE_JOINT_ROUND
 		line.begin_cap_mode = Line2D.LINE_CAP_ROUND
 		line.end_cap_mode = Line2D.LINE_CAP_ROUND
-		line.antialiased = true
+		line.antialiased = false
 		
 		var mat = ShaderMaterial.new()
 		mat.shader = PREVIEW_SHADER

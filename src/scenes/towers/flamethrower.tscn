@@ -46,6 +46,7 @@ z_as_relative = false
 position = Vector2(28, 0)
 emitting = false
 amount = 30
+fixed_fps = 30
 texture = ExtResource("5_particle")
 lifetime = 0.7
 spread = 30.0

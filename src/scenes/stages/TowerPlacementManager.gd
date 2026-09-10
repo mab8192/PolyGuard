@@ -20,11 +20,14 @@ func setup(p_stage: Stage, p_wave_manager: WaveManager) -> void:
 	stage = p_stage
 	wave_manager = p_wave_manager
 	SignalBus.wave_started.connect(exit_placement_mode)
+	set_process(false)
 
 func _process(_delta: float) -> void:
-	if is_instance_valid(preview_tower):
-		var valid: bool = can_place_preview()
-		preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
+	if not is_instance_valid(preview_tower):
+		set_process(false)
+		return
+	var valid: bool = can_place_preview()
+	preview_tower.modulate = Color(0.5, 1.0, 0.5, 0.7) if valid else Color(1.0, 0.4, 0.4, 0.7)
 
 func enter_placement_mode(tower_input: TowerData) -> void:
 	exit_placement_mode()
@@ -68,6 +71,7 @@ func _create_preview_tower(tower_data: TowerData, pos: Vector2) -> void:
 	preview_tower.reset_physics_interpolation()
 	preview_tower.is_preview = true
 	preview_tower.rotation_degrees = current_rotation_degrees
+	set_process(true)
 
 func rotate_preview(clockwise: bool = true) -> void:
 	if not is_in_placement_mode() or not preview_tower.data:
@@ -88,6 +92,7 @@ func exit_placement_mode() -> void:
 		preview_tower.queue_free()
 		preview_tower = null
 	is_dragging = false
+	set_process(false)
 	if _is_placement_active:
 		_is_placement_active = false
 		SignalBus.placement_mode_changed.emit(false)

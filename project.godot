@@ -13,7 +13,7 @@ config_version=5
 config/name="Poly Guard"
 run/main_scene="uid://duii2yuv2y63u"
 config/features=PackedStringArray("4.7", "Mobile")
-run/max_fps=240
+run/max_fps=120
 boot_splash/bg_color=Color(0.0313726, 0.0470588, 0.0862745, 1)
 boot_splash/image="res://src/textures/splash.png"
 config/icon="res://src/textures/app_icons/icon_192.png"
@@ -40,6 +40,7 @@ window/size/viewport_height=1920
 window/stretch/mode="canvas_items"
 window/stretch/aspect="expand"
 window/handheld/orientation=1
+window/vsync/vsync_mode=1
 
 [editor_plugins]
 

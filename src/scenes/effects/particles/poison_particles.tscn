@@ -2,6 +2,7 @@
 
 [node name="PoisonParticles" type="CPUParticles2D"]
 amount = 6
+fixed_fps = 30
 lifetime = 0.65
 emission_shape = 1
 emission_sphere_radius = 10.0

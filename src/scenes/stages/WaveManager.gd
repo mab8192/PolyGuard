@@ -9,6 +9,8 @@ var is_stage_active: bool = true
 var wave_is_active: bool = false
 var spawners: Array[Spawner] = []
 var pending_enemies: int = 0
+var _last_displayed_secs: int = -1
+var _wave_check_timer: float = 0.0
 
 func setup(p_stage: Stage) -> void:
 	stage = p_stage
@@ -36,14 +38,23 @@ func _process(delta: float) -> void:
 	if wave_is_active:
 		stage_time += delta
 		var total_secs = int(stage_time)
-		@warning_ignore("integer_division")
-		var mins = total_secs / 60
-		var secs = total_secs % 60
-		SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])
-		
-		# Ensure wave completion triggers if all spawners finish and no enemies remain
-		if spawners.all(func(x: Spawner): return !x.is_spawning()):
-			_check_wave_completion()
+		if total_secs != _last_displayed_secs:
+			_last_displayed_secs = total_secs
+			@warning_ignore("integer_division")
+			var mins = total_secs / 60
+			var secs = total_secs % 60
+			SignalBus.stage_time_changed.emit("%02d:%02d" % [mins, secs])
+
+		_wave_check_timer += delta
+		if _wave_check_timer >= 0.25:
+			_wave_check_timer = 0.0
+			var any_spawning := false
+			for s in spawners:
+				if s.is_spawning():
+					any_spawning = true
+					break
+			if not any_spawning:
+				_check_wave_completion()
 
 func _refresh_spawners() -> void:
 	for s in spawners:

@@ -58,6 +58,7 @@ scale_amount_min = 2.0
 scale_amount_max = 3.5
 color_ramp = SubResource("Gradient_wisps")
 
+fixed_fps = 30
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1195477899]
 visible = false
 shape = SubResource("RectangleShape2D_body")

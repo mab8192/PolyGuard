@@ -34,6 +34,9 @@ var dev_cheat_menu: DevCheatMenu = null
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	# Pixel-class phones are 120 Hz; 240 just doubles idle _process work and heat.
+	if OS.has_feature("mobile"):
+		Engine.max_fps = 120
 	dev_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
 	add_child(dev_cheat_menu)
 

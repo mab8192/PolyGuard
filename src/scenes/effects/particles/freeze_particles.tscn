@@ -2,6 +2,7 @@
 
 [node name="FreezeParticles" type="CPUParticles2D"]
 amount = 8
+fixed_fps = 30
 lifetime = 0.6
 emission_shape = 1
 emission_sphere_radius = 16.0

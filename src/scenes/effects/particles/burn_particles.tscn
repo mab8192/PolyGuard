@@ -2,6 +2,7 @@
 
 [node name="BurnParticles" type="CPUParticles2D"]
 amount = 8
+fixed_fps = 30
 lifetime = 0.45
 emission_shape = 1
 emission_sphere_radius = 12.0

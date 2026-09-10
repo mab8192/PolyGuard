@@ -23,7 +23,9 @@ var is_range_visible: bool = false:
 	set(value):
 		if is_range_visible != value:
 			is_range_visible = value
+			_last_range_pos = Vector2.INF
 			queue_redraw()
+			set_process(value or _state != State.IDLE)
 
 var _last_range_pos: Vector2 = Vector2.INF
 var _last_range_rot: float = INF
@@ -61,6 +63,7 @@ func disable() -> void:
 		_delay_timer = 0.0
 		_active_timer = 0.0
 		_cooldown_timer = 0.0
+		set_process(is_range_visible)
 
 func _exit_tree() -> void:
 	for body in _applied_effects.keys().duplicate():
@@ -76,6 +79,7 @@ func _ready() -> void:
 	_update_collision_mask()
 	body_entered.connect(_on_body_entered)
 	body_exited.connect(_on_body_exited)
+	set_process(false)
 
 func _update_collision_mask() -> void:
 	if data:
@@ -111,6 +115,7 @@ func _process(delta: float) -> void:
 			if _cooldown_timer <= 0.0:
 				_state = State.IDLE
 				_application_count = 0
+				set_process(is_range_visible)
 				cooldown_finished.emit()
 				
 				# Re-evaluate overlapping bodies
@@ -163,10 +168,12 @@ func _start_continuous_cooldown() -> void:
 	if data.cooldown > 0.0:
 		_state = State.COOLDOWN
 		_cooldown_timer = data.cooldown
+		set_process(true)
 		cooldown_started.emit()
 	else:
 		_state = State.IDLE
 		_application_count = 0
+		set_process(is_range_visible)
 
 func _start_trigger_sequence() -> void:
 	if not _enabled or not data:
@@ -175,6 +182,7 @@ func _start_trigger_sequence() -> void:
 	if data.delay > 0.0:
 		_state = State.ARMING
 		_delay_timer = data.delay
+		set_process(true)
 	else:
 		_on_delay_finished()
 
@@ -200,6 +208,7 @@ func _start_active_phase() -> void:
 	triggered.emit()
 	_state = State.ACTIVE
 	_active_timer = data.active_duration if data.active_duration > 0.0 else 0.1
+	set_process(true)
 
 	var targets = _get_valid_overlapping_targets()
 	for target in targets:
@@ -213,10 +222,12 @@ func _finish_trigger() -> void:
 	if data.cooldown > 0.0:
 		_state = State.COOLDOWN
 		_cooldown_timer = data.cooldown
+		set_process(true)
 		cooldown_started.emit()
 	else:
 		_state = State.IDLE
 		_application_count = 0
+		set_process(is_range_visible)
 		if _has_valid_overlapping_receivers():
 			_start_trigger_sequence()
 

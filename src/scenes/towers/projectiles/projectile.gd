@@ -21,6 +21,7 @@ var _secs_alive: float = 0
 const MAX_LIFETIME: float = 10
 
 func _ready() -> void:
+	physics_interpolation_mode = Node.PHYSICS_INTERPOLATION_MODE_OFF
 	if not damage_component:
 		damage_component = ComponentUtil.get_component(self, DamageComponent) as DamageComponent
 	if damage_component:
@@ -28,8 +29,7 @@ func _ready() -> void:
 	if visible_on_screen_notifier_2d:
 		visible_on_screen_notifier_2d.screen_exited.connect(_on_screen_exit)
 
-# Called every frame. 'delta' is the elapsed time since the previous frame.
-func _process(delta: float) -> void:
+func _physics_process(delta: float) -> void:
 	if follow_target and is_instance_valid(target):
 		direction = global_position.direction_to(target.global_position)
 

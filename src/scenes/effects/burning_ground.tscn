@@ -18,6 +18,7 @@ script = ExtResource("1_burn_ground")
 
 [node name="FireParticles" type="CPUParticles2D" parent="." unique_id=804923657]
 amount = 24
+fixed_fps = 30
 lifetime = 0.6
 emission_shape = 1
 emission_sphere_radius = 30.0

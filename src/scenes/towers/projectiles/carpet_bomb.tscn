@@ -12,6 +12,7 @@ script = ExtResource("1_bomb")
 [node name="BombTrail" type="CPUParticles2D" parent="."]
 position = Vector2(-6, 0)
 amount = 16
+fixed_fps = 30
 lifetime = 0.25
 spread = 15.0
 gravity = Vector2(0, 0)

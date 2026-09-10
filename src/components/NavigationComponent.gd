@@ -31,6 +31,9 @@ const SPATIAL_CELL_SIZE: float = 48.0
 const INV_SPATIAL_CELL_SIZE: float = 1.0 / SPATIAL_CELL_SIZE
 
 var _cached_pos: Vector2 = Vector2.ZERO
+var _cached_field_id: String = ""
+var _cached_dist_field_id: String = ""
+var _field_ids_dirty: bool = true
 
 
 func _enter_tree() -> void:
@@ -72,12 +75,14 @@ func _ready() -> void:
 
 
 func _on_flow_fields_updated() -> void:
+	_field_ids_dirty = true
 	if data and data.targets_towers:
 		_pick_target()
 
 
 func set_exits(new_exits: Array[Node2D]) -> void:
 	_exits = new_exits
+	_field_ids_dirty = true
 	_pick_target()
 
 
@@ -99,6 +104,26 @@ func distance_to_goal() -> float:
 
 
 func get_field_id() -> String:
+	if _exits.size() > 1 and data and data.strategy == NavigationData.NavStrategy.FARTHEST:
+		return _compute_field_id()
+	if _field_ids_dirty or _cached_field_id.is_empty():
+		_cached_field_id = _compute_field_id()
+		_cached_dist_field_id = _compute_distance_field_id()
+		_field_ids_dirty = false
+	return _cached_field_id
+
+
+func get_distance_field_id() -> String:
+	if _exits.size() > 1 and data and data.strategy == NavigationData.NavStrategy.FARTHEST:
+		return _compute_distance_field_id()
+	if _field_ids_dirty or _cached_dist_field_id.is_empty():
+		_cached_field_id = _compute_field_id()
+		_cached_dist_field_id = _compute_distance_field_id()
+		_field_ids_dirty = false
+	return _cached_dist_field_id
+
+
+func _compute_field_id() -> String:
 	var prefix: String = "ghost" if (data and (data.nav_layer & 4) != 0) else "physical"
 	var size_str: String = "small"
 	if data:
@@ -114,7 +139,7 @@ func get_field_id() -> String:
 	return "%s_%s" % [prefix, size_str]
 
 
-func get_distance_field_id() -> String:
+func _compute_distance_field_id() -> String:
 	var prefix: String = "ghost" if (data and (data.nav_layer & 4) != 0) else "physical"
 	if _exits.size() > 1 and data and data.strategy != NavigationData.NavStrategy.CLOSEST:
 		var exit_idx: int = _get_target_exit_index()
@@ -164,8 +189,9 @@ static func _update_spatial_grid_if_needed() -> void:
 		var cx: int = int(floor(comp._cached_pos.x * INV_SPATIAL_CELL_SIZE))
 		var cy: int = int(floor(comp._cached_pos.y * INV_SPATIAL_CELL_SIZE))
 		var cell := Vector2i(cx, cy)
-		var bucket: Array = _spatial_grid.get(cell, [])
-		if bucket.is_empty():
+		var bucket = _spatial_grid.get(cell)
+		if bucket == null:
+			bucket = []
 			_spatial_grid[cell] = bucket
 		bucket.append(comp)
 
@@ -192,7 +218,9 @@ func _compute_separation_vector() -> Vector2:
 	for dy in range(-cell_range, cell_range + 1):
 		for dx in range(-cell_range, cell_range + 1):
 			var cell := Vector2i(cx + dx, cy + dy)
-			var bucket: Array = _spatial_grid.get(cell, [])
+			var bucket = _spatial_grid.get(cell)
+			if bucket == null:
+				continue
 			for other: NavigationComponent in bucket:
 				if other == self:
 					continue
@@ -212,6 +240,8 @@ func _physics_process(delta: float) -> void:
 		return
 
 	var dir: Vector2 = Vector2.ZERO
+	var cached_field_id: String = get_field_id()
+	var cached_field: FlowField = FlowFieldManager.get_field(cached_field_id)
 
 	# 1. Tower-targeting enemies (Snipers, Bombers)
 	if data and data.targets_towers:
@@ -222,7 +252,7 @@ func _physics_process(delta: float) -> void:
 
 		if is_instance_valid(_target_tower) and not _target_tower.is_queued_for_deletion():
 			_no_path = false
-			remaining_distance = _calculate_path_length(_tower_path.slice(_tower_path_idx)) if _tower_path_idx < _tower_path.size() else _actor.global_position.distance_to(_target_tower.global_position)
+			remaining_distance = _calculate_path_length(_tower_path, _tower_path_idx) if _tower_path_idx < _tower_path.size() else _actor.global_position.distance_to(_target_tower.global_position)
 
 			# Advance waypoints
 			while _tower_path_idx < _tower_path.size() and _actor.global_position.distance_squared_to(_tower_path[_tower_path_idx]) < 256.0:
@@ -234,13 +264,11 @@ func _physics_process(delta: float) -> void:
 				dir = _actor.global_position.direction_to(_target_tower.global_position)
 		else:
 			# Fallback to exit flow field when no towers exist
-			var field_id: String = get_field_id()
-			var field: FlowField = FlowFieldManager.get_field(field_id)
-			if field and field.is_reachable(_actor.global_position):
-				_no_path = field.is_obstructed(_actor.global_position)
-				dir = field.query(_actor.global_position)
+			if cached_field and cached_field.is_reachable(_actor.global_position):
+				_no_path = cached_field.is_obstructed(_actor.global_position)
+				dir = cached_field.query(_actor.global_position)
 				var dist_field_id: String = get_distance_field_id()
-				var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != field_id else field
+				var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != cached_field_id else cached_field
 				var cost_val: float = dist_field.get_integration_cost(_actor.global_position) if dist_field else float(FlowField.INTEGRATION_MAX)
 				if cost_val < float(FlowField.INTEGRATION_MAX):
 					remaining_distance = cost_val * float(dist_field.cell_size)
@@ -269,20 +297,17 @@ func _physics_process(delta: float) -> void:
 
 	# 2. Standard exit-targeting enemies
 	else:
-		var field_id: String = get_field_id()
-		var field: FlowField = FlowFieldManager.get_field(field_id)
-
-		if field and field.is_reachable(_actor.global_position):
-			var obstructed: bool = field.is_obstructed(_actor.global_position)
+		if cached_field and cached_field.is_reachable(_actor.global_position):
+			var obstructed: bool = cached_field.is_obstructed(_actor.global_position)
 			if not obstructed:
 				_no_path = false
 			else:
 				if not _no_path:
 					no_path_available.emit()
 					_no_path = true
-			dir = field.query(_actor.global_position)
+			dir = cached_field.query(_actor.global_position)
 			var dist_field_id: String = get_distance_field_id()
-			var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != field_id else field
+			var dist_field: FlowField = FlowFieldManager.get_field(dist_field_id) if dist_field_id != cached_field_id else cached_field
 			var cost_val: float = dist_field.get_integration_cost(_actor.global_position) if dist_field else float(FlowField.INTEGRATION_MAX)
 			if cost_val < float(FlowField.INTEGRATION_MAX):
 				remaining_distance = cost_val * float(dist_field.cell_size)
@@ -321,8 +346,7 @@ func _physics_process(delta: float) -> void:
 
 				# Ensure separation does not steer into a solid wall
 				var test_pos := _actor.global_position + flow_tangent * (signf(lateral_sep) * 16.0)
-				var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
-				if cur_field and not cur_field.is_walkable(test_pos):
+				if cached_field and not cached_field.is_walkable(test_pos):
 					blended_sep = dir * (forward_sep * 0.25)
 
 				dir = (dir + blended_sep * data.separation_weight).normalized()
@@ -345,13 +369,12 @@ func _physics_process(delta: float) -> void:
 		if _stuck_timer >= 0.8:
 			var unstuck_side: float = 1.0 if (_actor.get_instance_id() % 2 == 0) else -1.0
 			var perp: Vector2 = Vector2(-dir.y, dir.x) * unstuck_side
-			var cur_field: FlowField = FlowFieldManager.get_field(get_field_id())
 			var test_pos := _actor.global_position + perp * 16.0
-			if cur_field and not cur_field.is_walkable(test_pos):
+			if cached_field and not cached_field.is_walkable(test_pos):
 				# Try opposite side
 				perp = -perp
 				test_pos = _actor.global_position + perp * 16.0
-				if cur_field and not cur_field.is_walkable(test_pos):
+				if cached_field and not cached_field.is_walkable(test_pos):
 					perp = Vector2.ZERO
 
 			if perp != Vector2.ZERO:
@@ -429,11 +452,11 @@ func _find_target_tower() -> Tower:
 	return null
 
 
-func _calculate_path_length(path: PackedVector2Array) -> float:
-	if path.size() < 2:
+func _calculate_path_length(path: PackedVector2Array, start_idx: int = 0) -> float:
+	if path.size() - start_idx < 2:
 		return 0.0
 	var total_len: float = 0.0
-	for i in range(path.size() - 1):
+	for i in range(start_idx, path.size() - 1):
 		total_len += path[i].distance_to(path[i + 1])
 	return total_len
 

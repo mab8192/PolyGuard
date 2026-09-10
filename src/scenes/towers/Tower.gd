@@ -178,13 +178,18 @@ func _on_died() -> void:
 func _on_hit(_dmg: float) -> void:
 	AudioManager.play_random_sfx(AudioManager.sfx_tower_hit)
 
-func _process(_delta: float) -> void:
+func _physics_process(_delta: float) -> void:
+	_process_attacks()
+
+func _process_attacks() -> void:
 	# Preview or inactive towers do not process attacks
 	if is_preview or not is_active:
 		return
-	
+
 	if targeting and attack:
-		attack.attack_targets(targeting.get_targets())
+		var targets := targeting.get_targets()
+		if not targets.is_empty():
+			attack.attack_targets(targets)
 
 func _update_solid_state() -> void:
 	if data:
@@ -203,6 +208,8 @@ func _update_preview_state() -> void:
 	for child in get_children():
 		if child is CollisionShape2D or child is CollisionPolygon2D:
 			child.disabled = is_preview
+		elif is_preview and (child is CPUParticles2D or child is GPUParticles2D):
+			child.emitting = false
 	
 	# Let placement input pass through preview visuals to the stage
 	_set_controls_mouse_filter(self, is_preview)
@@ -229,6 +236,11 @@ func _update_active_state(animate: bool = false) -> void:
 		return
 	
 	_set_visual_dimmed(!is_active, animate)
+
+	if not is_active:
+		for child in get_children():
+			if child is CPUParticles2D or child is GPUParticles2D:
+				child.emitting = false
 	
 	if effect_applier:
 		if is_active:

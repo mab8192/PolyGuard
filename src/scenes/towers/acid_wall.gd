@@ -10,11 +10,6 @@ func _ready() -> void:
 		if not effect_applier.deactivated.is_connected(_on_deactivated):
 			effect_applier.deactivated.connect(_on_deactivated)
 
-func _process(_delta: float) -> void:
-	if is_preview:
-		if acid_effect and acid_effect.emitting:
-			acid_effect.emitting = false
-
 func _on_triggered() -> void:
 	if acid_effect and not is_preview:
 		acid_effect.emitting = true

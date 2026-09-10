@@ -35,10 +35,14 @@ var _drag_history: Array[Dictionary] = []
 
 func _ready() -> void:
 	SignalBus.placement_mode_changed.connect(_on_placement_mode_changed)
+	set_process(false)
 
 func _process(delta: float) -> void:
+	var still_active: bool = false
+
 	# Smooth mouse wheel zoom interpolation
 	if _is_zooming:
+		still_active = true
 		var cur_z = zoom.x
 		var new_z = lerpf(cur_z, _target_zoom, 1.0 - exp(-ZOOM_SMOOTHNESS * delta))
 		if absf(new_z - _target_zoom) < 0.001:
@@ -51,11 +55,15 @@ func _process(delta: float) -> void:
 	
 	# Inertia momentum when released
 	if not _is_dragging and _pointers.is_empty() and _velocity.length_squared() > 0.0:
+		still_active = true
 		global_position -= _velocity * delta
 		_clamp_position()
 		_velocity = _velocity.lerp(Vector2.ZERO, 1.0 - exp(-PAN_FRICTION * delta))
 		if _velocity.length() < (MIN_PAN_VELOCITY / zoom.x):
 			_velocity = Vector2.ZERO
+
+	if not still_active:
+		set_process(false)
 
 func _unhandled_input(event: InputEvent) -> void:
 	# 1. Touch Events (Mobile & Emulated Pointer)
@@ -178,6 +186,8 @@ func _on_pointer_up(id: int) -> bool:
 		if _is_dragging:
 			_is_dragging = false
 			_velocity = _calculate_release_velocity() / zoom.x
+			if _velocity.length_squared() > 0.0:
+				set_process(true)
 			return true
 			
 	return false
@@ -197,6 +207,7 @@ func _zoom_step(factor: float, screen_pos: Vector2) -> void:
 	_zoom_anchor_screen = screen_pos
 	_zoom_anchor_world = _screen_to_world(screen_pos)
 	_is_zooming = true
+	set_process(true)
 
 func _zoom_immediate(new_zoom_val: float, screen_pos: Vector2) -> void:
 	var clamped_z = clampf(new_zoom_val, min_zoom, max_zoom)

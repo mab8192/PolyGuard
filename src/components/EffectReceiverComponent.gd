@@ -9,10 +9,9 @@ var _active_effects: Array[ActiveEffect] = []
 func _ready() -> void:
 	if get_parent():
 		get_parent().set_meta(&"EffectReceiverComponent", self)
+	set_process(false)
 
 func _process(delta: float) -> void:
-	if _active_effects.is_empty():
-		return
 	for i in range(_active_effects.size() - 1, -1, -1):
 		if i < _active_effects.size():
 			_active_effects[i].tick(delta)
@@ -21,6 +20,7 @@ func apply_effect(effect: ActiveEffect) -> void:
 	if not effect:
 		return
 	_active_effects.append(effect)
+	set_process(true)
 	if not effect.expired.is_connected(_on_effect_expired.bind(effect)):
 		effect.expired.connect(_on_effect_expired.bind(effect))
 	var parent_node = get_parent() as Node2D
@@ -31,6 +31,8 @@ func apply_effect(effect: ActiveEffect) -> void:
 func remove_effect(effect: ActiveEffect) -> void:
 	if effect in _active_effects:
 		_active_effects.erase(effect)
+		if _active_effects.is_empty():
+			set_process(false)
 		if effect.expired.is_connected(_on_effect_expired.bind(effect)):
 			effect.expired.disconnect(_on_effect_expired.bind(effect))
 		effect.remove()

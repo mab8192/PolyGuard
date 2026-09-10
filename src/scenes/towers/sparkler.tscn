@@ -66,3 +66,4 @@ initial_velocity_max = 30.0
 scale_amount_min = 1.5
 scale_amount_max = 3.0
 color_ramp = SubResource("Gradient_sparks")
+fixed_fps = 30

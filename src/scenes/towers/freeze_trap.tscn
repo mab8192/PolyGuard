@@ -42,6 +42,7 @@ z_index = 30
 z_as_relative = false
 emitting = false
 amount = 22
+fixed_fps = 30
 texture = ExtResource("4_b47wl")
 lifetime = 1.5
 one_shot = true
