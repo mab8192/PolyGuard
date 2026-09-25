@@ -4,6 +4,7 @@ class_name TutorialCompletePopup extends CanvasLayer
 @onready var continue_button: Button = %ContinueButton
 
 func _ready() -> void:
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 	inventory_button.pressed.connect(_on_inventory_pressed)
 	continue_button.pressed.connect(_on_continue_pressed)
 

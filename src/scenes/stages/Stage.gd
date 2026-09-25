@@ -62,14 +62,16 @@ func _ready() -> void:
 	add_child(flow_field_visualizer)
 
 	effect_manager = EffectManager.new()
+	effect_manager.name = "EffectManager"
+	add_child(effect_manager)
 	
 	effect_manager.setup()
 	wave_manager.setup(self)
 	placement_manager.setup(self, wave_manager)
 	
-	SignalBus.tower_placed.connect(_rebuild_flow_fields)
+	SignalBus.tower_placed.connect(_queue_flow_field_rebuild)
 	SignalBus.tower_destroyed.connect(_on_tower_destroyed)
-	SignalBus.exits_updated.connect(_setup_flow_fields)
+	SignalBus.exits_updated.connect(_queue_flow_field_setup)
 	
 	_setup_flow_fields()
 
@@ -204,6 +206,8 @@ func add_score(amount: int) -> void:
 	SignalBus.score_changed.emit(score)
 
 func take_lives(amount: int) -> void:
+	if lives <= 0:
+		return
 	lives -= amount
 	if lives <= 0:
 		lives = 0
@@ -350,15 +354,37 @@ func _setup_flow_fields() -> void:
 					g_e_field.padding_radius = radius
 					g_e_field.padding_added_cost = added_cost
 
-	_rebuild_flow_fields()
+	_rebuild_flow_fields(true)
 
 var _is_cleaning_unsupported_traps: bool = false
+var _flow_field_rebuild_queued: bool = false
+var _flow_field_setup_queued: bool = false
+var _last_obstacle_signature: Array = []
+
+func _queue_flow_field_rebuild() -> void:
+	if not _flow_field_rebuild_queued and not _flow_field_setup_queued:
+		_flush_flow_field_refresh.call_deferred()
+	_flow_field_rebuild_queued = true
+
+func _queue_flow_field_setup() -> void:
+	if not _flow_field_rebuild_queued and not _flow_field_setup_queued:
+		_flush_flow_field_refresh.call_deferred()
+	_flow_field_setup_queued = true
+
+func _flush_flow_field_refresh() -> void:
+	var needs_setup := _flow_field_setup_queued
+	_flow_field_rebuild_queued = false
+	_flow_field_setup_queued = false
+	if needs_setup:
+		_setup_flow_fields()
+	else:
+		_rebuild_flow_fields()
 
 func _on_tower_destroyed() -> void:
 	if is_instance_valid(selected_tower) and selected_tower.is_queued_for_deletion():
 		deselect_tower()
 	_cleanup_unsupported_wall_traps()
-	_rebuild_flow_fields()
+	_queue_flow_field_rebuild()
 
 func _cleanup_unsupported_wall_traps() -> void:
 	if _is_cleaning_unsupported_traps or not placement_manager or not towers:
@@ -379,7 +405,7 @@ func _cleanup_unsupported_wall_traps() -> void:
 			trap._on_died()
 	_is_cleaning_unsupported_traps = false
 
-func _rebuild_flow_fields() -> void:
+func _rebuild_flow_fields(force: bool = false) -> void:
 	var exit_nodes := _get_stage_exits()
 	var exit_rects: Array[Rect2] = []
 	for ex in exit_nodes:
@@ -400,6 +426,12 @@ func _rebuild_flow_fields() -> void:
 			physical_tower_rects.append(_get_tower_global_rect(tower))
 		if (tower.collision_layer & 16) != 0:
 			spectral_tower_rects.append(_get_tower_global_rect(tower))
+
+	# Skip when nothing that shapes the fields changed (e.g. a trap was placed or sold)
+	var obstacle_signature: Array = [exit_rects, physical_tower_rects, spectral_tower_rects]
+	if not force and obstacle_signature == _last_obstacle_signature:
+		return
+	_last_obstacle_signature = obstacle_signature
 
 	# Rebuild AStar pathfinding grid
 	FlowFieldManager.reset_astar()

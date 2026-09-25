@@ -15,6 +15,8 @@ var _exploded: bool = false
 
 func _ready() -> void:
 	super._ready()
+	if _trail:
+		_trail.direction = Vector2.LEFT
 	if damage_component:
 		damage_component.collides_with_walls = false
 		damage_component._update_collision_mask()
@@ -27,9 +29,6 @@ func _physics_process(delta: float) -> void:
 	if is_instance_valid(target):
 		_target_pos = target.global_position
 		_has_target_pos = true
-	
-	if _trail and direction != Vector2.ZERO:
-		_trail.direction = -direction
 		
 	# Check if passed/reached target position
 	if _has_target_pos:

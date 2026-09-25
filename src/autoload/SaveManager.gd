@@ -1,6 +1,8 @@
 extends Node
 
 const SAVE_PATH = "user://savegame.json"
+const SAVE_TMP_PATH = "user://savegame.json.tmp"
+const SAVE_BACKUP_PATH = "user://savegame.json.bak"
 
 const DEFAULT_UNLOCKED_STAGES: Array[String] = ["stage_00", "test_stage"]
 const DEFAULT_UNLOCKED_TOWERS: Array[String] = ["archer_tower", "tar_trap", "spike_trap"]
@@ -474,35 +476,54 @@ func save_to_disk() -> void:
 	}
 	
 	var json_str = JSON.stringify(data, "\t")
-	var file = FileAccess.open(SAVE_PATH, FileAccess.WRITE)
-	if file:
-		file.store_string(json_str)
-		file.close()
+	# Write next to the old save and swap it in afterwards, so a crash mid-write can't corrupt progress
+	var file = FileAccess.open(SAVE_TMP_PATH, FileAccess.WRITE)
+	if not file:
+		printerr("SaveManager: Failed to open save file for writing: ", error_string(FileAccess.get_open_error()))
+		return
+	file.store_string(json_str)
+	file.close()
+	if FileAccess.file_exists(SAVE_PATH):
+		DirAccess.rename_absolute(SAVE_PATH, SAVE_BACKUP_PATH)
+	var err := DirAccess.rename_absolute(SAVE_TMP_PATH, SAVE_PATH)
+	if err != OK:
+		printerr("SaveManager: Failed to finalize save file: ", error_string(err))
 
 func load_save() -> void:
 	_init_defaults()
 	
-	if not FileAccess.file_exists(SAVE_PATH):
+	var found_save := false
+	for path in [SAVE_PATH, SAVE_TMP_PATH, SAVE_BACKUP_PATH]:
+		if not FileAccess.file_exists(path):
+			continue
+		found_save = true
+		var data = _read_save_file(path)
+		if data is Dictionary:
+			_apply_save_data(data)
+			if path != SAVE_PATH:
+				printerr("SaveManager: Main save unreadable, restored progress from ", path)
+				if FileAccess.file_exists(SAVE_PATH):
+					DirAccess.remove_absolute(SAVE_PATH)
+				save_to_disk()
+			return
+	
+	if not found_save:
 		save_to_disk()
-		return
-	
-	var file = FileAccess.open(SAVE_PATH, FileAccess.READ)
+
+func _read_save_file(path: String) -> Variant:
+	var file = FileAccess.open(path, FileAccess.READ)
 	if not file:
-		return
-	
+		return null
 	var json_str = file.get_as_text()
 	file.close()
 	
 	var json = JSON.new()
-	var error = json.parse(json_str)
-	if error != OK:
-		printerr("SaveManager: Failed to parse save file: ", json.get_error_message())
-		return
-	
-	var data = json.data
-	if not data is Dictionary:
-		return
-	
+	if json.parse(json_str) != OK:
+		printerr("SaveManager: Failed to parse save file %s: %s" % [path, json.get_error_message()])
+		return null
+	return json.data
+
+func _apply_save_data(data: Dictionary) -> void:
 	_credits = int(data.get("credits", 0))
 	_last_free_credits_claim_time = int(data.get("last_free_credits_claim_time", 0))
 	_is_ad_free = bool(data.get("is_ad_free", false))

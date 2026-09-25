@@ -40,13 +40,7 @@ const VENDOR_CREDITS: Array[Dictionary] = [
 		"author": "phoenix1291",
 		"type": "Sound Effects",
 		"assets": "The Ultimate 2017 16-Bit Mini Pack",
-		"notes": "Combat explosions, projectile laser shots, hits, and impacts"
-	},
-	{
-		"author": "Quitschie",
-		"type": "Music",
-		"assets": "8-Bit Background Music",
-		"notes": "Victory screen celebration soundtrack"
+		"notes": "Explosions, enemy escapes, tower placement, and tower hit sounds"
 	},
 	{
 		"author": "Severin Meyer",
@@ -64,6 +58,7 @@ const VENDOR_CREDITS: Array[Dictionary] = [
 
 func _ready() -> void:
 	hide()
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 	close_button.pressed.connect(close)
 	_populate_credits()
 

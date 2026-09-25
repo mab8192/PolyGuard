@@ -21,7 +21,7 @@ func _ready() -> void:
 ## Split the owner into smaller copies of itself
 func split() -> void:
 	var actor: Node2D = (owner if owner else get_parent()) as Node2D
-	if not data or not is_instance_valid(actor):
+	if not data or not is_instance_valid(actor) or actor.is_queued_for_deletion():
 		return
 
 	var spawn_pos: Vector2 = actor.global_position

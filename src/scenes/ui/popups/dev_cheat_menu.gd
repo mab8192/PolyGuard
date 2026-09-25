@@ -39,6 +39,7 @@ func _ready() -> void:
 	instance = self
 	process_mode = Node.PROCESS_MODE_ALWAYS
 	hide()
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 	
 	close_button.pressed.connect(close)
 	

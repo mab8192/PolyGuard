@@ -12,11 +12,13 @@ class_name PauseMenu extends CanvasLayer
 func _ready() -> void:
 	process_mode = PROCESS_MODE_ALWAYS
 	hide()
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 
 	resume_button.pressed.connect(_on_resume_pressed)
 	restart_button.pressed.connect(_on_restart_pressed)
 	loadout_button.pressed.connect(_on_loadout_pressed)
 	if dev_cheats_button:
+		dev_cheats_button.visible = OS.is_debug_build()
 		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
 	main_menu_button.pressed.connect(_on_main_menu_pressed)
 

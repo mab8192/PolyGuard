@@ -151,7 +151,7 @@ func _on_body_entered(body: Node2D) -> void:
 		return
 		
 	var enemy: Enemy = body as Enemy
-	if enemy == null:
+	if enemy == null or enemy.is_queued_for_deletion():
 		return
 	
 	enemy.queue_free()

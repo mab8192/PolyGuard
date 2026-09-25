@@ -198,7 +198,7 @@ func _update_details_panel() -> void:
 	
 	detail_icon.texture = selected_tower.get_display_icon(active_choice)
 	detail_title.text = selected_tower.display_name
-	detail_cost.text = "%d Energy" % selected_tower.cost
+	detail_cost.text = "%d Energy" % selected_tower.get_placement_cost(active_choice)
 	
 	var base_desc = selected_tower.description if not selected_tower.description.is_empty() else "Defensive structure ready for deployment."
 	if not is_unlocked and not is_avail:
@@ -366,6 +366,9 @@ func _on_clear_all_pressed() -> void:
 func _on_back_pressed() -> void:
 	_save_current_loadout()
 	GameManager.load_view(GameManager.View.MAIN_MENU)
+
+func handle_back() -> void:
+	_on_back_pressed()
 
 func _on_start_battle_pressed() -> void:
 	if equipped_towers.is_empty():

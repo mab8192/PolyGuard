@@ -120,6 +120,13 @@ func _fill_active_targets(max_allowed: int, need_los: bool, keep_retained: bool)
 		if _is_valid_candidate(t):
 			_sort_scratch.append(t)
 
+	if max_allowed == 1 and not keep_retained:
+		var best := _find_best_candidate(_sort_scratch)
+		if best and (not need_los or _has_line_of_sight(best)):
+			_active_targets.clear()
+			_active_targets.append(best)
+			return
+
 	_sort_candidates(_sort_scratch)
 
 	if not keep_retained:
@@ -134,22 +141,42 @@ func _fill_active_targets(max_allowed: int, need_los: bool, keep_retained: bool)
 			continue
 		_active_targets.append(c)
 
-func _sort_candidates(candidates: Array[Node2D]) -> void:
-	if not data or candidates.size() < 2:
-		return
+func _get_strategy_comparator() -> Callable:
+	if not data:
+		return Callable()
 	match data.strategy:
 		TargetingData.Strategy.FIRST:
-			candidates.sort_custom(_cmp_first)
+			return _cmp_first
 		TargetingData.Strategy.LAST:
-			candidates.sort_custom(_cmp_last)
+			return _cmp_last
 		TargetingData.Strategy.CLOSEST:
-			candidates.sort_custom(_cmp_closest)
+			return _cmp_closest
 		TargetingData.Strategy.FARTHEST:
-			candidates.sort_custom(_cmp_farthest)
+			return _cmp_farthest
 		TargetingData.Strategy.STRONGEST:
-			candidates.sort_custom(_cmp_strongest)
+			return _cmp_strongest
 		TargetingData.Strategy.WEAKEST:
-			candidates.sort_custom(_cmp_weakest)
+			return _cmp_weakest
+	return Callable()
+
+func _sort_candidates(candidates: Array[Node2D]) -> void:
+	if candidates.size() < 2:
+		return
+	var comparator := _get_strategy_comparator()
+	if comparator.is_valid():
+		candidates.sort_custom(comparator)
+
+## Same pick as the first element after _sort_candidates, in a single pass
+func _find_best_candidate(candidates: Array[Node2D]) -> Node2D:
+	if candidates.is_empty():
+		return null
+	var best: Node2D = candidates[0]
+	var comparator := _get_strategy_comparator()
+	if comparator.is_valid():
+		for i in range(1, candidates.size()):
+			if comparator.call(candidates[i], best):
+				best = candidates[i]
+	return best
 
 func _cmp_first(a: Node2D, b: Node2D) -> bool:
 	var a_e := a as Enemy

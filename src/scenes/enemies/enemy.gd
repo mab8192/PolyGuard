@@ -117,8 +117,9 @@ func _on_exits_updated() -> void:
 		return
 	var targets: Array[Node2D] = []
 	for exit in get_tree().get_nodes_in_group("exits"):
-		if exit is Exit and exit.is_active:
-			targets.append(exit)
+		if exit is Exit:
+			if exit.is_active:
+				targets.append(exit)
 		elif exit is Node2D:
 			targets.append(exit)
 	nav.set_exits(targets)
@@ -150,6 +151,8 @@ func _physics_process(delta: float) -> void:
 			nav.resume()
 
 func _on_died() -> void:
+	if is_queued_for_deletion():
+		return
 	queue_free()
 	SignalBus.enemy_died.emit(self)
 

@@ -56,3 +56,9 @@ func _on_tab_select(tab: NavBar.Tab) -> void:
 func _on_settings_select() -> void:
 	if settings_popup:
 		settings_popup.open()
+
+func handle_back() -> void:
+	if campaign.visible:
+		get_tree().quit()
+	else:
+		nav_bar.select_tab(NavBar.Tab.CAMPAIGN)

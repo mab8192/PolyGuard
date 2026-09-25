@@ -3,6 +3,7 @@ extends Node2D
 var stage_ids: Array[String] = Registry.STAGES.keys()
 @onready var stage_root: StageRoot = $StageRoot
 @onready var camera: CameraController = $Camera2D
+@onready var hud: HUD = $HUD
 
 func _ready() -> void:
 	GameManager.camera = $Camera2D
@@ -51,3 +52,31 @@ func _update_camera() -> void:
 func _on_viewport_size_changed() -> void:
 	if camera:
 		camera.on_viewport_size_changed()
+
+func handle_back() -> void:
+	if hud.victory.visible or hud.defeat.visible:
+		return
+	var stage := stage_root.current_stage
+	if not stage:
+		return
+	var radial_menu := hud.find_child("RadialMenu", true, false) as RadialMenu
+	if radial_menu and radial_menu.is_open():
+		radial_menu.close()
+	elif stage.is_in_placement_mode():
+		stage.exit_placement_mode()
+	elif stage.get_selected_tower():
+		stage.deselect_tower()
+	else:
+		hud.open_pause_menu()
+
+func _notification(what: int) -> void:
+	var backgrounded := what == NOTIFICATION_APPLICATION_PAUSED or (what == NOTIFICATION_APPLICATION_FOCUS_OUT and OS.has_feature("mobile"))
+	if backgrounded and is_node_ready():
+		_pause_for_background()
+
+func _pause_for_background() -> void:
+	if get_tree().paused or GameManager.get_top_open_popup():
+		return
+	var stage := stage_root.current_stage
+	if stage and stage.wave_is_active:
+		hud.open_pause_menu()

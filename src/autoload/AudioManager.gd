@@ -262,7 +262,6 @@ func play_sfx(stream: AudioStream, pitch_min: float = 1.0, pitch_max: float = 1.
 		
 	var player = _get_available_sfx_player()
 	if player == null:
-		push_warning("AudioManager: SFX pool exhausted!")
 		return
 		
 	player.stream = stream

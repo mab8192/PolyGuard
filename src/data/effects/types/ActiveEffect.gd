@@ -4,6 +4,7 @@ signal expired()
 
 var data: EffectData
 var _target: Node2D
+var _target_health: HealthComponent = null
 var _visual_node: Node2D = null
 var _original_modulate: Color = Color.WHITE
 
@@ -29,6 +30,13 @@ func has_active_sources() -> bool:
 func get_source_count() -> int:
 	_sources = _sources.filter(func(s): return is_instance_valid(s))
 	return _sources.size()
+
+func _get_target_health() -> HealthComponent:
+	if not is_instance_valid(_target):
+		return null
+	if not is_instance_valid(_target_health):
+		_target_health = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+	return _target_health
 
 func count_time() -> void:
 	_counting_time = true
@@ -96,13 +104,13 @@ func _apply_instant_effects() -> void:
 	# Instant / Initial Damage
 	var total_initial: float = data.damage + data.initial_damage
 	if total_initial > 0.0:
-		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		var health_comp := _get_target_health()
 		if health_comp:
 			health_comp.damage(total_initial, data.damage_type)
 
 	# Instant Heal
 	if data.heal_amount > 0.0:
-		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		var health_comp := _get_target_health()
 		if health_comp:
 			health_comp.heal(data.heal_amount)
 
@@ -153,7 +161,7 @@ func tick(delta: float) -> void:
 
 	# Damage Over Time (with optional lambda exponential decay)
 	if data.damage_per_second > 0.0 and is_instance_valid(_target):
-		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		var health_comp := _get_target_health()
 		if health_comp:
 			var current_dps: float = data.damage_per_second
 			if data.lambda != 1.0 and data.lambda > 0.0:
@@ -163,7 +171,7 @@ func tick(delta: float) -> void:
 
 	# Healing Over Time
 	if data.heal_per_second > 0.0 and is_instance_valid(_target):
-		var health_comp = ComponentUtil.get_component(_target, HealthComponent) as HealthComponent
+		var health_comp := _get_target_health()
 		if health_comp:
 			var heal_amount_tick: float = data.heal_per_second * delta
 			health_comp.heal(heal_amount_tick)

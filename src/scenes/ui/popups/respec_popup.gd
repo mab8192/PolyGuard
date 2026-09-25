@@ -23,6 +23,7 @@ var _spent_credits: int = 0
 
 
 func _ready() -> void:
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 	paid_confirm_button.pressed.connect(_on_paid_confirm_pressed)
 	free_ad_button.pressed.connect(_on_free_ad_pressed)
 	free_fee_button.pressed.connect(_on_free_fee_pressed)

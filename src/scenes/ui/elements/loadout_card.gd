@@ -54,9 +54,10 @@ func _update_ui() -> void:
 	var t_id = Registry.get_tower_id(tower_data)
 	is_unlocked = SaveManager.is_tower_unlocked(t_id)
 	
-	icon_rect.texture = tower_data.get_display_icon(SaveManager.get_tower_choice(t_id))
+	var active_choice := SaveManager.get_tower_choice(t_id)
+	icon_rect.texture = tower_data.get_display_icon(active_choice)
 	name_label.text = tower_data.display_name
-	cost_label.text = "%d Energy" % tower_data.cost
+	cost_label.text = "%d Energy" % tower_data.get_placement_cost(active_choice)
 	
 	if selection_ring:
 		selection_ring.visible = is_card_selected

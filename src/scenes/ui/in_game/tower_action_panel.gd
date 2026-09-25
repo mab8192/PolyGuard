@@ -10,6 +10,7 @@ class_name TowerActionPanel extends PanelContainer
 @onready var close_button: Button = %CloseButton
 
 var _current_tower: Tower = null
+var _ui_update_queued: bool = false
 
 func _ready() -> void:
 	hide()
@@ -90,7 +91,12 @@ func _update_ui() -> void:
 	else:
 		strategy_button.hide()
 	
-	# Repair Button
+	var has_repair := _update_repair_button()
+	
+	if left_column:
+		left_column.visible = (has_strategy or has_repair)
+
+func _update_repair_button() -> bool:
 	var has_repair = (_current_tower.health != null and _current_tower.health.data != null and _current_tower.collision_layer > 0)
 	if has_repair:
 		repair_button.show()
@@ -104,16 +110,17 @@ func _update_ui() -> void:
 			repair_button.disabled = true
 	else:
 		repair_button.hide()
-	
-	if left_column:
-		left_column.visible = (has_strategy or has_repair)
+	return has_repair
 
 func _get_top_3_stats(stats: Dictionary, tower: Tower) -> Array[Dictionary]:
 	var result: Array[Dictionary] = []
 	var t_id = Registry.get_tower_id(tower.data) if tower.data else ""
-	var choice_id = SaveManager.get_tower_choice(t_id) if not t_id.is_empty() else ""
-	var level = SaveManager.get_tower_level(t_id) if (not t_id.is_empty() and SaveManager.is_tower_unlocked(t_id)) else 1
-	var summary = tower.data.get_stat_summary(level, choice_id) if tower.data else {}
+	var registry_data := Registry.get_tower_data(t_id)
+	var summary: Dictionary = {}
+	if registry_data and SaveManager.is_tower_unlocked(t_id):
+		summary = registry_data.get_stat_summary(SaveManager.get_tower_level(t_id), SaveManager.get_tower_choice(t_id))
+	elif tower.data:
+		summary = tower.data.get_stat_summary(1, "")
 	
 	# 1. HP (Structure/Wall/Damageable towers)
 	var has_health: bool = (tower.health != null and tower.health.data != null and tower.collision_layer > 0)
@@ -223,12 +230,18 @@ func _on_close_pressed() -> void:
 		close()
 
 func _on_tower_health_changed(_hp: float) -> void:
+	if visible and is_instance_valid(_current_tower) and not _ui_update_queued:
+		_ui_update_queued = true
+		_flush_queued_ui_update.call_deferred()
+
+func _flush_queued_ui_update() -> void:
+	_ui_update_queued = false
 	if visible and is_instance_valid(_current_tower):
 		_update_ui()
 
 func _on_energy_changed(_energy: int) -> void:
 	if visible and is_instance_valid(_current_tower):
-		_update_ui()
+		_update_repair_button()
 
 func _on_tower_selected(tower: Tower) -> void:
 	open(tower)

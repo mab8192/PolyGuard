@@ -30,6 +30,9 @@ const LOADOUT: PackedScene = preload("res://src/scenes/loadout_selection.tscn")
 const GAME: PackedScene = preload("res://src/scenes/game.tscn")
 const DEV_CHEAT_MENU_SCENE: PackedScene = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
 
+## Popups (CanvasLayers with a close() method) that the Android back button should dismiss
+const BACK_CLOSABLE_GROUP: StringName = &"back_closable"
+
 var dev_cheat_menu: DevCheatMenu = null
 
 func _ready() -> void:
@@ -37,8 +40,9 @@ func _ready() -> void:
 	# Pixel-class phones are 120 Hz; 240 just doubles idle _process work and heat.
 	if OS.has_feature("mobile"):
 		Engine.max_fps = 120
-	dev_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
-	add_child(dev_cheat_menu)
+	if OS.is_debug_build():
+		dev_cheat_menu = DEV_CHEAT_MENU_SCENE.instantiate() as DevCheatMenu
+		add_child(dev_cheat_menu)
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
@@ -46,6 +50,27 @@ func _unhandled_input(event: InputEvent) -> void:
 			if dev_cheat_menu:
 				dev_cheat_menu.toggle()
 				get_viewport().set_input_as_handled()
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
+		_handle_back_request()
+
+func get_top_open_popup() -> CanvasLayer:
+	var top_popup: CanvasLayer = null
+	for node in get_tree().get_nodes_in_group(BACK_CLOSABLE_GROUP):
+		var popup := node as CanvasLayer
+		if popup and popup.visible and (top_popup == null or popup.layer >= top_popup.layer):
+			top_popup = popup
+	return top_popup
+
+func _handle_back_request() -> void:
+	var popup := get_top_open_popup()
+	if popup:
+		popup.call(&"close")
+		return
+	var scene := get_tree().current_scene
+	if scene and scene.has_method(&"handle_back"):
+		scene.call(&"handle_back")
 
 func load_view(view: View) -> void:
 	Engine.time_scale = 1.0

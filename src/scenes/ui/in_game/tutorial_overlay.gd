@@ -135,7 +135,7 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 			{
 				"icon": ICON_TRASH,
 				"modulate": Color(1.0, 0.4, 0.3),
-				"headline": "50% ENERGY REFUND",
+				"headline": "75% ENERGY REFUND",
 				"body": "Need to reshape your chokepoint or pivot to magic-based traps? Tap the SELL button in the action panel to dismantle the tower and instantly recover 75% of its cost."
 			}
 		],
@@ -145,6 +145,7 @@ const TUTORIAL_PAGES: Array[Dictionary] = [
 
 func _ready() -> void:
 	process_mode = Node.PROCESS_MODE_ALWAYS
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 	prev_button.pressed.connect(_on_prev_pressed)
 	next_button.pressed.connect(_on_next_pressed)
 	skip_button.pressed.connect(_on_skip_pressed)

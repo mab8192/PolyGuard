@@ -12,6 +12,7 @@ config_version=5
 
 config/name="Poly Guard"
 run/main_scene="uid://duii2yuv2y63u"
+config/quit_on_go_back=false
 config/features=PackedStringArray("4.7", "Mobile")
 run/max_fps=120
 boot_splash/bg_color=Color(0.0313726, 0.0470588, 0.0862745, 1)

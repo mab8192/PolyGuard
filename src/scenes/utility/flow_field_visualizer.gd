@@ -117,6 +117,8 @@ func cycle_layer() -> void:
 
 
 func _unhandled_input(event: InputEvent) -> void:
+	if not OS.is_debug_build():
+		return
 	if event is InputEventKey and event.is_pressed() and not event.is_echo():
 		if event.keycode == KEY_F2 or event.keycode == KEY_F3:
 			cycle_mode()

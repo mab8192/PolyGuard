@@ -138,7 +138,7 @@ func _update_details(tower: TowerData) -> void:
 	
 	detail_icon.texture = tower.get_display_icon(active_choice)
 	detail_title.text = tower.display_name
-	detail_cost.text = "%d Energy" % tower.cost
+	detail_cost.text = "%d Energy" % tower.get_placement_cost(active_choice)
 	
 	if is_unlocked:
 		detail_icon.modulate = Color.WHITE

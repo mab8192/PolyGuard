@@ -53,6 +53,10 @@ func get_requirement_description() -> String:
 func get_upgrade_cost(target_level: int) -> int:
 	return 300 * (target_level - 1)
 
+func get_placement_cost(choice_id: String = "") -> int:
+	var choice = get_choice(choice_id)
+	return maxi(0, cost - choice.cost_reduction) if choice else cost
+
 func get_choice(choice_id: String) -> TowerChoiceUpgrade:
 	for c in choices:
 		if c and c.id == choice_id:
@@ -99,10 +103,12 @@ func get_scaled_copy(level: int = 1, choice_id: String = "") -> TowerData:
 				copy.targeting.targeting_mask = choice.targeting_mask_override
 			if copy.effect_applier:
 				copy.effect_applier.targeting_mask = choice.targeting_mask_override
-				if copy.effect_applier.max_targets > 0:
-					copy.effect_applier.max_targets += choice.extra_targets
-				else:
-					push_error("Attempted to increase max targets on a trap that has no limit!")
+		if choice.extra_targets != 0 and copy.effect_applier:
+			if copy.effect_applier.max_targets > 0:
+				copy.effect_applier.max_targets = maxi(1, copy.effect_applier.max_targets + choice.extra_targets)
+			else:
+				push_error("Attempted to increase max targets on a trap that has no limit!")
+		copy.cost = get_placement_cost(choice_id)
 		if choice.has_collision_layer_override:
 			copy.collision_layer = choice.collision_layer_override
 		if choice.has_collision_mask_override:
@@ -192,8 +198,11 @@ func get_stat_summary(level: int = 1, choice_id: String = "") -> Dictionary:
 	if scaled.attack:
 		result["has_attack"] = true
 		result["damage"] = scaled.attack.damage
-		result["cooldown"] = scaled.attack.cooldown
-		result["dps"] = scaled.attack.damage / maxf(scaled.attack.cooldown, 0.05)
+		if scaled.attack.attack_mode == AttackData.AttackMode.CONTINUOUS:
+			result["dps"] = scaled.attack.damage
+		else:
+			result["cooldown"] = scaled.attack.cooldown
+			result["dps"] = scaled.attack.damage / maxf(scaled.attack.cooldown, 0.05)
 		result["damage_type"] = scaled.attack.damage_type
 		match scaled.attack.damage_type:
 			AttackData.DamageType.PHYSICAL: result["damage_type_str"] = "Physical"
@@ -319,6 +328,9 @@ func get_stats(level: int = 1, choice_id: String = "") -> Dictionary:
 		
 		if summary["cooldown"] > 0.0 and not summary["has_dot"]:
 			grid_stats.append({"label": "FIRE RATE", "value": "%.2fs" % summary["cooldown"]})
+			grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
+		elif summary["dps"] > 0.0 and not summary["has_dot"]:
+			grid_stats.append({"label": "FIRE RATE", "value": "Cont."})
 			grid_stats.append({"label": "DPS", "value": "%.1f" % summary["dps"]})
 		
 		lines.append("%s: %.0f (%s)" % ["Initial Damage" if summary["has_dot"] else "Damage", summary["damage"], summary["damage_type_str"]])

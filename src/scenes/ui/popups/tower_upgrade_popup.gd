@@ -29,12 +29,9 @@ var tower_data: TowerData = null
 @onready var upgrade_action_button: Button = %UpgradeActionButton
 @onready var credits_balance_label: Label = %CreditsBalanceLabel
 
-func _notification(what: int) -> void:
-	if what == NOTIFICATION_WM_GO_BACK_REQUEST:
-		close()
-
 func _ready() -> void:
 	hide()
+	add_to_group(GameManager.BACK_CLOSABLE_GROUP)
 
 	center_container.gui_input.connect(_on_background_click)
 	close_button.pressed.connect(close)

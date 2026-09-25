@@ -91,14 +91,18 @@ func repair() -> bool:
 func get_stats() -> Dictionary:
 	if not data:
 		return {}
+	var stats_source: TowerData = data
 	var current_level: int = 1
 	var active_choice: String = ""
 	var t_id = Registry.get_tower_id(data)
-	if not t_id.is_empty() and SaveManager.is_tower_unlocked(t_id):
+	var registry_data := Registry.get_tower_data(t_id)
+	if registry_data and SaveManager.is_tower_unlocked(t_id):
+		# data is already scaled to the saved level/spec, so scale from the registry entry instead
+		stats_source = registry_data
 		current_level = SaveManager.get_tower_level(t_id)
 		active_choice = SaveManager.get_tower_choice(t_id)
 		
-	var base_stats = data.get_stats(current_level, active_choice)
+	var base_stats = stats_source.get_stats(current_level, active_choice)
 	
 	if health:
 		base_stats["current_health"] = health.get_health()
@@ -155,6 +159,8 @@ func _ready() -> void:
 	
 	if not is_in_group("towers"):
 		add_to_group("towers")
+
+	set_physics_process(targeting != null and attack != null)
 
 	_update_solid_state()
 	_update_preview_state()
