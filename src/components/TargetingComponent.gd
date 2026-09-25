@@ -30,6 +30,9 @@ var _sort_scratch: Array[Node2D] = []
 var _target_update_timer: float = 0.0
 const TARGET_UPDATE_INTERVAL: float = 0.05 ## 20 Hz targeting scans
 
+## Replaces the zero-width wall raycast when set (projectile attacks sweep their real hitbox instead)
+var line_of_sight_check: Callable = Callable()
+
 func set_range_visible(vis: bool) -> void:
 	is_range_visible = vis
 
@@ -281,6 +284,8 @@ func get_targeting_origin_global() -> Vector2:
 func _has_line_of_sight(target: Node2D) -> bool:
 	if not is_instance_valid(target) or not is_inside_tree():
 		return false
+	if line_of_sight_check.is_valid():
+		return line_of_sight_check.call(target)
 	var space_state: PhysicsDirectSpaceState2D = get_world_2d().direct_space_state
 	if not space_state:
 		return true

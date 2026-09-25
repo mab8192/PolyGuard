@@ -14,6 +14,7 @@
 script = ExtResource("2_dyd85")
 damage = 100.0
 cooldown = 4.0
+initial_delay = 1.0
 projectile_scene = ExtResource("1_aacki")
 metadata/_custom_type_script = "uid://cgsewox3e0gwv"
 

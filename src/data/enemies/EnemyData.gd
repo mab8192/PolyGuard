@@ -118,6 +118,8 @@ func get_stats() -> Dictionary:
 		traits.append("Acceleration Aura (+35% speed to nearby allies)")
 	elif display_name == "Sniper":
 		traits.append("Long-Range Ballistics (Attacks towers outside standard range)")
+		if attack and attack.initial_delay > 0.0:
+			traits.append("Aims for %.0fs before its first shot" % attack.initial_delay)
 		
 	var grid_stats: Array[Dictionary] = []
 	
@@ -146,6 +148,8 @@ func get_stats() -> Dictionary:
 		grid_stats.append({"label": "DAMAGE", "value": "%.0f" % attack.damage})
 		if attack.cooldown > 0:
 			grid_stats.append({"label": "FIRE RATE", "value": "%.1fs" % attack.cooldown})
+		if attack.initial_delay > 0.0:
+			grid_stats.append({"label": "AIM TIME", "value": "%.1fs" % attack.initial_delay})
 			
 	# 6. Lives Penalty
 	grid_stats.append({"label": "PENALTY", "value": "%d %s" % [lives_penalty, "Life" if lives_penalty == 1 else "Lives"]})
@@ -163,7 +167,10 @@ func get_stats() -> Dictionary:
 	lines.append("Speed: %d px/s" % int(speed_val))
 	lines.append("Penalty: %d Lives   •   Bounty: +%d Energy" % [lives_penalty, energy_reward])
 	if attack:
-		lines.append("Attack: %.0f dmg every %.1fs" % [attack.damage, attack.cooldown])
+		var attack_line := "Attack: %.0f dmg every %.1fs" % [attack.damage, attack.cooldown]
+		if attack.initial_delay > 0.0:
+			attack_line += " (aims %.0fs first)" % attack.initial_delay
+		lines.append(attack_line)
 	if not traits.is_empty():
 		lines.append("Traits: %s" % " • ".join(traits))
 		
