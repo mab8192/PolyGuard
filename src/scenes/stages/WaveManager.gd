@@ -224,6 +224,9 @@ func _on_wave_started() -> void:
 	pass
 
 func _check_wave_completion() -> void:
+	# Rare edge case where the last enemy in a stage gets through and kills the player
+	if stage.lives == 0: return
+	
 	var enemies_remaining: int = pending_enemies
 	if GameManager.stage_root:
 		for e in GameManager.stage_root.enemies.get_children():

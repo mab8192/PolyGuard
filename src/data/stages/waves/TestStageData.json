@@ -3,82 +3,13 @@
     "reward_energy": 400.0,
     "spawns": [
       {
-        "count": 100,
+        "count": 20,
         "delay": 0.0,
-        "enemy_type": "heavy",
-        "interval": 0.05,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 8,
-        "delay": 1.5,
-        "enemy_type": "healer",
-        "interval": 0.8,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 6,
-        "delay": 0.0,
-        "enemy_type": "booster",
-        "interval": 1.0,
-        "spawner_id": "Spawner2"
-      },
-      {
-        "count": 100,
-        "delay": 0.8,
-        "enemy_type": "grunt",
-        "interval": 0.05,
-        "spawner_id": "Spawner2"
-      },
-      {
-        "count": 100,
-        "delay": 0.6,
         "enemy_type": "light",
         "interval": 0.05,
         "spawner_id": "Spawner"
       }
     ],
     "wave_number": 1
-  },
-  {
-    "reward_energy": 600.0,
-    "spawns": [
-      {
-        "count": 20.0,
-        "delay": 0.0,
-        "enemy_type": "grunt",
-        "interval": 0.7,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 10.0,
-        "delay": 2.0,
-        "enemy_type": "speeder",
-        "interval": 0.35,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 6.0,
-        "delay": 3.5,
-        "enemy_type": "ghost",
-        "interval": 0.7,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 5.0,
-        "delay": 5.0,
-        "enemy_type": "sniper",
-        "interval": 1.2,
-        "spawner_id": "Spawner"
-      },
-      {
-        "count": 3.0,
-        "delay": 6.5,
-        "enemy_type": "splitter",
-        "interval": 1.0,
-        "spawner_id": "Spawner"
-      }
-    ],
-    "wave_number": 2
   }
 ]
