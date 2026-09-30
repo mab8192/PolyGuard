@@ -9,4 +9,5 @@ __pycache__/
 # Export outputs
 *.apk
 *.aab
+*.exe
 *.idsig
