@@ -75,6 +75,12 @@ func _populate_credits() -> void:
 	for child in credits_container.get_children():
 		child.queue_free()
 
+	var section = Label.new()
+	section.theme_type_variation = &"CreditText"
+	section.text = "THIRD-PARTY & VENDOR ATTRIBUTION"
+	section.horizontal_alignment = HORIZONTAL_ALIGNMENT_CENTER
+	credits_container.add_child(section)
+
 	for cred in VENDOR_CREDITS:
 		_create_credit_card(cred["author"], cred["type"], cred["assets"], cred.get("notes", ""))
 

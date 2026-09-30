@@ -19,20 +19,9 @@ var _tower_levels: Dictionary = {} # tower_id -> int (1 to 5)
 var _tower_choices: Dictionary = {} # tower_id -> choice_id (String)
 var _unlocked_specializations: Dictionary = {} # tower_id -> Array[String]
 var _selected_loadout: Array[String] = []
-var _is_ad_free: bool = false
 
 func _ready() -> void:
 	load_save()
-
-func is_ad_free() -> bool:
-	return _is_ad_free
-
-func set_ad_free(p_ad_free: bool) -> void:
-	if _is_ad_free == p_ad_free:
-		return
-	_is_ad_free = p_ad_free
-	save_to_disk()
-	AdManager.ads_enabled_changed.emit(AdManager.are_ads_enabled())
 
 func get_selected_loadout() -> Array[String]:
 	return _selected_loadout.duplicate()
@@ -464,7 +453,6 @@ func save_to_disk() -> void:
 	var data = {
 		"credits": _credits,
 		"last_free_credits_claim_time": _last_free_credits_claim_time,
-		"is_ad_free": _is_ad_free,
 		"unlocked_stages": _unlocked_stages,
 		"stage_records": _stage_records,
 		"unlocked_towers": _unlocked_towers,
@@ -526,7 +514,6 @@ func _read_save_file(path: String) -> Variant:
 func _apply_save_data(data: Dictionary) -> void:
 	_credits = int(data.get("credits", 0))
 	_last_free_credits_claim_time = int(data.get("last_free_credits_claim_time", 0))
-	_is_ad_free = bool(data.get("is_ad_free", false))
 	
 	var saved_stages = data.get("unlocked_stages", [])
 	if saved_stages is Array:
@@ -578,7 +565,6 @@ func _apply_save_data(data: Dictionary) -> void:
 func _init_defaults() -> void:
 	_credits = 0
 	_last_free_credits_claim_time = 0
-	_is_ad_free = false
 	_unlocked_stages = DEFAULT_UNLOCKED_STAGES.duplicate()
 	_stage_records = {}
 	_unlocked_towers = DEFAULT_UNLOCKED_TOWERS.duplicate()

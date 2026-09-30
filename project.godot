@@ -8,6 +8,11 @@
 
 config_version=5
 
+[admob]
+
+general/android/app_id="ca-app-pub-4313808425382994~8557120168"
+general/ios/app_id="ca-app-pub-4313808425382994~8557120168"
+
 [application]
 
 config/name="Poly Guard"

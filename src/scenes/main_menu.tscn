@@ -52,6 +52,12 @@ theme_type_variation = &"HeaderText"
 text = "POLY GUARD"
 horizontal_alignment = 1
 
+[node name="StudioLabel" type="Label" parent="MarginContainer/VBoxContainer" unique_id=2046030940]
+layout_mode = 2
+theme_type_variation = &"CreditText"
+text = "ARKADIA LABS"
+horizontal_alignment = 1
+
 [node name="SubBarContainer" type="PanelContainer" parent="MarginContainer/VBoxContainer" unique_id=2046030933]
 custom_minimum_size = Vector2(0, 88)
 layout_mode = 2

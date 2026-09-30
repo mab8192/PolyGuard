@@ -18,12 +18,9 @@ signal interstitial_ad_closed()
 ## Set to false to disable all ads globally for paid/premium builds.
 @export var ads_enabled: bool = true
 
-## Ad Unit IDs (Google AdMob Sample Test IDs)
-const ANDROID_REWARDED_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/5224354917"
-const IOS_REWARDED_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/1712485313"
-
-const ANDROID_INTERSTITIAL_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/1033173712"
-const IOS_INTERSTITIAL_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/4411468910"
+## Ad Unit IDs
+const REWARDED_AD_UNIT_ID: String = "ca-app-pub-4313808425382994/4905599434"
+const INTERSTITIAL_AD_UNIT_ID: String = "ca-app-pub-4313808425382994/9815348598"
 
 const REWARD_CREDITS_AMOUNT: int = 100
 
@@ -68,8 +65,6 @@ func is_paid_version() -> bool:
 		return true
 	if not ProjectSettings.get_setting("admob/general/enabled", true):
 		return true
-	if SaveManager.is_ad_free():
-		return true
 	return false
 
 
@@ -97,11 +92,11 @@ func is_mobile() -> bool:
 
 
 func get_rewarded_ad_unit_id() -> String:
-	return ANDROID_REWARDED_AD_UNIT_ID if OS.get_name() == "Android" else IOS_REWARDED_AD_UNIT_ID
+	return REWARDED_AD_UNIT_ID
 
 
 func get_interstitial_ad_unit_id() -> String:
-	return ANDROID_INTERSTITIAL_AD_UNIT_ID if OS.get_name() == "Android" else IOS_INTERSTITIAL_AD_UNIT_ID
+	return INTERSTITIAL_AD_UNIT_ID
 
 
 func _setup_listeners() -> void:
