@@ -1,4 +1,4 @@
-extends MarginContainer
+extends SafeAreaMarginContainer
 
 @onready var build_button: Button = %BuildButton
 @onready var next_wave_button: Button = %NextWaveButton
@@ -11,6 +11,7 @@ extends MarginContainer
 @onready var radial_menu: RadialMenu = %RadialMenu
 
 func _ready() -> void:
+	super._ready()
 	build_button.focus_mode = Control.FOCUS_NONE
 	next_wave_button.focus_mode = Control.FOCUS_NONE
 	cancel_button.focus_mode = Control.FOCUS_NONE

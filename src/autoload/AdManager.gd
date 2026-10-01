@@ -52,7 +52,7 @@ func _ready() -> void:
 		print("[AdManager] Paid / Premium version active. All ads disabled.")
 		return
 	
-	if is_mobile() or OS.has_feature("editor"):
+	if is_mobile():
 		_initialize_mobile_ads()
 	else:
 		_is_initialized = true
@@ -73,6 +73,60 @@ func are_ads_enabled() -> bool:
 
 
 func _initialize_mobile_ads() -> void:
+	# UMP must run before the ads SDK so EEA/UK/CH users can consent.
+	# Outside those regions the form is not required and init continues.
+	if ConsentInformation._plugin == null:
+		_start_mobile_ads()
+		return
+	var request := ConsentRequestParameters.new()
+	print("[AdManager] Requesting consent info...")
+	UserMessagingPlatform.consent_information.update(
+		request, _on_consent_info_updated, _on_consent_info_failed
+	)
+
+
+func _on_consent_info_updated() -> void:
+	var info := UserMessagingPlatform.consent_information
+	var needs_form := (
+		info.get_is_consent_form_available()
+		and info.get_consent_status() == ConsentInformation.ConsentStatus.REQUIRED
+	)
+	if needs_form:
+		print("[AdManager] Consent required. Loading form...")
+		UserMessagingPlatform.load_consent_form(_on_consent_form_loaded, _on_consent_form_failed)
+	else:
+		_start_mobile_ads()
+
+
+func _on_consent_info_failed(error: FormError) -> void:
+	var msg := error.message if error else "unknown"
+	print("[AdManager] Consent info update failed (%s). Continuing without a form." % msg)
+	_start_mobile_ads()
+
+
+func _on_consent_form_loaded(form: ConsentForm) -> void:
+	form.show(_on_consent_form_dismissed)
+
+
+func _on_consent_form_failed(error: FormError) -> void:
+	var msg := error.message if error else "unknown"
+	print("[AdManager] Consent form failed to load (%s)." % msg)
+	_start_mobile_ads()
+
+
+func _on_consent_form_dismissed(error: FormError) -> void:
+	if error:
+		print("[AdManager] Consent form dismissed with error: %s" % error.message)
+	_start_mobile_ads()
+
+
+func _start_mobile_ads() -> void:
+	var request_config := RequestConfiguration.new()
+	request_config.max_ad_content_rating = RequestConfiguration.MAX_AD_CONTENT_RATING_G
+	request_config.tag_for_child_directed_treatment = (
+		RequestConfiguration.TagForChildDirectedTreatment.FALSE
+	)
+	MobileAds.set_request_configuration(request_config)
 	var on_init_listener := OnInitializationCompleteListener.new()
 	on_init_listener.on_initialization_complete = _on_initialization_complete
 	print("[AdManager] Initializing MobileAds...")
@@ -164,7 +218,7 @@ func load_rewarded_ad() -> void:
 	if _is_loading_rewarded or _rewarded_ad != null:
 		return
 	
-	if not is_mobile() and not OS.has_feature("editor"):
+	if not is_mobile():
 		return
 	
 	_is_loading_rewarded = true
@@ -248,7 +302,7 @@ func load_interstitial_ad() -> void:
 	if _is_loading_interstitial or _interstitial_ad != null:
 		return
 	
-	if not is_mobile() and not OS.has_feature("editor"):
+	if not is_mobile():
 		return
 	
 	_is_loading_interstitial = true

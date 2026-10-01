@@ -7,6 +7,7 @@ class_name SettingsPopup extends CanvasLayer
 @onready var dev_cheats_button: Button = %DevCheatsButton
 @onready var credits_button: Button = %CreditsButton
 @onready var close_button: Button = %CloseButton
+var _privacy_button: Button = null
 
 const DEV_CHEAT_MENU_SCENE = preload("res://src/scenes/ui/popups/dev_cheat_menu.tscn")
 const CREDITS_POPUP_SCENE = preload("res://src/scenes/ui/popups/credits_popup.tscn")
@@ -24,6 +25,7 @@ func _ready() -> void:
 		dev_cheats_button.pressed.connect(_on_dev_cheats_pressed)
 	if credits_button:
 		credits_button.pressed.connect(_on_credits_pressed)
+	_ensure_privacy_button()
 	_connect_slider_signals()
 	_update_slider_values()
 
@@ -48,7 +50,39 @@ func open() -> void:
 	_update_slider_values()
 	_reset_armed = false
 	reset_button.text = "RESET SAVE DATA"
+	_refresh_privacy_button()
 	show()
+
+
+func _ensure_privacy_button() -> void:
+	if _privacy_button or credits_button == null:
+		return
+	_privacy_button = Button.new()
+	_privacy_button.text = "AD PRIVACY OPTIONS"
+	_privacy_button.custom_minimum_size = Vector2(0, 80)
+	_privacy_button.focus_mode = Control.FOCUS_NONE
+	_privacy_button.theme_type_variation = &"SecondaryButton"
+	_privacy_button.visible = false
+	_privacy_button.pressed.connect(_on_privacy_options_pressed)
+	var parent := credits_button.get_parent()
+	parent.add_child(_privacy_button)
+	parent.move_child(_privacy_button, credits_button.get_index())
+
+
+func _refresh_privacy_button() -> void:
+	if _privacy_button == null:
+		return
+	var show_options := false
+	if ConsentInformation._plugin != null:
+		var status := UserMessagingPlatform.consent_information.get_privacy_options_requirement_status()
+		show_options = status == ConsentInformation.PrivacyOptionsRequirementStatus.REQUIRED
+	_privacy_button.visible = show_options
+
+
+func _on_privacy_options_pressed() -> void:
+	UserMessagingPlatform.show_privacy_options_form(func(_error: FormError) -> void:
+		_refresh_privacy_button()
+	)
 
 func close() -> void:
 	hide()
