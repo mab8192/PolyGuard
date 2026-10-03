@@ -36,6 +36,7 @@ const CAMPAIGN_GROUP_RANGES: Array[Vector2i] = [
 	Vector2i(21, 30),
 	Vector2i(31, 40),
 ]
+const CAMPAIGN_GROUP_NAMES: PackedStringArray = ["Frontier", "Stronghold", "Ash March", "Citadel"]
 
 func get_level_packs() -> Array[Dictionary]:
 	var by_number: Dictionary = {}
@@ -56,7 +57,7 @@ func get_level_packs() -> Array[Dictionary]:
 				by_number.erase(number)
 		if chunk.is_empty():
 			continue
-		var series := chunk[0].pack_name if not chunk[0].pack_name.is_empty() else "Frontier"
+		var series := CAMPAIGN_GROUP_NAMES[order] if order < CAMPAIGN_GROUP_NAMES.size() else "Campaign"
 		packs.append({
 			"id": "stages_%d_%d" % [range.x, range.y],
 			"name": "Stages %d–%d" % [range.x, range.y],
