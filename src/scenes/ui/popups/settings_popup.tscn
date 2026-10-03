@@ -25,7 +25,7 @@ grow_vertical = 2
 theme = ExtResource("2_theme")
 
 [node name="PanelContainer" type="PanelContainer" parent="CenterContainer" unique_id=2190004]
-custom_minimum_size = Vector2(920, 1050)
+custom_minimum_size = Vector2(920, 1400)
 layout_mode = 2
 theme_type_variation = &"ModalPanel"
 
@@ -103,6 +103,40 @@ layout_mode = 2
 max_value = 1.0
 step = 0.05
 value = 0.8
+
+[node name="PremiumSection" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190030]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="PremiumSectionTitle" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/PremiumSection" unique_id=2190031]
+layout_mode = 2
+theme_type_variation = &"StatText"
+text = "PREMIUM"
+horizontal_alignment = 1
+
+[node name="PremiumStatusLabel" type="Label" parent="CenterContainer/PanelContainer/MarginContainer/VBox/PremiumSection" unique_id=2190032]
+unique_name_in_owner = true
+layout_mode = 2
+theme_type_variation = &"BodyText"
+text = "PREMIUM — ADS REMOVED"
+horizontal_alignment = 1
+autowrap_mode = 3
+
+[node name="RemoveAdsButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/PremiumSection" unique_id=2190033]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"PrimaryButton"
+text = "REMOVE ADS"
+
+[node name="RestorePurchasesButton" type="Button" parent="CenterContainer/PanelContainer/MarginContainer/VBox/PremiumSection" unique_id=2190034]
+unique_name_in_owner = true
+custom_minimum_size = Vector2(0, 80)
+layout_mode = 2
+focus_mode = 0
+theme_type_variation = &"SecondaryButton"
+text = "RESTORE PURCHASES"
 
 [node name="ProfileSection" type="VBoxContainer" parent="CenterContainer/PanelContainer/MarginContainer/VBox" unique_id=2190024]
 layout_mode = 2

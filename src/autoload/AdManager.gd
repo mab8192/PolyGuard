@@ -18,9 +18,11 @@ signal interstitial_ad_closed()
 ## Set to false to disable all ads globally for paid/premium builds.
 @export var ads_enabled: bool = true
 
-## Ad Unit IDs
-const REWARDED_AD_UNIT_ID: String = "ca-app-pub-4313808425382994/4905599434"
-const INTERSTITIAL_AD_UNIT_ID: String = "ca-app-pub-4313808425382994/9815348598"
+## Google's public demo ad units. These always serve test ads.
+const REWARDED_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/5224354917"
+const REWARDED_AD_UNIT_ID_IOS: String = "ca-app-pub-3940256099942544/1712485313"
+const INTERSTITIAL_AD_UNIT_ID: String = "ca-app-pub-3940256099942544/1033173712"
+const INTERSTITIAL_AD_UNIT_ID_IOS: String = "ca-app-pub-3940256099942544/4411468910"
 
 const REWARD_CREDITS_AMOUNT: int = 100
 
@@ -42,16 +44,36 @@ var _interstitial_content_callback: FullScreenContentCallback
 
 var _pending_reward_callback: Callable = Callable()
 var _pending_interstitial_callback: Callable = Callable()
+var _ads_init_started: bool = false
 
 
 func _ready() -> void:
 	_setup_listeners()
 	SignalBus.stage_completed.connect(_on_stage_completed)
-	
+	if PurchaseManager.entitlement_known:
+		_sync_ads_to_entitlement()
+	else:
+		PurchaseManager.entitlement_resolved.connect(_sync_ads_to_entitlement, CONNECT_ONE_SHOT)
+	PurchaseManager.entitlement_changed.connect(_on_entitlement_changed)
+
+
+func _on_entitlement_changed(_is_premium: bool) -> void:
+	_sync_ads_to_entitlement()
+
+
+func _sync_ads_to_entitlement(_is_premium: bool = false) -> void:
 	if is_paid_version():
 		print("[AdManager] Paid / Premium version active. All ads disabled.")
+		_destroy_rewarded_ad()
+		_destroy_interstitial_ad()
+		ads_enabled_changed.emit(false)
 		return
-	
+	ads_enabled_changed.emit(true)
+	if _ads_init_started:
+		if _is_initialized:
+			load_rewarded_ad()
+			load_interstitial_ad()
+		return
 	if is_mobile():
 		_initialize_mobile_ads()
 	else:
@@ -65,6 +87,8 @@ func is_paid_version() -> bool:
 		return true
 	if not ProjectSettings.get_setting("admob/general/enabled", true):
 		return true
+	if PurchaseManager.is_premium:
+		return true
 	return false
 
 
@@ -73,6 +97,7 @@ func are_ads_enabled() -> bool:
 
 
 func _initialize_mobile_ads() -> void:
+	_ads_init_started = true
 	# UMP must run before the ads SDK so EEA/UK/CH users can consent.
 	# Outside those regions the form is not required and init continues.
 	if ConsentInformation._plugin == null:
@@ -136,6 +161,8 @@ func _start_mobile_ads() -> void:
 func _on_initialization_complete(_status: InitializationStatus) -> void:
 	print("[AdManager] MobileAds initialized successfully.")
 	_is_initialized = true
+	if not are_ads_enabled():
+		return
 	load_rewarded_ad()
 	load_interstitial_ad()
 
@@ -146,10 +173,14 @@ func is_mobile() -> bool:
 
 
 func get_rewarded_ad_unit_id() -> String:
+	if OS.get_name() == "iOS":
+		return REWARDED_AD_UNIT_ID_IOS
 	return REWARDED_AD_UNIT_ID
 
 
 func get_interstitial_ad_unit_id() -> String:
+	if OS.get_name() == "iOS":
+		return INTERSTITIAL_AD_UNIT_ID_IOS
 	return INTERSTITIAL_AD_UNIT_ID
 
 
@@ -213,6 +244,8 @@ func is_rewarded_ad_ready() -> bool:
 
 
 func load_rewarded_ad() -> void:
+	if not are_ads_enabled():
+		return
 	if not _is_initialized:
 		return
 	if _is_loading_rewarded or _rewarded_ad != null:
@@ -253,6 +286,9 @@ func show_rewarded(on_reward_earned: Callable = Callable()) -> bool:
 
 func _on_rewarded_ad_loaded(ad: RewardedAd) -> void:
 	_is_loading_rewarded = false
+	if not are_ads_enabled():
+		ad.destroy()
+		return
 	_rewarded_ad = ad
 	_rewarded_ad.full_screen_content_callback = _rewarded_content_callback
 	print("[AdManager] Rewarded ad loaded successfully (UID: %s)" % str(ad._uid))
@@ -343,6 +379,9 @@ func show_interstitial(on_closed: Callable = Callable()) -> bool:
 
 func _on_interstitial_ad_loaded(ad: InterstitialAd) -> void:
 	_is_loading_interstitial = false
+	if not are_ads_enabled():
+		ad.destroy()
+		return
 	_interstitial_ad = ad
 	_interstitial_ad.full_screen_content_callback = _interstitial_content_callback
 	print("[AdManager] Interstitial ad loaded successfully (UID: %s)" % str(ad._uid))
