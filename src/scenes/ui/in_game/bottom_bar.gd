@@ -52,7 +52,7 @@ func open_build_radial_menu() -> void:
 	var towers: Array[TowerData] = GameManager.selected_loadout
 	var current_energy: int = GameManager.current_stage.energy if GameManager.current_stage else 999
 	
-	# Populate menu entries directly from TowerData resources (up to 6 items)
+	# Populate menu entries directly from TowerData resources (up to 8 items)
 	for tower_data in towers:
 		items.append({
 			"payload": tower_data,

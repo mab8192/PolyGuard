@@ -1,0 +1,692 @@
+[
+  {
+    "wave_number": 1,
+    "reward_energy": 280,
+    "spawns": [
+      {
+        "count": 9,
+        "delay": 0.25,
+        "enemy_type": "speeder",
+        "interval": 0.38,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 10,
+        "delay": 0.2,
+        "enemy_type": "light",
+        "interval": 0.5,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 5,
+        "delay": 1.0,
+        "enemy_type": "bomber",
+        "interval": 0.42,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 9,
+        "delay": 0.6,
+        "enemy_type": "speeder",
+        "interval": 0.38,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 10,
+        "delay": 0.55,
+        "enemy_type": "light",
+        "interval": 0.5,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 5,
+        "delay": 1.35,
+        "enemy_type": "bomber",
+        "interval": 0.42,
+        "spawner_id": "Spawner2"
+      }
+    ]
+  },
+  {
+    "wave_number": 2,
+    "reward_energy": 294,
+    "spawns": [
+      {
+        "count": 12,
+        "delay": 0.4,
+        "enemy_type": "grunt",
+        "interval": 0.98,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 1.4,
+        "enemy_type": "heavy",
+        "interval": 1.42,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 6,
+        "delay": 0.6,
+        "enemy_type": "light",
+        "interval": 0.73,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 12,
+        "delay": 0.75,
+        "enemy_type": "grunt",
+        "interval": 0.98,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 1.75,
+        "enemy_type": "heavy",
+        "interval": 1.42,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 6,
+        "delay": 0.95,
+        "enemy_type": "light",
+        "interval": 0.73,
+        "spawner_id": "Spawner2"
+      }
+    ]
+  },
+  {
+    "wave_number": 3,
+    "reward_energy": 308,
+    "spawns": [
+      {
+        "count": 4,
+        "delay": 0.8,
+        "enemy_type": "splitter",
+        "interval": 1.1,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 9,
+        "delay": 0.25,
+        "enemy_type": "light",
+        "interval": 0.53,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 5,
+        "delay": 0.7,
+        "enemy_type": "speeder",
+        "interval": 0.38,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 1.15,
+        "enemy_type": "splitter",
+        "interval": 1.1,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 9,
+        "delay": 0.6,
+        "enemy_type": "light",
+        "interval": 0.53,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 5,
+        "delay": 1.05,
+        "enemy_type": "speeder",
+        "interval": 0.38,
+        "spawner_id": "Spawner2"
+      }
+    ]
+  },
+  {
+    "wave_number": 4,
+    "reward_energy": 322,
+    "spawns": [
+      {
+        "count": 8,
+        "delay": 0.25,
+        "enemy_type": "speeder",
+        "interval": 0.36,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 9,
+        "delay": 0.2,
+        "enemy_type": "light",
+        "interval": 0.47,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 1.0,
+        "enemy_type": "bomber",
+        "interval": 0.39,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 8,
+        "delay": 0.6,
+        "enemy_type": "speeder",
+        "interval": 0.36,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 9,
+        "delay": 0.55,
+        "enemy_type": "light",
+        "interval": 0.47,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 1.35,
+        "enemy_type": "bomber",
+        "interval": 0.39,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 8,
+        "delay": 0.95,
+        "enemy_type": "speeder",
+        "interval": 0.36,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 9,
+        "delay": 0.9,
+        "enemy_type": "light",
+        "interval": 0.47,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 4,
+        "delay": 1.7,
+        "enemy_type": "bomber",
+        "interval": 0.39,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 5,
+    "reward_energy": 336,
+    "spawns": [
+      {
+        "count": 5,
+        "delay": 0.4,
+        "enemy_type": "heavy",
+        "interval": 1.06,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 2,
+        "delay": 1.8,
+        "enemy_type": "tank",
+        "interval": 1.75,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 7,
+        "delay": 0.35,
+        "enemy_type": "grunt",
+        "interval": 0.78,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 5,
+        "delay": 0.75,
+        "enemy_type": "heavy",
+        "interval": 1.06,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 2,
+        "delay": 2.15,
+        "enemy_type": "tank",
+        "interval": 1.75,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 7,
+        "delay": 0.7,
+        "enemy_type": "grunt",
+        "interval": 0.78,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 5,
+        "delay": 1.1,
+        "enemy_type": "heavy",
+        "interval": 1.06,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 2,
+        "delay": 2.5,
+        "enemy_type": "tank",
+        "interval": 1.75,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 7,
+        "delay": 1.05,
+        "enemy_type": "grunt",
+        "interval": 0.78,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 6,
+    "reward_energy": 350,
+    "spawns": [
+      {
+        "count": 8,
+        "delay": 0.25,
+        "enemy_type": "speeder",
+        "interval": 0.34,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 10,
+        "delay": 0.2,
+        "enemy_type": "light",
+        "interval": 0.45,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 5,
+        "delay": 1.0,
+        "enemy_type": "bomber",
+        "interval": 0.38,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 8,
+        "delay": 0.6,
+        "enemy_type": "speeder",
+        "interval": 0.34,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 10,
+        "delay": 0.55,
+        "enemy_type": "light",
+        "interval": 0.45,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 5,
+        "delay": 1.35,
+        "enemy_type": "bomber",
+        "interval": 0.38,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 8,
+        "delay": 0.95,
+        "enemy_type": "speeder",
+        "interval": 0.34,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 10,
+        "delay": 0.9,
+        "enemy_type": "light",
+        "interval": 0.45,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 5,
+        "delay": 1.7,
+        "enemy_type": "bomber",
+        "interval": 0.38,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 7,
+    "reward_energy": 364,
+    "spawns": [
+      {
+        "count": 4,
+        "delay": 0.8,
+        "enemy_type": "splitter",
+        "interval": 1.01,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 9,
+        "delay": 0.25,
+        "enemy_type": "light",
+        "interval": 0.48,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 0.7,
+        "enemy_type": "speeder",
+        "interval": 0.35,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 1.15,
+        "enemy_type": "splitter",
+        "interval": 1.01,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 9,
+        "delay": 0.6,
+        "enemy_type": "light",
+        "interval": 0.48,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 1.05,
+        "enemy_type": "speeder",
+        "interval": 0.35,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 1.5,
+        "enemy_type": "splitter",
+        "interval": 1.01,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 9,
+        "delay": 0.95,
+        "enemy_type": "light",
+        "interval": 0.48,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 4,
+        "delay": 1.4,
+        "enemy_type": "speeder",
+        "interval": 0.35,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 8,
+    "reward_energy": 378,
+    "spawns": [
+      {
+        "count": 12,
+        "delay": 0.4,
+        "enemy_type": "grunt",
+        "interval": 0.86,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 1.4,
+        "enemy_type": "heavy",
+        "interval": 1.25,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 6,
+        "delay": 0.6,
+        "enemy_type": "light",
+        "interval": 0.65,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 12,
+        "delay": 0.75,
+        "enemy_type": "grunt",
+        "interval": 0.86,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 1.75,
+        "enemy_type": "heavy",
+        "interval": 1.25,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 6,
+        "delay": 0.95,
+        "enemy_type": "light",
+        "interval": 0.65,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 12,
+        "delay": 1.1,
+        "enemy_type": "grunt",
+        "interval": 0.86,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 4,
+        "delay": 2.1,
+        "enemy_type": "heavy",
+        "interval": 1.25,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 6,
+        "delay": 1.3,
+        "enemy_type": "light",
+        "interval": 0.65,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 9,
+    "reward_energy": 392,
+    "spawns": [
+      {
+        "count": 6,
+        "delay": 0.4,
+        "enemy_type": "heavy",
+        "interval": 0.97,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 2,
+        "delay": 1.8,
+        "enemy_type": "tank",
+        "interval": 1.6,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 8,
+        "delay": 0.35,
+        "enemy_type": "grunt",
+        "interval": 0.71,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 6,
+        "delay": 0.75,
+        "enemy_type": "heavy",
+        "interval": 0.97,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 2,
+        "delay": 2.15,
+        "enemy_type": "tank",
+        "interval": 1.6,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 8,
+        "delay": 0.7,
+        "enemy_type": "grunt",
+        "interval": 0.71,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 6,
+        "delay": 1.1,
+        "enemy_type": "heavy",
+        "interval": 0.97,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 2,
+        "delay": 2.5,
+        "enemy_type": "tank",
+        "interval": 1.6,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 8,
+        "delay": 1.05,
+        "enemy_type": "grunt",
+        "interval": 0.71,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  },
+  {
+    "wave_number": 10,
+    "reward_energy": 0,
+    "spawns": [
+      {
+        "count": 14,
+        "delay": 0.25,
+        "enemy_type": "grunt",
+        "interval": 0.53,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 8,
+        "delay": 0.5,
+        "enemy_type": "speeder",
+        "interval": 0.28,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 6,
+        "delay": 0.8,
+        "enemy_type": "heavy",
+        "interval": 0.86,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 2,
+        "delay": 1.8,
+        "enemy_type": "tank",
+        "interval": 1.56,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 3,
+        "delay": 1.2,
+        "enemy_type": "splitter",
+        "interval": 0.94,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 4,
+        "delay": 0.6,
+        "enemy_type": "light_ghost",
+        "interval": 0.53,
+        "spawner_id": "Spawner"
+      },
+      {
+        "count": 14,
+        "delay": 0.6,
+        "enemy_type": "grunt",
+        "interval": 0.53,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 8,
+        "delay": 0.85,
+        "enemy_type": "speeder",
+        "interval": 0.28,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 6,
+        "delay": 1.15,
+        "enemy_type": "heavy",
+        "interval": 0.86,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 2,
+        "delay": 2.15,
+        "enemy_type": "tank",
+        "interval": 1.56,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 3,
+        "delay": 1.55,
+        "enemy_type": "splitter",
+        "interval": 0.94,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 4,
+        "delay": 0.95,
+        "enemy_type": "light_ghost",
+        "interval": 0.53,
+        "spawner_id": "Spawner2"
+      },
+      {
+        "count": 14,
+        "delay": 0.95,
+        "enemy_type": "grunt",
+        "interval": 0.53,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 8,
+        "delay": 1.2,
+        "enemy_type": "speeder",
+        "interval": 0.28,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 6,
+        "delay": 1.5,
+        "enemy_type": "heavy",
+        "interval": 0.86,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 2,
+        "delay": 2.5,
+        "enemy_type": "tank",
+        "interval": 1.56,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 3,
+        "delay": 1.9,
+        "enemy_type": "splitter",
+        "interval": 0.94,
+        "spawner_id": "Spawner3"
+      },
+      {
+        "count": 4,
+        "delay": 1.3,
+        "enemy_type": "light_ghost",
+        "interval": 0.53,
+        "spawner_id": "Spawner3"
+      }
+    ]
+  }
+]

@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://b17g6xqa6dxl4"]
+
+[ext_resource type="Texture2D" uid="uid://t2wpcp4xusvb" path="res://src/textures/stages/Stage31.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://bpya44imi7crd" path="res://src/scenes/stages/Stage31.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_31"
+stage_name = "31 · Alcoves"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+pack_id = "ash_march"
+pack_name = "Ash March"
+pack_order = 1
+starting_energy = 1680
+starting_lives = 26
+loadout_size = 6
+wave_data_file = "res://src/data/stages/waves/Stage31.json"

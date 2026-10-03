@@ -22,7 +22,68 @@ func get_all_stages() -> Array[StageData]:
 	var result: Array[StageData] = []
 	for key in STAGES:
 		result.append(STAGES[key])
+	result.sort_custom(func(a: StageData, b: StageData) -> bool:
+		if a.pack_order != b.pack_order:
+			return a.pack_order < b.pack_order
+		return a.stage_id < b.stage_id
+	)
 	return result
+
+## Inclusive stage-number ranges. Stage 0, the tutorial, stays with the first ten.
+const CAMPAIGN_GROUP_RANGES: Array[Vector2i] = [
+	Vector2i(0, 10),
+	Vector2i(11, 20),
+	Vector2i(21, 30),
+	Vector2i(31, 40),
+]
+
+func get_level_packs() -> Array[Dictionary]:
+	var by_number: Dictionary = {}
+	var extras: Array[StageData] = []
+	for stage in get_all_stages():
+		var number := _campaign_stage_number(stage)
+		if stage.stage_id.begins_with("stage_"):
+			by_number[number] = stage
+		else:
+			extras.append(stage)
+	var packs: Array[Dictionary] = []
+	for order in CAMPAIGN_GROUP_RANGES.size():
+		var range: Vector2i = CAMPAIGN_GROUP_RANGES[order]
+		var chunk: Array[StageData] = []
+		for number in range(range.x, range.y + 1):
+			if by_number.has(number):
+				chunk.append(by_number[number])
+				by_number.erase(number)
+		if chunk.is_empty():
+			continue
+		var series := chunk[0].pack_name if not chunk[0].pack_name.is_empty() else "Frontier"
+		packs.append({
+			"id": "stages_%d_%d" % [range.x, range.y],
+			"name": "Stages %d–%d" % [range.x, range.y],
+			"series": series,
+			"order": order,
+			"stages": chunk,
+		})
+	if not by_number.is_empty() or not extras.is_empty():
+		var chunk: Array[StageData] = extras.duplicate()
+		var leftover_numbers: Array = by_number.keys()
+		leftover_numbers.sort()
+		for number in leftover_numbers:
+			chunk.append(by_number[number])
+		if not chunk.is_empty():
+			packs.append({
+				"id": "stages_extra",
+				"name": "More Stages",
+				"series": "Campaign",
+				"order": packs.size(),
+				"stages": chunk,
+			})
+	return packs
+
+func _campaign_stage_number(stage: StageData) -> int:
+	if stage.stage_id.begins_with("stage_"):
+		return stage.stage_id.trim_prefix("stage_").to_int()
+	return 0
 
 func get_stage_id(stage: StageData) -> String:
 	if not stage:
@@ -118,6 +179,26 @@ func _load_registry() -> void:
 		"stage_18": load("res://src/data/stages/stage_18.tres"),
 		"stage_19": load("res://src/data/stages/stage_19.tres"),
 		"stage_20": load("res://src/data/stages/stage_20.tres"),
+		"stage_21": load("res://src/data/stages/stage_21.tres"),
+		"stage_22": load("res://src/data/stages/stage_22.tres"),
+		"stage_23": load("res://src/data/stages/stage_23.tres"),
+		"stage_24": load("res://src/data/stages/stage_24.tres"),
+		"stage_25": load("res://src/data/stages/stage_25.tres"),
+		"stage_26": load("res://src/data/stages/stage_26.tres"),
+		"stage_27": load("res://src/data/stages/stage_27.tres"),
+		"stage_28": load("res://src/data/stages/stage_28.tres"),
+		"stage_29": load("res://src/data/stages/stage_29.tres"),
+		"stage_30": load("res://src/data/stages/stage_30.tres"),
+		"stage_31": load("res://src/data/stages/stage_31.tres"),
+		"stage_32": load("res://src/data/stages/stage_32.tres"),
+		"stage_33": load("res://src/data/stages/stage_33.tres"),
+		"stage_34": load("res://src/data/stages/stage_34.tres"),
+		"stage_35": load("res://src/data/stages/stage_35.tres"),
+		"stage_36": load("res://src/data/stages/stage_36.tres"),
+		"stage_37": load("res://src/data/stages/stage_37.tres"),
+		"stage_38": load("res://src/data/stages/stage_38.tres"),
+		"stage_39": load("res://src/data/stages/stage_39.tres"),
+		"stage_40": load("res://src/data/stages/stage_40.tres"),
 		#"test_stage": load("res://src/data/stages/TestStage.tres"),
 	}
 	

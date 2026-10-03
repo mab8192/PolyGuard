@@ -16,7 +16,7 @@ var selected_tower: TowerData = null
 @onready var stage_subtitle_label: Label = %StageSubtitleLabel
 @onready var loadout_count_label: Label = %LoadoutCountLabel
 @onready var clear_all_button: Button = %ClearAllButton
-@onready var loadout_slots_container: HBoxContainer = %LoadoutSlotsContainer
+@onready var loadout_slots_container: GridContainer = %LoadoutSlotsContainer
 @onready var available_grid: GridContainer = %AvailableGrid
 @onready var start_battle_button: Button = %StartBattleButton
 
@@ -143,7 +143,11 @@ func _update_header() -> void:
 func _render_loadout_slots() -> void:
 	for child in loadout_slots_container.get_children():
 		child.queue_free()
-		
+
+	# Six slots sit on one row. Seven and eight wrap to a second row at the same
+	# 115px size so the row does not shrink to fit the 1080-wide screen.
+	loadout_slots_container.columns = 4 if max_loadout_size > 6 else maxi(max_loadout_size, 1)
+
 	for i in range(max_loadout_size):
 		var slot: LoadoutSlot = SLOT_SCENE.instantiate() as LoadoutSlot
 		loadout_slots_container.add_child(slot)

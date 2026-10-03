@@ -7,7 +7,7 @@
 [resource]
 script = ExtResource("2_script")
 stage_id = "stage_12"
-stage_name = "Stage 12"
+stage_name = "12 · The Crook"
 scene = ExtResource("3_scene")
 icon = ExtResource("1_icon")
 starting_energy = 1350

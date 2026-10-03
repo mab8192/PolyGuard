@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://cvfaw5ut2dnku"]
+
+[ext_resource type="Texture2D" uid="uid://bahas4l3u5b8q" path="res://src/textures/stages/Stage24.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://c01cmooa68dic" path="res://src/scenes/stages/Stage24.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_24"
+stage_name = "24 · Palisade"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+pack_id = "ash_march"
+pack_name = "Ash March"
+pack_order = 1
+starting_energy = 1750
+starting_lives = 30
+loadout_size = 6
+wave_data_file = "res://src/data/stages/waves/Stage24.json"

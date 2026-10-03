@@ -7,10 +7,9 @@
 [resource]
 script = ExtResource("3_jmcjt")
 stage_id = "stage_00"
-stage_name = "Tutorial"
+stage_name = "0 · Tutorial"
 scene = ExtResource("2_hxbv7")
 icon = ExtResource("1_0qk35")
-starting_energy = 600
 starting_lives = 50
 loadout_size = 3
 wave_data_file = "res://src/data/stages/waves/Stage0.json"

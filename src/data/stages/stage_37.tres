@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://c2uwfxooiu21o"]
+
+[ext_resource type="Texture2D" uid="uid://cg883tske53h6" path="res://src/textures/stages/Stage37.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://2moovx8uwdtx" path="res://src/scenes/stages/Stage37.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_37"
+stage_name = "37 · The Column"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+pack_id = "ash_march"
+pack_name = "Ash March"
+pack_order = 1
+starting_energy = 1550
+starting_lives = 22
+loadout_size = 7
+wave_data_file = "res://src/data/stages/waves/Stage37.json"

@@ -11,6 +11,7 @@ var selected_loadout: Array[TowerData] = []
 var loadout_presets: Dictionary = {} # int -> Array[TowerData]
 var active_preset_index: int = 1
 var target_main_menu_tab: int = -1
+var campaign_group_id: String = ""
 var current_game_mode: GameMode = GameMode.CAMPAIGN
 
 var is_endless_mode: bool:

@@ -58,6 +58,8 @@ func _on_settings_select() -> void:
 		settings_popup.open()
 
 func handle_back() -> void:
+	if campaign.visible and campaign.has_method("handle_back") and campaign.handle_back():
+		return
 	if campaign.visible:
 		get_tree().quit()
 	else:

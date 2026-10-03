@@ -6,11 +6,8 @@
 
 [resource]
 script = ExtResource("2_script")
-stage_id = "stage_01"
-stage_name = "Stage 1"
+stage_name = "1 · Hairpin"
 scene = ExtResource("3_scene")
 icon = ExtResource("1_icon")
 starting_energy = 750
-starting_lives = 20
-loadout_size = 4
 wave_data_file = "res://src/data/stages/waves/Stage1.json"

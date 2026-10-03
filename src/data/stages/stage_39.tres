@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://booahthlo7p17"]
+
+[ext_resource type="Texture2D" uid="uid://ca6yajlikbfx0" path="res://src/textures/stages/Stage39.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://7yyag0cc30bt" path="res://src/scenes/stages/Stage39.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_39"
+stage_name = "39 · Tangle"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+pack_id = "ash_march"
+pack_name = "Ash March"
+pack_order = 1
+starting_energy = 1680
+starting_lives = 24
+loadout_size = 8
+wave_data_file = "res://src/data/stages/waves/Stage39.json"

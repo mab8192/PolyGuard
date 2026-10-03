@@ -8,6 +8,11 @@ extends Resource
 @export var scene: PackedScene ## The scene for this stage
 @export var icon: Texture2D = preload("res://vendor/HAMMA.png")
 
+@export_group("Campaign Pack")
+@export var pack_id: String = "frontier"
+@export var pack_name: String = "Frontier"
+@export var pack_order: int = 0
+
 @export_group("Economy & Rules")
 @export var starting_energy: int = 600
 var starting_gold: int:

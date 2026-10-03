@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="StageData" format=3 uid="uid://dfs0y1x3evers"]
+
+[ext_resource type="Texture2D" uid="uid://d3ifim8dx80hu" path="res://src/textures/stages/Stage27.png" id="1_icon"]
+[ext_resource type="Script" uid="uid://xynccep1kdc5" path="res://src/data/stages/StageData.gd" id="2_script"]
+[ext_resource type="PackedScene" uid="uid://o247tvph6so6" path="res://src/scenes/stages/Stage27.tscn" id="3_scene"]
+
+[resource]
+script = ExtResource("2_script")
+stage_id = "stage_27"
+stage_name = "27 · The Field"
+scene = ExtResource("3_scene")
+icon = ExtResource("1_icon")
+pack_id = "ash_march"
+pack_name = "Ash March"
+pack_order = 1
+starting_energy = 1700
+starting_lives = 28
+loadout_size = 6
+wave_data_file = "res://src/data/stages/waves/Stage27.json"

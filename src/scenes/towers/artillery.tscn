@@ -7,7 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://b8us1luf3bxn7" path="res://src/textures/towers/carpet_bomb_artillery.png" id="5_q2u2u"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_corridor"]
-size = Vector2(352, 64)
+size = Vector2(320, 64)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_solid"]
 size = Vector2(64, 64)
@@ -26,7 +26,7 @@ script = ExtResource("3_hq3yo")
 metadata/_custom_type_script = "uid://ce03oldy8eqse"
 
 [node name="RangeCollider" type="CollisionShape2D" parent="TargetingComponent" unique_id=221653091]
-position = Vector2(272, 0)
+position = Vector2(256, 0)
 shape = SubResource("RectangleShape2D_corridor")
 
 [node name="AttackComponent" type="Node" parent="." unique_id=1774107551]

@@ -93,11 +93,15 @@ focus_mode = 0
 theme_type_variation = &"DangerButton"
 text = "CLEAR ALL"
 
-[node name="LoadoutSlotsContainer" type="HBoxContainer" parent="MainMargin/RootVBox" unique_id=637681859]
+[node name="LoadoutSlotsCenter" type="CenterContainer" parent="MainMargin/RootVBox" unique_id=637681860]
+layout_mode = 2
+
+[node name="LoadoutSlotsContainer" type="GridContainer" parent="MainMargin/RootVBox/LoadoutSlotsCenter" unique_id=637681859]
 unique_name_in_owner = true
 layout_mode = 2
-theme_override_constants/separation = 12
-alignment = 1
+theme_override_constants/h_separation = 12
+theme_override_constants/v_separation = 12
+columns = 6
 
 [node name="DetailsPanel" type="PanelContainer" parent="MainMargin/RootVBox" unique_id=637681861]
 custom_minimum_size = Vector2(0, 420)
